@@ -1,15 +1,15 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { ReactNotifications } from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 import { Route, Routes } from "react-router-dom";
-import Dashboard from "./pages/Dashboard/Dashboard";
+import ProfilesPage from "./pages/ProfilesPage/ProfilesPage";
 
 function App() {
   return (
     <>
       <ReactNotifications />
       <Routes>
-        <Route path="/" element={<Dashboard></Dashboard>} />
+        <Route path="/" element={<ProfilesPage></ProfilesPage>} />
       </Routes>
     </>
   );
