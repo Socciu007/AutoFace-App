@@ -33,6 +33,7 @@
     "sass": "^1.62.1",
     "styled-components": "^5.3.11",
     "toastr": "^2.1.4",
+    "yarn": "^1.22.21",
     "yup": "^1.2.0"
   },
   "devDependencies": {
