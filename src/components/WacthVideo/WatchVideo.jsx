@@ -45,66 +45,68 @@ const WatchVideo = () => {
             <div className="component-item numberOfVideo">
               <p className="component-item__header">Number of videos:</p>
               <div className="component-item__number">
-                <svg
-                  width="11"
-                  height="15"
-                  viewBox="0 0 11 15"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  onClick={handleIncrement}
-                >
-                  <path
-                    d="M3.97142 0.467669C4.17141 0.225192 4.54288 0.225192 4.74287 0.467669L8.32177 4.80686C8.59075 5.13298 8.35878 5.625 7.93605 5.625L0.778241 5.625C0.355507 5.625 0.123534 5.13298 0.392513 4.80686L3.97142 0.467669Z"
-                    fill="#01162B"
-                  />
-                </svg>
+                <div className="component-item__number__icon">
+                  <svg
+                    width="11"
+                    height="7"
+                    viewBox="0 0 11 7"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    onClick={handleIncrement}
+                  >
+                    <path
+                      d="M3.97142 0.467669C4.17141 0.225192 4.54288 0.225192 4.74287 0.467669L8.32177 4.80686C8.59075 5.13298 8.35878 5.625 7.93605 5.625L0.778241 5.625C0.355507 5.625 0.123534 5.13298 0.392513 4.80686L3.97142 0.467669Z"
+                      fill="#01162B"
+                    />
+                  </svg>
 
-                <svg
-                  width="11"
-                  height="15"
-                  viewBox="0 0 11 15"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  onClick={handleDecrement}
-                >
-                  <path
-                    d="M4.74245 5.53233C4.54246 5.77481 4.17099 5.77481 3.971 5.53233L0.392095 1.19314C0.123116 0.867021 0.355088 0.374999 0.777822 0.374999L7.93563 0.375C8.35836 0.375 8.59033 0.867022 8.32135 1.19314L4.74245 5.53233Z"
-                    fill="#01162B"
-                  />
-                </svg>
-
+                  <svg
+                    width="11"
+                    height="7"
+                    viewBox="0 0 11 7"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    onClick={handleDecrement}
+                  >
+                    <path
+                      d="M4.74245 5.53233C4.54246 5.77481 4.17099 5.77481 3.971 5.53233L0.392095 1.19314C0.123116 0.867021 0.355088 0.374999 0.777822 0.374999L7.93563 0.375C8.35836 0.375 8.59033 0.867022 8.32135 1.19314L4.74245 5.53233Z"
+                      fill="#01162B"
+                    />
+                  </svg>
+                </div>
                 <input type="text" value={inputValue} onChange />
               </div>
               <span>to</span>
               <div className="component-item__number">
-                <svg
-                  className="iconIncreaseNumber"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="11"
-                  height="15"
-                  viewBox="0 0 11 15"
-                  fill="none"
-                  onClick={handleIncrement}
-                >
-                  <path
-                    d="M4.97142 0.467669C5.17141 0.225192 5.54288 0.225192 5.74287 0.467669L9.32177 4.80686C9.59075 5.13298 9.35878 5.625 8.93605 5.625L1.77824 5.625C1.35551 5.625 1.12353 5.13298 1.39251 4.80686L4.97142 0.467669Z"
-                    fill="#01162B"
-                  />
-                </svg>
-                <svg
-                  className="iconDecreaseNumber"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="11"
-                  height="15"
-                  viewBox="0 0 11 15"
-                  fill="none"
-                  onClick={handleDecrement}
-                >
-                  <path
-                    d="M5.74245 14.5323C5.54246 14.7748 5.17099 14.7748 4.971 14.5323L1.3921 10.1931C1.12312 9.86702 1.35509 9.375 1.77782 9.375L8.93563 9.375C9.35836 9.375 9.59033 9.86702 9.32135 10.1931L5.74245 14.5323Z"
-                    fill="#01162B"
-                  />
-                </svg>
+                <div className="component-item__number__icon">
+                  <svg
+                    width="11"
+                    height="7"
+                    viewBox="0 0 11 7"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    onClick={handleIncrement}
+                  >
+                    <path
+                      d="M3.97142 0.467669C4.17141 0.225192 4.54288 0.225192 4.74287 0.467669L8.32177 4.80686C8.59075 5.13298 8.35878 5.625 7.93605 5.625L0.778241 5.625C0.355507 5.625 0.123534 5.13298 0.392513 4.80686L3.97142 0.467669Z"
+                      fill="#01162B"
+                    />
+                  </svg>
+
+                  <svg
+                    width="11"
+                    height="7"
+                    viewBox="0 0 11 7"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    onClick={handleDecrement}
+                  >
+                    <path
+                      d="M4.74245 5.53233C4.54246 5.77481 4.17099 5.77481 3.971 5.53233L0.392095 1.19314C0.123116 0.867021 0.355088 0.374999 0.777822 0.374999L7.93563 0.375C8.35836 0.375 8.59033 0.867022 8.32135 1.19314L4.74245 5.53233Z"
+                      fill="#01162B"
+                    />
+                  </svg>
+                </div>
                 <input type="text" value={inputValue} onChange />
               </div>
             </div>
@@ -113,66 +115,68 @@ const WatchVideo = () => {
                 Watching time/video <span>(s):</span>
               </p>
               <div className="component-item__number">
-                <svg
-                  className="iconIncreaseNumber"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="11"
-                  height="15"
-                  viewBox="0 0 11 15"
-                  fill="none"
-                  onClick={handleIncrement}
-                >
-                  <path
-                    d="M4.97142 0.467669C5.17141 0.225192 5.54288 0.225192 5.74287 0.467669L9.32177 4.80686C9.59075 5.13298 9.35878 5.625 8.93605 5.625L1.77824 5.625C1.35551 5.625 1.12353 5.13298 1.39251 4.80686L4.97142 0.467669Z"
-                    fill="#01162B"
-                  />
-                </svg>
-                <svg
-                  className="iconDecreaseNumber"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="11"
-                  height="15"
-                  viewBox="0 0 11 15"
-                  fill="none"
-                  onClick={handleDecrement}
-                >
-                  <path
-                    d="M5.74245 14.5323C5.54246 14.7748 5.17099 14.7748 4.971 14.5323L1.3921 10.1931C1.12312 9.86702 1.35509 9.375 1.77782 9.375L8.93563 9.375C9.35836 9.375 9.59033 9.86702 9.32135 10.1931L5.74245 14.5323Z"
-                    fill="#01162B"
-                  />
-                </svg>
+                <div className="component-item__number__icon">
+                  <svg
+                    width="11"
+                    height="7"
+                    viewBox="0 0 11 7"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    onClick={handleIncrement}
+                  >
+                    <path
+                      d="M3.97142 0.467669C4.17141 0.225192 4.54288 0.225192 4.74287 0.467669L8.32177 4.80686C8.59075 5.13298 8.35878 5.625 7.93605 5.625L0.778241 5.625C0.355507 5.625 0.123534 5.13298 0.392513 4.80686L3.97142 0.467669Z"
+                      fill="#01162B"
+                    />
+                  </svg>
+
+                  <svg
+                    width="11"
+                    height="7"
+                    viewBox="0 0 11 7"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    onClick={handleDecrement}
+                  >
+                    <path
+                      d="M4.74245 5.53233C4.54246 5.77481 4.17099 5.77481 3.971 5.53233L0.392095 1.19314C0.123116 0.867021 0.355088 0.374999 0.777822 0.374999L7.93563 0.375C8.35836 0.375 8.59033 0.867022 8.32135 1.19314L4.74245 5.53233Z"
+                      fill="#01162B"
+                    />
+                  </svg>
+                </div>
                 <input type="text" value={inputValue} onChange />
               </div>
               <span>to</span>
               <div className="component-item__number">
-                <svg
-                  className="iconIncreaseNumber"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="11"
-                  height="15"
-                  viewBox="0 0 11 15"
-                  fill="none"
-                  onClick={handleIncrement}
-                >
-                  <path
-                    d="M4.97142 0.467669C5.17141 0.225192 5.54288 0.225192 5.74287 0.467669L9.32177 4.80686C9.59075 5.13298 9.35878 5.625 8.93605 5.625L1.77824 5.625C1.35551 5.625 1.12353 5.13298 1.39251 4.80686L4.97142 0.467669Z"
-                    fill="#01162B"
-                  />
-                </svg>
-                <svg
-                  className="iconDecreaseNumber"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="11"
-                  height="15"
-                  viewBox="0 0 11 15"
-                  fill="none"
-                  onClick={handleDecrement}
-                >
-                  <path
-                    d="M5.74245 14.5323C5.54246 14.7748 5.17099 14.7748 4.971 14.5323L1.3921 10.1931C1.12312 9.86702 1.35509 9.375 1.77782 9.375L8.93563 9.375C9.35836 9.375 9.59033 9.86702 9.32135 10.1931L5.74245 14.5323Z"
-                    fill="#01162B"
-                  />
-                </svg>
+                <div className="component-item__number__icon">
+                  <svg
+                    width="11"
+                    height="7"
+                    viewBox="0 0 11 7"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    onClick={handleIncrement}
+                  >
+                    <path
+                      d="M3.97142 0.467669C4.17141 0.225192 4.54288 0.225192 4.74287 0.467669L8.32177 4.80686C8.59075 5.13298 8.35878 5.625 7.93605 5.625L0.778241 5.625C0.355507 5.625 0.123534 5.13298 0.392513 4.80686L3.97142 0.467669Z"
+                      fill="#01162B"
+                    />
+                  </svg>
+
+                  <svg
+                    width="11"
+                    height="7"
+                    viewBox="0 0 11 7"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    onClick={handleDecrement}
+                  >
+                    <path
+                      d="M4.74245 5.53233C4.54246 5.77481 4.17099 5.77481 3.971 5.53233L0.392095 1.19314C0.123116 0.867021 0.355088 0.374999 0.777822 0.374999L7.93563 0.375C8.35836 0.375 8.59033 0.867022 8.32135 1.19314L4.74245 5.53233Z"
+                      fill="#01162B"
+                    />
+                  </svg>
+                </div>
                 <input type="text" value={inputValue} onChange />
               </div>
             </div>
@@ -185,66 +189,68 @@ const WatchVideo = () => {
               </div>
               <div className="component-item__content">
                 <div className="component-item__number">
-                  <svg
-                    className="iconIncreaseNumber"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="11"
-                    height="15"
-                    viewBox="0 0 11 15"
-                    fill="none"
-                    onClick={handleIncrement}
-                  >
-                    <path
-                      d="M4.97142 0.467669C5.17141 0.225192 5.54288 0.225192 5.74287 0.467669L9.32177 4.80686C9.59075 5.13298 9.35878 5.625 8.93605 5.625L1.77824 5.625C1.35551 5.625 1.12353 5.13298 1.39251 4.80686L4.97142 0.467669Z"
-                      fill="#01162B"
-                    />
-                  </svg>
-                  <svg
-                    className="iconDecreaseNumber"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="11"
-                    height="15"
-                    viewBox="0 0 11 15"
-                    fill="none"
-                    onClick={handleDecrement}
-                  >
-                    <path
-                      d="M5.74245 14.5323C5.54246 14.7748 5.17099 14.7748 4.971 14.5323L1.3921 10.1931C1.12312 9.86702 1.35509 9.375 1.77782 9.375L8.93563 9.375C9.35836 9.375 9.59033 9.86702 9.32135 10.1931L5.74245 14.5323Z"
-                      fill="#01162B"
-                    />
-                  </svg>
+                  <div className="component-item__number__icon">
+                    <svg
+                      width="11"
+                      height="7"
+                      viewBox="0 0 11 7"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      onClick={handleIncrement}
+                    >
+                      <path
+                        d="M3.97142 0.467669C4.17141 0.225192 4.54288 0.225192 4.74287 0.467669L8.32177 4.80686C8.59075 5.13298 8.35878 5.625 7.93605 5.625L0.778241 5.625C0.355507 5.625 0.123534 5.13298 0.392513 4.80686L3.97142 0.467669Z"
+                        fill="#01162B"
+                      />
+                    </svg>
+
+                    <svg
+                      width="11"
+                      height="7"
+                      viewBox="0 0 11 7"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      onClick={handleDecrement}
+                    >
+                      <path
+                        d="M4.74245 5.53233C4.54246 5.77481 4.17099 5.77481 3.971 5.53233L0.392095 1.19314C0.123116 0.867021 0.355088 0.374999 0.777822 0.374999L7.93563 0.375C8.35836 0.375 8.59033 0.867022 8.32135 1.19314L4.74245 5.53233Z"
+                        fill="#01162B"
+                      />
+                    </svg>
+                  </div>
                   <input type="text" value={inputValue} onChange />
                 </div>
                 <span>to</span>
                 <div className="component-item__number">
-                  <svg
-                    className="iconIncreaseNumber"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="11"
-                    height="15"
-                    viewBox="0 0 11 15"
-                    fill="none"
-                    onClick={handleIncrement}
-                  >
-                    <path
-                      d="M4.97142 0.467669C5.17141 0.225192 5.54288 0.225192 5.74287 0.467669L9.32177 4.80686C9.59075 5.13298 9.35878 5.625 8.93605 5.625L1.77824 5.625C1.35551 5.625 1.12353 5.13298 1.39251 4.80686L4.97142 0.467669Z"
-                      fill="#01162B"
-                    />
-                  </svg>
-                  <svg
-                    className="iconDecreaseNumber"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="11"
-                    height="15"
-                    viewBox="0 0 11 15"
-                    fill="none"
-                    onClick={handleDecrement}
-                  >
-                    <path
-                      d="M5.74245 14.5323C5.54246 14.7748 5.17099 14.7748 4.971 14.5323L1.3921 10.1931C1.12312 9.86702 1.35509 9.375 1.77782 9.375L8.93563 9.375C9.35836 9.375 9.59033 9.86702 9.32135 10.1931L5.74245 14.5323Z"
-                      fill="#01162B"
-                    />
-                  </svg>
+                  <div className="component-item__number__icon">
+                    <svg
+                      width="11"
+                      height="7"
+                      viewBox="0 0 11 7"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      onClick={handleIncrement}
+                    >
+                      <path
+                        d="M3.97142 0.467669C4.17141 0.225192 4.54288 0.225192 4.74287 0.467669L8.32177 4.80686C8.59075 5.13298 8.35878 5.625 7.93605 5.625L0.778241 5.625C0.355507 5.625 0.123534 5.13298 0.392513 4.80686L3.97142 0.467669Z"
+                        fill="#01162B"
+                      />
+                    </svg>
+
+                    <svg
+                      width="11"
+                      height="7"
+                      viewBox="0 0 11 7"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      onClick={handleDecrement}
+                    >
+                      <path
+                        d="M4.74245 5.53233C4.54246 5.77481 4.17099 5.77481 3.971 5.53233L0.392095 1.19314C0.123116 0.867021 0.355088 0.374999 0.777822 0.374999L7.93563 0.375C8.35836 0.375 8.59033 0.867022 8.32135 1.19314L4.74245 5.53233Z"
+                        fill="#01162B"
+                      />
+                    </svg>
+                  </div>
                   <input type="text" value={inputValue} onChange />
                 </div>
               </div>
@@ -258,66 +264,68 @@ const WatchVideo = () => {
               </div>
               <div className="component-item__content">
                 <div className="component-item__number">
-                  <svg
-                    className="iconIncreaseNumber"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="11"
-                    height="15"
-                    viewBox="0 0 11 15"
-                    fill="none"
-                    onClick={handleIncrement}
-                  >
-                    <path
-                      d="M4.97142 0.467669C5.17141 0.225192 5.54288 0.225192 5.74287 0.467669L9.32177 4.80686C9.59075 5.13298 9.35878 5.625 8.93605 5.625L1.77824 5.625C1.35551 5.625 1.12353 5.13298 1.39251 4.80686L4.97142 0.467669Z"
-                      fill="#01162B"
-                    />
-                  </svg>
-                  <svg
-                    className="iconDecreaseNumber"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="11"
-                    height="15"
-                    viewBox="0 0 11 15"
-                    fill="none"
-                    onClick={handleDecrement}
-                  >
-                    <path
-                      d="M5.74245 14.5323C5.54246 14.7748 5.17099 14.7748 4.971 14.5323L1.3921 10.1931C1.12312 9.86702 1.35509 9.375 1.77782 9.375L8.93563 9.375C9.35836 9.375 9.59033 9.86702 9.32135 10.1931L5.74245 14.5323Z"
-                      fill="#01162B"
-                    />
-                  </svg>
+                  <div className="component-item__number__icon">
+                    <svg
+                      width="11"
+                      height="7"
+                      viewBox="0 0 11 7"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      onClick={handleIncrement}
+                    >
+                      <path
+                        d="M3.97142 0.467669C4.17141 0.225192 4.54288 0.225192 4.74287 0.467669L8.32177 4.80686C8.59075 5.13298 8.35878 5.625 7.93605 5.625L0.778241 5.625C0.355507 5.625 0.123534 5.13298 0.392513 4.80686L3.97142 0.467669Z"
+                        fill="#01162B"
+                      />
+                    </svg>
+
+                    <svg
+                      width="11"
+                      height="7"
+                      viewBox="0 0 11 7"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      onClick={handleDecrement}
+                    >
+                      <path
+                        d="M4.74245 5.53233C4.54246 5.77481 4.17099 5.77481 3.971 5.53233L0.392095 1.19314C0.123116 0.867021 0.355088 0.374999 0.777822 0.374999L7.93563 0.375C8.35836 0.375 8.59033 0.867022 8.32135 1.19314L4.74245 5.53233Z"
+                        fill="#01162B"
+                      />
+                    </svg>
+                  </div>
                   <input type="text" value={inputValue} onChange />
                 </div>
                 <span>to</span>
                 <div className="component-item__number">
-                  <svg
-                    className="iconIncreaseNumber"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="11"
-                    height="15"
-                    viewBox="0 0 11 15"
-                    fill="none"
-                    onClick={handleIncrement}
-                  >
-                    <path
-                      d="M4.97142 0.467669C5.17141 0.225192 5.54288 0.225192 5.74287 0.467669L9.32177 4.80686C9.59075 5.13298 9.35878 5.625 8.93605 5.625L1.77824 5.625C1.35551 5.625 1.12353 5.13298 1.39251 4.80686L4.97142 0.467669Z"
-                      fill="#01162B"
-                    />
-                  </svg>
-                  <svg
-                    className="iconDecreaseNumber"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="11"
-                    height="15"
-                    viewBox="0 0 11 15"
-                    fill="none"
-                    onClick={handleDecrement}
-                  >
-                    <path
-                      d="M5.74245 14.5323C5.54246 14.7748 5.17099 14.7748 4.971 14.5323L1.3921 10.1931C1.12312 9.86702 1.35509 9.375 1.77782 9.375L8.93563 9.375C9.35836 9.375 9.59033 9.86702 9.32135 10.1931L5.74245 14.5323Z"
-                      fill="#01162B"
-                    />
-                  </svg>
+                  <div className="component-item__number__icon">
+                    <svg
+                      width="11"
+                      height="7"
+                      viewBox="0 0 11 7"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      onClick={handleIncrement}
+                    >
+                      <path
+                        d="M3.97142 0.467669C4.17141 0.225192 4.54288 0.225192 4.74287 0.467669L8.32177 4.80686C8.59075 5.13298 8.35878 5.625 7.93605 5.625L0.778241 5.625C0.355507 5.625 0.123534 5.13298 0.392513 4.80686L3.97142 0.467669Z"
+                        fill="#01162B"
+                      />
+                    </svg>
+
+                    <svg
+                      width="11"
+                      height="7"
+                      viewBox="0 0 11 7"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      onClick={handleDecrement}
+                    >
+                      <path
+                        d="M4.74245 5.53233C4.54246 5.77481 4.17099 5.77481 3.971 5.53233L0.392095 1.19314C0.123116 0.867021 0.355088 0.374999 0.777822 0.374999L7.93563 0.375C8.35836 0.375 8.59033 0.867022 8.32135 1.19314L4.74245 5.53233Z"
+                        fill="#01162B"
+                      />
+                    </svg>
+                  </div>
                   <input type="text" value={inputValue} onChange />
                 </div>
               </div>
@@ -332,66 +340,68 @@ const WatchVideo = () => {
               <p className="component-item__header">Number of videos:</p>
               <div className="component-item__content">
                 <div className="component-item__number">
-                  <svg
-                    className="iconIncreaseNumber"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="11"
-                    height="15"
-                    viewBox="0 0 11 15"
-                    fill="none"
-                    onClick={handleIncrement}
-                  >
-                    <path
-                      d="M4.97142 0.467669C5.17141 0.225192 5.54288 0.225192 5.74287 0.467669L9.32177 4.80686C9.59075 5.13298 9.35878 5.625 8.93605 5.625L1.77824 5.625C1.35551 5.625 1.12353 5.13298 1.39251 4.80686L4.97142 0.467669Z"
-                      fill="#01162B"
-                    />
-                  </svg>
-                  <svg
-                    className="iconDecreaseNumber"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="11"
-                    height="15"
-                    viewBox="0 0 11 15"
-                    fill="none"
-                    onClick={handleDecrement}
-                  >
-                    <path
-                      d="M5.74245 14.5323C5.54246 14.7748 5.17099 14.7748 4.971 14.5323L1.3921 10.1931C1.12312 9.86702 1.35509 9.375 1.77782 9.375L8.93563 9.375C9.35836 9.375 9.59033 9.86702 9.32135 10.1931L5.74245 14.5323Z"
-                      fill="#01162B"
-                    />
-                  </svg>
+                  <div className="component-item__number__icon">
+                    <svg
+                      width="11"
+                      height="7"
+                      viewBox="0 0 11 7"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      onClick={handleIncrement}
+                    >
+                      <path
+                        d="M3.97142 0.467669C4.17141 0.225192 4.54288 0.225192 4.74287 0.467669L8.32177 4.80686C8.59075 5.13298 8.35878 5.625 7.93605 5.625L0.778241 5.625C0.355507 5.625 0.123534 5.13298 0.392513 4.80686L3.97142 0.467669Z"
+                        fill="#01162B"
+                      />
+                    </svg>
+
+                    <svg
+                      width="11"
+                      height="7"
+                      viewBox="0 0 11 7"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      onClick={handleDecrement}
+                    >
+                      <path
+                        d="M4.74245 5.53233C4.54246 5.77481 4.17099 5.77481 3.971 5.53233L0.392095 1.19314C0.123116 0.867021 0.355088 0.374999 0.777822 0.374999L7.93563 0.375C8.35836 0.375 8.59033 0.867022 8.32135 1.19314L4.74245 5.53233Z"
+                        fill="#01162B"
+                      />
+                    </svg>
+                  </div>
                   <input type="text" value={inputValue} onChange />
                 </div>
                 <span>to</span>
                 <div className="component-item__number">
-                  <svg
-                    className="iconIncreaseNumber"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="11"
-                    height="15"
-                    viewBox="0 0 11 15"
-                    fill="none"
-                    onClick={handleIncrement}
-                  >
-                    <path
-                      d="M4.97142 0.467669C5.17141 0.225192 5.54288 0.225192 5.74287 0.467669L9.32177 4.80686C9.59075 5.13298 9.35878 5.625 8.93605 5.625L1.77824 5.625C1.35551 5.625 1.12353 5.13298 1.39251 4.80686L4.97142 0.467669Z"
-                      fill="#01162B"
-                    />
-                  </svg>
-                  <svg
-                    className="iconDecreaseNumber"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="11"
-                    height="15"
-                    viewBox="0 0 11 15"
-                    fill="none"
-                    onClick={handleDecrement}
-                  >
-                    <path
-                      d="M5.74245 14.5323C5.54246 14.7748 5.17099 14.7748 4.971 14.5323L1.3921 10.1931C1.12312 9.86702 1.35509 9.375 1.77782 9.375L8.93563 9.375C9.35836 9.375 9.59033 9.86702 9.32135 10.1931L5.74245 14.5323Z"
-                      fill="#01162B"
-                    />
-                  </svg>
+                  <div className="component-item__number__icon">
+                    <svg
+                      width="11"
+                      height="7"
+                      viewBox="0 0 11 7"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      onClick={handleIncrement}
+                    >
+                      <path
+                        d="M3.97142 0.467669C4.17141 0.225192 4.54288 0.225192 4.74287 0.467669L8.32177 4.80686C8.59075 5.13298 8.35878 5.625 7.93605 5.625L0.778241 5.625C0.355507 5.625 0.123534 5.13298 0.392513 4.80686L3.97142 0.467669Z"
+                        fill="#01162B"
+                      />
+                    </svg>
+
+                    <svg
+                      width="11"
+                      height="7"
+                      viewBox="0 0 11 7"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      onClick={handleDecrement}
+                    >
+                      <path
+                        d="M4.74245 5.53233C4.54246 5.77481 4.17099 5.77481 3.971 5.53233L0.392095 1.19314C0.123116 0.867021 0.355088 0.374999 0.777822 0.374999L7.93563 0.375C8.35836 0.375 8.59033 0.867022 8.32135 1.19314L4.74245 5.53233Z"
+                        fill="#01162B"
+                      />
+                    </svg>
+                  </div>
                   <input type="text" value={inputValue} onChange />
                 </div>
               </div>
@@ -426,66 +436,68 @@ const WatchVideo = () => {
               <div className="component-item numberOfVideo">
                 <p className="component-item__header numberOfVideoText">Number of photo/video:</p>
                 <div className="component-item__number">
-                  <svg
-                    className="iconIncreaseNumber"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="11"
-                    height="15"
-                    viewBox="0 0 11 15"
-                    fill="none"
-                    onClick={handleIncrement}
-                  >
-                    <path
-                      d="M4.97142 0.467669C5.17141 0.225192 5.54288 0.225192 5.74287 0.467669L9.32177 4.80686C9.59075 5.13298 9.35878 5.625 8.93605 5.625L1.77824 5.625C1.35551 5.625 1.12353 5.13298 1.39251 4.80686L4.97142 0.467669Z"
-                      fill="#01162B"
-                    />
-                  </svg>
-                  <svg
-                    className="iconDecreaseNumber"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="11"
-                    height="15"
-                    viewBox="0 0 11 15"
-                    fill="none"
-                    onClick={handleDecrement}
-                  >
-                    <path
-                      d="M5.74245 14.5323C5.54246 14.7748 5.17099 14.7748 4.971 14.5323L1.3921 10.1931C1.12312 9.86702 1.35509 9.375 1.77782 9.375L8.93563 9.375C9.35836 9.375 9.59033 9.86702 9.32135 10.1931L5.74245 14.5323Z"
-                      fill="#01162B"
-                    />
-                  </svg>
+                  <div className="component-item__number__icon">
+                    <svg
+                      width="11"
+                      height="7"
+                      viewBox="0 0 11 7"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      onClick={handleIncrement}
+                    >
+                      <path
+                        d="M3.97142 0.467669C4.17141 0.225192 4.54288 0.225192 4.74287 0.467669L8.32177 4.80686C8.59075 5.13298 8.35878 5.625 7.93605 5.625L0.778241 5.625C0.355507 5.625 0.123534 5.13298 0.392513 4.80686L3.97142 0.467669Z"
+                        fill="#01162B"
+                      />
+                    </svg>
+
+                    <svg
+                      width="11"
+                      height="7"
+                      viewBox="0 0 11 7"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      onClick={handleDecrement}
+                    >
+                      <path
+                        d="M4.74245 5.53233C4.54246 5.77481 4.17099 5.77481 3.971 5.53233L0.392095 1.19314C0.123116 0.867021 0.355088 0.374999 0.777822 0.374999L7.93563 0.375C8.35836 0.375 8.59033 0.867022 8.32135 1.19314L4.74245 5.53233Z"
+                        fill="#01162B"
+                      />
+                    </svg>
+                  </div>
                   <input type="text" value={inputValue} onChange />
                 </div>
                 <span>to</span>
                 <div className="component-item__number">
-                  <svg
-                    className="iconIncreaseNumber"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="11"
-                    height="15"
-                    viewBox="0 0 11 15"
-                    fill="none"
-                    onClick={handleIncrement}
-                  >
-                    <path
-                      d="M4.97142 0.467669C5.17141 0.225192 5.54288 0.225192 5.74287 0.467669L9.32177 4.80686C9.59075 5.13298 9.35878 5.625 8.93605 5.625L1.77824 5.625C1.35551 5.625 1.12353 5.13298 1.39251 4.80686L4.97142 0.467669Z"
-                      fill="#01162B"
-                    />
-                  </svg>
-                  <svg
-                    className="iconDecreaseNumber"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="11"
-                    height="15"
-                    viewBox="0 0 11 15"
-                    fill="none"
-                    onClick={handleDecrement}
-                  >
-                    <path
-                      d="M5.74245 14.5323C5.54246 14.7748 5.17099 14.7748 4.971 14.5323L1.3921 10.1931C1.12312 9.86702 1.35509 9.375 1.77782 9.375L8.93563 9.375C9.35836 9.375 9.59033 9.86702 9.32135 10.1931L5.74245 14.5323Z"
-                      fill="#01162B"
-                    />
-                  </svg>
+                  <div className="component-item__number__icon">
+                    <svg
+                      width="11"
+                      height="7"
+                      viewBox="0 0 11 7"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      onClick={handleIncrement}
+                    >
+                      <path
+                        d="M3.97142 0.467669C4.17141 0.225192 4.54288 0.225192 4.74287 0.467669L8.32177 4.80686C8.59075 5.13298 8.35878 5.625 7.93605 5.625L0.778241 5.625C0.355507 5.625 0.123534 5.13298 0.392513 4.80686L3.97142 0.467669Z"
+                        fill="#01162B"
+                      />
+                    </svg>
+
+                    <svg
+                      width="11"
+                      height="7"
+                      viewBox="0 0 11 7"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      onClick={handleDecrement}
+                    >
+                      <path
+                        d="M4.74245 5.53233C4.54246 5.77481 4.17099 5.77481 3.971 5.53233L0.392095 1.19314C0.123116 0.867021 0.355088 0.374999 0.777822 0.374999L7.93563 0.375C8.35836 0.375 8.59033 0.867022 8.32135 1.19314L4.74245 5.53233Z"
+                        fill="#01162B"
+                      />
+                    </svg>
+                  </div>
                   <input type="text" value={inputValue} onChange />
                 </div>
               </div>
@@ -586,7 +598,7 @@ const WatchVideo = () => {
                 <path
                   d="M25.2545 18.3685L25.2544 18.3684L16.6962 13.159C16.6961 13.159 16.696 13.1589 16.6959 13.1589C16.0244 12.7506 15 13.2023 15 14.2906V24.7091C15 25.7989 16.0238 26.2496 16.6961 25.8407L25.2545 18.3685ZM25.2545 18.3685C26.0578 18.8574 26.0579 20.1448 25.2546 20.6338C25.2545 20.6338 25.2545 20.6338 25.2545 20.6338L16.6962 25.8407L25.2545 18.3685Z"
                   stroke="#01162B"
-                  stroke-width="2"
+                  strokeWidth="2"
                 />
               </svg>
               <svg xmlns="http://www.w3.org/2000/svg" width="3" height="15" viewBox="0 0 3 15" fill="none">
