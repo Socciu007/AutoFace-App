@@ -1,0 +1,347 @@
+body {
+  padding: 0;
+  margin: 0;
+  font-family: "GoogleSansBold", sans-serif;
+}
+.create-script {
+  width: 1280px;
+  height: 720px;
+  border: 1px;
+  padding: 30px;
+  margin: auto;
+
+  h1 {
+    color: #01162b;
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+  }
+  &__title {
+    display: flex;
+    font-weight: 700;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    button {
+      border: none;
+      background-color: #fff;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    p {
+      justify-content: center;
+      align-items: center;
+      padding: 5px;
+      font-size: 18px;
+    }
+  }
+  &__content {
+    display: flex;
+  }
+  .scrollable-container {
+    width: 40%;
+    height: 70vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-radius: 15px;
+    background: #fff;
+    box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
+    scrollbar-width: thin;
+  }
+  .scrollable-container::-webkit-scrollbar {
+    width: 5px;
+  }
+  .scrollable-container::-webkit-scrollbar-thumb {
+    background-color: #ccc; /* Màu của thanh cuộn */
+    border-radius: 20px; /* Bo tròn góc của thanh cuộn */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Bóng mờ */
+  }
+  .scrollable-container::-webkit-scrollbar-track {
+    background-color: #f0f0f0; /* Màu của phần bên dưới thanh cuộn */
+    border-radius: 20px;
+  }
+  .left-content {
+    border-radius: 15px;
+    width: 100%;
+    padding: 15px;
+    height: 100%;
+    &__top {
+      display: flex;
+      margin-top: 10px;
+      .search {
+        display: flex;
+        align-items: center;
+        border-radius: 8px;
+        background: #f5f5f5;
+        width: 100%;
+        height: 40px;
+        svg {
+          margin-left: 20px;
+          margin-right: 15px;
+        }
+        .inputSearch {
+          border: none;
+          background: #f5f5f5;
+        }
+      }
+    }
+    &__category {
+      .category-left,
+      .category-middle,
+      .category-right {
+        border: none;
+        background-color: #fff;
+        cursor: pointer;
+        margin-right: 30px;
+        margin-top: 20px;
+        padding: 5px;
+      }
+    }
+    &__container {
+      cursor: pointer;
+      .grid-container {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-top: 20px;
+      }
+      .card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100px;
+        border: none;
+        border-radius: 5px;
+        text-align: center;
+        background: #fff;
+        margin-bottom: 20px;
+        box-shadow: 0px 4px 5px 0px rgba(107, 127, 148, 0.15);
+        p {
+          margin-top: 12px;
+          font-size: 12px;
+          font-weight: 700;
+        }
+      }
+    }
+  }
+  .right-content {
+    width: 70%;
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    &__edit {
+      display: flex;
+      align-items: center;
+      border-radius: 15px;
+      background: #fff;
+      width: 100%;
+      height: 64px;
+      box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
+      .edit-input,
+      .note-input {
+        display: flex;
+        align-items: center;
+        height: 40px;
+        width: 28%;
+        margin-left: 17px;
+        border-radius: 5px;
+        border: 1px dashed rgba(1, 22, 43, 0.2);
+        background: #f5f5f5;
+        svg {
+          margin-left: 15px;
+        }
+        input {
+          border: none;
+          background-color: #f5f5f5;
+          margin-left: 10px;
+        }
+      }
+
+      .debug,
+      .test,
+      .more {
+        border: none;
+        background-color: #fff;
+        margin-left: 3%;
+      }
+      .editBtn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 15%;
+        height: 40px;
+        gap: 11.308px;
+        flex-shrink: 0;
+        padding-top: 2px;
+        margin-left: 3%;
+        border: none;
+        border-radius: 8px;
+        background: #2a86ff;
+        color: #fff;
+        box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
+      }
+    }
+    &__container {
+      border-radius: 15px;
+      border: 1px dashed rgba(1, 22, 43, 0.5);
+      margin-top: 15px;
+      background: #f5f5f5;
+      height: 100%;
+    }
+  }
+  .makeCopy {
+    display: none;
+    position: fixed;
+    top: 40%;
+    left: 35%;
+    border-radius: 15px;
+    background: #fff;
+    box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
+    width: 636px;
+    height: 154px;
+    flex-shrink: 0;
+    padding: 20px;
+    &__top {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+
+      h1 {
+        color: #01162b;
+        font-size: 22px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 200%;
+      }
+      .close {
+        background-color: #f5f5f5;
+        padding: 15px;
+        border-radius: 100%;
+        cursor: pointer;
+      }
+    }
+
+    input {
+      border-radius: 8px;
+      border: 1px dashed rgba(1, 22, 43, 0.2);
+      background: #f5f5f5;
+      width: 80%;
+      height: 40px;
+      padding: 15px;
+    }
+    button {
+      font-size: 15px;
+      border-radius: 25px;
+      padding: 10px 30px 10px 30px;
+      border: none;
+      font-weight: 700;
+      background-color: #2a86ff;
+      color: #fff;
+      margin-left: 13px;
+      cursor: pointer;
+    }
+  }
+  .delete {
+    display: none;
+    position: fixed;
+    top: 40%;
+    left: 35%;
+    border-radius: 15px;
+    background: #fff;
+    box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
+    width: 636px;
+    height: 154px;
+    flex-shrink: 0;
+    padding: 20px;
+    h1 {
+      color: #01162b;
+      font-size: 22px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 200%;
+    }
+    p {
+      margin-bottom: 10px;
+      margin-top: 5px;
+    }
+    div {
+      display: flex;
+      justify-content: end;
+      gap: 10px;
+      button {
+        padding: 9px 30px;
+        border-radius: 36px;
+        background: #f5f5f5;
+        border: none;
+        font-weight: 700;
+        box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
+      }
+      .deleteBtn {
+        border-radius: 36px;
+        background: #2a86ff;
+        box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
+        color: #fff;
+        font-weight: 700;
+      }
+    }
+  }
+}
+.dndflow {
+  flex-direction: column;
+  display: flex;
+  flex-grow: 1;
+  height: 100%;
+}
+
+.dndflow aside {
+  border-right: 1px solid #eee;
+  padding: 15px 10px;
+  font-size: 12px;
+  background: #fcfcfc;
+}
+
+.dndflow aside .description {
+  margin-bottom: 10px;
+}
+
+.dndflow .dndnode {
+  height: 20px;
+  padding: 4px;
+  border: 1px solid #1a192b;
+  border-radius: 2px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: grab;
+}
+
+.dndflow .dndnode.input {
+  border-color: #0041d0;
+}
+
+.dndflow .dndnode.output {
+  border-color: #ff0072;
+}
+
+.dndflow .reactflow-wrapper {
+  flex-grow: 1;
+  height: 100%;
+}
+
+.dndflow .selectall {
+  margin-top: 10px;
+}
+
+@media screen and (min-width: 768px) {
+  .dndflow {
+    flex-direction: row;
+  }
+
+  .dndflow aside {
+    width: 20%;
+    max-width: 250px;
+  }
+}
