@@ -37,57 +37,6 @@ const CreatePost = () => {
     setInputValueWatchVideoEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
   };
 
-  //Random Like start
-  const [inputValueLikeStart, setInputValueLikeStart] = useState(5);
-  const handleIncrementLikeStart = () => {
-    setInputValueLikeStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementLikeStart = () => {
-    setInputValueLikeStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Random Like end
-  const [inputValueLikeEnd, setInputValueLikeEnd] = useState(10);
-  const handleIncrementLikeEnd = () => {
-    setInputValueLikeEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementLikeEnd = () => {
-    setInputValueLikeEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-
-  //Random Share start
-  const [inputValueShareStart, setInputValueShareStart] = useState(5);
-  const handleIncrementShareStart = () => {
-    setInputValueShareStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementShareStart = () => {
-    setInputValueShareStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Random Share end
-  const [inputValueShareEnd, setInputValueShareEnd] = useState(10);
-  const handleIncrementShareEnd = () => {
-    setInputValueShareEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementShareEnd = () => {
-    setInputValueShareEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-
-  //Random CommentVideo start
-  const [inputValueCommentVideoStart, setInputValueCommentVideoStart] = useState(5);
-  const handleIncrementCommentVideoStart = () => {
-    setInputValueCommentVideoStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementCommentVideoStart = () => {
-    setInputValueCommentVideoStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Random CommentVideo end
-  const [inputValueCommentVideoEnd, setInputValueCommentVideoEnd] = useState(10);
-  const handleIncrementCommentVideoEnd = () => {
-    setInputValueCommentVideoEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementCommentVideoEnd = () => {
-    setInputValueCommentVideoEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-
   //Random PhotoVideo start
   const [inputValuePhotoVideoStart, setInputValuePhotoVideoStart] = useState(5);
   const handleIncrementPhotoVideoStart = () => {
@@ -105,24 +54,28 @@ const CreatePost = () => {
     setInputValuePhotoVideoEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
   };
 
+  //Random Like start
+  const [inputValueLikeStart, setInputValueLikeStart] = useState(5);
+  const handleIncrementLikeStart = () => {
+    setInputValueLikeStart((prevValue) => prevValue + 1);
+  };
+  const handleDecrementLikeStart = () => {
+    setInputValueLikeStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
+  };
+  //Random Like end
+  const [inputValueLikeEnd, setInputValueLikeEnd] = useState(10);
+  const handleIncrementLikeEnd = () => {
+    setInputValueLikeEnd((prevValue) => prevValue + 1);
+  };
+  const handleDecrementLikeEnd = () => {
+    setInputValueLikeEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
+  };
   // Hien thi
   const [isLiked, setIsLiked] = useState(false);
 
   const handleCheckboxChange = () => {
     setIsLiked((prevIsLiked) => !prevIsLiked);
   };
-  //Hien thi share
-  const [isShare, setIsShared] = useState(false);
-  const handleCheckboxChangeShare = () => {
-    setIsShared((prevIsLiked) => !prevIsLiked);
-  };
-
-  //Hien thi comment
-  const [isComment, setisComment] = useState(false);
-  const handleCheckboxChangeComment = () => {
-    setisComment((prevIsLiked) => !prevIsLiked);
-  };
-
   //Hien thi select
   const [selectedValue, setSelectedValue] = useState('');
 
@@ -488,6 +441,122 @@ const CreatePost = () => {
                         id="dragVideoOrPhotoInput"
                         className="dragVideoOrPhotoInput"
                       />
+                    </div>
+                    <div className="component-item__header">
+                      <input type="checkbox" name="randomLike" onChange={handleCheckboxChange} />
+                      <p>Tag</p>
+                    </div>
+                    <div className="component-item tag">
+                      <div className="numberOfFriend">
+                        <p>Number of friends:</p>
+                        <div className={`component-item__content ${isLiked ? 'show' : 'hide'}`}>
+                          <div className="component-item__number">
+                            <div className="component-item__number__icon">
+                              <svg
+                                width="10"
+                                height="10"
+                                viewBox="0 0 10 10"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                onClick={handleIncrementLikeStart}
+                              >
+                                <path
+                                  d="M3.97142 0.467669C4.17141 0.225192 4.54288 0.225192 4.74287 0.467669L8.32177 4.80686C8.59075 5.13298 8.35878 5.625 7.93605 5.625L0.778241 5.625C0.355507 5.625 0.123534 5.13298 0.392513 4.80686L3.97142 0.467669Z"
+                                  fill="#01162B"
+                                />
+                              </svg>
+
+                              <svg
+                                width="10"
+                                height="10"
+                                viewBox="0 0 10 10"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                onClick={handleDecrementLikeStart}
+                              >
+                                <path
+                                  d="M4.74245 5.53233C4.54246 5.77481 4.17099 5.77481 3.971 5.53233L0.392095 1.19314C0.123116 0.867021 0.355088 0.374999 0.777822 0.374999L7.93563 0.375C8.35836 0.375 8.59033 0.867022 8.32135 1.19314L4.74245 5.53233Z"
+                                  fill="#01162B"
+                                />
+                              </svg>
+                            </div>
+                            <input type="text" value={inputValueLikeStart} onChange />
+                          </div>
+                          <span>to</span>
+                          <div className="component-item__number">
+                            <div className="component-item__number__icon">
+                              <svg
+                                width="10"
+                                height="10"
+                                viewBox="0 0 10 10"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                onClick={handleIncrementLikeEnd}
+                              >
+                                <path
+                                  d="M3.97142 0.467669C4.17141 0.225192 4.54288 0.225192 4.74287 0.467669L8.32177 4.80686C8.59075 5.13298 8.35878 5.625 7.93605 5.625L0.778241 5.625C0.355507 5.625 0.123534 5.13298 0.392513 4.80686L3.97142 0.467669Z"
+                                  fill="#01162B"
+                                />
+                              </svg>
+
+                              <svg
+                                width="10"
+                                height="10"
+                                viewBox="0 0 10 10"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                onClick={handleDecrementLikeEnd}
+                              >
+                                <path
+                                  d="M4.74245 5.53233C4.54246 5.77481 4.17099 5.77481 3.971 5.53233L0.392095 1.19314C0.123116 0.867021 0.355088 0.374999 0.777822 0.374999L7.93563 0.375C8.35836 0.375 8.59033 0.867022 8.32135 1.19314L4.74245 5.53233Z"
+                                  fill="#01162B"
+                                />
+                              </svg>
+                            </div>
+                            <input type="text" value={inputValueLikeEnd} onChange />
+                          </div>
+                        </div>
+                      </div>
+                      <p>Friends</p>
+                      <div className="component-item optionComment">
+                        <select
+                          name="optionComment"
+                          className="commentType"
+                          onChange={handleSelectChange}
+                          value={selectedValue}
+                        >
+                          <option value="amongFriend">Randomly tag among friends</option>
+                          <option value="UIDList">UID list</option>
+                        </select>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="7" viewBox="0 0 12 7" fill="none">
+                          <path
+                            d="M1 1L6 6L11 1"
+                            stroke="#01162B"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </div>
+                      {selectedValue === 'UIDList' && (
+                        <div className="component-item text">
+                          <textarea
+                            id="textContent"
+                            name="textContent"
+                            rows="10"
+                            value={textContent}
+                            onChange={handleTextareaChange}
+                          ></textarea>
+                          <div className={`placeholder ${textContent ? 'hide' : ''}`}>
+                            <p>
+                              <span>1</span>Enter the content here
+                            </p>
+                            <p>
+                              <span>2</span>Each content/line
+                            </p>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}

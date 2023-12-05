@@ -210,22 +210,9 @@
           font-weight: 400;
         }
       }
-      .Like .component-item__content {
-        display: none;
-      }
-      .Like .component-item__content.show {
-        display: flex;
-      }
 
-      .share .component-item__content {
-        display: none;
-      }
-      .share .component-item__content.show {
-        display: flex;
-      }
-    
       .comment,
-      .comment .commentContent{
+      .comment .commentContent {
         display: block;
       }
     }
