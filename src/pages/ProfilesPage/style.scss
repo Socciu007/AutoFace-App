@@ -80,6 +80,7 @@
             color: #FFF;
             font-size: 14px;
             font-weight: 700;
+            cursor: pointer;
         }       
       }
    }
@@ -108,5 +109,21 @@
          padding: 1px;
          border-radius: 6px;
       }
+   }
+   .-expand-icon {
+      cursor: pointer;
+   }
+   .-tag-status {
+      width: 64px;
+                height: 20px;
+                padding: 3px 8px;
+                border: none;
+                border-radius: 14px;
+                background: rgba(241, 180, 76, 0.2);
+                color: rgb(241, 180, 76);
+                font-size: 12px;
+                font-weight: 700;
+                margin: 0;
+                line-height: 12px;
    }
 }

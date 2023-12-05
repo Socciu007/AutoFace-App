@@ -66,10 +66,8 @@
                             border-radius: 8px;
                             border: 1px solid rgba(1, 22, 43, 0.10);
                             background: #FFF;
-                            svg {
+                            .-count-settings {
                                 position: absolute;
-                                display: inline;
-                                align-items: center;
                                 top: 50%;
                                 left: 5%;
                                 transform: translate(-15%, -50%);
@@ -100,7 +98,7 @@
                             }
                             .-input-text-sub-settings {
                                 left: 49%;
-                                svg {
+                                .-icon-down {
                                     left: 100%;;
                                 }
                             }
