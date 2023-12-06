@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import ReactFlow, {
   ReactFlowProvider,
   addEdge,
@@ -8,24 +8,49 @@ import ReactFlow, {
   MiniMap,
 } from "reactflow";
 import "reactflow/dist/style.css";
-
-import Sidebar from "./sidebar";
+import TextUpdaterNode from "../../components/nodes/node";
 import "./style.scss";
+import watchStoryNode from "../../components/nodes/watchStory";
+import watchVideoNode from "../../components/nodes/watchVideo";
+import newsFeedNode from "../../components/nodes/newsfeed";
+import createPostNode from "../../components/nodes/createPost";
+import postInteractNode from "../../components/nodes/postInteract";
+import deletePostNode from "../../components/nodes/deletePost";
+import viewNotiNode from "../../components/nodes/viewNoti";
+import sendMsgNode from "../../components/nodes/sendMsg";
+import replyMsgNode from "../../components/nodes/replyMsg";
+import addFriendNode from "../../components/nodes/addFriend";
+import cancelFriendNode from "../../components/nodes/cancelFriend";
 
 const initialNodes = [
   {
     id: "1",
-    type: "input",
-    data: { label: "input node" },
-    position: { x: 250, y: 5 },
+    type: "textUpdater",
+    data: { label: "Starting Point" },
+    position: { x: 250, y: 250 },
   },
 ];
+const nodeTypes = {
+  textUpdater: TextUpdaterNode,
+  watchStory: watchStoryNode,
+  watchVideo: watchVideoNode,
+  newsFeed: newsFeedNode,
+  createPost: createPostNode,
+  postInteract: postInteractNode,
+  deletePost: deletePostNode,
+  viewNoti: viewNotiNode,
+  sendMsg: sendMsgNode,
+  replyMsg: replyMsgNode,
+  addFriend: addFriendNode,
+  cancelFriend: cancelFriendNode,
+};
 
 let id = 0;
 const getId = () => `dndnode_${id++}`;
 
 const DnDFlow = () => {
   const reactFlowWrapper = useRef(null);
+
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
@@ -83,13 +108,13 @@ const DnDFlow = () => {
             onInit={setReactFlowInstance}
             onDrop={onDrop}
             onDragOver={onDragOver}
-            fitView
+            fitViewOptions={0.8}
+            nodeTypes={nodeTypes}
           >
             <Controls />
             <MiniMap />
           </ReactFlow>
         </div>
-        <Sidebar />
       </ReactFlowProvider>
     </div>
   );

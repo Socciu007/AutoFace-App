@@ -4,19 +4,10 @@ import Loading from "../../components/loading/Loading";
 import DnDFlow from "./drag";
 
 const CreateScript = () => {
-  const [isMenuVisible, setMenuVisibility] = useState(false);
-  const [isCopyDialogVisible, setCopyDialogVisibility] = useState(false);
-  const toggleMenu = () => {
-    setMenuVisibility(!isMenuVisible);
+  const onDragStart = (event, nodeType) => {
+    event.dataTransfer.setData("application/reactflow", nodeType);
+    event.dataTransfer.effectAllowed = "move";
   };
-  const openCopyDialog = () => {
-    setCopyDialogVisibility(true);
-  };
-
-  const closeCopyDialog = () => {
-    setCopyDialogVisibility(false);
-  };
-
   return (
     <>
       <div className="create-script">
@@ -76,7 +67,11 @@ const CreateScript = () => {
               </div>
               <div className="left-content__container">
                 <div class="grid-container">
-                  <div class="card">
+                  <div
+                    class="card"
+                    onDragStart={(event) => onDragStart(event, "watchStory")}
+                    draggable
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="20"
@@ -97,7 +92,11 @@ const CreateScript = () => {
                     </svg>
                     <p>Watch story</p>
                   </div>
-                  <div class="card">
+                  <div
+                    class="card"
+                    onDragStart={(event) => onDragStart(event, "watchVideo")}
+                    draggable
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="22"
@@ -126,7 +125,11 @@ const CreateScript = () => {
                     </svg>
                     <p>Watch video</p>
                   </div>
-                  <div class="card">
+                  <div
+                    class="card"
+                    onDragStart={(event) => onDragStart(event, "newsFeed")}
+                    draggable
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="22"
@@ -142,7 +145,11 @@ const CreateScript = () => {
                     </svg>
                     <p>Newsfeed</p>
                   </div>
-                  <div class="card">
+                  <div
+                    class="card"
+                    onDragStart={(event) => onDragStart(event, "createPost")}
+                    draggable
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="37"
@@ -189,7 +196,11 @@ const CreateScript = () => {
                     </svg>
                     <p>Create post</p>
                   </div>
-                  <div class="card">
+                  <div
+                    class="card"
+                    onDragStart={(event) => onDragStart(event, "postInteract")}
+                    draggable
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="37"
@@ -236,7 +247,11 @@ const CreateScript = () => {
                     </svg>
                     <p>Post interaction</p>
                   </div>
-                  <div class="card">
+                  <div
+                    class="card"
+                    onDragStart={(event) => onDragStart(event, "deletePost")}
+                    draggable
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="39"
@@ -283,7 +298,11 @@ const CreateScript = () => {
                     </svg>
                     <p>Delete post</p>
                   </div>
-                  <div class="card">
+                  <div
+                    class="card"
+                    onDragStart={(event) => onDragStart(event, "viewNoti")}
+                    draggable
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="18"
@@ -315,7 +334,11 @@ const CreateScript = () => {
                     </svg>
                     <p>View notifications</p>
                   </div>
-                  <div class="card">
+                  <div
+                    class="card"
+                    onDragStart={(event) => onDragStart(event, "sendMsg")}
+                    draggable
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="22"
@@ -339,7 +362,11 @@ const CreateScript = () => {
                     </svg>
                     <p>Send message</p>
                   </div>
-                  <div class="card">
+                  <div
+                    class="card"
+                    onDragStart={(event) => onDragStart(event, "replyMsg")}
+                    draggable
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="22"
@@ -361,7 +388,11 @@ const CreateScript = () => {
                     </svg>
                     <p>Reply message</p>
                   </div>
-                  <div class="card">
+                  <div
+                    class="card"
+                    onDragStart={(event) => onDragStart(event, "addFriend")}
+                    draggable
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="25"
@@ -384,7 +415,11 @@ const CreateScript = () => {
                     </svg>
                     <p>Add friend</p>
                   </div>
-                  <div class="card">
+                  <div
+                    class="card"
+                    onDragStart={(event) => onDragStart(event, "cancelFriend")}
+                    draggable
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="27"
