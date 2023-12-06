@@ -12,7 +12,7 @@ import Edit from '../../assets/icon/icon-edit.svg';
 import Debug from '../../assets/icon/icon-debug.svg';
 import RunTest from '../../assets/icon/icon-runTest.svg';
 import iconOptions from '../../assets/icon/icon-options.svg';
-const CreatePost = () => {
+const AddFriend = () => {
   //Value post start
   const [inputValuePostStart, setInputValuePostStart] = useState(5);
   const handleIncrementPostStart = () => {
@@ -94,7 +94,7 @@ const CreatePost = () => {
     setSelectedValuePost(event.target.value);
   };
   useEffect(() => {
-    setSelectedValuePost('background');
+    setSelectedValuePost('suggestions');
   }, []);
 
   //Hien thi select Friends
@@ -136,7 +136,7 @@ const CreatePost = () => {
     }
   }, [selectedFile, isFileSelected]);
   return (
-    <div className="createPost">
+    <div className="addFriend">
       <h1 className="createPost__title">Facebook Automation</h1>
       <div className="goBack">
         <img src={backButton} alt="Back button" />
@@ -145,51 +145,13 @@ const CreatePost = () => {
       <div className="component_container">
         <div className="scrollable-container">
           <div className="component-left">
-            <div className="goBack">
+            <div className="goBack titleAddFriend">
               <img src={backButton} alt="Back button" />
-              <p>Create post</p>
-            </div>
-            <div className="component-item numberOfPost">
-              <p className="component-item__header">Number of posts:</p>
-              <div className="component-item__number">
-                <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementPostStart} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementPostStart} />
-                </div>
-                <input type="text" value={inputValuePostStart} onChange />
-              </div>
-              <span>to</span>
-              <div className="component-item__number">
-                <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementPostEnd} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementPostEnd} />
-                </div>
-                <input type="text" value={inputValuePostEnd} onChange />
-              </div>
-            </div>
-            <div className="component-item delayTime">
-              <p className="component-item__header">
-                Delay time <span>(s):</span>
-              </p>
-              <div className="component-item__number">
-                <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeStart} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeStart} />
-                </div>
-                <input type="text" value={inputValueDelayTimeStart} onChange />
-              </div>
-              <span>to</span>
-              <div className="component-item__number">
-                <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeEnd} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeEnd} />
-                </div>
-                <input type="text" value={inputValueDelayTimeEnd} onChange />
-              </div>
+              <p>Add friends</p>
             </div>
             <div className="component-item Post">
               <div className="component-item__header">
-                <p>Post options</p>
+                <p>Select Add friend type</p>
               </div>
               <div className="PostContent">
                 <div className="component-item postOption">
@@ -199,76 +161,19 @@ const CreatePost = () => {
                     onChange={handleSelectChangePost}
                     value={selectedValuePost}
                   >
-                    <option value="background">Using background</option>
-                    <option value="photoOrVideo">Text, Photo/video</option>
+                    <option value="suggestions">By suggestions</option>
+                    <option value="acceptFriendRequests">Accept friend requests</option>
+                    <option value="UID">By UID</option>
+                    <option value="UIDList">UID list</option>
+                    <option value="keywords">By keywords</option>
+                    <option value="groupMembers">Group members</option>
+                    <option value="friendOfFriends">Friend of friends</option>
+                    <option value="friendOfUID">Friend of UID</option>
                   </select>
                   <img src={downButton} alt="Down Button" />
                 </div>
-                {(selectedValuePost === 'background' || selectedValuePost === 'photoOrVideo') && (
-                  <div className="Text">
-                    <p className="selectPost__header">Text</p>
-                    <div className="component-item text">
-                      <textarea
-                        id="textContent"
-                        name="textContent"
-                        rows="10"
-                        value={textContent}
-                        onChange={handleTextareaChange}
-                      ></textarea>
-                      <div className={`placeholder ${textContent ? 'hide' : ''}`}>
-                        <p>
-                          <span>1</span>Enter the content here
-                        </p>
-                        <p>
-                          <span>2</span>Each content/line
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-                {selectedValuePost === 'photoOrVideo' && (
-                  <div className="photoOrVideo">
-                    <p className="component-item__header">Photo/video</p>
-                    <div className="component-item numberOfPost">
-                      <p className="component-item__header numberOfPostText">Number of photo/video:</p>
-                      <div className="component-item__number">
-                        <div className="component-item__number__icon">
-                          <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementPhotoVideoStart} />
-                          <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementPhotoVideoStart} />
-                        </div>
-                        <input type="text" value={inputValuePhotoVideoStart} onChange />
-                      </div>
-                      <span>to</span>
-                      <div className="component-item__number">
-                        <div className="component-item__number__icon">
-                          <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementPhotoVideoEnd} />
-                          <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementPhotoVideoEnd} />
-                        </div>
-                        <input type="text" value={inputValuePhotoVideoEnd} onChange />
-                      </div>
-                    </div>
-                    {!isFileSelected && (
-                      <div className="component-item dragVideoOrPhoto">
-                        <img src={DragButton} alt="Increase icon" onClick={handleIconClick} />
-                        <p>Drag the photo/video folder here</p>
-                        <input
-                          type="file"
-                          style={{ display: 'none' }}
-                          name="dragVideoOrPhotoInput"
-                          id="dragVideoOrPhotoInput"
-                          className="dragVideoOrPhotoInput"
-                          onChange={handleFileChange}
-                        />
-                      </div>
-                    )}
-                    {isFileSelected && (
-                      <div className="folderPhoto">
-                        <p>
-                          <span>Folder:</span> {selectedFile.name}
-                        </p>
-                        <img src={DeleteButton} alt="Delete Button" />
-                      </div>
-                    )}
+                {selectedValuePost === 'suggestions' && (
+                  <div>
                     <div className="component-item__header">
                       <input type="checkbox" name="CheckTag" onChange={handleCheckboxTag} />
                       <p>Tag</p>
@@ -328,6 +233,71 @@ const CreatePost = () => {
                         </div>
                       )}
                     </div>
+                    <div className="Text">
+                      <p className="selectPost__header">Text</p>
+                      <div className="component-item text">
+                        <textarea
+                          id="textContent"
+                          name="textContent"
+                          rows="10"
+                          value={textContent}
+                          onChange={handleTextareaChange}
+                        ></textarea>
+                        <div className={`placeholder ${textContent ? 'hide' : ''}`}>
+                          <p>
+                            <span>1</span>Enter the content here
+                          </p>
+                          <p>
+                            <span>2</span>Each content/line
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {selectedValuePost === 'acceptFriendRequests' && (
+                  <div className="photoOrVideo">
+                    <p className="component-item__header">Photo/video</p>
+                    <div className="component-item numberOfPost">
+                      <p className="component-item__header numberOfPostText">Number of photo/video:</p>
+                      <div className="component-item__number">
+                        <div className="component-item__number__icon">
+                          <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementPhotoVideoStart} />
+                          <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementPhotoVideoStart} />
+                        </div>
+                        <input type="text" value={inputValuePhotoVideoStart} onChange />
+                      </div>
+                      <span>to</span>
+                      <div className="component-item__number">
+                        <div className="component-item__number__icon">
+                          <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementPhotoVideoEnd} />
+                          <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementPhotoVideoEnd} />
+                        </div>
+                        <input type="text" value={inputValuePhotoVideoEnd} onChange />
+                      </div>
+                    </div>
+                    {!isFileSelected && (
+                      <div className="component-item dragVideoOrPhoto">
+                        <img src={DragButton} alt="Increase icon" onClick={handleIconClick} />
+                        <p>Drag the photo/video folder here</p>
+                        <input
+                          type="file"
+                          style={{ display: 'none' }}
+                          name="dragVideoOrPhotoInput"
+                          id="dragVideoOrPhotoInput"
+                          className="dragVideoOrPhotoInput"
+                          onChange={handleFileChange}
+                        />
+                      </div>
+                    )}
+                    {isFileSelected && (
+                      <div className="folderPhoto">
+                        <p>
+                          <span>Folder:</span> {selectedFile.name}
+                        </p>
+                        <img src={DeleteButton} alt="Delete Button" />
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -365,4 +335,4 @@ const CreatePost = () => {
   );
 };
 
-export default CreatePost;
+export default AddFriend;

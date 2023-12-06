@@ -22,11 +22,12 @@
       font-weight: 700;
       line-height: 30px;
     }
-    svg {
+    img {
       width: 30px;
       height: 30px;
       flex-shrink: 0;
       margin-right: 10px;
+      margin-right: 1rem;
     }
   }
 
@@ -106,6 +107,9 @@
             transform: translate(-10%, -60%);
             align-items: center;
             z-index: 99999;
+            img {
+              margin: 0.1rem 0;
+            }
           }
           input {
             text-align: center;
@@ -148,7 +152,7 @@
             color: var(--font-color-para);
           }
         }
-        svg {
+        img {
           position: absolute;
           display: inline;
           right: 5%;
@@ -164,6 +168,8 @@
           border-radius: 5px;
           border: 1px dashed rgba(1, 22, 43, 0.2);
           background: #f5f5f5;
+          font-size: 15px;
+          padding: 2%;
         }
         .placeholder {
           position: absolute;
@@ -184,30 +190,24 @@
       .dragVideoOrPhoto {
         position: relative;
         width: 100%;
-        padding: 1.5rem 0;
+        padding: 1rem 0;
         border-radius: 5px;
         border: 1px dashed rgba(1, 22, 43, 0.2);
         background: #f5f5f5;
-        svg,
+        display: flex;
+        justify-content: center;
         p {
-          z-index: 9999;
           opacity: 0.5;
+          font-size: 15px;
+          font-weight: 400;
         }
-        svg {
+        img {
+          opacity: 0.5;
           position: absolute;
           left: 10%;
           top: 50%;
           transform: translate(-10%, -50%);
-        }
-        p {
-          position: absolute;
-          text-align: center;
-          width: 100%;
-          left: 50%;
-          top: 50%;
-          transform: translate(-50%, -50%);
-          font-size: 15px;
-          font-weight: 400;
+          margin-right: 0.5rem;
         }
       }
       .Like .component-item__content {
@@ -261,13 +261,15 @@
             border: 1px dashed rgba(1, 22, 43, 0.2);
             background: #f5f5f5;
             width: 80%;
+            font-size: 15px;
+            padding: 2%;
           }
           input::placeholder {
             font-size: 15px;
             font-weight: 400;
             padding-left: 5%;
           }
-          svg {
+          img {
             position: absolute;
             right: 23%;
             transform: translate(-23%, 0);

@@ -1,4 +1,4 @@
-.createPost {
+.Delete_Post {
   border: 1px solid #ccc;
   margin: 0 auto;
   position: relative;
@@ -30,7 +30,6 @@
       margin-right: 1rem;
     }
   }
-
   .scrollable-container {
     width: 35%;
     overflow-y: auto;
@@ -124,55 +123,13 @@
             transform: translate(-50%, -50%);
           }
         }
-        .numberOfPostText {
-          font-weight: 400;
-        }
-        .tag {
-          display: none;
-          .numberOfFriend {
-            display: flex;
-            justify-content: space-between;
-          }
-          p {
-            font-weight: 400;
-          }
-        }
-        .tag.show {
-          display: block;
-        }
       }
-      .numberOfPost {
-        margin-top: 0;
-      }
-      .postOption,
-      .optionTag {
-        position: relative;
+
+      .PostUIDList .selectComment__header {
         display: flex;
-        align-items: center;
-        .PostType,
-        .TagType {
-          top: 0;
-          width: 100%;
-          border-radius: 5px;
-          background: var(--bg-input);
-          height: 40px;
-          font-size: 15px;
-          padding: 0 3%;
-          appearance: none;
-          -webkit-appearance: none;
-          -moz-appearance: none;
-          border: 0;
-          option {
-            font-weight: 400;
-            color: var(--font-color-para);
-          }
-        }
-        img {
-          position: absolute;
-          display: inline;
-          right: 5%;
-          top: 50%;
-          transform: translate(-5%, -50%);
+        justify-content: space-between;
+        span {
+          font-weight: 400;
         }
       }
       .text {
@@ -201,50 +158,6 @@
             margin-right: 3%;
           }
         }
-      }
-      .dragVideoOrPhoto {
-        position: relative;
-        width: 100%;
-        padding: 1rem 0;
-        border-radius: 5px;
-        border: 1px dashed rgba(1, 22, 43, 0.2);
-        background: #f5f5f5;
-        display: flex;
-        justify-content: center;
-        p {
-          opacity: 0.5;
-          font-size: 15px;
-          font-weight: 400;
-        }
-        img {
-          opacity: 0.5;
-          position: absolute;
-          left: 10%;
-          top: 50%;
-          transform: translate(-10%, -50%);
-          margin-right: 0.5rem;
-        }
-      }
-      .folderPhoto {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background-color: #fff;
-        margin-bottom: 2%;
-        p {
-          width: 80%;
-          font-weight: 400;
-          span {
-            opacity: 0.5;
-          }
-        }
-        img {
-          width: 3%;
-        }
-      }
-      .Post,
-      .Post .PostContent {
-        display: block;
       }
     }
     .componet-right {
