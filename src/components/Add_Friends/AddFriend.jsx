@@ -13,39 +13,39 @@ import Debug from '../../assets/icon/icon-debug.svg';
 import RunTest from '../../assets/icon/icon-runTest.svg';
 import iconOptions from '../../assets/icon/icon-options.svg';
 const AddFriend = () => {
-  //Value post start
-  const [inputValuePostStart, setInputValuePostStart] = useState(5);
-  const handleIncrementPostStart = () => {
-    setInputValuePostStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementPostStart = () => {
-    setInputValuePostStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Value post end
-  const [inputValuePostEnd, setInputValuePostEnd] = useState(10);
-  const handleIncrementPostEnd = () => {
-    setInputValuePostEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementPostEnd = () => {
-    setInputValuePostEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  // //Value post start
+  // const [inputValuePostStart, setInputValuePostStart] = useState(5);
+  // const handleIncrementPostStart = () => {
+  //   setInputValuePostStart((prevValue) => prevValue + 1);
+  // };
+  // const handleDecrementPostStart = () => {
+  //   setInputValuePostStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
+  // };
+  // //Value post end
+  // const [inputValuePostEnd, setInputValuePostEnd] = useState(10);
+  // const handleIncrementPostEnd = () => {
+  //   setInputValuePostEnd((prevValue) => prevValue + 1);
+  // };
+  // const handleDecrementPostEnd = () => {
+  //   setInputValuePostEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
+  // };
 
-  //Delay time start
-  const [inputValueDelayTimeStart, setInputValueDelayTimeStart] = useState(5);
-  const handleIncrementDelayTimeStart = () => {
-    setInputValueDelayTimeStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementDelayTimeStart = () => {
-    setInputValueDelayTimeStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Delay time end
-  const [inputValueDelayTimeEnd, setInputValueDelayTimeEnd] = useState(10);
-  const handleIncrementDelayTimeEnd = () => {
-    setInputValueDelayTimeEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementDelayTimeEnd = () => {
-    setInputValueDelayTimeEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  // //Delay time start
+  // const [inputValueDelayTimeStart, setInputValueDelayTimeStart] = useState(5);
+  // const handleIncrementDelayTimeStart = () => {
+  //   setInputValueDelayTimeStart((prevValue) => prevValue + 1);
+  // };
+  // const handleDecrementDelayTimeStart = () => {
+  //   setInputValueDelayTimeStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
+  // };
+  // //Delay time end
+  // const [inputValueDelayTimeEnd, setInputValueDelayTimeEnd] = useState(10);
+  // const handleIncrementDelayTimeEnd = () => {
+  //   setInputValueDelayTimeEnd((prevValue) => prevValue + 1);
+  // };
+  // const handleDecrementDelayTimeEnd = () => {
+  //   setInputValueDelayTimeEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
+  // };
 
   //Random PhotoVideo start
   const [inputValuePhotoVideoStart, setInputValuePhotoVideoStart] = useState(5);
