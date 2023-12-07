@@ -5,6 +5,7 @@ import { Route, Routes } from "react-router-dom";
 import ProfilesPage from "./pages/ProfilesPage/ProfilesPage";
 import SettingsPage from "./pages/SettingsPage/SettingsPage";
 import ProxySettingsPage from "./pages/ProxySettingsPage/ProxySettingsPage";
+import BoostLikeComment from "./pages/BoostLikeCommentPage/BoostLikeComment";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/" element={<ProfilesPage></ProfilesPage>} />
         <Route path="/settings" element={<SettingsPage></SettingsPage>} />
         <Route path="/settings-proxy" element={<ProxySettingsPage></ProxySettingsPage>} />
+        <Route path="/boost-like-comment" element={<BoostLikeComment></BoostLikeComment>} />
       </Routes>
     </>
   );

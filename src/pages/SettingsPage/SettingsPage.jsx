@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./style.scss";
-import up from "../../assets/pictures/icon-up.png";
-import down from "../../assets/pictures/icon-down.png";
+import up from "../../assets/pictures/icon-updown.svg";
+import down from "../../assets/pictures/icon-downup.svg";
 import downup from "../../assets/pictures/icon-down.svg";
 import onOption from "../../assets/pictures/icon-on-option.svg";
 import { useNavigate } from "react-router-dom";
@@ -25,7 +25,7 @@ const SettingsPage = () => {
     setCounter_0((prevCounter) => (prevCounter > 0 ? prevCounter - 1 : 0));
   };
   return (
-    <div className="layout-profiles">
+    <div className="layout-settings">
       <div className="-layout-page">
         <h1 className="-title-profiles">FACEBOOK AUTOMATION</h1>
         <div className="-return-profiles">
@@ -57,11 +57,11 @@ const SettingsPage = () => {
                 <p>Numbers of profiles running simultaneously</p>
                 <div className="-options-sub-settings">
                   <div className="-count-settings">
-                    <div onClick={incrementCounter}>
-                      <img src={up} alt="up" width={9} height={9} />
+                    <div style={{marginBottom: '2px'}} onClick={incrementCounter}>
+                      <img src={up} alt="up" width={10} height={7}/>
                     </div>
-                    <div onClick={decrementCounter}>
-                      <img src={down} alt="down" width={9} height={9} />
+                    <div style={{marginTop: '2px'}} onClick={decrementCounter}>
+                      <img src={down} alt="down" width={10} height={7}/>
                     </div>
                   </div>
                   <div className="-input-sub-settings">
@@ -78,11 +78,11 @@ const SettingsPage = () => {
                 <p>Numbers of loops</p>
                 <div className="-options-sub-settings">
                   <div className="-count-settings">
-                    <div onClick={incrementCounter}>
-                      <img src={up} alt="up" width={9} height={9} />
+                    <div style={{marginBottom: '2px'}} onClick={incrementCounter}>
+                      <img src={up} alt="up" width={10} height={7} />
                     </div>
-                    <div onClick={decrementCounter}>
-                      <img src={down} alt="down" width={9} height={9} />
+                    <div style={{marginTop: '2px'}} onClick={decrementCounter}>
+                      <img src={down} alt="down" width={10} height={7} />
                     </div>
                   </div>
                   <div className="-input-sub-settings">
@@ -145,11 +145,11 @@ const SettingsPage = () => {
                 <p>Maximum time per thread</p>
                 <div className="-options-sub-settings">
                   <div className="-count-settings">
-                    <div onClick={incrementCounter}>
-                      <img src={up} alt="up" width={9} height={9} />
+                    <div style={{marginBottom: '2px'}} onClick={incrementCounter}>
+                      <img src={up} alt="up" width={10} height={7} />
                     </div>
-                    <div onClick={decrementCounter}>
-                      <img src={down} alt="down" width={9} height={9} />
+                    <div style={{marginTop: '2px'}} onClick={decrementCounter}>
+                      <img src={down} alt="down" width={10} height={7} />
                     </div>
                   </div>
                   <div className="-input-sub-settings">
@@ -166,11 +166,11 @@ const SettingsPage = () => {
                 <p>Delay in each new thread open</p>
                 <div className="-options-sub-settings">
                   <div className="-count-settings">
-                    <div onClick={incrementCounter}>
-                      <img src={up} alt="up" width={9} height={9} />
+                    <div style={{marginBottom: '2px'}} onClick={incrementCounter}>
+                      <img src={up} alt="up" width={10} height={7} />
                     </div>
-                    <div onClick={decrementCounter}>
-                      <img src={down} alt="down" width={9} height={9} />
+                    <div style={{marginTop: '2px'}} onClick={decrementCounter}>
+                      <img src={down} alt="down" width={10} height={7} />
                     </div>
                   </div>
                   <div className="-input-sub-settings">
@@ -187,32 +187,11 @@ const SettingsPage = () => {
                 <p>Stop if RAM reaches</p>
                 <div className="-options-sub-settings">
                   <div className="-count-settings">
-                    <div onClick={incrementCounter}>
-                      <img src={up} alt="up" width={9} height={9} />
+                    <div style={{marginBottom: '2px'}} onClick={incrementCounter}>
+                      <img src={up} alt="up" width={10} height={7} />
                     </div>
-                    <div onClick={decrementCounter}>
-                      <img src={down} alt="down" width={9} height={9} />
-                    </div>
-                  </div>
-                  <div className="-input-sub-settings">
-                    <input
-                      name="numbersProfiles"
-                      value="90"
-                      onChange={() => {}}
-                    ></input>
-                    <span>%</span>
-                  </div>
-                </div>
-              </div>
-              <div className="-sub-settings">
-                <p>Stop if CPU reaches</p>
-                <div className="-options-sub-settings">
-                  <div className="-count-settings">
-                    <div onClick={incrementCounter}>
-                      <img src={up} alt="up" width={9} height={9} />
-                    </div>
-                    <div onClick={decrementCounter}>
-                      <img src={down} alt="down" width={9} height={9} />
+                    <div style={{marginTop: '2px'}} onClick={decrementCounter}>
+                      <img src={down} alt="down" width={10} height={7} />
                     </div>
                   </div>
                   <div className="-input-sub-settings">
@@ -229,11 +208,32 @@ const SettingsPage = () => {
                 <p>Stop if CPU reaches</p>
                 <div className="-options-sub-settings">
                   <div className="-count-settings">
-                    <div onClick={incrementCounter}>
-                      <img src={up} alt="up" width={9} height={9} />
+                    <div style={{marginBottom: '2px'}} onClick={incrementCounter}>
+                      <img src={up} alt="up" width={10} height={7} />
                     </div>
-                    <div onClick={decrementCounter}>
-                      <img src={down} alt="down" width={9} height={9} />
+                    <div style={{marginTop: '2px'}} onClick={decrementCounter}>
+                      <img src={down} alt="down" width={10} height={7} />
+                    </div>
+                  </div>
+                  <div className="-input-sub-settings">
+                    <input
+                      name="numbersProfiles"
+                      value="90"
+                      onChange={() => {}}
+                    ></input>
+                    <span>%</span>
+                  </div>
+                </div>
+              </div>
+              <div className="-sub-settings">
+                <p>Stop if CPU reaches</p>
+                <div className="-options-sub-settings">
+                  <div className="-count-settings">
+                    <div style={{marginBottom: '2px'}} onClick={incrementCounter}>
+                      <img src={up} alt="up" width={10} height={7} />
+                    </div>
+                    <div style={{marginTop: '2px'}} onClick={decrementCounter}>
+                      <img src={down} alt="down" width={10} height={7} />
                     </div>
                   </div>
                   <div className="-input-sub-settings">
