@@ -1,21 +1,61 @@
 import React, { useEffect, useState } from "react";
 import "./style.scss";
+import { useNavigate } from "react-router-dom";
 import Loading from "../../components/loading/Loading";
-
+import DnDFlow from "../Create-Script/drag";
 const ScriptManager = () => {
-  const [isMenuVisible, setMenuVisibility] = useState(false);
-  const [isCopyDialogVisible, setCopyDialogVisibility] = useState(false);
-  const toggleMenu = () => {
-    setMenuVisibility(!isMenuVisible);
+  const navigate = useNavigate();
+  const [isMenu1Open, setMenu1Open] = useState(false);
+  const [isMenu2Open, setMenu2Open] = useState(false);
+  const [isButton1Active, setButton1Active] = useState(true);
+  const [isScript1Active, setScript1Active] = useState(false);
+
+  const toggleMenu1 = () => {
+    setMenu1Open(!isMenu1Open);
   };
-  const openCopyDialog = () => {
-    setCopyDialogVisibility(true);
+  const toggleMenu2 = () => {
+    setMenu2Open(!isMenu2Open);
+  };
+  // Handle the button click
+  const handleAddClick = () => {
+    // Navigate to the desired route when the button is clicked
+    navigate("/create");
+  };
+  const handleScript1Click = (button) => {
+    // Swap the colors between button 1 and button 2
+    setScript1Active(button === isButton1Active ? null : button);
   };
 
-  const closeCopyDialog = () => {
-    setCopyDialogVisibility(false);
+  const handleButtonClick = () => {
+    // Toggle the active state
+    setButton1Active(!isButton1Active);
   };
 
+  const handleOptionClick = (className) => {
+    const optionElement = document.querySelector(`.${className}`);
+    setMenu1Open(!isMenu1Open);
+    if (optionElement) {
+      const currentDisplay = getComputedStyle(optionElement).display;
+      optionElement.style.display =
+        currentDisplay === "none" ? "block" : "none";
+    }
+  };
+  const handleOption1Click = (className) => {
+    const optionElement = document.querySelector(`.${className}`);
+    setMenu2Open(!isMenu2Open);
+    if (optionElement) {
+      const currentDisplay = getComputedStyle(optionElement).display;
+      optionElement.style.display =
+        currentDisplay === "none" ? "block" : "none";
+    }
+  };
+  const handleClose = (className) => {
+    const closeButton = document.querySelector(`.${className}`);
+    if (closeButton) {
+      const closeStyle = getComputedStyle(closeButton).display;
+      closeButton.style.display = closeStyle === "none" ? "block" : "none";
+    }
+  };
   return (
     <>
       <div className="script-manager">
@@ -90,7 +130,7 @@ const ScriptManager = () => {
                     />
                   </svg>
                 </button>
-                <button className="add">
+                <button className="add" onClick={handleAddClick}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
@@ -108,62 +148,35 @@ const ScriptManager = () => {
                 </button>
               </div>
               <div className="left-content__category">
-                <button className="category-left">System's Scripts</button>
-                <button className="category-right">Your Scripts</button>
+                <button
+                  className={
+                    isButton1Active ? "category-left" : "category-right"
+                  }
+                  onClick={handleButtonClick}
+                >
+                  System's Scripts
+                </button>
+                <button
+                  className={
+                    isButton1Active ? "category-right" : "category-left"
+                  }
+                  onClick={handleButtonClick}
+                >
+                  Your Scripts
+                </button>
               </div>
               <div className="left-content__content">
-                <div className="script">
-                  <p>Auto watch Live videos</p>
+                <div
+                  className={
+                    isScript1Active === 1 ? "script selected" : "script"
+                  }
+                  onClick={() => handleScript1Click(1)}
+                >
+                  <p className={isScript1Active === 1 ? "inputSelected" : ""}>
+                    Auto watch Live videos
+                  </p>
                   <div>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="3"
-                      height="15"
-                      viewBox="0 0 3 15"
-                      fill="none"
-                    >
-                      <circle
-                        opacity="0.5"
-                        cx="1.5"
-                        cy="1.5"
-                        r="1.5"
-                        fill="#2A3042"
-                      />
-                      <circle
-                        opacity="0.5"
-                        cx="1.5"
-                        cy="7.5"
-                        r="1.5"
-                        fill="#2A3042"
-                      />
-                      <circle
-                        opacity="0.5"
-                        cx="1.5"
-                        cy="13.5"
-                        r="1.5"
-                        fill="#2A3042"
-                      />
-                    </svg>
-                  </div>
-                </div>
-                <div className="script selected">
-                  <p className="inputSelected"> Make 50 random friends</p>
-                  <div>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="10"
-                      height="10"
-                      viewBox="0 0 10 10"
-                      fill="none"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
-                        d="M6.57467 0.482869C6.18414 0.0923447 5.55098 0.092345 5.16045 0.482869L4.91089 0.732436C4.52036 1.12296 4.52036 1.75613 4.91089 2.14665L5.03567 2.27143L3.95433 3.35277C2.92322 3.01925 1.75778 3.2165 0.88554 3.94454L2.95594 6.01494L0.668244 8.30264C0.553385 8.4175 0.553385 8.60372 0.668245 8.71858C0.783105 8.83344 0.96933 8.83344 1.08419 8.71858L3.37189 6.43089L5.44228 8.50128C6.17032 7.62904 6.36758 6.46361 6.03406 5.4325L7.11539 4.35116L7.24018 4.47594C7.6307 4.86647 8.26387 4.86647 8.65439 4.47594L8.90396 4.22638C9.29448 3.83585 9.29448 3.20269 8.90396 2.81216L6.57467 0.482869Z"
-                        fill="#F7931A"
-                      />
-                    </svg>
-                    <div className="more" onClick={toggleMenu}>
+                    <div className="more" onClick={toggleMenu2}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="3"
@@ -194,17 +207,95 @@ const ScriptManager = () => {
                         />
                       </svg>
                     </div>
-                    {isMenuVisible && (
+                    {isMenu2Open && (
                       <div className="menu-options">
                         <div>Unpin</div>
                         <div className="divider"></div>
                         <div>Edit</div>
                         <div className="divider"></div>
-                        <div onClick={openCopyDialog}>Make a Copy</div>
+                        <div onClick={() => handleOption1Click("makeCopy")}>
+                          Make a Copy
+                        </div>
                         <div className="divider"></div>
                         <div>Rename</div>
                         <div className="divider"></div>
-                        <div>Delete</div>
+                        <div onClick={() => handleOption1Click("delete")}>
+                          Delete
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div
+                  className={
+                    isScript1Active === 2 ? "script selected" : "script"
+                  }
+                  onClick={() => handleScript1Click(2)}
+                >
+                  <p className={isScript1Active === 2 ? "inputSelected" : ""}>
+                    Make 50 random friends
+                  </p>
+                  <div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="10"
+                      height="10"
+                      viewBox="0 0 10 10"
+                      fill="none"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M6.57467 0.482869C6.18414 0.0923447 5.55098 0.092345 5.16045 0.482869L4.91089 0.732436C4.52036 1.12296 4.52036 1.75613 4.91089 2.14665L5.03567 2.27143L3.95433 3.35277C2.92322 3.01925 1.75778 3.2165 0.88554 3.94454L2.95594 6.01494L0.668244 8.30264C0.553385 8.4175 0.553385 8.60372 0.668245 8.71858C0.783105 8.83344 0.96933 8.83344 1.08419 8.71858L3.37189 6.43089L5.44228 8.50128C6.17032 7.62904 6.36758 6.46361 6.03406 5.4325L7.11539 4.35116L7.24018 4.47594C7.6307 4.86647 8.26387 4.86647 8.65439 4.47594L8.90396 4.22638C9.29448 3.83585 9.29448 3.20269 8.90396 2.81216L6.57467 0.482869Z"
+                        fill="#F7931A"
+                      />
+                    </svg>
+                    <div className="more" onClick={toggleMenu1}>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="3"
+                        height="15"
+                        viewBox="0 0 3 15"
+                        fill="none"
+                      >
+                        <circle
+                          opacity="0.5"
+                          cx="1.5"
+                          cy="1.5"
+                          r="1.5"
+                          fill="#2A3042"
+                        />
+                        <circle
+                          opacity="0.5"
+                          cx="1.5"
+                          cy="7.5"
+                          r="1.5"
+                          fill="#2A3042"
+                        />
+                        <circle
+                          opacity="0.5"
+                          cx="1.5"
+                          cy="13.5"
+                          r="1.5"
+                          fill="#2A3042"
+                        />
+                      </svg>
+                    </div>
+                    {isMenu1Open && (
+                      <div className="menu-options">
+                        <div>Unpin</div>
+                        <div className="divider"></div>
+                        <div>Edit</div>
+                        <div className="divider"></div>
+                        <div onClick={() => handleOptionClick("makeCopy")}>
+                          Make a Copy
+                        </div>
+                        <div className="divider"></div>
+                        <div>Rename</div>
+                        <div className="divider"></div>
+                        <div onClick={() => handleOptionClick("delete")}>
+                          Delete
+                        </div>
                       </div>
                     )}
                   </div>
@@ -404,6 +495,7 @@ const ScriptManager = () => {
               </div>
             </div>
           </div>
+
           <div className="right-content">
             <div className="right-content__edit">
               <h3>SCRIPT OVERVIEW</h3>
@@ -463,13 +555,15 @@ const ScriptManager = () => {
                 EDIT
               </button>
             </div>
-            <div className="right-content__content"></div>
+            <div className="right-content__container">
+              <DnDFlow></DnDFlow>
+            </div>
           </div>
         </div>
         <div className="makeCopy">
           <div className="makeCopy__top">
             <h1>MAKE A COPY</h1>
-            <button className="close">
+            <button className="close" onClick={() => handleClose("makeCopy")}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="12"
@@ -496,7 +590,7 @@ const ScriptManager = () => {
           <h1>DELETE</h1>
           <p>Are you sure to delete this script?</p>
           <div>
-            <button>Cancel</button>
+            <button onClick={() => handleClose("delete")}>Cancel</button>
             <button className="deleteBtn">Delete</button>
           </div>
         </div>
