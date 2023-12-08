@@ -4,7 +4,7 @@ import Loading from '../../components/loading/Loading.jsx';
 import WatchVideo from '../../components/General/WatchVideo/WatchVideo.jsx';
 import WatchStory from '../../components/General/WatchStory/WatchStory.jsx';
 import Newsfeed from '../../components/General/Newsfeed/Newsfeed.jsx';
-import CreatePost from '../../components/General/CreatePost/CreatePost';
+import CreatePost from '../../components/General/CreatePost/CreatePost.jsx';
 import Post_Interaction from '../../components/General/Post_Interaction/Post_Interaction.jsx';
 import Delete_Post from '../../components/General/Delete_Post/Delete_Post.jsx';
 import Send_Message from '../../components/General/Send_Message/Send_Message.jsx';
@@ -27,21 +27,21 @@ const Dashboard = () => {
   return (
     <>
       <div className="dashboard ">
-        <WatchVideo></WatchVideo>
-        <WatchStory></WatchStory>
-        <Newsfeed></Newsfeed>
+        {/* <WatchVideo></WatchVideo> */}
+        {/* <WatchStory></WatchStory> */}
+        {/* <Newsfeed></Newsfeed> */}
         <CreatePost></CreatePost>
-        <Post_Interaction></Post_Interaction>
-        <Delete_Post></Delete_Post>
-        <Send_Message></Send_Message>
-        <Reply_Message></Reply_Message>
-        <View_Notifications></View_Notifications>
-        <AddFriend></AddFriend>
-        <CancelFriend></CancelFriend>
-        <JoinGroup></JoinGroup>
-        <LeaveGroup></LeaveGroup>
-        <Invite></Invite>
-        <CreatePostGroup></CreatePostGroup>
+        {/* <Post_Interaction></Post_Interaction> */}
+        {/* <Delete_Post></Delete_Post> */}
+        {/* <Send_Message></Send_Message> */}
+        {/* <Reply_Message></Reply_Message> */}
+        {/* <View_Notifications></View_Notifications> */}
+        {/* <AddFriend></AddFriend> */}
+        {/* <CancelFriend></CancelFriend> */}
+        {/* <JoinGroup></JoinGroup> */}
+        {/* <LeaveGroup></LeaveGroup> */}
+        {/* <Invite></Invite> */}
+        {/* <CreatePostGroup></CreatePostGroup> */}
       </div>
     </>
   );

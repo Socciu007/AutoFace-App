@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useEffect, useState, useRef } from 'react';
+import React from 'react';
 import './style.scss';
 import saveIcon from '../../../assets/img/Page-1.png';
 import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
@@ -10,83 +10,46 @@ import Edit from '../../../assets/icon/icon-edit.svg';
 import Debug from '../../../assets/icon/icon-debug.svg';
 import RunTest from '../../../assets/icon/icon-runTest.svg';
 import iconOptions from '../../../assets/icon/icon-options.svg';
+import { UIDText, cancelFriendOption, delayTime, numberFriend, numberOfRequests, unfriendOption } from './CancelFriend';
 const CancelFriend = () => {
-  //Value number of Requests start
-  const [inputValueRequestsStart, setInputValueRequestsStart] = useState(5);
-  const handleIncrementRequestsStart = () => {
-    setInputValueRequestsStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementRequestsStart = () => {
-    setInputValueRequestsStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Value number of Requests end
-  const [inputValueRequestsEnd, setInputValueRequestsEnd] = useState(10);
-  const handleIncrementRequestsEnd = () => {
-    setInputValueRequestsEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementRequestsEnd = () => {
-    setInputValueRequestsEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  const {
+    inputValueRequestsStart,
+    handleIncrementRequestsStart,
+    handleDecrementRequestsStart,
+    inputValueRequestsEnd,
+    handleIncrementRequestsEnd,
+    handleDecrementRequestsEnd,
+    handleInputChangeRequestsStart,
+    handleInputChangeRequestsEnd,
+  } = numberOfRequests();
 
-  //Delay time start
-  const [inputValueDelayTimeStart, setInputValueDelayTimeStart] = useState(3);
-  const handleIncrementDelayTimeStart = () => {
-    setInputValueDelayTimeStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementDelayTimeStart = () => {
-    setInputValueDelayTimeStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Delay time end
-  const [inputValueDelayTimeEnd, setInputValueDelayTimeEnd] = useState(5);
-  const handleIncrementDelayTimeEnd = () => {
-    setInputValueDelayTimeEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementDelayTimeEnd = () => {
-    setInputValueDelayTimeEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  const {
+    inputValueDelayTimeStart,
+    handleIncrementDelayTimeStart,
+    handleDecrementDelayTimeStart,
+    inputValueDelayTimeEnd,
+    handleIncrementDelayTimeEnd,
+    handleDecrementDelayTimeEnd,
+    handleInputChangeDelayTimeStart,
+    handleInputChangeDelayTimeEnd,
+  } = delayTime();
 
-  //Random NumberFriend start
-  const [inputValueNumberFriendStart, setInputValueNumberFriendStart] = useState(5);
-  const handleIncrementNumberFriendStart = () => {
-    setInputValueNumberFriendStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementNumberFriendStart = () => {
-    setInputValueNumberFriendStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Random NumberFriend end
-  const [inputValueNumberFriendEnd, setInputValueNumberFriendEnd] = useState(10);
-  const handleIncrementNumberFriendEnd = () => {
-    setInputValueNumberFriendEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementNumberFriendEnd = () => {
-    setInputValueNumberFriendEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Hien thi select cancel Friend option
-  const [selectedValueCancelFriend, setSelectedValueCancelFriend] = useState('');
+  const {
+    inputValueNumberFriendStart,
+    handleIncrementNumberFriendStart,
+    handleDecrementNumberFriendStart,
+    inputValueNumberFriendEnd,
+    handleIncrementNumberFriendEnd,
+    handleDecrementNumberFriendEnd,
+    handleInputChangeNumberFriendStart,
+    handleInputChangeNumberFriendEnd,
+  } = numberFriend();
 
-  const handleSelectChangeCancelFriend = (event) => {
-    setSelectedValueCancelFriend(event.target.value);
-  };
-  useEffect(() => {
-    setSelectedValueCancelFriend('cancelRequest');
-  }, []);
+  const { selectedValueCancelFriend, handleSelectChangeCancelFriend } = cancelFriendOption();
 
-  //Hien thi select  Unfriend option
-  const [selectedValueUnfriend, setSelectedValueUnfriend] = useState('');
+  const { selectedValueUnfriend, handleSelectChangeUnfriend } = unfriendOption();
 
-  const handleSelectChangeUnfriend = (event) => {
-    setSelectedValueUnfriend(event.target.value);
-  };
-  useEffect(() => {
-    setSelectedValueUnfriend('random');
-  }, []);
-
-  //cai dat cho phan UID Text (khi go chu thi placeholder cua textarea se an di)
-  const [UIDContent, setUIDContent] = useState('');
-
-  const handleTextareaChangeUIDContent = (event) => {
-    setUIDContent(event.target.value);
-  };
+  const { UIDContent, handleTextareaChangeUIDContent } = UIDText();
 
   return (
     <div className="CancelFriend">
@@ -127,7 +90,7 @@ const CancelFriend = () => {
                         <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementRequestsStart} />
                         <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementRequestsStart} />
                       </div>
-                      <input type="text" value={inputValueRequestsStart} onChange />
+                      <input type="text" value={inputValueRequestsStart} onChange={handleInputChangeRequestsStart} />
                     </div>
                     <span>to</span>
                     <div className="component-item__number">
@@ -135,7 +98,7 @@ const CancelFriend = () => {
                         <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementRequestsEnd} />
                         <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementRequestsEnd} />
                       </div>
-                      <input type="text" value={inputValueRequestsEnd} onChange />
+                      <input type="text" value={inputValueRequestsEnd} onChange={handleInputChangeRequestsEnd} />
                     </div>
                   </div>
                 )}
@@ -149,7 +112,7 @@ const CancelFriend = () => {
                         <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeStart} />
                         <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeStart} />
                       </div>
-                      <input type="text" value={inputValueDelayTimeStart} onChange />
+                      <input type="text" value={inputValueDelayTimeStart} onChange={handleInputChangeDelayTimeStart} />
                     </div>
                     <span>to</span>
                     <div className="component-item__number">
@@ -157,7 +120,7 @@ const CancelFriend = () => {
                         <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeEnd} />
                         <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeEnd} />
                       </div>
-                      <input type="text" value={inputValueDelayTimeEnd} onChange />
+                      <input type="text" value={inputValueDelayTimeEnd} onChange={handleInputChangeDelayTimeEnd} />
                     </div>
                   </div>
                 )}
@@ -196,7 +159,11 @@ const CancelFriend = () => {
                                   onClick={handleDecrementNumberFriendStart}
                                 />
                               </div>
-                              <input type="text" value={inputValueNumberFriendStart} onChange />
+                              <input
+                                type="text"
+                                value={inputValueNumberFriendStart}
+                                onChange={handleInputChangeNumberFriendStart}
+                              />
                             </div>
                             <span>to</span>
                             <div className="component-item__number">
@@ -204,7 +171,11 @@ const CancelFriend = () => {
                                 <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementNumberFriendEnd} />
                                 <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementNumberFriendEnd} />
                               </div>
-                              <input type="text" value={inputValueNumberFriendEnd} onChange />
+                              <input
+                                type="text"
+                                value={inputValueNumberFriendEnd}
+                                onChange={handleInputChangeNumberFriendEnd}
+                              />
                             </div>
                           </div>
                         </div>
@@ -246,7 +217,6 @@ const CancelFriend = () => {
                 className="nameScenario"
                 placeholder="Enter name here"
               />
-
               <img src={Edit} alt="Edit button" />
             </div>
             <div className="componet-right__header__function">
