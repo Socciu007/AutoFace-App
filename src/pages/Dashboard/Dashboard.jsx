@@ -13,6 +13,9 @@ import View_Notifications from '../../components/General/View_Notifications/View
 import AddFriend from '../../components/General/Add_Friends/AddFriend.jsx';
 import CancelFriend from '../../components/General/Cancel_Friend/CancelFriend.jsx';
 import JoinGroup from '../../components/Group/Join_Group/JoinGroup.jsx';
+import LeaveGroup from '../../components/Group/Leave_Group/LeaveGroup.jsx';
+import Invite from '../../components/Group/Invite/Invite.jsx';
+import CreatePostGroup from '../../components/Group/Create_Post/CreatePost.jsx';
 import i18n from 'i18next';
 import { useTranslation } from 'react-i18next';
 const Dashboard = () => {
@@ -24,7 +27,7 @@ const Dashboard = () => {
   return (
     <>
       <div className="dashboard ">
-        {/* <WatchVideo></WatchVideo>
+        <WatchVideo></WatchVideo>
         <WatchStory></WatchStory>
         <Newsfeed></Newsfeed>
         <CreatePost></CreatePost>
@@ -34,8 +37,11 @@ const Dashboard = () => {
         <Reply_Message></Reply_Message>
         <View_Notifications></View_Notifications>
         <AddFriend></AddFriend>
-        <CancelFriend></CancelFriend> */}
+        <CancelFriend></CancelFriend>
         <JoinGroup></JoinGroup>
+        <LeaveGroup></LeaveGroup>
+        <Invite></Invite>
+        <CreatePostGroup></CreatePostGroup>
       </div>
     </>
   );

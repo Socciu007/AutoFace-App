@@ -45,52 +45,32 @@ const JoinGroup = () => {
     setInputValueDelayTimeEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
   };
 
-  //Random NumberFriend start
-  const [inputValueNumberFriendStart, setInputValueNumberFriendStart] = useState(5);
-  const handleIncrementNumberFriendStart = () => {
-    setInputValueNumberFriendStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementNumberFriendStart = () => {
-    setInputValueNumberFriendStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Random NumberFriend end
-  const [inputValueNumberFriendEnd, setInputValueNumberFriendEnd] = useState(10);
-  const handleIncrementNumberFriendEnd = () => {
-    setInputValueNumberFriendEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementNumberFriendEnd = () => {
-    setInputValueNumberFriendEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
   //Hien thi select cancel Friend option
-  const [selectedValueCancelFriend, setSelectedValueCancelFriend] = useState('');
+  const [selectedValueJoinGroup, setSelectedValueJoinGroup] = useState('');
 
-  const handleSelectChangeCancelFriend = (event) => {
-    setSelectedValueCancelFriend(event.target.value);
+  const handleSelectChangeJoinGroup = (event) => {
+    setSelectedValueJoinGroup(event.target.value);
   };
   useEffect(() => {
-    setSelectedValueCancelFriend('suggestions');
+    setSelectedValueJoinGroup('suggestions');
   }, []);
 
-  //Hien thi select  Unfriend option
-  const [selectedValueUnfriend, setSelectedValueUnfriend] = useState('');
+  //cai dat cho phan Keyword Text (khi go chu thi placeholder cua textarea se an di)
+  const [KeywordContent, setKeywordContent] = useState('');
 
-  const handleSelectChangeUnfriend = (event) => {
-    setSelectedValueUnfriend(event.target.value);
+  const handleTextareaChangeKeywordContent = (event) => {
+    setKeywordContent(event.target.value);
   };
-  useEffect(() => {
-    setSelectedValueUnfriend('random');
-  }, []);
+  //cai dat cho phan Answer question (khi go chu thi placeholder cua textarea se an di)
+  const [AnswerContent, setAnswerContent] = useState('');
 
-  //cai dat cho phan UID Text (khi go chu thi placeholder cua textarea se an di)
-  const [UIDContent, setUIDContent] = useState('');
-
-  const handleTextareaChangeUIDContent = (event) => {
-    setUIDContent(event.target.value);
+  const handleTextareaChangeAnswerContent = (event) => {
+    setAnswerContent(event.target.value);
   };
-  //Hien thi comment
-  const [isComment, setisComment] = useState(false);
-  const handleCheckboxChangeComment = () => {
-    setisComment((prevIsLiked) => !prevIsLiked);
+  //Hien thi textarea auto answer question
+  const [isAutoAnswer, setisAutoAnswer] = useState(false);
+  const handleCheckboxChangeAutoAnswer = () => {
+    setisAutoAnswer((prevIsAutoAnswer) => !prevIsAutoAnswer);
   };
   return (
     <div className="joinGroup">
@@ -102,21 +82,21 @@ const JoinGroup = () => {
       <div className="component_container">
         <div className="scrollable-container">
           <div className="component-left">
-            <div className="goBack titleCancelFriend">
+            <div className="goBack titleJoinGroup">
               <img src={backButton} alt="Back button" />
               <p>Join group</p>
             </div>
-            <div className="component-item cancelFriend">
+            <div className="component-item__joinGroup">
               <div className="component-item__header">
                 <p>Select Join group type</p>
               </div>
-              <div className="cancelFriendContent">
-                <div className="component-item cancelFriendOption">
+              <div className="JoinGroupContent">
+                <div className="component-item JoinGroupOption">
                   <select
-                    name="cancelFriendOption"
-                    className="cancelFriendType"
-                    onChange={handleSelectChangeCancelFriend}
-                    value={selectedValueCancelFriend}
+                    name="JoinGroupOption"
+                    className="JoinGroupType"
+                    onChange={handleSelectChangeJoinGroup}
+                    value={selectedValueJoinGroup}
                   >
                     <option value="suggestions">By suggestions</option>
                     <option value="keywords">By keywords</option>
@@ -124,10 +104,9 @@ const JoinGroup = () => {
                   </select>
                   <img src={downButton} alt="Down Button" />
                 </div>
-
-                {(selectedValueCancelFriend === 'suggestions' ||
-                  selectedValueCancelFriend === 'keywords' ||
-                  selectedValueCancelFriend === 'UID') && (
+                {(selectedValueJoinGroup === 'suggestions' ||
+                  selectedValueJoinGroup === 'keywords' ||
+                  selectedValueJoinGroup === 'UID') && (
                   <div>
                     <div className="component-item numberOfGroups">
                       <p className="component-item__header">Number of groups:</p>
@@ -167,20 +146,46 @@ const JoinGroup = () => {
                         <input type="text" value={inputValueDelayTimeEnd} onChange />
                       </div>
                     </div>
-                    <div className="UIDContent">
-                      <div className="UID_Header">
-                        <input type="checkbox" name="randomComment" onChange={handleCheckboxChangeComment} />
+                    {(selectedValueJoinGroup === 'keywords' || selectedValueJoinGroup === 'UID') && (
+                      <div className="KeywordContent">
+                        <div className="Keyword_Header">
+                          {selectedValueJoinGroup === 'keywords' && <p>Keyword list</p>}
+                          {selectedValueJoinGroup === 'UID' && <p>UID list</p>}
+                          <span>(0)</span>
+                        </div>
+                        <div className="component-item keywordText">
+                          <textarea
+                            id="KeywordContent"
+                            name="KeywordContent"
+                            rows="10"
+                            value={KeywordContent}
+                            onChange={handleTextareaChangeKeywordContent}
+                          ></textarea>
+                          <div className={`placeholder ${KeywordContent ? 'hide' : ''}`}>
+                            <p>
+                              <span>1</span>Enter the keyword here
+                            </p>
+                            <p>
+                              <span>2</span>Each keyword/line
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    <div className="AutoAnswerContent">
+                      <div className="AutoAnswer_Header">
+                        <input type="checkbox" name="autoAnswer" onChange={handleCheckboxChangeAutoAnswer} />
                         <p>Automatically answer the questions</p>
                       </div>
-                      <div className={`component-item UIDText ${isComment ? 'show' : 'hide'}`}>
+                      <div className={`component-item AutoAnswerText ${isAutoAnswer ? 'show' : 'hide'}`}>
                         <textarea
-                          id="UIDContent"
-                          name="UIDContent"
+                          id="AnswerContent"
+                          name="AnswerContent"
                           rows="10"
-                          value={UIDContent}
-                          onChange={handleTextareaChangeUIDContent}
+                          value={AnswerContent}
+                          onChange={handleTextareaChangeAnswerContent}
                         ></textarea>
-                        <div className={`placeholder ${UIDContent ? 'hide' : ''}`}>
+                        <div className={`placeholder ${AnswerContent ? 'hide' : ''}`}>
                           <p>
                             <span>1</span>Enter the answer here
                           </p>
@@ -189,76 +194,6 @@ const JoinGroup = () => {
                           </p>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                )}
-                {selectedValueCancelFriend === 'UID' && (
-                  <div className="component-item unfriend">
-                    <div className="component-item__header">
-                      <p>Unfriend options</p>
-                    </div>
-                    <div className="unfriendContent">
-                      <div className="component-item unfriendOption">
-                        <select
-                          name="unfriendOption"
-                          className="unfriendSelector"
-                          onChange={handleSelectChangeUnfriend}
-                          value={selectedValueUnfriend}
-                        >
-                          <option value="random">Randomly</option>
-                          <option value="UID">UID</option>
-                        </select>
-                        <img src={downButton} alt="Down Button" />
-                      </div>
-                      {selectedValueUnfriend === 'random' && (
-                        <div className="component-item comment__numberFriend">
-                          <p className="component-item__header">Number of friends:</p>
-                          <div className="component-item__content">
-                            <div className="component-item__number">
-                              <div className="component-item__number__icon">
-                                <img
-                                  src={iconIncrease}
-                                  alt="Increase icon"
-                                  onClick={handleIncrementNumberFriendStart}
-                                />
-                                <img
-                                  src={iconDecrease}
-                                  alt="Decrease icon"
-                                  onClick={handleDecrementNumberFriendStart}
-                                />
-                              </div>
-                              <input type="text" value={inputValueNumberFriendStart} onChange />
-                            </div>
-                            <span>to</span>
-                            <div className="component-item__number">
-                              <div className="component-item__number__icon">
-                                <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementNumberFriendEnd} />
-                                <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementNumberFriendEnd} />
-                              </div>
-                              <input type="text" value={inputValueNumberFriendEnd} onChange />
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                      {selectedValueUnfriend === 'UID' && (
-                        <div className="component-item UIDText">
-                          <textarea
-                            id="UIDContent"
-                            name="UIDContent"
-                            rows="10"
-                            value={UIDContent}
-                            onChange={handleTextareaChangeUIDContent}
-                          ></textarea>
-                          <div className={`placeholder ${UIDContent ? 'hide' : ''}`}>
-                            <p>
-                              <span>1</span>Enter the UID list here
-                            </p>
-                            <p>
-                              <span>2</span>Each UID/line
-                            </p>
-                          </div>
-                        </div>
-                      )}
                     </div>
                   </div>
                 )}
