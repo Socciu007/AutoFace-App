@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./style.scss";
-import { Table, Tag } from "antd";
+import { Table } from "antd";
 import display from "../../assets/pictures/icon-display-setting.png";
 import search from "../../assets/pictures/icon-search.svg";
 import refresh from "../../assets/pictures/icon-refresh.png";
@@ -14,16 +14,19 @@ import script from "../../assets/pictures/icon-script.svg";
 import options from "../../assets/pictures/icon-options.png";
 import addProxy from "../../assets/pictures/icon-addproxy.svg";
 import deleted from "../../assets/pictures/icon-delete.svg";
+import foxy from "../../assets/pictures/icon-foxy.png";
+import ghosty from "../../assets/pictures/icon-ghosty.png";
 import { useNavigate } from "react-router-dom";
 import PopupComponent from "../../components/PopupComponent/PopupComponent";
-import downup from "../../assets/pictures/icon-down.svg";
+// import downup from "../../assets/pictures/icon-down.svg";
 import proxy from "../../assets/pictures/icon-proxy.svg"
 
 const ProfilesPage = () => {
   const [openScripts, setOpenScripts] = useState(false)
   const [openProfiles, setOpenProfiles] = useState(false)
-  const [openAddProfile, setOpenAddProfile] =useState(false)
+  const [openAddProxy, setOpenAddProxy] =useState(false)
   const [openDeleteProfile, setOpenDeleteProfile] =useState(false)
+  const [typeProxy, setTypeProxy] = useState('')
   const columns = [
     {
       title: "#",
@@ -48,7 +51,7 @@ const ProfilesPage = () => {
       render: (status) => {
         return (
           <>
-            <Tag className="-tag-status">{status}</Tag>
+            <div className="-status-profiles">{status}</div>
           </>
         );
       },
@@ -72,6 +75,13 @@ const ProfilesPage = () => {
     {
       title: "Tag",
       dataIndex: "tag",
+      render: (tag) => {
+        return (
+          <>
+            <span className="-tag-profiles">{tag}</span>
+          </>
+        );
+      },
       sorter: (a, b) => a.tag.length - b.tag.length,
       sortDirections: ["descend"],
     },
@@ -106,6 +116,16 @@ const ProfilesPage = () => {
     {
       title: "Source",
       dataIndex: "source",
+      render: () => {
+        return (
+          <>
+          <div style={{display: 'flex', gap: '5px'}}>
+            <img src={foxy} alt="icon-foxy"></img>
+            <img src={ghosty} alt="icon-ghosty"></img>
+          </div>
+          </>
+        );
+      },
     },
     {
       title: "Browser",
@@ -117,7 +137,7 @@ const ProfilesPage = () => {
       render: (status) => {
         return (
           <>
-            <Tag className="-tag-status">{status}</Tag>
+            <div className="-status-profiles">{status}</div>
           </>
         );
       },
@@ -339,13 +359,16 @@ const ProfilesPage = () => {
     setOpenProfiles(false)
   }
   const handleCloseAdd = () => {
-    setOpenAddProfile(false)
+    setOpenAddProxy(false)
   }
   const handleCloseDelete = () => {
     setOpenDeleteProfile(false)
   }
+  const onChangeTypeProxy = (e) => {
+    setTypeProxy(e.target.value)
+  }
   return (
-    <div className="layout-profiles" style={{ opacity: openAddProfile || openDeleteProfile || openScripts || openProfiles ? 0.2 : 1 }}>
+    <div className="layout-profiles" style={{ opacity: openAddProxy || openDeleteProfile || openScripts || openProfiles ? 0.2 : 1 }}>
       <div className="-container-profiles">
         <h1 className="-title-profiles">FACEBOOK AUTOMATION</h1>
         <div className="-nav-profiles">
@@ -370,7 +393,7 @@ const ProfilesPage = () => {
               <span className="-option-profiles" onClick={handleSettings}>
                 <img src={settings} alt="image-settings"></img>
               </span>
-              <span className="-option-profiles" onClick={handleOpenScripts}>
+              <span className="-option-profiles">
                 <img
                   src={circle}
                   alt="circle"
@@ -378,7 +401,191 @@ const ProfilesPage = () => {
                 ></img>
                 <img src={script} alt="script"></img>
               </span>
+              <span className="-option-profiles" onClick={handleOpenProfiles}>
+                <img src={plus} alt="image-plus"></img>
+              </span>
               <PopupComponent
+              open={openProfiles} 
+              onClose={handleCloseProfiles}
+              style={{margin: 'auto'}}
+            >
+              {
+                <div className='-layout-choose-scripts'>
+                  <div className="-layout-choose-scripts__container">
+                    <div className="-nav-scripts">
+                      <div className="-nav-scripts__header">
+                        <div className="-nav-scripts__header__close" onClick={handleCloseProfiles}>
+                          <img src={closePopup} alt="icon-x"></img>
+                        </div>           
+                        <h1>CHOOSE PROFILES</h1>
+                      </div>
+                      <div className="-wrapper-option-profiles -nav-scripts__btn">
+                        <span className="-option-profiles" onClick={handleSettings}>
+                          <img src={settings} alt="image-settings"></img>
+                        </span>
+                        <span className="-option-profiles" onClick={handleOpenScripts}>
+                          <img
+                            src={circle}
+                            alt="circle"
+                            style={{ position: "absolute" }}
+                          ></img>
+                          <img src={script} alt="script"></img>
+                        </span>
+                        <div>
+                          <button>Run</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="-container-scripts">
+                      <div className="-container-scripts__left">
+                        <div className="-container-scripts__left__options">
+                          <h1>FOLDER</h1>
+                          <div className="-container-scripts__left__options__type"><p>All</p></div>
+                          <div className="-container-scripts__left__options__list -option-list">
+                            <ul>
+                              <li className="-option-item">                               
+                                <div className="-option-item__icon" style={{background: '#E84314'}}></div>
+                                <p>Facebook Ads 1</p>
+                              </li>
+                              <li className="-option-item">
+                                <div className="-option-item__icon" style={{background: '#F6A01D'}}></div>
+                                <p>Seeding 1</p>
+                              </li>
+                              <li className="-option-item">
+                                <div className="-option-item__icon" style={{background: '#FFDE50'}}></div>
+                                <p>Mail 1 - Alcie</p>
+                              </li>
+                              <li className="-option-item">
+                                <div className="-option-item__icon" style={{background: '#81BC06'}}></div>
+                                <p>Mail 1 - Brono</p>
+                              </li >
+                              <li className="-option-item">
+                                <div className="-option-item__icon" style={{background: '#00ADEF'}}></div>
+                                <p>Mail 3 - Kazza</p>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="-container-scripts__right">
+                        <div className="-container-scripts__right__main">
+                          <div className="-container-scripts__right__main__search">
+                            <h1>PROFILES</h1>
+                            <div className="-search-profiles">
+                              <span>
+                                <img
+                                  src={search}
+                                  alt="search"
+                                  style={{ marginLeft: "11px" }}
+                                ></img>
+                              </span>
+                              <input placeholder="Search..."></input>
+                            </div>
+                          </div>
+                          <div className="-container-scripts__right__main__content">
+                            <div className="-container-scripts__right__main__content__table">
+                              <Table
+                                rowSelection={{
+                                  ...rowSelection,
+                                }}
+                                columns={columnsProfiles}
+                                dataSource={dataProfiles}
+                                pagination={false}
+                              ></Table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>          
+                  </div>
+                </div>
+              }
+              </PopupComponent>
+            </div>
+          </div>
+          <div className="-btn-profiles">
+            <div className="-select-profile" onClick={() => setOpenAddProxy(o => !o)}>
+              <div style={{position: 'relative'}}>
+                <img src={addProxy} alt="icon-add-proxy"></img>
+                <img src={plus1} alt="icon-plus" style={{position: 'absolute', top: '12%', left:'52%'}}></img>
+              </div>
+              <p>Add Proxy</p>
+            </div>
+            <PopupComponent
+              open={openAddProxy} 
+              onClose={handleCloseAdd}
+              style={{margin: 'auto'}}
+            >
+              {
+                <div className='modal'>
+                  <div className='-add-proxys'>
+                    <div className="-close-popup" onClick={handleCloseAdd}>
+                      <img src={closePopup} alt="icon-x"></img>
+                    </div>           
+                    <h1>ADD PROXY</h1>
+                    <p>Add new proxies to <b>2 profiles</b></p>
+                    <div className='-add-proxys__type'>
+                      <p>Connection type</p>
+                      <div className='-add-proxys-nav'>
+                        <div className='-add-proxys__type__text'>
+                          <div className="-add-proxys__type__text__option">
+                            <select
+                              name="typeProxy"
+                              onChange={onChangeTypeProxy}
+                              value={typeProxy}
+                            >
+                              <option value="Without proxy">Without proxy</option>
+                              <option value="Your Proxy">Your Proxy</option>
+                              <option value="Free Proxy">Free Proxy</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div className='-add-proxys__type__icon'>
+                          <img src={proxy} alt='icon-proxy'></img>
+                        </div>
+                      </div>
+                    </div>
+                    <div className='-add-proxys__type'>
+                      <p>Proxy list</p>
+                      <div className='-add-proxys-nav -list-proxys'>
+                        <textarea name="" type="text"></textarea>
+                        <div className='-form-instruct'>
+                          <p style={{marginRight: '19px'}}><span>1</span>Enter the content here</p>
+                          <p style={{marginRight: '19px'}}><span>2</span><b>Proxy format: </b>IP:Port:Username:Password</p>
+                          <p><span>3</span>1 proxy/line</p>
+                          <p ><span>4</span>The number of proxies should not be less or more than the number of profiles</p>
+                        </div>
+                        <div className='-list-proxys__save'>
+                          Save
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              }
+            </PopupComponent>
+            <div className="-select-profile" onClick={() => setOpenDeleteProfile(o => !o)}>
+              <div><img src={deleted} alt="icon-delete"></img></div>
+                <p>Remove</p>
+            </div>
+            <PopupComponent open={openDeleteProfile} onClose={handleCloseDelete}>
+              {
+                <div className="-delete-profiles">
+                  <div className="-delete-profiles__content">
+                    <h1>REMOVE</h1>
+                    <p>Are you sure to remove the profiles?</p>
+                    <div className="-delete-profiles__content__confirm">
+                      <button type="button" style={{background: '#F5F5F5', color: '#01162B'}} onClick={handleCloseDelete}>Cancel</button>
+                      <button type="button" style={{background: '#2A86FF', color: '#fff'}}>Remove</button>
+                    </div>
+                  </div>
+                </div>
+              }
+            </PopupComponent>
+            <div onClick={handleOpenScripts}>
+              <button>Run</button>
+            </div>
+            <PopupComponent
               open={openScripts} 
               onClose={handleCloseScripts}
               style={{margin: 'auto'}}
@@ -456,168 +663,6 @@ const ProfilesPage = () => {
                 </div>
               }
               </PopupComponent>
-              <span className="-option-profiles" onClick={handleOpenProfiles}>
-                <img src={plus} alt="image-plus"></img>
-              </span>
-              <PopupComponent
-              open={openProfiles} 
-              onClose={handleCloseProfiles}
-              style={{margin: 'auto'}}
-            >
-              {
-                <div className='-layout-choose-scripts'>
-                  <div className="-layout-choose-scripts__container">
-                    <div className="-nav-scripts">
-                      <div className="-nav-scripts__header">
-                        <div className="-nav-scripts__header__close" onClick={handleCloseProfiles}>
-                          <img src={closePopup} alt="icon-x"></img>
-                        </div>           
-                        <h1>PROFILES</h1>
-                      </div>
-                      <div className="-wrapper-option-profiles -nav-scripts__btn">
-                        <span className="-option-profiles" onClick={handleSettings}>
-                          <img src={settings} alt="image-settings"></img>
-                        </span>
-                        <span className="-option-profiles" onClick={handleOpenScripts}>
-                          <img
-                            src={circle}
-                            alt="circle"
-                            style={{ position: "absolute" }}
-                          ></img>
-                          <img src={script} alt="script"></img>
-                        </span>
-                        <div>
-                          <button>Run</button>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="-container-scripts">
-                      <div className="-container-scripts__left">
-                        <div className="-container-scripts__left__options">
-                          <div className="-container-scripts__left__options__type"><p>All</p></div>
-                          <div className="-container-scripts__left__options__list">
-                            <ul>
-                              <li>System’s script</li>
-                              <li>Your script</li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="-container-scripts__right">
-                        <div className="-container-scripts__right__main">
-                          <div className="-container-scripts__right__main__search">
-                            <h1>SCRIPTS</h1>
-                            <div className="-search-profiles">
-                              <span>
-                                <img
-                                  src={search}
-                                  alt="search"
-                                  style={{ marginLeft: "11px" }}
-                                ></img>
-                              </span>
-                              <input placeholder="Search..."></input>
-                            </div>
-                          </div>
-                          <div className="-container-scripts__right__main__content">
-                            <div className="-container-scripts__right__main__content__table">
-                              <Table
-                                rowSelection={{
-                                  ...rowSelection,
-                                }}
-                                columns={columnsProfiles}
-                                dataSource={dataProfiles}
-                                pagination={false}
-                              ></Table>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>          
-                  </div>
-                </div>
-              }
-              </PopupComponent>
-            </div>
-          </div>
-          <div className="-btn-profiles">
-            <div className="-select-profile" onClick={() => setOpenAddProfile(o => !o)}>
-              <div style={{position: 'relative'}}>
-                <img src={addProxy} alt="icon-add-proxy"></img>
-                <img src={plus1} alt="icon-plus" style={{position: 'absolute', top: '12%', left:'52%'}}></img>
-              </div>
-              <p>Add Proxy</p>
-            </div>
-            <PopupComponent
-              open={openAddProfile} 
-              onClose={handleCloseAdd}
-              style={{margin: 'auto'}}
-            >
-              {
-                <div className='modal'>
-                  <div className='-add-proxys'>
-                    <div className="-close-popup" onClick={handleCloseAdd}>
-                      <img src={closePopup} alt="icon-x"></img>
-                    </div>           
-                    <h1>ADD PROXY</h1>
-                    <p>Add new proxies to <b>2 profiles</b></p>
-                    <div className='-add-proxys__type'>
-                      <p>Connection type</p>
-                      <div className='-add-proxys-nav'>
-                        <div className='-add-proxys__type__text'>
-                          <input
-                            name="numbersProfiles"
-                            value="Without proxy"
-                            onChange={() => {}}
-                          ></input>
-                          <div className="-add-proxys__type__text__icon">
-                            <img src={downup} alt="down-up"></img>
-                          </div>
-                        </div>
-                        <div className='-add-proxys__type__icon'>
-                          <img src={proxy} alt='icon-proxy'></img>
-                        </div>
-                      </div>
-                    </div>
-                    <div className='-add-proxys__type'>
-                      <p>Proxy list</p>
-                      <div className='-add-proxys-nav -list-proxys'>
-                        <textarea></textarea>
-                        <div className='-form-instruct'>
-                          <p style={{marginRight: '19px'}}><span>1</span>Enter the content here</p>
-                          <p style={{marginRight: '19px'}}><span>2</span><b>Proxy format: </b>IP:Port:Username:Password</p>
-                          <p><span>3</span>1 proxy/line</p>
-                          <p ><span>4</span>The number of proxies should not be less or more than the number of profiles</p>
-                        </div>
-                        <div className='-list-proxys__save'>
-                          Save
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              }
-            </PopupComponent>
-            <div className="-select-profile" onClick={() => setOpenDeleteProfile(o => !o)}>
-              <div><img src={deleted} alt="icon-delete"></img></div>
-                <p>Remove</p>
-            </div>
-            <PopupComponent open={openDeleteProfile} onClose={handleCloseDelete}>
-              {
-                <div className="-delete-profiles">
-                  <div className="-delete-profiles__content">
-                    <h1>REMOVE</h1>
-                    <p>Are you sure to remove the profiles?</p>
-                    <div className="-delete-profiles__content__confirm">
-                      <button type="button" style={{background: '#F5F5F5', color: '#01162B'}} onClick={handleCloseDelete}>Cancel</button>
-                      <button type="button" style={{background: '#2A86FF', color: '#fff'}}>Remove</button>
-                    </div>
-                  </div>
-                </div>
-              }
-            </PopupComponent>
-            <div>
-              <button>Run</button>
-            </div>
           </div>
         </div>
         <div className="-content-profiles">

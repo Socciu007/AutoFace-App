@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import edit from "../../assets/pictures/icon-edit.png";
 import deleted from "../../assets/pictures/icon-delete.png";
 import onOption from "../../assets/pictures/icon-on-option.svg";
 import downup from "../../assets/pictures/icon-down.svg";
 import question from "../../assets/pictures/icon-question.svg";
+import x from "../../assets/pictures/icon-x.svg"
 import "./style.scss";
 
 const ProxySettingsPage = () => {
+  const [editProxy, setEditProxy] = useState(false)
+  const navigate = useNavigate();
   const data = [
     {
       key: 1,
@@ -26,7 +29,12 @@ const ProxySettingsPage = () => {
       proxy: "123.120.9.22:1232:username:123jbsdf",
     },
   ];
-  const navigate = useNavigate();
+  const handleOpenEdit = () => {
+    setEditProxy(true)
+  }
+  const handleCloseEdit = () => {
+    setEditProxy(false)
+  }
   return (
     <div className="layout-proxy">
       <div className="-container-proxy">
@@ -65,16 +73,31 @@ const ProxySettingsPage = () => {
                           <div className="-key-proxys">
                             <p>{proxy.key}</p>
                           </div>
-                          <div className="-action-proxys">
-                            <span>{proxy.proxy}</span>
-                            <div className="-action-icon-proxys">
-                              <div className="-action-icon">
-                                <img src={edit} alt="edit-proxy"></img>
-                              </div>
-                              <div className="-action-icon">
-                                <img src={deleted} alt="delete-proxy"></img>
-                              </div>
-                            </div>
+                          <div className={editProxy ? "-action-proxys -action-proxys-active" : "-action-proxys"}>
+                            {
+                              editProxy ? (
+                                <>
+                                  <input type="text" placeholder={proxy.proxy}></input>
+                                  <div className="-action-icon-proxys">
+                                    <div className="-action-icon" onClick={handleCloseEdit}>
+                                      <img src={x} alt="icon-x"></img>
+                                    </div>
+                                  </div>
+                                </>
+                              ) : (
+                                <>
+                                  <span>{proxy.proxy}</span>
+                                  <div className="-action-icon-proxys">
+                                    <div className="-action-icon" onClick={handleOpenEdit}>
+                                      <img src={edit} alt="icon-edit"></img>
+                                    </div>
+                                    <div className="-action-icon">
+                                      <img src={deleted} alt="icon-remove"></img>
+                                    </div>
+                                  </div>
+                                </>
+                              )
+                            }
                           </div>
                         </li>
                       ))}
@@ -121,18 +144,20 @@ const ProxySettingsPage = () => {
                   </div>
                 </div>
                 <div className="-info-add-proxys">
-                  <div className="-info-proxys">
-                    <div className="-list-info">
+                  <textarea className="-info-proxys">
+                  </textarea>
+                  <div className="-list-info">
+                    <div className="-list-info__item">
                       <div className="-stt-info">
-                        <span>1</span>
+                        <p>
+                        <span>1</span>Enter the proxy here
+                        </p>
                       </div>
-                      <input placeholder="Enter the proxy here"></input>
                     </div>
-                    <div className="-list-info" style={{ marginTop: "10px" }}>
+                    <div className="-list-info__item" style={{ marginTop: "10px" }}>
                       <div className="-stt-info">
-                        <span>2</span>
+                        <p><span>2</span><b>Proxy format:</b> Host:Port:Username:Password</p>
                       </div>
-                      <input placeholder="Proxy format: Host:Port:Username:Password"></input>
                     </div>
                   </div>
                   <button>ADD</button>

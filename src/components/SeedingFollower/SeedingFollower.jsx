@@ -5,7 +5,7 @@ import drag from "../../assets/pictures/icon-drag.svg"
 import deleted from "../../assets/pictures/icon-delete.png"
 import './style.scss'
 
-const SeedingLikeComment = () => {
+const SeedingFollower = () => {
   const [likeComment, setLikeComment] = useState({
     viewTimeStart: 3,
     viewTimeEnd: 3,
@@ -220,33 +220,7 @@ const SeedingLikeComment = () => {
                   strokeLinejoin="round"
                 />
               </svg>
-              <p>Boost like, comment</p>
-            </div>
-            <div className="-option-boost-like">
-              <p>Post view time <span>(s)</span>:</p>
-              <div className="-option-boost-like__number">
-                <div className="-option-boost-like__number__icon">
-                  <div style={{marginBottom: '2px'}} onClick={handleUpViewTimeStart}>
-                    <img src={up} alt="up" width={10} height={7}/>
-                  </div>
-                  <div style={{marginTop: '2px'}} onClick={handleDownViewTimeStart}>
-                    <img src={down} alt="down" width={10} height={7}/>
-                  </div>
-                </div>
-                <input type="text" value={likeComment.viewTimeStart} onChange />
-              </div>
-              <span>to</span>
-              <div className="-option-boost-like__number">
-                <div className="-option-boost-like__number__icon">
-                  <div style={{marginBottom: '2px'}} onClick={handleUpViewTimeEnd}>
-                    <img src={up} alt="up" width={10} height={7}/>
-                  </div>
-                  <div style={{marginTop: '2px'}} onClick={handleDownViewTimeEnd}>
-                    <img src={down} alt="down" width={10} height={7}/>
-                  </div>
-                </div>
-                <input type="text" value={likeComment.viewTimeEnd} onChange />
-              </div>
+              <p>Boost followers</p>
             </div>
             <div className="-option-boost-like">
               <p>Delay time <span>(s)</span>:</p>
@@ -274,34 +248,8 @@ const SeedingLikeComment = () => {
                 <input type="text" value={likeComment.delayTimeEnd} onChange />
               </div>
             </div>
-            <div className="-option-boost-like">
-              <p>Post quantity<span>/account</span>:</p>
-              <div className="-option-boost-like__number">
-                <div className="-option-boost-like__number__icon">
-                  <div style={{marginBottom: '2px'}} onClick={handleUpPostQuantityStart}>
-                    <img src={up} alt="up" width={10} height={7}/>
-                  </div>
-                  <div style={{marginTop: '2px'}} onClick={handleDownPostQuantityStart}>
-                    <img src={down} alt="down" width={10} height={7}/>
-                  </div>
-                </div>
-                <input type="text" value={likeComment.postQuantityStart} onChange />
-              </div>
-              <span>to</span>
-              <div className="-option-boost-like__number">
-              <div className="-option-boost-like__number__icon">
-                  <div style={{marginBottom: '2px'}} onClick={handleUpPostQuantityEnd}>
-                    <img src={up} alt="up" width={10} height={7}/>
-                  </div>
-                  <div style={{marginTop: '2px'}} onClick={handleDownPostQuantityEnd}>
-                    <img src={down} alt="down" width={10} height={7}/>
-                  </div>
-                </div>
-                <input type="text" value={likeComment.postQuantityEnd} onChange />
-              </div>
-            </div>
             <div className="-option-boost-like -option-boost-comment">
-              <p style={{width: '100%'}}>Post ID: <span style={{float: 'inline-end'}}>(0)</span></p>
+              <p>UID list</p>
               <div className="-option-boost-comment__wrapper">
                 <textarea 
                   name="textContent"
@@ -311,10 +259,10 @@ const SeedingLikeComment = () => {
                 </textarea>
                 <div className='-option-boost-comment__wrapper__content'>
                   <p>
-                    <span style={{paddingRight: '7%'}}>1</span>Enter the ID here
+                    <span style={{paddingRight: '7%'}}>1</span>Enter the UID here
                   </p>
                   <p>
-                    <span style={{paddingRight: '6%'}}>2</span>Each ID/line
+                    <span style={{paddingRight: '6%'}}>2</span>Each UID/line
                   </p>
                 </div>
               </div>
@@ -322,121 +270,13 @@ const SeedingLikeComment = () => {
             <div className="-option-boost-like">
               <div className="-option-boost-like__header">
                 <input type="checkbox" name="like" onChange />
-                <p>Like</p>
+                <p>Like page</p>
               </div>
             </div>
             <div className="-option-boost-like">
               <div className="-option-boost-like__header">
                 <input type="checkbox" name="share" onChange />
-                <p>Share to Feed</p>
-              </div>
-            </div>
-            <div className="-option-boost-like">
-              <div className="-option-boost-like__header">
-                <input type="checkbox" name="comment" onChange />
-                <p>Comment</p>
-              </div>
-            </div>
-            <div className="-option-boost-like -option-boost-comment">
-              <p>Text</p>
-              <div className="-option-boost-comment__wrapper">
-                <textarea 
-                  name="textContent"
-                  style={{width: '501px'}}
-                  value={likeComment.textComment}
-                >              
-                </textarea>
-                <div className='-option-boost-comment__wrapper__content'>
-                  <p>
-                    <span style={{paddingRight: '7%'}}>1</span>Enter the content here
-                  </p>
-                  <p>
-                    <span style={{paddingRight: '6%'}}>2</span>Each content/line
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="-option-boost-like -option-photo-video">
-              <h1>Photo/Video</h1>
-              <div className='-option-boost-like'>
-                <p>Quantity:</p>
-                <div className="-option-boost-like__number">
-                  <div className="-option-boost-like__number__icon">
-                    <div style={{marginBottom: '2px'}} onClick={handleUpPhotoVideoStart}>
-                      <img src={up} alt="up" width={10} height={7}/>
-                    </div>
-                    <div style={{marginTop: '2px'}} onClick={handleDownPhotoVideoStart}>
-                      <img src={down} alt="down" width={10} height={7}/>
-                    </div>
-                  </div>
-                  <input type="text" value={likeComment.photoVideoQuantityStart} onChange />
-                </div>
-                <span>to</span>
-                <div className="-option-boost-like__number">
-                  <div className="-option-boost-like__number__icon">
-                    <div style={{marginBottom: '2px'}} onClick={handleUpPhotoVideoEnd}>
-                      <img src={up} alt="up" width={10} height={7}/>
-                    </div>
-                    <div style={{marginTop: '2px'}} onClick={handleDownPhotoVideoEnd}>
-                      <img src={down} alt="down" width={10} height={7}/>
-                    </div>
-                  </div>
-                  <input type="text" value={likeComment.photoVideoQuantityEnd} onChange />
-                </div>
-              </div>
-            </div>
-            <div className="-option-boost-like dragVideoOrPhoto" onClick={handleFile}>
-              <img src={drag} alt="icon-drag" />
-              <span>Drag the photo/video folder here</span>
-              <input
-                type="file"
-                style={{ display: 'none' }}
-                name="dragVideoOrPhotoInput"
-                id="dragVideoOrPhotoInput"
-                value={likeComment.file}
-                className="dragVideoOrPhotoInput"
-                onChange={handleFileChange}
-              />
-            </div>
-            {isFileSelected && (
-              <div className="folderPhoto">
-                <p>
-                  <span>Folder:</span> {selectedFile.name}
-                </p>
-                <img src={deleted} alt="icon-delete" onClick={() => setIsFileSelected(false)}/>
-              </div>
-            )}
-
-            <div className="-option-boost-like -option-photo-video">
-              <div className='-option-photo-video__checkbox'>
-                <input type="checkbox" name="tagFriend" />
-                <h1>Tag friends</h1>
-              </div>
-              <div className='-option-boost-like'>
-                <p>Number of friends:</p>
-                <div className="-option-boost-like__number">
-                  <div className="-option-boost-like__number__icon">
-                    <div style={{marginBottom: '2px'}} onClick={handleUpTagFriendStart}>
-                      <img src={up} alt="up" width={10} height={7}/>
-                    </div>
-                    <div style={{marginTop: '2px'}} onClick={handleDownTagFriendStart}>
-                      <img src={down} alt="down" width={10} height={7}/>
-                    </div>
-                  </div>
-                  <input type="text" value={likeComment.tagFriendStart} onChange />
-                </div>
-                <span>to</span>
-                <div className="-option-boost-like__number">
-                  <div className="-option-boost-like__number__icon">
-                    <div style={{marginBottom: '2px'}} onClick={handleUpTagFriendEnd}>
-                      <img src={up} alt="up" width={10} height={7}/>
-                    </div>
-                    <div style={{marginTop: '2px'}} onClick={handleDownTagFriendEnd}>
-                      <img src={down} alt="down" width={10} height={7}/>
-                    </div>
-                  </div>
-                  <input type="text" value={likeComment.tagFriendEnd} onChange />
-                </div>
+                <p>Follow page</p>
               </div>
             </div>
           </div>
@@ -445,4 +285,4 @@ const SeedingLikeComment = () => {
   )
 }
 
-export default SeedingLikeComment
+export default SeedingFollower
