@@ -31,7 +31,7 @@ const Dashboard = () => {
         {/* <WatchStory></WatchStory> */}
         {/* <Newsfeed></Newsfeed> */}
         {/* <CreatePost></CreatePost> */}
-        {/* <Post_Interaction></Post_Interaction> //da fix so chu  */}
+        {/* <Post_Interaction></Post_Interaction>*/}
         {/* <Delete_Post></Delete_Post> */}
         {/* <Send_Message></Send_Message> */}
         {/* <Reply_Message></Reply_Message> */}
