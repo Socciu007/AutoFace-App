@@ -9,65 +9,43 @@ import Edit from '../../../assets/icon/icon-edit.svg';
 import Debug from '../../../assets/icon/icon-debug.svg';
 import RunTest from '../../../assets/icon/icon-runTest.svg';
 import iconOptions from '../../../assets/icon/icon-options.svg';
+import { DelayTime, NumberPostOrUser, PostUIDList, VideoTime } from './Post_Interaction';
 
 const Post_Interaction = () => {
-  //ViewTime start
-  const [inputValueViewTimeStart, setInputValueViewTimeStart] = useState(10);
-  const handleIncrementViewTimeStart = () => {
-    setInputValueViewTimeStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementViewTimeStart = () => {
-    setInputValueViewTimeStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //ViewTime end
-  const [inputValueViewTimeEnd, setInputValueViewTimeEnd] = useState(30);
-  const handleIncrementViewTimeEnd = () => {
-    setInputValueViewTimeEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementViewTimeEnd = () => {
-    setInputValueViewTimeEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  const {
+    inputValueViewTimeStart,
+    handleIncrementViewTimeStart,
+    handleDecrementViewTimeStart,
+    inputValueViewTimeEnd,
+    handleIncrementViewTimeEnd,
+    handleDecrementViewTimeEnd,
+    handleInputChangeViewTimeStart,
+    handleInputChangeViewTimeEnd,
+  } = VideoTime();
 
-  //DelayTime start
-  const [inputValueDelayTimeStart, setInputValueDelayTimeStart] = useState(3);
-  const handleIncrementDelayTimeStart = () => {
-    setInputValueDelayTimeStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementDelayTimeStart = () => {
-    setInputValueDelayTimeStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //DelayTime end
-  const [inputValueDelayTimeEnd, setInputValueDelayTimeEnd] = useState(5);
-  const handleIncrementDelayTimeEnd = () => {
-    setInputValueDelayTimeEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementDelayTimeEnd = () => {
-    setInputValueDelayTimeEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  const {
+    inputValueDelayTimeStart,
+    handleIncrementDelayTimeStart,
+    handleDecrementDelayTimeStart,
+    inputValueDelayTimeEnd,
+    handleIncrementDelayTimeEnd,
+    handleDecrementDelayTimeEnd,
+    handleInputChangeDelayTimeStart,
+    handleInputChangeDelayTimeEnd,
+  } = DelayTime();
 
-  //Number of posts/user start
-  const [inputValueNumberPostOrUserStart, setInputValueNumberPostOrUserStart] = useState(1);
-  const handleIncrementNumberPostOrUserStart = () => {
-    setInputValueNumberPostOrUserStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementNumberPostOrUserStart = () => {
-    setInputValueNumberPostOrUserStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Number of posts/user end
-  const [inputValueNumberPostOrUserEnd, setInputValueNumberPostOrUserEnd] = useState(3);
-  const handleIncrementNumberPostOrUserEnd = () => {
-    setInputValueNumberPostOrUserEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementNumberPostOrUserEnd = () => {
-    setInputValueNumberPostOrUserEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  const {
+    inputValueNumberPostOrUserStart,
+    handleIncrementNumberPostOrUserStart,
+    handleDecrementNumberPostOrUserStart,
+    inputValueNumberPostOrUserEnd,
+    handleIncrementNumberPostOrUserEnd,
+    handleDecrementNumberPostOrUserEnd,
+    handleInputChangeNumberPostOrUserStart,
+    handleInputChangeNumberPostOrUserEnd,
+  } = NumberPostOrUser();
 
-  //cai dat cho phan text comment
-  const [textContent, setTextContent] = useState('');
-
-  const handleTextareaChange = (event) => {
-    setTextContent(event.target.value);
-  };
+  const { textContent, handleTextareaChange, charCount } = PostUIDList();
   return (
     <div className="Post_Interaction">
       <h1 className="watch-video__title">Facebook Automation</h1>
@@ -85,7 +63,7 @@ const Post_Interaction = () => {
             <div className="PostUIDList">
               <p className="selectComment__header">
                 Post UID list
-                <span>(0)</span>
+                <span>({charCount})</span>
               </p>
               <div className="component-item text">
                 <textarea
@@ -115,7 +93,7 @@ const Post_Interaction = () => {
                   <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementViewTimeStart} />
                   <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementViewTimeStart} />
                 </div>
-                <input type="text" value={inputValueViewTimeStart} onChange />
+                <input type="text" value={inputValueViewTimeStart} onChange={handleInputChangeViewTimeStart} />
               </div>
               <span>to</span>
               <div className="component-item__number">
@@ -123,7 +101,7 @@ const Post_Interaction = () => {
                   <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementViewTimeEnd} />
                   <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementViewTimeEnd} />
                 </div>
-                <input type="text" value={inputValueViewTimeEnd} onChange />
+                <input type="text" value={inputValueViewTimeEnd} onChange={handleInputChangeViewTimeEnd} />
               </div>
             </div>
 
@@ -136,7 +114,7 @@ const Post_Interaction = () => {
                   <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeStart} />
                   <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeStart} />
                 </div>
-                <input type="text" value={inputValueDelayTimeStart} onChange />
+                <input type="text" value={inputValueDelayTimeStart} onChange={handleInputChangeDelayTimeStart} />
               </div>
               <span>to</span>
               <div className="component-item__number">
@@ -144,7 +122,7 @@ const Post_Interaction = () => {
                   <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeEnd} />
                   <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeEnd} />
                 </div>
-                <input type="text" value={inputValueDelayTimeEnd} onChange />
+                <input type="text" value={inputValueDelayTimeEnd} onChange={handleInputChangeDelayTimeEnd} />
               </div>
             </div>
 
@@ -155,7 +133,11 @@ const Post_Interaction = () => {
                   <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementNumberPostOrUserStart} />
                   <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementNumberPostOrUserStart} />
                 </div>
-                <input type="text" value={inputValueNumberPostOrUserStart} onChange />
+                <input
+                  type="text"
+                  value={inputValueNumberPostOrUserStart}
+                  onChange={handleInputChangeNumberPostOrUserStart}
+                />
               </div>
               <span>to</span>
               <div className="component-item__number">
@@ -163,7 +145,11 @@ const Post_Interaction = () => {
                   <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementNumberPostOrUserEnd} />
                   <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementNumberPostOrUserEnd} />
                 </div>
-                <input type="text" value={inputValueNumberPostOrUserEnd} onChange />
+                <input
+                  type="text"
+                  value={inputValueNumberPostOrUserEnd}
+                  onChange={handleInputChangeNumberPostOrUserEnd}
+                />
               </div>
             </div>
 

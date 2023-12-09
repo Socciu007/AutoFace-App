@@ -10,68 +10,44 @@ import Edit from '../../../assets/icon/icon-edit.svg';
 import Debug from '../../../assets/icon/icon-debug.svg';
 import RunTest from '../../../assets/icon/icon-runTest.svg';
 import iconOptions from '../../../assets/icon/icon-options.svg';
+import {
+  AnswerTextarea,
+  CancelFriendOption,
+  DelayTime,
+  KeywordTextarea,
+  NumberGroup,
+  ShowAutoAnswer,
+} from './JoinGroup';
 const JoinGroup = () => {
-  //Value number of Groups start
-  const [inputValueGroupsStart, setInputValueGroupsStart] = useState(5);
-  const handleIncrementGroupsStart = () => {
-    setInputValueGroupsStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementGroupsStart = () => {
-    setInputValueGroupsStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Value number of Groups end
-  const [inputValueGroupsEnd, setInputValueGroupsEnd] = useState(10);
-  const handleIncrementGroupsEnd = () => {
-    setInputValueGroupsEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementGroupsEnd = () => {
-    setInputValueGroupsEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  const {
+    inputValueGroupsStart,
+    handleIncrementGroupsStart,
+    handleDecrementGroupsStart,
+    inputValueGroupsEnd,
+    handleIncrementGroupsEnd,
+    handleDecrementGroupsEnd,
+    handleInputChangeGroupsStart,
+    handleInputChangeGroupsEnd,
+  } = NumberGroup();
 
-  //Delay time start
-  const [inputValueDelayTimeStart, setInputValueDelayTimeStart] = useState(3);
-  const handleIncrementDelayTimeStart = () => {
-    setInputValueDelayTimeStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementDelayTimeStart = () => {
-    setInputValueDelayTimeStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Delay time end
-  const [inputValueDelayTimeEnd, setInputValueDelayTimeEnd] = useState(5);
-  const handleIncrementDelayTimeEnd = () => {
-    setInputValueDelayTimeEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementDelayTimeEnd = () => {
-    setInputValueDelayTimeEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  const {
+    inputValueDelayTimeStart,
+    handleIncrementDelayTimeStart,
+    handleDecrementDelayTimeStart,
+    inputValueDelayTimeEnd,
+    handleIncrementDelayTimeEnd,
+    handleDecrementDelayTimeEnd,
+    handleInputChangeDelayTimeStart,
+    handleInputChangeDelayTimeEnd,
+  } = DelayTime();
 
-  //Hien thi select cancel Friend option
-  const [selectedValueJoinGroup, setSelectedValueJoinGroup] = useState('');
+  const { selectedValueJoinGroup, handleSelectChangeJoinGroup } = CancelFriendOption();
 
-  const handleSelectChangeJoinGroup = (event) => {
-    setSelectedValueJoinGroup(event.target.value);
-  };
-  useEffect(() => {
-    setSelectedValueJoinGroup('suggestions');
-  }, []);
+  const { KeywordContent, handleTextareaChangeKeywordContent } = KeywordTextarea();
 
-  //cai dat cho phan Keyword Text (khi go chu thi placeholder cua textarea se an di)
-  const [KeywordContent, setKeywordContent] = useState('');
+  const { AnswerContent, handleTextareaChangeAnswerContent } = AnswerTextarea();
 
-  const handleTextareaChangeKeywordContent = (event) => {
-    setKeywordContent(event.target.value);
-  };
-  //cai dat cho phan Answer question (khi go chu thi placeholder cua textarea se an di)
-  const [AnswerContent, setAnswerContent] = useState('');
-
-  const handleTextareaChangeAnswerContent = (event) => {
-    setAnswerContent(event.target.value);
-  };
-  //Hien thi textarea auto answer question
-  const [isAutoAnswer, setisAutoAnswer] = useState(false);
-  const handleCheckboxChangeAutoAnswer = () => {
-    setisAutoAnswer((prevIsAutoAnswer) => !prevIsAutoAnswer);
-  };
+  const { isAutoAnswer, handleCheckboxChangeAutoAnswer } = ShowAutoAnswer();
   return (
     <div className="joinGroup">
       <h1 className="createPost__title">Facebook Automation</h1>
@@ -115,7 +91,7 @@ const JoinGroup = () => {
                           <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementGroupsStart} />
                           <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementGroupsStart} />
                         </div>
-                        <input type="text" value={inputValueGroupsStart} onChange />
+                        <input type="text" value={inputValueGroupsStart} onChange={handleInputChangeGroupsStart} />
                       </div>
                       <span>to</span>
                       <div className="component-item__number">
@@ -123,7 +99,7 @@ const JoinGroup = () => {
                           <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementGroupsEnd} />
                           <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementGroupsEnd} />
                         </div>
-                        <input type="text" value={inputValueGroupsEnd} onChange />
+                        <input type="text" value={inputValueGroupsEnd} onChange={handleInputChangeGroupsEnd} />
                       </div>
                     </div>
                     <div className="component-item delayTime">
@@ -135,7 +111,11 @@ const JoinGroup = () => {
                           <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeStart} />
                           <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeStart} />
                         </div>
-                        <input type="text" value={inputValueDelayTimeStart} onChange />
+                        <input
+                          type="text"
+                          value={inputValueDelayTimeStart}
+                          onChange={handleInputChangeDelayTimeStart}
+                        />
                       </div>
                       <span>to</span>
                       <div className="component-item__number">
@@ -143,7 +123,7 @@ const JoinGroup = () => {
                           <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeEnd} />
                           <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeEnd} />
                         </div>
-                        <input type="text" value={inputValueDelayTimeEnd} onChange />
+                        <input type="text" value={inputValueDelayTimeEnd} onChange={handleInputChangeDelayTimeEnd} />
                       </div>
                     </div>
                     {(selectedValueJoinGroup === 'keywords' || selectedValueJoinGroup === 'UID') && (

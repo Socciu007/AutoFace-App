@@ -30,8 +30,8 @@ const Dashboard = () => {
         {/* <WatchVideo></WatchVideo> */}
         {/* <WatchStory></WatchStory> */}
         {/* <Newsfeed></Newsfeed> */}
-        <CreatePost></CreatePost>
-        {/* <Post_Interaction></Post_Interaction> */}
+        {/* <CreatePost></CreatePost> */}
+        {/* <Post_Interaction></Post_Interaction> //da fix so chu  */}
         {/* <Delete_Post></Delete_Post> */}
         {/* <Send_Message></Send_Message> */}
         {/* <Reply_Message></Reply_Message> */}
@@ -39,7 +39,7 @@ const Dashboard = () => {
         {/* <AddFriend></AddFriend> */}
         {/* <CancelFriend></CancelFriend> */}
         {/* <JoinGroup></JoinGroup> */}
-        {/* <LeaveGroup></LeaveGroup> */}
+        <LeaveGroup></LeaveGroup>
         {/* <Invite></Invite> */}
         {/* <CreatePostGroup></CreatePostGroup> */}
       </div>

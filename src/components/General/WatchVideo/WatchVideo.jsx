@@ -12,167 +12,98 @@ import Edit from '../../../assets/icon/icon-edit.svg';
 import Debug from '../../../assets/icon/icon-debug.svg';
 import RunTest from '../../../assets/icon/icon-runTest.svg';
 import iconOptions from '../../../assets/icon/icon-options.svg';
+import {
+  CommentOption,
+  CommentTextarea,
+  NumberCommentVideo,
+  NumberLike,
+  NumberPhotoVideo,
+  NumberShare,
+  NumberVideo,
+  ShowComment,
+  ShowLike,
+  ShowShare,
+  TimeWatchVideo,
+  URLImg,
+} from './WatchVideo';
 const WatchVideo = () => {
-  //Video start
-  const [inputValueVideoStart, setInputValueVideoStart] = useState(5);
-  const handleIncrementVideoStart = () => {
-    setInputValueVideoStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementVideoStart = () => {
-    setInputValueVideoStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Video end
-  const [inputValueVideoEnd, setInputValueVideoEnd] = useState(10);
-  const handleIncrementVideoEnd = () => {
-    setInputValueVideoEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementVideoEnd = () => {
-    setInputValueVideoEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  const {
+    inputValueVideoStart,
+    handleIncrementVideoStart,
+    handleDecrementVideoStart,
+    inputValueVideoEnd,
+    handleIncrementVideoEnd,
+    handleDecrementVideoEnd,
+    handleInputChangeVideoStart,
+    handleInputChangeVideoEnd,
+  } = NumberVideo();
 
-  //Watching time/video (s) start
-  const [inputValueWatchVideoStart, setInputValueWatchVideoStart] = useState(5);
-  const handleIncrementWatchVideoStart = () => {
-    setInputValueWatchVideoStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementWatchVideoStart = () => {
-    setInputValueWatchVideoStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Watching time/video (s) end
-  const [inputValueWatchVideoEnd, setInputValueWatchVideoEnd] = useState(10);
-  const handleIncrementWatchVideoEnd = () => {
-    setInputValueWatchVideoEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementWatchVideoEnd = () => {
-    setInputValueWatchVideoEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  const {
+    inputValueWatchVideoStart,
+    handleIncrementWatchVideoStart,
+    handleDecrementWatchVideoStart,
+    inputValueWatchVideoEnd,
+    handleIncrementWatchVideoEnd,
+    handleDecrementWatchVideoEnd,
+    handleInputChangeWatchVideoStart,
+    handleInputChangeWatchVideoEnd,
+  } = TimeWatchVideo();
 
-  //Random Like start
-  const [inputValueLikeStart, setInputValueLikeStart] = useState(5);
-  const handleIncrementLikeStart = () => {
-    setInputValueLikeStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementLikeStart = () => {
-    setInputValueLikeStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Random Like end
-  const [inputValueLikeEnd, setInputValueLikeEnd] = useState(10);
-  const handleIncrementLikeEnd = () => {
-    setInputValueLikeEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementLikeEnd = () => {
-    setInputValueLikeEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  const {
+    inputValueLikeStart,
+    handleIncrementLikeStart,
+    handleDecrementLikeStart,
+    inputValueLikeEnd,
+    handleIncrementLikeEnd,
+    handleDecrementLikeEnd,
+    handleInputChangeLikeStart,
+    handleInputChangeLikeEnd,
+  } = NumberLike();
 
-  //Random Share start
-  const [inputValueShareStart, setInputValueShareStart] = useState(5);
-  const handleIncrementShareStart = () => {
-    setInputValueShareStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementShareStart = () => {
-    setInputValueShareStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Random Share end
-  const [inputValueShareEnd, setInputValueShareEnd] = useState(10);
-  const handleIncrementShareEnd = () => {
-    setInputValueShareEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementShareEnd = () => {
-    setInputValueShareEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  const {
+    inputValueShareStart,
+    handleIncrementShareStart,
+    handleDecrementShareStart,
+    inputValueShareEnd,
+    handleIncrementShareEnd,
+    handleDecrementShareEnd,
+    handleInputChangeShareStart,
+    handleInputChangeShareEnd,
+  } = NumberShare();
 
-  //Random CommentVideo start
-  const [inputValueCommentVideoStart, setInputValueCommentVideoStart] = useState(5);
-  const handleIncrementCommentVideoStart = () => {
-    setInputValueCommentVideoStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementCommentVideoStart = () => {
-    setInputValueCommentVideoStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Random CommentVideo end
-  const [inputValueCommentVideoEnd, setInputValueCommentVideoEnd] = useState(10);
-  const handleIncrementCommentVideoEnd = () => {
-    setInputValueCommentVideoEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementCommentVideoEnd = () => {
-    setInputValueCommentVideoEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  const {
+    inputValueCommentVideoStart,
+    handleIncrementCommentVideoStart,
+    handleDecrementCommentVideoStart,
+    inputValueCommentVideoEnd,
+    handleIncrementCommentVideoEnd,
+    handleDecrementCommentVideoEnd,
+    handleInputChangeCommentVideoStart,
+    handleInputChangeCommentVideoEnd,
+  } = NumberCommentVideo();
 
-  //Random PhotoVideo start
-  const [inputValuePhotoVideoStart, setInputValuePhotoVideoStart] = useState(5);
-  const handleIncrementPhotoVideoStart = () => {
-    setInputValuePhotoVideoStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementPhotoVideoStart = () => {
-    setInputValuePhotoVideoStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Random PhotoVideo end
-  const [inputValuePhotoVideoEnd, setInputValuePhotoVideoEnd] = useState(10);
-  const handleIncrementPhotoVideoEnd = () => {
-    setInputValuePhotoVideoEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementPhotoVideoEnd = () => {
-    setInputValuePhotoVideoEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  const {
+    inputValuePhotoVideoStart,
+    handleIncrementPhotoVideoStart,
+    handleDecrementPhotoVideoStart,
+    inputValuePhotoVideoEnd,
+    handleIncrementPhotoVideoEnd,
+    handleDecrementPhotoVideoEnd,
+    handleInputChangePhotoVideoStart,
+    handleInputChangePhotoVideoEnd,
+  } = NumberPhotoVideo();
 
-  // Hien thi
-  const [isLiked, setIsLiked] = useState(false);
+  const { isLiked, handleCheckboxChange } = ShowLike();
 
-  const handleCheckboxChange = () => {
-    setIsLiked((prevIsLiked) => !prevIsLiked);
-  };
-  //Hien thi share
-  const [isShare, setIsShared] = useState(false);
-  const handleCheckboxChangeShare = () => {
-    setIsShared((prevIsLiked) => !prevIsLiked);
-  };
+  const { isShare, handleCheckboxChangeShare } = ShowShare();
 
-  //Hien thi comment
-  const [isComment, setisComment] = useState(false);
-  const handleCheckboxChangeComment = () => {
-    setisComment((prevIsLiked) => !prevIsLiked);
-  };
+  const { isComment, handleCheckboxChangeComment } = ShowComment();
 
-  //Hien thi select
-  const [selectedValue, setSelectedValue] = useState('');
+  const { selectedValue, handleSelectChange } = CommentOption();
 
-  const handleSelectChange = (event) => {
-    setSelectedValue(event.target.value);
-  };
-  useEffect(() => {
-    setSelectedValue('text');
-  }, []);
+  const { textContent, handleTextareaChange } = CommentTextarea();
 
-  //cai dat cho phan text comment
-  const [textContent, setTextContent] = useState('');
-
-  const handleTextareaChange = (event) => {
-    setTextContent(event.target.value);
-  };
-
-  //Hien thi duong dan cua anh
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [isFileSelected, setIsFileSelected] = useState(false);
-
-  const handleIconClick = () => {
-    if (!isFileSelected) {
-      document.getElementById('dragVideoOrPhotoInput').click();
-    }
-  };
-
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setSelectedFile(file);
-    }
-  };
-
-  useEffect(() => {
-    // Kiểm tra xem có file được chọn không và chưa thực hiện hiển thị
-    if (selectedFile && !isFileSelected) {
-      setIsFileSelected(true);
-    }
-  }, [selectedFile, isFileSelected]);
+  const { handleIconClick, handleFileChange, isFileSelected, selectedFile } = URLImg();
   return (
     <div className="watch-video">
       <h1 className="watch-video__title">Facebook Automation</h1>
@@ -194,7 +125,7 @@ const WatchVideo = () => {
                   <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementVideoStart} />
                   <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementVideoStart} />
                 </div>
-                <input type="text" value={inputValueVideoStart} onChange />
+                <input type="text" value={inputValueVideoStart} onChange={handleInputChangeVideoStart} />
               </div>
               <span>to</span>
               <div className="component-item__number">
@@ -202,7 +133,7 @@ const WatchVideo = () => {
                   <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementVideoEnd} />
                   <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementVideoEnd} />
                 </div>
-                <input type="text" value={inputValueVideoEnd} onChange />
+                <input type="text" value={inputValueVideoEnd} onChange={handleInputChangeVideoEnd} />
               </div>
             </div>
             <div className="component-item watchingTime">
@@ -214,7 +145,7 @@ const WatchVideo = () => {
                   <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementWatchVideoStart} />
                   <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementWatchVideoStart} />
                 </div>
-                <input type="text" value={inputValueWatchVideoStart} onChange />
+                <input type="text" value={inputValueWatchVideoStart} onChange={handleInputChangeWatchVideoStart} />
               </div>
               <span>to</span>
               <div className="component-item__number">
@@ -222,7 +153,7 @@ const WatchVideo = () => {
                   <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementWatchVideoEnd} />
                   <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementWatchVideoEnd} />
                 </div>
-                <input type="text" value={inputValueWatchVideoEnd} onChange />
+                <input type="text" value={inputValueWatchVideoEnd} onChange={handleInputChangeWatchVideoEnd} />
               </div>
             </div>
             <div className="component-item Like">
@@ -238,7 +169,7 @@ const WatchVideo = () => {
                     <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementLikeStart} />
                     <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementLikeStart} />
                   </div>
-                  <input type="text" value={inputValueLikeStart} onChange />
+                  <input type="text" value={inputValueLikeStart} onChange={handleInputChangeLikeStart} />
                 </div>
                 <span>to</span>
                 <div className="component-item__number">
@@ -246,7 +177,7 @@ const WatchVideo = () => {
                     <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementLikeEnd} />
                     <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementLikeEnd} />
                   </div>
-                  <input type="text" value={inputValueLikeEnd} onChange />
+                  <input type="text" value={inputValueLikeEnd} onChange={handleInputChangeLikeEnd} />
                 </div>
               </div>
             </div>
@@ -263,7 +194,7 @@ const WatchVideo = () => {
                     <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementShareStart} />
                     <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementShareStart} />
                   </div>
-                  <input type="text" value={inputValueShareStart} onChange />
+                  <input type="text" value={inputValueShareStart} onChange={handleInputChangeShareStart} />
                 </div>
                 <span>to</span>
                 <div className="component-item__number">
@@ -271,7 +202,7 @@ const WatchVideo = () => {
                     <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementShareEnd} />
                     <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementShareEnd} />
                   </div>
-                  <input type="text" value={inputValueShareEnd} onChange />
+                  <input type="text" value={inputValueShareEnd} onChange={handleInputChangeShareEnd} />
                 </div>
               </div>
             </div>
@@ -289,7 +220,11 @@ const WatchVideo = () => {
                         <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementCommentVideoStart} />
                         <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementCommentVideoStart} />
                       </div>
-                      <input type="text" value={inputValueCommentVideoStart} onChange />
+                      <input
+                        type="text"
+                        value={inputValueCommentVideoStart}
+                        onChange={handleInputChangeCommentVideoStart}
+                      />
                     </div>
                     <span>to</span>
                     <div className="component-item__number">
@@ -297,7 +232,11 @@ const WatchVideo = () => {
                         <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementCommentVideoEnd} />
                         <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementCommentVideoEnd} />
                       </div>
-                      <input type="text" value={inputValueCommentVideoEnd} onChange />
+                      <input
+                        type="text"
+                        value={inputValueCommentVideoEnd}
+                        onChange={handleInputChangeCommentVideoEnd}
+                      />
                     </div>
                   </div>
                 </div>
@@ -347,7 +286,11 @@ const WatchVideo = () => {
                           <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementPhotoVideoStart} />
                           <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementPhotoVideoStart} />
                         </div>
-                        <input type="text" value={inputValuePhotoVideoStart} onChange />
+                        <input
+                          type="text"
+                          value={inputValuePhotoVideoStart}
+                          onChange={handleInputChangePhotoVideoStart}
+                        />
                       </div>
                       <span>to</span>
                       <div className="component-item__number">
@@ -355,7 +298,7 @@ const WatchVideo = () => {
                           <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementPhotoVideoEnd} />
                           <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementPhotoVideoEnd} />
                         </div>
-                        <input type="text" value={inputValuePhotoVideoEnd} onChange />
+                        <input type="text" value={inputValuePhotoVideoEnd} onChange={handleInputChangePhotoVideoEnd} />
                       </div>
                     </div>
                     {!isFileSelected && (

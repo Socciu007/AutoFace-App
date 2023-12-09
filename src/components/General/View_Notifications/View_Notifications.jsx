@@ -10,40 +10,29 @@ import Edit from '../../../assets/icon/icon-edit.svg';
 import Debug from '../../../assets/icon/icon-debug.svg';
 import RunTest from '../../../assets/icon/icon-runTest.svg';
 import iconOptions from '../../../assets/icon/icon-options.svg';
+import { DelayTime, Notification } from './View_Notifications';
 const View_Notifications = () => {
-  //Value number of Notification start
-  const [inputValueNotificationStart, setInputValueNotificationStart] = useState(5);
-  const handleIncrementNotificationStart = () => {
-    setInputValueNotificationStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementNotificationStart = () => {
-    setInputValueNotificationStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Value number of Notification end
-  const [inputValueNotificationEnd, setInputValueNotificationEnd] = useState(10);
-  const handleIncrementNotificationEnd = () => {
-    setInputValueNotificationEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementNotificationEnd = () => {
-    setInputValueNotificationEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  const {
+    inputValueNotificationStart,
+    handleIncrementNotificationStart,
+    handleDecrementNotificationStart,
+    inputValueNotificationEnd,
+    handleIncrementNotificationEnd,
+    handleDecrementNotificationEnd,
+    handleInputChangeNotificationStart,
+    handleInputChangeNotificationEnd,
+  } = Notification();
 
-  //Delay time start
-  const [inputValueDelayTimeStart, setInputValueDelayTimeStart] = useState(5);
-  const handleIncrementDelayTimeStart = () => {
-    setInputValueDelayTimeStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementDelayTimeStart = () => {
-    setInputValueDelayTimeStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Delay time end
-  const [inputValueDelayTimeEnd, setInputValueDelayTimeEnd] = useState(10);
-  const handleIncrementDelayTimeEnd = () => {
-    setInputValueDelayTimeEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementDelayTimeEnd = () => {
-    setInputValueDelayTimeEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  const {
+    inputValueDelayTimeStart,
+    handleIncrementDelayTimeStart,
+    handleDecrementDelayTimeStart,
+    inputValueDelayTimeEnd,
+    handleIncrementDelayTimeEnd,
+    handleDecrementDelayTimeEnd,
+    handleInputChangeDelayTimeStart,
+    handleInputChangeDelayTimeEnd,
+  } = DelayTime();
 
   return (
     <div className="View_Notifications">
@@ -66,7 +55,7 @@ const View_Notifications = () => {
                   <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementNotificationStart} />
                   <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementNotificationStart} />
                 </div>
-                <input type="text" value={inputValueNotificationStart} onChange />
+                <input type="text" value={inputValueNotificationStart} onChange={handleInputChangeNotificationStart} />
               </div>
               <span>to</span>
               <div className="component-item__number">
@@ -74,7 +63,7 @@ const View_Notifications = () => {
                   <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementNotificationEnd} />
                   <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementNotificationEnd} />
                 </div>
-                <input type="text" value={inputValueNotificationEnd} onChange />
+                <input type="text" value={inputValueNotificationEnd} onChange={handleInputChangeNotificationEnd} />
               </div>
             </div>
             <div className="component-item delayTime">
@@ -86,7 +75,7 @@ const View_Notifications = () => {
                   <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeStart} />
                   <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeStart} />
                 </div>
-                <input type="text" value={inputValueDelayTimeStart} onChange />
+                <input type="text" value={inputValueDelayTimeStart} onChange={handleInputChangeDelayTimeStart} />
               </div>
               <span>to</span>
               <div className="component-item__number">
@@ -94,7 +83,7 @@ const View_Notifications = () => {
                   <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeEnd} />
                   <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeEnd} />
                 </div>
-                <input type="text" value={inputValueDelayTimeEnd} onChange />
+                <input type="text" value={inputValueDelayTimeEnd} onChange={handleInputChangeDelayTimeEnd} />
               </div>
             </div>
             <div className="component-item Notification">

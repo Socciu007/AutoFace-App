@@ -12,135 +12,74 @@ import Edit from '../../../assets/icon/icon-edit.svg';
 import Debug from '../../../assets/icon/icon-debug.svg';
 import RunTest from '../../../assets/icon/icon-runTest.svg';
 import iconOptions from '../../../assets/icon/icon-options.svg';
+import {
+  DelayTime,
+  FriendsOption,
+  NumberFriend,
+  NumberPhotoVideo,
+  NumberPost,
+  PostOption,
+  ShowTag,
+  TextOfTextarea,
+  UIDListContent,
+  URLImg,
+} from './CreatePost';
 const CreatePostGroup = () => {
-  //Value post start
-  const [inputValuePostStart, setInputValuePostStart] = useState(5);
-  const handleIncrementPostStart = () => {
-    setInputValuePostStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementPostStart = () => {
-    setInputValuePostStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Value post end
-  const [inputValuePostEnd, setInputValuePostEnd] = useState(10);
-  const handleIncrementPostEnd = () => {
-    setInputValuePostEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementPostEnd = () => {
-    setInputValuePostEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  const {
+    inputValuePostStart,
+    handleIncrementPostStart,
+    handleDecrementPostStart,
+    inputValuePostEnd,
+    handleIncrementPostEnd,
+    handleDecrementPostEnd,
+    handleInputChangePostStart,
+    handleInputChangePostEnd,
+  } = NumberPost();
 
-  //Delay time start
-  const [inputValueDelayTimeStart, setInputValueDelayTimeStart] = useState(5);
-  const handleIncrementDelayTimeStart = () => {
-    setInputValueDelayTimeStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementDelayTimeStart = () => {
-    setInputValueDelayTimeStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Delay time end
-  const [inputValueDelayTimeEnd, setInputValueDelayTimeEnd] = useState(10);
-  const handleIncrementDelayTimeEnd = () => {
-    setInputValueDelayTimeEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementDelayTimeEnd = () => {
-    setInputValueDelayTimeEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  const {
+    inputValueDelayTimeStart,
+    handleIncrementDelayTimeStart,
+    handleDecrementDelayTimeStart,
+    inputValueDelayTimeEnd,
+    handleIncrementDelayTimeEnd,
+    handleDecrementDelayTimeEnd,
+    handleInputChangeDelayTimeStart,
+    handleInputChangeDelayTimeEnd,
+  } = DelayTime();
 
-  //Random PhotoVideo start
-  const [inputValuePhotoVideoStart, setInputValuePhotoVideoStart] = useState(5);
-  const handleIncrementPhotoVideoStart = () => {
-    setInputValuePhotoVideoStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementPhotoVideoStart = () => {
-    setInputValuePhotoVideoStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Random PhotoVideo end
-  const [inputValuePhotoVideoEnd, setInputValuePhotoVideoEnd] = useState(10);
-  const handleIncrementPhotoVideoEnd = () => {
-    setInputValuePhotoVideoEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementPhotoVideoEnd = () => {
-    setInputValuePhotoVideoEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  const {
+    inputValuePhotoVideoStart,
+    handleIncrementPhotoVideoStart,
+    handleDecrementPhotoVideoStart,
+    inputValuePhotoVideoEnd,
+    handleIncrementPhotoVideoEnd,
+    handleDecrementPhotoVideoEnd,
+    handleInputChangePhotoVideoStart,
+    handleInputChangePhotoVideoEnd,
+  } = NumberPhotoVideo();
 
-  //Random Tag start
-  const [inputValueTagStart, setInputValueTagStart] = useState(5);
-  const handleIncrementTagStart = () => {
-    setInputValueTagStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementTagStart = () => {
-    setInputValueTagStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Random Tag end
-  const [inputValueTagEnd, setInputValueTagEnd] = useState(10);
-  const handleIncrementTagEnd = () => {
-    setInputValueTagEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementTagEnd = () => {
-    setInputValueTagEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  const {
+    inputValueNumberFriendStart,
+    handleIncrementNumberFriendStart,
+    handleDecrementNumberFriendStart,
+    inputValueNumberFriendEnd,
+    handleIncrementNumberFriendEnd,
+    handleDecrementNumberFriendEnd,
+    handleInputChangeNumberFriendStart,
+    handleInputChangeNumberFriendEnd,
+  } = NumberFriend();
 
-  // Hien thi tag
-  const [isTag, setIsTag] = useState(false);
+  const { isTag, handleCheckboxTag } = ShowTag();
 
-  const handleCheckboxTag = () => {
-    setIsTag((prevIsLiked) => !prevIsLiked);
-  };
-  //Hien thi select post option
-  const [selectedValuePost, setSelectedValuePost] = useState('');
+  const { selectedValuePost, handleSelectChangePost } = PostOption();
 
-  const handleSelectChangePost = (event) => {
-    setSelectedValuePost(event.target.value);
-  };
-  useEffect(() => {
-    setSelectedValuePost('photoOrVideo');
-  }, []);
+  const { selectedValueFriend, handleSelectChangeFriend } = FriendsOption();
 
-  //Hien thi select Friends
-  const [selectedValueFriend, setSelectedValueFriend] = useState('');
+  const { textContent, handleTextareaChange } = TextOfTextarea();
 
-  const handleSelectChangeFriend = (event) => {
-    setSelectedValueFriend(event.target.value);
-  };
-  useEffect(() => {
-    setSelectedValueFriend('amongFriend');
-  }, []);
-  //cai dat cho phan text comment(khi go chu thi placeholder cua textarea se an di)
-  const [textContent, setTextContent] = useState('');
+  const { UIDContent, handleTextareaChangeUID, charCount } = UIDListContent();
 
-  const handleTextareaChange = (event) => {
-    setTextContent(event.target.value);
-  };
-  //cai dat cho phan UID List(khi go chu thi placeholder cua textarea se an di)
-  const [UIDContent, setUIDContent] = useState('');
-
-  const handleTextareaChangeUID = (event) => {
-    setUIDContent(event.target.value);
-  };
-  //Hien thi duong dan cua anh
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [isFileSelected, setIsFileSelected] = useState(false);
-
-  const handleIconClick = () => {
-    if (!isFileSelected) {
-      document.getElementById('dragVideoOrPhotoInput').click();
-    }
-  };
-
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setSelectedFile(file);
-    }
-  };
-
-  useEffect(() => {
-    // Kiểm tra xem có file được chọn không và chưa thực hiện hiển thị
-    if (selectedFile && !isFileSelected) {
-      setIsFileSelected(true);
-    }
-  }, [selectedFile, isFileSelected]);
+  const { handleIconClick, handleFileChange, isFileSelected, selectedFile } = URLImg();
   return (
     <div className="createPostGroup">
       <h1 className="createPost__title">Facebook Automation</h1>
@@ -162,7 +101,7 @@ const CreatePostGroup = () => {
                   <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementPostStart} />
                   <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementPostStart} />
                 </div>
-                <input type="text" value={inputValuePostStart} onChange />
+                <input type="text" value={inputValuePostStart} onChange={handleInputChangePostStart} />
               </div>
               <span>to</span>
               <div className="component-item__number">
@@ -170,7 +109,7 @@ const CreatePostGroup = () => {
                   <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementPostEnd} />
                   <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementPostEnd} />
                 </div>
-                <input type="text" value={inputValuePostEnd} onChange />
+                <input type="text" value={inputValuePostEnd} onChange={handleInputChangePostEnd} />
               </div>
             </div>
             <div className="component-item delayTime">
@@ -182,7 +121,7 @@ const CreatePostGroup = () => {
                   <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeStart} />
                   <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeStart} />
                 </div>
-                <input type="text" value={inputValueDelayTimeStart} onChange />
+                <input type="text" value={inputValueDelayTimeStart} onChange={handleInputChangeDelayTimeStart} />
               </div>
               <span>to</span>
               <div className="component-item__number">
@@ -190,7 +129,7 @@ const CreatePostGroup = () => {
                   <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeEnd} />
                   <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeEnd} />
                 </div>
-                <input type="text" value={inputValueDelayTimeEnd} onChange />
+                <input type="text" value={inputValueDelayTimeEnd} onChange={handleInputChangeDelayTimeEnd} />
               </div>
             </div>
             <div className="component-item Post">
@@ -243,7 +182,11 @@ const CreatePostGroup = () => {
                           <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementPhotoVideoStart} />
                           <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementPhotoVideoStart} />
                         </div>
-                        <input type="text" value={inputValuePhotoVideoStart} onChange />
+                        <input
+                          type="text"
+                          value={inputValuePhotoVideoStart}
+                          onChange={handleInputChangePhotoVideoStart}
+                        />
                       </div>
                       <span>to</span>
                       <div className="component-item__number">
@@ -251,7 +194,7 @@ const CreatePostGroup = () => {
                           <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementPhotoVideoEnd} />
                           <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementPhotoVideoEnd} />
                         </div>
-                        <input type="text" value={inputValuePhotoVideoEnd} onChange />
+                        <input type="text" value={inputValuePhotoVideoEnd} onChange={handleInputChangePhotoVideoEnd} />
                       </div>
                     </div>
                     {!isFileSelected && (
@@ -286,18 +229,26 @@ const CreatePostGroup = () => {
                         <div className="component-item__content">
                           <div className="component-item__number">
                             <div className="component-item__number__icon">
-                              <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementTagStart} />
-                              <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementTagStart} />
+                              <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementNumberFriendStart} />
+                              <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementNumberFriendStart} />
                             </div>
-                            <input type="text" value={inputValueTagStart} onChange />
+                            <input
+                              type="text"
+                              value={inputValueNumberFriendStart}
+                              onChange={handleInputChangeNumberFriendStart}
+                            />
                           </div>
                           <span>to</span>
                           <div className="component-item__number">
                             <div className="component-item__number__icon">
-                              <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementTagEnd} />
-                              <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementTagEnd} />
+                              <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementNumberFriendEnd} />
+                              <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementNumberFriendEnd} />
                             </div>
-                            <input type="text" value={inputValueTagEnd} onChange />
+                            <input
+                              type="text"
+                              value={inputValueNumberFriendEnd}
+                              onChange={handleInputChangeNumberFriendEnd}
+                            />
                           </div>
                         </div>
                       </div>
@@ -340,7 +291,7 @@ const CreatePostGroup = () => {
                 <div className="UIDList">
                   <div className="UIDList__header">
                     <p>Group UID list</p>
-                    <span>(0)</span>
+                    <span>({charCount})</span>
                   </div>
                   <div className="component-item UID">
                     <textarea

@@ -9,48 +9,32 @@ import Edit from '../../../assets/icon/icon-edit.svg';
 import Debug from '../../../assets/icon/icon-debug.svg';
 import RunTest from '../../../assets/icon/icon-runTest.svg';
 import iconOptions from '../../../assets/icon/icon-options.svg';
+import { UIDTextarea, delayTime, viewTime } from './Delete_Post';
 
 const Delete_Post = () => {
-  //ViewTime start
-  const [inputValueViewTimeStart, setInputValueViewTimeStart] = useState(3);
-  const handleIncrementViewTimeStart = () => {
-    setInputValueViewTimeStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementViewTimeStart = () => {
-    setInputValueViewTimeStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //ViewTime end
-  const [inputValueViewTimeEnd, setInputValueViewTimeEnd] = useState(5);
-  const handleIncrementViewTimeEnd = () => {
-    setInputValueViewTimeEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementViewTimeEnd = () => {
-    setInputValueViewTimeEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  const {
+    inputValueViewTimeStart,
+    handleIncrementViewTimeStart,
+    handleDecrementViewTimeStart,
+    inputValueViewTimeEnd,
+    handleIncrementViewTimeEnd,
+    handleDecrementViewTimeEnd,
+    handleInputChangeViewTimeStart,
+    handleInputChangeViewTimeEnd,
+  } = viewTime();
 
-  //DelayTime start
-  const [inputValueDelayTimeStart, setInputValueDelayTimeStart] = useState(3);
-  const handleIncrementDelayTimeStart = () => {
-    setInputValueDelayTimeStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementDelayTimeStart = () => {
-    setInputValueDelayTimeStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //DelayTime end
-  const [inputValueDelayTimeEnd, setInputValueDelayTimeEnd] = useState(5);
-  const handleIncrementDelayTimeEnd = () => {
-    setInputValueDelayTimeEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementDelayTimeEnd = () => {
-    setInputValueDelayTimeEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  const {
+    inputValueDelayTimeStart,
+    handleIncrementDelayTimeStart,
+    handleDecrementDelayTimeStart,
+    inputValueDelayTimeEnd,
+    handleIncrementDelayTimeEnd,
+    handleDecrementDelayTimeEnd,
+    handleInputChangeDelayTimeStart,
+    handleInputChangeDelayTimeEnd,
+  } = delayTime();
 
-  //cai dat cho phan text comment
-  const [textContent, setTextContent] = useState('');
-
-  const handleTextareaChange = (event) => {
-    setTextContent(event.target.value);
-  };
+  const { textContent, handleTextareaChange } = UIDTextarea();
   return (
     <div className="Delete_Post">
       <h1 className="watch-video__title">Facebook Automation</h1>
@@ -98,7 +82,7 @@ const Delete_Post = () => {
                   <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementViewTimeStart} />
                   <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementViewTimeStart} />
                 </div>
-                <input type="text" value={inputValueViewTimeStart} onChange />
+                <input type="text" value={inputValueViewTimeStart} onChange={handleInputChangeViewTimeStart} />
               </div>
               <span>to</span>
               <div className="component-item__number">
@@ -106,7 +90,7 @@ const Delete_Post = () => {
                   <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementViewTimeEnd} />
                   <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementViewTimeEnd} />
                 </div>
-                <input type="text" value={inputValueViewTimeEnd} onChange />
+                <input type="text" value={inputValueViewTimeEnd} onChange={handleInputChangeViewTimeEnd} />
               </div>
             </div>
 
@@ -119,7 +103,7 @@ const Delete_Post = () => {
                   <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeStart} />
                   <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeStart} />
                 </div>
-                <input type="text" value={inputValueDelayTimeStart} onChange />
+                <input type="text" value={inputValueDelayTimeStart} onChange={handleInputChangeDelayTimeStart} />
               </div>
               <span>to</span>
               <div className="component-item__number">
@@ -127,7 +111,7 @@ const Delete_Post = () => {
                   <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeEnd} />
                   <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeEnd} />
                 </div>
-                <input type="text" value={inputValueDelayTimeEnd} onChange />
+                <input type="text" value={inputValueDelayTimeEnd} onChange={handleInputChangeDelayTimeEnd} />
               </div>
             </div>
           </div>

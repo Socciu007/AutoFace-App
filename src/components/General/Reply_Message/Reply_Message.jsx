@@ -9,48 +9,31 @@ import Edit from '../../../assets/icon/icon-edit.svg';
 import Debug from '../../../assets/icon/icon-debug.svg';
 import RunTest from '../../../assets/icon/icon-runTest.svg';
 import iconOptions from '../../../assets/icon/icon-options.svg';
+import { DelayTime, MessageTextarea, NumberOfFriend } from './Reply_Message';
 
 const Reply_Message = () => {
-  //NumberOfFriend start
-  const [inputValueNumberOfFriendStart, setInputValueNumberOfFriendStart] = useState(5);
-  const handleIncrementNumberOfFriendStart = () => {
-    setInputValueNumberOfFriendStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementNumberOfFriendStart = () => {
-    setInputValueNumberOfFriendStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //NumberOfFriend end
-  const [inputValueNumberOfFriendEnd, setInputValueNumberOfFriendEnd] = useState(10);
-  const handleIncrementNumberOfFriendEnd = () => {
-    setInputValueNumberOfFriendEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementNumberOfFriendEnd = () => {
-    setInputValueNumberOfFriendEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  const {
+    inputValueNumberOfFriendStart,
+    handleIncrementNumberOfFriendStart,
+    handleDecrementNumberOfFriendStart,
+    inputValueNumberOfFriendEnd,
+    handleIncrementNumberOfFriendEnd,
+    handleDecrementNumberOfFriendEnd,
+    handleInputChangeNumberOfFriendStart,
+    handleInputChangeNumberOfFriendEnd,
+  } = NumberOfFriend();
 
-  //DelayTime start
-  const [inputValueDelayTimeStart, setInputValueDelayTimeStart] = useState(3);
-  const handleIncrementDelayTimeStart = () => {
-    setInputValueDelayTimeStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementDelayTimeStart = () => {
-    setInputValueDelayTimeStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //DelayTime end
-  const [inputValueDelayTimeEnd, setInputValueDelayTimeEnd] = useState(5);
-  const handleIncrementDelayTimeEnd = () => {
-    setInputValueDelayTimeEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementDelayTimeEnd = () => {
-    setInputValueDelayTimeEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-
-  //cai dat cho phan text comment
-  const [textContentMessage, setTextContentMessage] = useState('');
-
-  const handleTextareaChangeMessage = (event) => {
-    setTextContentMessage(event.target.value);
-  };
+  const {
+    inputValueDelayTimeStart,
+    handleIncrementDelayTimeStart,
+    handleDecrementDelayTimeStart,
+    inputValueDelayTimeEnd,
+    handleIncrementDelayTimeEnd,
+    handleDecrementDelayTimeEnd,
+    handleInputChangeDelayTimeStart,
+    handleInputChangeDelayTimeEnd,
+  } = DelayTime();
+  const { textContentMessage, handleTextareaChangeMessage } = MessageTextarea();
   return (
     <div className="replyMessage">
       <h1 className="watch-video__title">Facebook Automation</h1>
@@ -73,7 +56,11 @@ const Reply_Message = () => {
                   <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementNumberOfFriendStart} />
                   <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementNumberOfFriendStart} />
                 </div>
-                <input type="text" value={inputValueNumberOfFriendStart} onChange />
+                <input
+                  type="text"
+                  value={inputValueNumberOfFriendStart}
+                  onChange={handleInputChangeNumberOfFriendStart}
+                />
               </div>
               <span>to</span>
               <div className="component-item__number">
@@ -81,7 +68,7 @@ const Reply_Message = () => {
                   <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementNumberOfFriendEnd} />
                   <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementNumberOfFriendEnd} />
                 </div>
-                <input type="text" value={inputValueNumberOfFriendEnd} onChange />
+                <input type="text" value={inputValueNumberOfFriendEnd} onChange={handleInputChangeNumberOfFriendEnd} />
               </div>
             </div>
 
@@ -92,7 +79,7 @@ const Reply_Message = () => {
                   <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeStart} />
                   <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeStart} />
                 </div>
-                <input type="text" value={inputValueDelayTimeStart} onChange />
+                <input type="text" value={inputValueDelayTimeStart} onChange={handleInputChangeDelayTimeStart} />
               </div>
               <span>to</span>
               <div className="component-item__number">
@@ -100,7 +87,7 @@ const Reply_Message = () => {
                   <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeEnd} />
                   <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeEnd} />
                 </div>
-                <input type="text" value={inputValueDelayTimeEnd} onChange />
+                <input type="text" value={inputValueDelayTimeEnd} onChange={handleInputChangeDelayTimeEnd} />
               </div>
             </div>
 

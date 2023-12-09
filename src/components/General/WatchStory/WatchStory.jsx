@@ -10,60 +10,35 @@ import Debug from '../../../assets/icon/icon-debug.svg';
 import RunTest from '../../../assets/icon/icon-runTest.svg';
 import iconOptions from '../../../assets/icon/icon-options.svg';
 import iconQuestion from '../../../assets/icon/icon-question.svg';
+import { NumberStory, ShowComment, ShowReact, TextareaComment, TimeWatchStory } from './WatchStory';
 const WatchStory = () => {
-  //Story start
-  const [inputValueNumberStoryStart, setInputValueNumberStoryStart] = useState(5);
-  const handleIncrementNumberStoryStart = () => {
-    setInputValueNumberStoryStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementNumberStoryStart = () => {
-    setInputValueNumberStoryStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Story end
-  const [inputValueNumberStoryEnd, setInputValueNumberStoryEnd] = useState(10);
-  const handleIncrementNumberStoryEnd = () => {
-    setInputValueNumberStoryEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementNumberStoryEnd = () => {
-    setInputValueNumberStoryEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  const {
+    inputValueNumberStoryStart,
+    handleIncrementNumberStoryStart,
+    handleDecrementNumberStoryStart,
+    inputValueNumberStoryEnd,
+    handleIncrementNumberStoryEnd,
+    handleDecrementNumberStoryEnd,
+    handleInputChangeNumberStoryStart,
+    handleInputChangeNumberStoryEnd,
+  } = NumberStory();
 
-  //Watching time/story (s) start
-  const [inputValueTimeWatchStoryStart, setInputValueTimeWatchStoryStart] = useState(5);
-  const handleIncrementTimeWatchStoryStart = () => {
-    setInputValueTimeWatchStoryStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementTimeWatchStoryStart = () => {
-    setInputValueTimeWatchStoryStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Watching time/story (s) end
-  const [inputValueTimeWatchStoryEnd, setInputValueTimeWatchStoryEnd] = useState(10);
-  const handleIncrementTimeWatchStoryEnd = () => {
-    setInputValueTimeWatchStoryEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementTimeWatchStoryEnd = () => {
-    setInputValueTimeWatchStoryEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  const {
+    inputValueTimeWatchStoryStart,
+    handleIncrementTimeWatchStoryStart,
+    handleDecrementTimeWatchStoryStart,
+    inputValueTimeWatchStoryEnd,
+    handleIncrementTimeWatchStoryEnd,
+    handleDecrementTimeWatchStoryEnd,
+    handleInputChangeTimeWatchStoryStart,
+    handleInputChangeTimeWatchStoryEnd,
+  } = TimeWatchStory();
 
-  // Hien thi react
-  const [isReact, setIsReact] = useState(false);
+  const { isReact, handleCheckboxChangeReact } = ShowReact();
 
-  const handleCheckboxChangeReact = () => {
-    setIsReact((prevIsReact) => !prevIsReact);
-  };
+  const { isComment, handleCheckboxChangeComment } = ShowComment();
 
-  //Hien thi comment
-  const [isComment, setisComment] = useState(false);
-  const handleCheckboxChangeComment = () => {
-    setisComment((prevIsLiked) => !prevIsLiked);
-  };
-
-  //cai dat cho phan text comment
-  const [textContent, setTextContent] = useState('');
-
-  const handleTextareaChange = (event) => {
-    setTextContent(event.target.value);
-  };
+  const { textContent, handleTextareaChange } = TextareaComment();
   return (
     <div className="watch-story">
       <h1 className="watch-story__title">Facebook Automation</h1>
@@ -85,7 +60,7 @@ const WatchStory = () => {
                   <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementNumberStoryStart} />
                   <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementNumberStoryStart} />
                 </div>
-                <input type="text" value={inputValueNumberStoryStart} onChange />
+                <input type="text" value={inputValueNumberStoryStart} onChange={handleInputChangeNumberStoryStart} />
               </div>
               <span>to</span>
               <div className="component-item__number">
@@ -93,7 +68,7 @@ const WatchStory = () => {
                   <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementNumberStoryEnd} />
                   <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementNumberStoryEnd} />
                 </div>
-                <input type="text" value={inputValueNumberStoryEnd} onChange />
+                <input type="text" value={inputValueNumberStoryEnd} onChange={handleInputChangeNumberStoryEnd} />
               </div>
             </div>
             <div className="component-item watchingTime">
@@ -103,7 +78,11 @@ const WatchStory = () => {
                   <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementTimeWatchStoryStart} />
                   <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementTimeWatchStoryStart} />
                 </div>
-                <input type="text" value={inputValueTimeWatchStoryStart} onChange />
+                <input
+                  type="text"
+                  value={inputValueTimeWatchStoryStart}
+                  onChange={handleInputChangeTimeWatchStoryStart}
+                />
               </div>
               <span>to</span>
               <div className="component-item__number">
@@ -111,7 +90,7 @@ const WatchStory = () => {
                   <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementTimeWatchStoryEnd} />
                   <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementTimeWatchStoryEnd} />
                 </div>
-                <input type="text" value={inputValueTimeWatchStoryEnd} onChange />
+                <input type="text" value={inputValueTimeWatchStoryEnd} onChange={handleInputChangeTimeWatchStoryEnd} />
               </div>
             </div>
             <div className="component-item_react">

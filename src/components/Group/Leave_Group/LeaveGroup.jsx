@@ -10,66 +10,40 @@ import Edit from '../../../assets/icon/icon-edit.svg';
 import Debug from '../../../assets/icon/icon-debug.svg';
 import RunTest from '../../../assets/icon/icon-runTest.svg';
 import iconOptions from '../../../assets/icon/icon-options.svg';
+import { DelayTime, KeywordTextarea, LeaveGroupOption, NumberGroup, NumberOfMember } from './LeaveGroup';
 const LeaveGroup = () => {
-  //Value number of Groups start
-  const [inputValueGroupsStart, setInputValueGroupsStart] = useState(5);
-  const handleIncrementGroupsStart = () => {
-    setInputValueGroupsStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementGroupsStart = () => {
-    setInputValueGroupsStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Value number of Groups end
-  const [inputValueGroupsEnd, setInputValueGroupsEnd] = useState(10);
-  const handleIncrementGroupsEnd = () => {
-    setInputValueGroupsEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementGroupsEnd = () => {
-    setInputValueGroupsEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  const {
+    inputValueGroupsStart,
+    handleIncrementGroupsStart,
+    handleDecrementGroupsStart,
+    inputValueGroupsEnd,
+    handleIncrementGroupsEnd,
+    handleDecrementGroupsEnd,
+    handleInputChangeGroupsStart,
+    handleInputChangeGroupsEnd,
+  } = NumberGroup();
 
-  //Delay time start
-  const [inputValueDelayTimeStart, setInputValueDelayTimeStart] = useState(3);
-  const handleIncrementDelayTimeStart = () => {
-    setInputValueDelayTimeStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementDelayTimeStart = () => {
-    setInputValueDelayTimeStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Delay time end
-  const [inputValueDelayTimeEnd, setInputValueDelayTimeEnd] = useState(5);
-  const handleIncrementDelayTimeEnd = () => {
-    setInputValueDelayTimeEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementDelayTimeEnd = () => {
-    setInputValueDelayTimeEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  const {
+    inputValueDelayTimeStart,
+    handleIncrementDelayTimeStart,
+    handleDecrementDelayTimeStart,
+    inputValueDelayTimeEnd,
+    handleIncrementDelayTimeEnd,
+    handleDecrementDelayTimeEnd,
+    handleInputChangeDelayTimeStart,
+    handleInputChangeDelayTimeEnd,
+  } = DelayTime();
 
-  //Number of members less than:
-  const [inputValueNumberOfMember, setInputValueNumberOfMember] = useState(10);
-  const handleIncrementNumberOfMember = () => {
-    setInputValueNumberOfMember((prevValue) => prevValue + 1);
-  };
-  const handleDecrementNumberOfMember = () => {
-    setInputValueNumberOfMember((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  const {
+    inputValueNumberOfMember,
+    handleIncrementNumberOfMember,
+    handleDecrementNumberOfMember,
+    handleInputChangeNumberOfMember,
+  } = NumberOfMember();
 
-  //Hien thi select leave group option
-  const [selectedValueLeaveGroup, setSelectedValueLeaveGroup] = useState('');
+  const { selectedValueLeaveGroup, handleSelectChangeLeaveGroup } = LeaveGroupOption();
 
-  const handleSelectChangeLeaveGroup = (event) => {
-    setSelectedValueLeaveGroup(event.target.value);
-  };
-  useEffect(() => {
-    setSelectedValueLeaveGroup('Random');
-  }, []);
-
-  //cai dat cho phan Keyword Text (khi go chu thi placeholder cua textarea se an di)
-  const [KeywordContent, setKeywordContent] = useState('');
-
-  const handleTextareaChangeKeywordContent = (event) => {
-    setKeywordContent(event.target.value);
-  };
+  const { KeywordContent, handleTextareaChangeKeywordContent } = KeywordTextarea();
 
   return (
     <div className="leaveGroup">
@@ -93,7 +67,7 @@ const LeaveGroup = () => {
                     <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementGroupsStart} />
                     <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementGroupsStart} />
                   </div>
-                  <input type="text" value={inputValueGroupsStart} onChange />
+                  <input type="text" value={inputValueGroupsStart} onChange={handleInputChangeGroupsStart} />
                 </div>
                 <span>to</span>
                 <div className="component-item__number">
@@ -101,7 +75,7 @@ const LeaveGroup = () => {
                     <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementGroupsEnd} />
                     <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementGroupsEnd} />
                   </div>
-                  <input type="text" value={inputValueGroupsEnd} onChange />
+                  <input type="text" value={inputValueGroupsEnd} onChange={handleInputChangeGroupsEnd} />
                 </div>
               </div>
               <div className="component-item delayTime">
@@ -113,7 +87,7 @@ const LeaveGroup = () => {
                     <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeStart} />
                     <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeStart} />
                   </div>
-                  <input type="text" value={inputValueDelayTimeStart} onChange />
+                  <input type="text" value={inputValueDelayTimeStart} onChange={handleInputChangeDelayTimeStart} />
                 </div>
                 <span>to</span>
                 <div className="component-item__number">
@@ -121,7 +95,7 @@ const LeaveGroup = () => {
                     <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeEnd} />
                     <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeEnd} />
                   </div>
-                  <input type="text" value={inputValueDelayTimeEnd} onChange />
+                  <input type="text" value={inputValueDelayTimeEnd} onChange={handleInputChangeDelayTimeEnd} />
                 </div>
               </div>
               <div className="LeaveGroup_Selection">
@@ -148,7 +122,12 @@ const LeaveGroup = () => {
                           <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementNumberOfMember} />
                           <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementNumberOfMember} />
                         </div>
-                        <input type="text" value={inputValueNumberOfMember} onChange style={{ background: '#FFF' }} />
+                        <input
+                          type="text"
+                          value={inputValueNumberOfMember}
+                          onChange={handleInputChangeNumberOfMember}
+                          style={{ background: '#FFF' }}
+                        />
                       </div>
                     </div>
                     <div className="KeywordContent">

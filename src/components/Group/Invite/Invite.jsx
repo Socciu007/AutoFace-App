@@ -10,57 +10,34 @@ import Edit from '../../../assets/icon/icon-edit.svg';
 import Debug from '../../../assets/icon/icon-debug.svg';
 import RunTest from '../../../assets/icon/icon-runTest.svg';
 import iconOptions from '../../../assets/icon/icon-options.svg';
+import { DelayTime, InviteOption, NumberGroup_Friends, UIDTextarea } from './Invite';
 const Invite = () => {
-  //Value number of Group_Friends start
-  const [inputValueGroup_FriendsStart, setInputValueGroup_FriendsStart] = useState(5);
-  const handleIncrementGroup_FriendsStart = () => {
-    setInputValueGroup_FriendsStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementGroup_FriendsStart = () => {
-    setInputValueGroup_FriendsStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Value number of Group_Friends end
-  const [inputValueGroup_FriendsEnd, setInputValueGroup_FriendsEnd] = useState(10);
-  const handleIncrementGroup_FriendsEnd = () => {
-    setInputValueGroup_FriendsEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementGroup_FriendsEnd = () => {
-    setInputValueGroup_FriendsEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  const {
+    inputValueGroup_FriendsStart,
+    handleIncrementGroup_FriendsStart,
+    handleDecrementGroup_FriendsStart,
+    inputValueGroup_FriendsEnd,
+    handleIncrementGroup_FriendsEnd,
+    handleDecrementGroup_FriendsEnd,
+    handleInputChangeGroup_FriendsStart,
+    handleInputChangeGroup_FriendsEnd,
+  } = NumberGroup_Friends();
 
-  //Delay time start
-  const [inputValueDelayTimeStart, setInputValueDelayTimeStart] = useState(3);
-  const handleIncrementDelayTimeStart = () => {
-    setInputValueDelayTimeStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementDelayTimeStart = () => {
-    setInputValueDelayTimeStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Delay time end
-  const [inputValueDelayTimeEnd, setInputValueDelayTimeEnd] = useState(5);
-  const handleIncrementDelayTimeEnd = () => {
-    setInputValueDelayTimeEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementDelayTimeEnd = () => {
-    setInputValueDelayTimeEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  const {
+    inputValueDelayTimeStart,
+    handleIncrementDelayTimeStart,
+    handleDecrementDelayTimeStart,
+    inputValueDelayTimeEnd,
+    handleIncrementDelayTimeEnd,
+    handleDecrementDelayTimeEnd,
+    handleInputChangeDelayTimeStart,
+    handleInputChangeDelayTimeEnd,
+  } = DelayTime();
 
-  //Hien thi select Invite option
-  const [selectedValueInvite, setSelectedValueInvite] = useState('');
+  const { selectedValueInvite, handleSelectChangeInvite } = InviteOption();
 
-  const handleSelectChangeInvite = (event) => {
-    setSelectedValueInvite(event.target.value);
-  };
-  useEffect(() => {
-    setSelectedValueInvite('random');
-  }, []);
+  const { UIDContent, handleTextareaChangeUIDContent } = UIDTextarea();
 
-  //cai dat cho phan UID Text (khi go chu thi placeholder cua textarea se an di)
-  const [UIDContent, setUIDContent] = useState('');
-
-  const handleTextareaChangeUIDContent = (event) => {
-    setUIDContent(event.target.value);
-  };
   return (
     <div className="invite">
       <h1 className="createPost__title">Facebook Automation</h1>
@@ -83,7 +60,11 @@ const Invite = () => {
                     <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementGroup_FriendsStart} />
                     <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementGroup_FriendsStart} />
                   </div>
-                  <input type="text" value={inputValueGroup_FriendsStart} onChange />
+                  <input
+                    type="text"
+                    value={inputValueGroup_FriendsStart}
+                    onChange={handleInputChangeGroup_FriendsStart}
+                  />
                 </div>
                 <span>to</span>
                 <div className="component-item__number">
@@ -91,7 +72,7 @@ const Invite = () => {
                     <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementGroup_FriendsEnd} />
                     <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementGroup_FriendsEnd} />
                   </div>
-                  <input type="text" value={inputValueGroup_FriendsEnd} onChange />
+                  <input type="text" value={inputValueGroup_FriendsEnd} onChange={handleInputChangeGroup_FriendsEnd} />
                 </div>
               </div>
               <div className="component-item delayTime">
@@ -103,7 +84,7 @@ const Invite = () => {
                     <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeStart} />
                     <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeStart} />
                   </div>
-                  <input type="text" value={inputValueDelayTimeStart} onChange />
+                  <input type="text" value={inputValueDelayTimeStart} onChange={handleInputChangeDelayTimeStart} />
                 </div>
                 <span>to</span>
                 <div className="component-item__number">
@@ -111,7 +92,7 @@ const Invite = () => {
                     <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeEnd} />
                     <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeEnd} />
                   </div>
-                  <input type="text" value={inputValueDelayTimeEnd} onChange />
+                  <input type="text" value={inputValueDelayTimeEnd} onChange={handleInputChangeDelayTimeEnd} />
                 </div>
               </div>
               <div className="component-item__header">
