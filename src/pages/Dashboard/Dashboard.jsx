@@ -27,21 +27,21 @@ const Dashboard = () => {
   return (
     <>
       <div className="dashboard ">
-        {/* <WatchVideo></WatchVideo> */}
-        {/* <WatchStory></WatchStory> */}
-        {/* <Newsfeed></Newsfeed> */}
-        {/* <CreatePost></CreatePost> */}
-        {/* <Post_Interaction></Post_Interaction>*/}
-        {/* <Delete_Post></Delete_Post> */}
-        {/* <Send_Message></Send_Message> */}
-        {/* <Reply_Message></Reply_Message> */}
-        {/* <View_Notifications></View_Notifications> */}
-        {/* <AddFriend></AddFriend> */}
-        {/* <CancelFriend></CancelFriend> */}
-        {/* <JoinGroup></JoinGroup> */}
+        <WatchVideo></WatchVideo>
+        <WatchStory></WatchStory>
+        <Newsfeed></Newsfeed>
+        <CreatePost></CreatePost>
+        <Post_Interaction></Post_Interaction>
+        <Delete_Post></Delete_Post>
+        <Send_Message></Send_Message>
+        <Reply_Message></Reply_Message>
+        <View_Notifications></View_Notifications>
+        <AddFriend></AddFriend>
+        <CancelFriend></CancelFriend>
+        <JoinGroup></JoinGroup>
         <LeaveGroup></LeaveGroup>
-        {/* <Invite></Invite> */}
-        {/* <CreatePostGroup></CreatePostGroup> */}
+        <Invite></Invite>
+        <CreatePostGroup></CreatePostGroup>
       </div>
     </>
   );
