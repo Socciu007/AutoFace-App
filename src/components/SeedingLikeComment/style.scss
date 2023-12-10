@@ -176,24 +176,63 @@
               transform: translate(-10%, -50%);
               margin-right: 0.5rem;
             }
-          }
-          .folderPhoto {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #fff;
-            margin-bottom: 2%;
-            p {
-              font-weight: 400;
-              span {
-                opacity: 0.5;
+        }
+        .folderPhoto {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #fff;
+        margin-bottom: 2%;
+        p {
+            font-weight: 400;
+            span {
+            opacity: 0.5;
+            }
+        }
+        img {
+            width: 3%;
+            cursor: pointer;
+        }
+        }
+        .-type-follower {
+            display: block;
+            .PostContent {
+                margin-top: 10px;
+                // width: 100%;
+                border-radius: 5px;
+                background: #F5F5F5;
+            }
+            .postOption{
+                position: relative;
+                display: flex;
+                align-items: center;
+                .PostType,
+                .TagType {
+                  top: 0;
+                  width: 100%;
+                  border-radius: 5px;
+                  background: var(--bg-input);
+                  height: 40px;
+                  font-size: 15px;
+                  padding: 0 3%;
+                  appearance: none;
+                  -webkit-appearance: none;
+                  -moz-appearance: none;
+                  border: 0;
+                  option {
+                    font-weight: 400;
+                    color: var(--font-color-para);
+                  }
+                }
+                img {
+                  position: absolute;
+                  display: inline;
+                  right: 5%;
+                  top: 50%;
+                  transform: translate(-5%, -50%);
+                }
               }
-            }
-            img {
-              width: 3%;
-              cursor: pointer;
-            }
-          }    
+        }    
     }
     .scrollable-container {
         height: 100%; 
