@@ -1,4 +1,6 @@
+// eslint-disable-next-line no-unused-vars
 import { useEffect, useState } from 'react';
+
 export function handleInputChange(event, setInputValue) {
   // Nếu giá trị mới là chuỗi rỗng, thiết lập về giá trị mặc định hoặc giá trị mong muốn
   const newValue = event.target.value === '' ? '' : parseInt(event.target.value, 10);
