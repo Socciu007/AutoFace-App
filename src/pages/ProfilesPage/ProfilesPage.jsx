@@ -13,40 +13,34 @@ import addProxy from "../../assets/pictures/icon-addProxy.png";
 import deleted from "../../assets/pictures/icon-delete.svg";
 import foxy from "../../assets/pictures/icon-foxy.png";
 import ghosty from "../../assets/pictures/icon-ghosty.png";
-import yourScript from "../../assets/pictures/icon-yourScripts.svg"
+import yourScript from "../../assets/pictures/icon-yourScripts.svg";
 import PopupComponent from "../../components/PopupComponent/PopupComponent";
-import proxy from "../../assets/pictures/icon-proxy.svg"
+import proxy from "../../assets/pictures/icon-proxy.svg";
 import { useNavigate } from "react-router-dom";
 import profiles from "../../resources/profiles";
-import scripts from "../../resources/scripts.json"
-import Popup from "reactjs-popup";
+import scripts from "../../resources/scripts.json";
+import {
+  EditableCell,
+  EditableRow,
+} from "../../components/EditableTable/EditableTable";
 
 const ProfilesPage = () => {
-  const [openScripts, setOpenScripts] = useState(false)
-  const [openProfiles, setOpenProfiles] = useState(false)
-  const [openAddProxy, setOpenAddProxy] =useState(false)
-  const [openDeleteProfile, setOpenDeleteProfile] =useState(false)
-  const [openOptions, setOpenOptions] = useState(false)
-  const [typeProxy, setTypeProxy] = useState('')
+  const [rowSelectedKeys, setRowSelectedKeys] = useState([]);
+  const [rowKeys, setRowKeys] = useState("");
+  const [openScripts, setOpenScripts] = useState(false);
+  const [openProfiles, setOpenProfiles] = useState(false);
+  const [openAddProxy, setOpenAddProxy] = useState(false);
+  const [openDeleteProfile, setOpenDeleteProfile] = useState(false);
+  const [openOptions, setOpenOptions] = useState(false);
+  const [typeProxy, setTypeProxy] = useState("");
+  const [dataProfiles, setDataProfiles] = useState(profiles);
+  const [dataScripts, setDataScripts] = useState(scripts);
   const navigate = useNavigate();
-  // const [tags, setTags] =useState('')
-  // const renderTag = (tag) => {
-  //   return (
-  //     <>
-  //       <Input 
-  //         name="tag" 
-  //         value={tag} 
-  //         className="-tag-profiles" 
-  //         onChange={(e) => tag = e.target.value}
-  //       >
-  //       </Input>
-  //     </>
-  //   );
-  // }
-  const columns = [
+  const defaultColumns = [
     {
       title: "#",
       dataIndex: "key",
+      fixed: "left",
     },
     {
       title: "Profile",
@@ -65,7 +59,7 @@ const ProfilesPage = () => {
       title: "Status",
       dataIndex: "status",
       render: (status) => {
-        if (status[0] === 'Running') {
+        if (status[0] === "Running") {
           return (
             <>
               <div className="-status-profiles">{status}</div>
@@ -74,7 +68,9 @@ const ProfilesPage = () => {
         } else {
           return (
             <>
-              <div className="-status-profiles -status-profiles-ready">{status}</div>
+              <div className="-status-profiles -status-profiles-ready">
+                {status}
+              </div>
             </>
           );
         }
@@ -99,16 +95,17 @@ const ProfilesPage = () => {
     {
       title: "Tag",
       dataIndex: "tag",
+      width: 150,
+      editable: true,
       render: (tag) => {
         return (
           <>
-            <Input 
-              name="tag" 
-              value={tag} 
-              className="-tag-profiles" 
-              onChange={(e) => e.target.value}
-            >
-            </Input>
+            <Input
+              name="tag"
+              value={tag}
+              className="-tag-profiles"
+              // onChange={(e) => setDataProfiles({})}
+            ></Input>
           </>
         );
       },
@@ -123,6 +120,37 @@ const ProfilesPage = () => {
     },
     Table.EXPAND_COLUMN,
   ];
+  const handleSave = (row) => {
+    const newData = [...dataProfiles];
+    const index = newData.findIndex((item) => row.key === item.key);
+    const item = newData[index];
+    newData.splice(index, 1, {
+      ...item,
+      ...row,
+    });
+    setDataProfiles(newData);
+  };
+  const components = {
+    body: {
+      row: EditableRow,
+      cell: EditableCell,
+    },
+  };
+  const columns = defaultColumns.map((col) => {
+    if (!col.editable) {
+      return col;
+    }
+    return {
+      ...col,
+      onCell: (record) => ({
+        record,
+        editable: col.editable,
+        dataIndex: col.dataIndex,
+        title: col.title,
+        handleSave,
+      }),
+    };
+  });
   const columnsScripts = [
     {
       title: "Scripts",
@@ -149,10 +177,10 @@ const ProfilesPage = () => {
       render: () => {
         return (
           <>
-          <div style={{display: 'flex', gap: '5px'}}>
-            <img src={foxy} alt="icon-foxy"></img>
-            <img src={ghosty} alt="icon-ghosty"></img>
-          </div>
+            <div style={{ display: "flex", gap: "5px" }}>
+              <img src={foxy} alt="icon-foxy"></img>
+              <img src={ghosty} alt="icon-ghosty"></img>
+            </div>
           </>
         );
       },
@@ -165,7 +193,7 @@ const ProfilesPage = () => {
       title: "Status",
       dataIndex: "status",
       render: (status) => {
-        if (status[0] === 'Running') {
+        if (status[0] === "Running") {
           return (
             <>
               <div className="-status-profiles">{status}</div>
@@ -174,7 +202,9 @@ const ProfilesPage = () => {
         } else {
           return (
             <>
-              <div className="-status-profiles -status-profiles-ready">{status}</div>
+              <div className="-status-profiles -status-profiles-ready">
+                {status}
+              </div>
             </>
           );
         }
@@ -199,16 +229,14 @@ const ProfilesPage = () => {
     {
       title: "Notes",
       dataIndex: "notes",
-    }
+    },
   ];
-  const dataProfiles = profiles
-  const dataScripts = scripts
+
   // rowSelection object indicates the need for row selection
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-      );
+      console.log(`selectedRowKeys: ${selectedRowKeys}`);
+      setRowSelectedKeys(selectedRowKeys);
     },
   };
   //
@@ -220,37 +248,38 @@ const ProfilesPage = () => {
   };
   //
   const handleOpenScripts = () => {
-    setOpenScripts(true)
-  }
+    setOpenScripts(true);
+  };
   const handleCloseScripts = () => {
-    setOpenScripts(false)
-  }
+    setOpenScripts(false);
+  };
   //
   const handleOpenProfiles = () => {
-    setOpenProfiles(true)
-  }
+    setOpenProfiles(true);
+  };
   const handleCloseProfiles = () => {
-    setOpenProfiles(false)
-  }
+    setOpenProfiles(false);
+  };
   const handleCloseAdd = () => {
-    setOpenAddProxy(false)
-  }
+    setOpenAddProxy(false);
+  };
   const handleCloseDelete = () => {
-    setOpenDeleteProfile(false)
-  }
+    setOpenDeleteProfile(false);
+  };
   const onChangeTypeProxy = (e) => {
-    setTypeProxy(e.target.value)
-  }
-  //
-  // const handleOpenPopup = () => {
-  //   return (
-  //     <>
+    setTypeProxy(e.target.value);
+  };
 
-  //     </>
-  //   )
-  // }
   return (
-    <div className="layout-profiles" style={{ opacity: openAddProxy || openDeleteProfile || openScripts || openProfiles ? 0.2 : 1 }}>
+    <div
+      className="layout-profiles"
+      style={{
+        opacity:
+          openAddProxy || openDeleteProfile || openScripts || openProfiles
+            ? 0.2
+            : 1,
+      }}
+    >
       <div className="-container-profiles">
         <h1 className="-title-profiles">FACEBOOK AUTOMATION</h1>
         <div className="-nav-profiles">
@@ -282,172 +311,237 @@ const ProfilesPage = () => {
                 <img src={plus} alt="image-plus"></img>
               </span>
               <PopupComponent
-              open={openProfiles} 
-              onClose={handleCloseProfiles}
-              style={{margin: 'auto'}}
-            >
-              {
-                <div className='-layout-choose-scripts'>
-                  <div className="-layout-choose-scripts__container">
-                    <div className="-nav-scripts">
-                      <div className="-nav-scripts__header">
-                        <div className="-nav-scripts__header__close" onClick={handleCloseProfiles}>
-                          <img src={closePopup} alt="icon-x"></img>
-                        </div>           
-                        <h1>CHOOSE PROFILES</h1>
+                open={openProfiles}
+                onClose={handleCloseProfiles}
+                style={{ margin: "auto" }}
+              >
+                {
+                  <div className="-layout-choose-scripts">
+                    <div className="-layout-choose-scripts__container">
+                      <div className="-nav-scripts">
+                        <div className="-nav-scripts__header">
+                          <div
+                            className="-nav-scripts__header__close"
+                            onClick={handleCloseProfiles}
+                          >
+                            <img src={closePopup} alt="icon-x"></img>
+                          </div>
+                          <h1>CHOOSE PROFILES</h1>
+                        </div>
+                        <div className="-wrapper-option-profiles -nav-scripts__btn">
+                          <span
+                            className="-option-profiles"
+                            onClick={handleSettings}
+                          >
+                            <img src={settings} alt="image-settings"></img>
+                          </span>
+                          <span
+                            className="-option-profiles"
+                            onClick={handleOpenScripts}
+                          >
+                            <img src={yourScript} alt="icon-yourscripts"></img>
+                          </span>
+                          <div>
+                            <button>ADD</button>
+                          </div>
+                        </div>
                       </div>
-                      <div className="-wrapper-option-profiles -nav-scripts__btn">
-                        <span className="-option-profiles" onClick={handleSettings}>
-                          <img src={settings} alt="image-settings"></img>
-                        </span>
-                        <span className="-option-profiles" onClick={handleOpenScripts}>
-                          <img src={yourScript} alt="icon-yourscripts"></img>
-                        </span>
-                        <div>
-                          <button>ADD</button>
+                      <div className="-container-scripts">
+                        <div className="-container-scripts__left">
+                          <div className="-container-scripts__left__options">
+                            <h1>FOLDER</h1>
+                            <div className="-container-scripts__left__options__type">
+                              <p>All</p>
+                            </div>
+                            <div className="-container-scripts__left__options__list -option-list">
+                              <ul>
+                                <li className="-option-item">
+                                  <div
+                                    className="-option-item__icon"
+                                    style={{ background: "#E84314" }}
+                                  ></div>
+                                  <p>Facebook Ads 1</p>
+                                </li>
+                                <li className="-option-item">
+                                  <div
+                                    className="-option-item__icon"
+                                    style={{ background: "#F6A01D" }}
+                                  ></div>
+                                  <p>Seeding 1</p>
+                                </li>
+                                <li className="-option-item">
+                                  <div
+                                    className="-option-item__icon"
+                                    style={{ background: "#FFDE50" }}
+                                  ></div>
+                                  <p>Mail 1 - Alcie</p>
+                                </li>
+                                <li className="-option-item">
+                                  <div
+                                    className="-option-item__icon"
+                                    style={{ background: "#81BC06" }}
+                                  ></div>
+                                  <p>Mail 1 - Brono</p>
+                                </li>
+                                <li className="-option-item">
+                                  <div
+                                    className="-option-item__icon"
+                                    style={{ background: "#00ADEF" }}
+                                  ></div>
+                                  <p>Mail 3 - Kazza</p>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="-container-scripts__right">
+                          <div className="-container-scripts__right__main">
+                            <div className="-container-scripts__right__main__search">
+                              <h1>PROFILES</h1>
+                              <div className="-search-profiles">
+                                <span>
+                                  <img
+                                    src={search}
+                                    alt="icon-search"
+                                    style={{ marginLeft: "11px" }}
+                                  ></img>
+                                </span>
+                                <input placeholder="Search..."></input>
+                              </div>
+                            </div>
+                            <div className="-container-scripts__right__main__content">
+                              <div className="-container-scripts__right__main__content__table">
+                                <Table
+                                  rowSelection={{
+                                    ...rowSelection,
+                                  }}
+                                  columns={columnsProfiles}
+                                  dataSource={dataProfiles}
+                                  pagination={false}
+                                ></Table>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
-                    <div className="-container-scripts">
-                      <div className="-container-scripts__left">
-                        <div className="-container-scripts__left__options">
-                          <h1>FOLDER</h1>
-                          <div className="-container-scripts__left__options__type"><p>All</p></div>
-                          <div className="-container-scripts__left__options__list -option-list">
-                            <ul>
-                              <li className="-option-item">                               
-                                <div className="-option-item__icon" style={{background: '#E84314'}}></div>
-                                <p>Facebook Ads 1</p>
-                              </li>
-                              <li className="-option-item">
-                                <div className="-option-item__icon" style={{background: '#F6A01D'}}></div>
-                                <p>Seeding 1</p>
-                              </li>
-                              <li className="-option-item">
-                                <div className="-option-item__icon" style={{background: '#FFDE50'}}></div>
-                                <p>Mail 1 - Alcie</p>
-                              </li>
-                              <li className="-option-item">
-                                <div className="-option-item__icon" style={{background: '#81BC06'}}></div>
-                                <p>Mail 1 - Brono</p>
-                              </li >
-                              <li className="-option-item">
-                                <div className="-option-item__icon" style={{background: '#00ADEF'}}></div>
-                                <p>Mail 3 - Kazza</p>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="-container-scripts__right">
-                        <div className="-container-scripts__right__main">
-                          <div className="-container-scripts__right__main__search">
-                            <h1>PROFILES</h1>
-                            <div className="-search-profiles">
-                              <span>
-                                <img
-                                  src={search}
-                                  alt="icon-search"
-                                  style={{ marginLeft: "11px" }}
-                                ></img>
-                              </span>
-                              <input placeholder="Search..."></input>
-                            </div>
-                          </div>
-                          <div className="-container-scripts__right__main__content">
-                            <div className="-container-scripts__right__main__content__table">
-                              <Table
-                                rowSelection={{
-                                  ...rowSelection,
-                                }}
-                                columns={columnsProfiles}
-                                dataSource={dataProfiles}
-                                pagination={false}
-                              ></Table>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>          
                   </div>
-                </div>
-              }
+                }
               </PopupComponent>
             </div>
           </div>
           <div className="-btn-profiles">
-            <div className="-select-profile" onClick={() => setOpenAddProxy(o => !o)}>
-              <div style={{position: 'relative'}}>
-                <img src={addProxy} alt="icon-add-proxy" width={15} height={15}></img>
+            <div
+              className="-select-profile"
+              onClick={() => setOpenAddProxy((o) => !o)}
+            >
+              <div style={{ position: "relative" }}>
+                <img
+                  src={addProxy}
+                  alt="icon-add-proxy"
+                  width={15}
+                  height={15}
+                ></img>
               </div>
               <p>Add Proxy</p>
             </div>
             <PopupComponent
-              open={openAddProxy} 
+              open={openAddProxy}
               onClose={handleCloseAdd}
-              style={{margin: 'auto'}}
+              style={{ margin: "auto" }}
             >
               {
-                <div className='modal'>
-                  <div className='-add-proxys'>
+                <div className="modal">
+                  <div className="-add-proxys">
                     <div className="-close-popup" onClick={handleCloseAdd}>
                       <img src={closePopup} alt="icon-x"></img>
-                    </div>           
+                    </div>
                     <h1>ADD PROXY</h1>
-                    <p>Add new proxies to <b>2 profiles</b></p>
-                    <div className='-add-proxys__type'>
+                    <p>
+                      Add new proxies to <b>2 profiles</b>
+                    </p>
+                    <div className="-add-proxys__type">
                       <p>Connection type</p>
-                      <div className='-add-proxys-nav'>
-                        <div className='-add-proxys__type__text'>
+                      <div className="-add-proxys-nav">
+                        <div className="-add-proxys__type__text">
                           <div className="-add-proxys__type__text__option">
                             <select
                               name="typeProxy"
                               onChange={onChangeTypeProxy}
                               value={typeProxy}
                             >
-                              <option value="Without proxy">Without proxy</option>
+                              <option value="Without proxy">
+                                Without proxy
+                              </option>
                               <option value="Your Proxy">Your Proxy</option>
                               <option value="Free Proxy">Free Proxy</option>
                             </select>
                           </div>
                         </div>
-                        <div className='-add-proxys__type__icon'>
-                          <img src={proxy} alt='icon-proxy'></img>
+                        <div className="-add-proxys__type__icon">
+                          <img src={proxy} alt="icon-proxy"></img>
                         </div>
                       </div>
                     </div>
-                    <div className='-add-proxys__type'>
+                    <div className="-add-proxys__type">
                       <p>Proxy list</p>
-                      <div className='-add-proxys-nav -list-proxys'>
+                      <div className="-add-proxys-nav -list-proxys">
                         <textarea name="" type="text"></textarea>
-                        <div className='-form-instruct'>
-                          <p style={{marginRight: '19px'}}><span>1</span>Enter the content here</p>
-                          <p style={{marginRight: '19px'}}><span>2</span><b>Proxy format: </b>IP:Port:Username:Password</p>
-                          <p><span>3</span>1 proxy/line</p>
-                          <p ><span>4</span>The number of proxies should not be less or more than the number of profiles</p>
+                        <div className="-form-instruct">
+                          <p style={{ marginRight: "19px" }}>
+                            <span>1</span>Enter the content here
+                          </p>
+                          <p style={{ marginRight: "19px" }}>
+                            <span>2</span>
+                            <b>Proxy format: </b>IP:Port:Username:Password
+                          </p>
+                          <p>
+                            <span>3</span>1 proxy/line
+                          </p>
+                          <p>
+                            <span>4</span>The number of proxies should not be
+                            less or more than the number of profiles
+                          </p>
                         </div>
-                        <div className='-list-proxys__save'>
-                          Save
-                        </div>
+                        <div className="-list-proxys__save">Save</div>
                       </div>
                     </div>
                   </div>
                 </div>
               }
             </PopupComponent>
-            <div className="-select-profile" onClick={() => setOpenDeleteProfile(o => !o)}>
-              <div><img src={deleted} alt="icon-delete"></img></div>
-                <p>Remove</p>
+            <div
+              className="-select-profile"
+              onClick={() => setOpenDeleteProfile((o) => !o)}
+            >
+              <div>
+                <img src={deleted} alt="icon-delete"></img>
+              </div>
+              <p>Remove</p>
             </div>
-            <PopupComponent open={openDeleteProfile} onClose={handleCloseDelete}>
+            <PopupComponent
+              open={openDeleteProfile}
+              onClose={handleCloseDelete}
+            >
               {
                 <div className="-delete-profiles">
                   <div className="-delete-profiles__content">
                     <h1>REMOVE</h1>
                     <p>Are you sure to remove the profiles?</p>
                     <div className="-delete-profiles__content__confirm">
-                      <button type="button" style={{background: '#F5F5F5', color: '#01162B'}} onClick={handleCloseDelete}>Cancel</button>
-                      <button type="button" style={{background: '#2A86FF', color: '#fff'}}>Remove</button>
+                      <button
+                        type="button"
+                        style={{ background: "#F5F5F5", color: "#01162B" }}
+                        onClick={handleCloseDelete}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        style={{ background: "#2A86FF", color: "#fff" }}
+                      >
+                        Remove
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -457,25 +551,34 @@ const ProfilesPage = () => {
               <button>Run</button>
             </div>
             <PopupComponent
-              open={openScripts} 
+              open={openScripts}
               onClose={handleCloseScripts}
-              style={{margin: 'auto'}}
+              style={{ margin: "auto" }}
             >
               {
-                <div className='-layout-choose-scripts'>
+                <div className="-layout-choose-scripts">
                   <div className="-layout-choose-scripts__container">
                     <div className="-nav-scripts">
                       <div className="-nav-scripts__header">
-                        <div className="-nav-scripts__header__close" onClick={handleCloseScripts}>
+                        <div
+                          className="-nav-scripts__header__close"
+                          onClick={handleCloseScripts}
+                        >
                           <img src={closePopup} alt="icon-x"></img>
-                        </div>           
+                        </div>
                         <h1>CHOOSE SCRIPT</h1>
                       </div>
                       <div className="-wrapper-option-profiles -nav-scripts__btn">
-                        <span className="-option-profiles" onClick={handleSettings}>
+                        <span
+                          className="-option-profiles"
+                          onClick={handleSettings}
+                        >
                           <img src={settings} alt="image-settings"></img>
                         </span>
-                        <span className="-option-profiles" onClick={handleOpenScripts}>
+                        <span
+                          className="-option-profiles"
+                          onClick={handleOpenScripts}
+                        >
                           <img src={yourScript} alt="icon-yourscripts"></img>
                         </span>
                         <div>
@@ -486,7 +589,9 @@ const ProfilesPage = () => {
                     <div className="-container-scripts">
                       <div className="-container-scripts__left">
                         <div className="-container-scripts__left__options">
-                          <div className="-container-scripts__left__options__type"><p>All</p></div>
+                          <div className="-container-scripts__left__options__type">
+                            <p>All</p>
+                          </div>
                           <div className="-container-scripts__left__options__list">
                             <ul>
                               <li>System’s script</li>
@@ -524,7 +629,7 @@ const ProfilesPage = () => {
                           </div>
                         </div>
                       </div>
-                    </div>          
+                    </div>
                   </div>
                 </div>
               }
@@ -537,29 +642,49 @@ const ProfilesPage = () => {
               rowSelection={{
                 ...rowSelection,
               }}
-
+              onRow={(record, index) => {
+                return {
+                  onClick: () => {
+                    setRowKeys(record.key);
+                  },
+                };
+              }}
+              components={components}
+              rowClassName={() => "editable-row"}
               expandable={{
-                expandedRowRender: record => (
-                  <p style={{ margin: 0 }}>{record.description}</p>
+                expandedRowRender: () => (
+                  // <div className="-options">
+                  //   <div className="">
+                  //     <img src={proxy} alt=""></img>
+                  //     <p>Pin</p>
+                  //   </div>
+                  // </div>
+                  <></>
                 ),
                 expandIcon: () => {
                   return (
-                 
-                      <div className="-expand-icon" onClick={() => setOpenOptions(true)}>
-                        <img src={options} alt="image-option"></img>
-                        <PopupComponent open={openOptions} position={'left'} onClose={() => setOpenOptions(false)}>
-                          {
-                            <div className="-options">
-                              <div className="">
-                                <img src={proxy} alt=""></img>
-                                <p>Pin</p>
-                              </div>
+                    <div
+                      className="-expand-icon"
+                      // onClick={(e) => onExpand(record, e)}
+                      onClick={() => setOpenOptions(true)}
+                    >
+                      <img src={options} alt="image-option"></img>
+                      <PopupComponent
+                        open={openOptions}
+                        position={"left center"}
+                        onClose={() => setOpenOptions(false)}
+                      >
+                        {
+                          <div className="-options">
+                            <div className="">
+                              <img src={proxy} alt=""></img>
+                              <p>Pin</p>
                             </div>
-                          }
-                        </PopupComponent>                    
-                      </div>
-                    
-                  )
+                          </div>
+                        }
+                      </PopupComponent>
+                    </div>
+                  );
                 },
               }}
               columns={columns}
