@@ -1,29 +1,137 @@
 import React, { useState } from "react";
 import "./style.scss";
-import up from "../../assets/pictures/icon-updown.svg";
-import down from "../../assets/pictures/icon-downup.svg";
-import downup from "../../assets/pictures/icon-down.svg";
+import up from "../../assets/pictures/icon-Increase.svg";
+import down from "../../assets/pictures/icon-Descrease.svg";
+// import downup from "../../assets/pictures/icon-down.svg";
 import onOption from "../../assets/pictures/icon-on-option.svg";
 import { useNavigate } from "react-router-dom";
 
 const SettingsPage = () => {
   const navigate = useNavigate();
-  const [counter, setCounter] = useState(0);
-  const [counter_0, setCounter_0] = useState(0);
+  const [settings, setSettings] = useState({
+    numberProfile: 5,
+    numberLoop: 1,
+    typeProfile: 'Random',
+    url: 'www.fb.com',
+    maxTimePerThread: 500,
+    delayInEachNewThread: 5,
+    stopIfRamReaches: 90,
+    stopIfCPUReaches: 90,
+    stopIfDiskReaches: 90
+  })
+  //
+  const handleNumberProfile = (type) => {
+    if (type === 'increase') {
+      setSettings({
+        ...settings,
+        numberProfile: settings.numberProfile + 1
+      })
+    } else {
+      setSettings({
+        ...settings,
+        numberProfile: settings.numberProfile > 0 ? (settings.numberProfile - 1) : 0
+      })
+    }
+  }
+  //
+  const handleNumberLoop = (type) => {
+    if (type === 'increase') {
+      setSettings({
+        ...settings,
+        numberLoop: settings.numberLoop + 1
+      })
+    } else {
+      setSettings({
+        ...settings,
+        numberLoop: settings.numberLoop > 0 ? (settings.numberLoop - 1) : 0
+      })
+    }
+  }
+  //
+  const handleMaxTimePerThread = (type) => {
+    if (type === 'increase') {
+      setSettings({
+        ...settings,
+        maxTimePerThread: settings.maxTimePerThread + 1
+      })
+    } else {
+      setSettings({
+        ...settings,
+        maxTimePerThread: settings.maxTimePerThread > 0 ? (settings.maxTimePerThread - 1) : 0
+      })
+    }
+  }
+  //
+  const handleDelayInEachNewThread = (type) => {
+    if (type === 'increase') {
+      setSettings({
+        ...settings,
+        delayInEachNewThread: settings.delayInEachNewThread + 1
+      })
+    } else {
+      setSettings({
+        ...settings,
+        delayInEachNewThread: settings.delayInEachNewThread > 0 ? (settings.delayInEachNewThread - 1) : 0
+      })
+    }
+  }
+  //
+  const handlestopIfRamReaches = (type) => {
+    if (type === 'increase') {
+      setSettings({
+        ...settings,
+        stopIfRamReaches: settings.stopIfRamReaches + 1
+      })
+    } else {
+      setSettings({
+        ...settings,
+        stopIfRamReaches: settings.stopIfRamReaches > 0 ? (settings.stopIfRamReaches - 1) : 0
+      })
+    }
+  }
+  //
+  const handleStopIfCPUReaches = (type) => {
+    if (type === 'increase') {
+      setSettings({
+        ...settings,
+        stopIfCPUReaches: settings.stopIfCPUReaches + 1
+      })
+    } else {
+      setSettings({
+        ...settings,
+        stopIfCPUReaches: settings.stopIfCPUReaches > 0 ? (settings.stopIfCPUReaches - 1) : 0
+      })
+    }
+  }
+  //
+  const handleStopIfDiskReaches = (type) => {
+    if (type === 'increase') {
+      setSettings({
+        ...settings,
+        stopIfDiskReaches: settings.stopIfDiskReaches + 1
+      })
+    } else {
+      setSettings({
+        ...settings,
+        stopIfDiskReaches: settings.stopIfDiskReaches > 0 ? (settings.stopIfDiskReaches - 1) : 0
+      })
+    }
+  }
+  //
+  const handleOnChangeTypeProfile = (e) => {
+    setSettings({
+      ...settings,
+      [e.target.name]: e.target.value
+    })
+  }
+  //
+  const handleOnchangeUrl = (e) => {
+    setSettings({
+      ...settings,
+      [e.target.name]: e.target.value
+    })
+  }
 
-  const incrementCounter = () => {
-    setCounter((prevCounter) => prevCounter + 1);
-  };
-  const incrementCounter_0 = () => {
-    setCounter_0((prevCounter) => prevCounter + 1);
-  };
-
-  const decrementCounter = () => {
-    setCounter((prevCounter) => (prevCounter > 0 ? prevCounter - 1 : 0));
-  };
-  const decrementCounter_0 = () => {
-    setCounter_0((prevCounter) => (prevCounter > 0 ? prevCounter - 1 : 0));
-  };
   return (
     <div className="layout-settings">
       <div className="-layout-page">
@@ -57,17 +165,17 @@ const SettingsPage = () => {
                 <p>Numbers of profiles running simultaneously</p>
                 <div className="-options-sub-settings">
                   <div className="-count-settings">
-                    <div style={{marginBottom: '2px'}} onClick={incrementCounter}>
+                    <div style={{marginBottom: '2px'}} onClick={() => handleNumberProfile('increase')}>
                       <img src={up} alt="up" width={10} height={7}/>
                     </div>
-                    <div style={{marginTop: '2px'}} onClick={decrementCounter}>
+                    <div style={{marginTop: '2px'}} onClick={() => handleNumberProfile('descrease')}>
                       <img src={down} alt="down" width={10} height={7}/>
                     </div>
                   </div>
                   <div className="-input-sub-settings">
                     <input
-                      name="numbersProfiles"
-                      value={counter}
+                      name="numberProfile"
+                      value={settings.numberProfile}
                       onChange={() => {}}
                     ></input>
                     <span>profile(s)</span>
@@ -78,17 +186,17 @@ const SettingsPage = () => {
                 <p>Numbers of loops</p>
                 <div className="-options-sub-settings">
                   <div className="-count-settings">
-                    <div style={{marginBottom: '2px'}} onClick={incrementCounter}>
+                    <div style={{marginBottom: '2px'}} onClick={() => handleNumberLoop('increase')}>
                       <img src={up} alt="up" width={10} height={7} />
                     </div>
-                    <div style={{marginTop: '2px'}} onClick={decrementCounter}>
+                    <div style={{marginTop: '2px'}} onClick={() => handleNumberLoop('descrease')}>
                       <img src={down} alt="down" width={10} height={7} />
                     </div>
                   </div>
                   <div className="-input-sub-settings">
                     <input
-                      name="numbersProfiles"
-                      value={counter_0}
+                      name="numberLoop"
+                      value={settings.numberLoop}
                       onChange={() => {}}
                     ></input>
                     <span>loops(s)</span>
@@ -98,30 +206,34 @@ const SettingsPage = () => {
               <div className="-sub-settings">
                 <p>Profile running type</p>
                 <div className="-options-sub-settings">
-                  <div className="-input-sub-settings -input-text-sub-settings">
-                    <input
-                      name="numbersProfiles"
-                      value="Random"
-                      onChange={() => {}}
-                    ></input>
-                    <div className="-icon-down">
-                      <img src={downup} alt="down-up"></img>
-                    </div>
+                  <div className="-options-sub-settings__select">
+                    <select
+                      name="typeProfile"
+                      className="-options-sub-settings__select__details"
+                      onChange={handleOnChangeTypeProfile}
+                      value={settings.typeProfile}
+                    >
+                      <option value="random">Random</option>
+                      <option value="friend">Friend</option>
+                      <option value="group">Group</option>
+                    </select>
                   </div>
                 </div>
               </div>
               <div className="-sub-settings">
                 <p>URL</p>
                 <div className="-options-sub-settings">
-                  <div className="-input-sub-settings -input-text-sub-settings">
-                    <input
-                      name="numbersProfiles"
-                      value="www.fb.com"
-                      onChange={() => {}}
-                    ></input>
-                    <div className="-icon-down">
-                      <img src={downup} alt="down-up"></img>
-                    </div>
+                  <div className="-options-sub-settings__select">
+                    <select
+                      name="url"
+                      className="-options-sub-settings__select__details"
+                      onChange={handleOnchangeUrl}
+                      value={settings.url}
+                    >
+                      <option value="random">www.fb.com</option>
+                      <option value="friend">Friend</option>
+                      <option value="group">Group</option>
+                    </select>
                   </div>
                 </div>
               </div>
@@ -145,17 +257,17 @@ const SettingsPage = () => {
                 <p>Maximum time per thread</p>
                 <div className="-options-sub-settings">
                   <div className="-count-settings">
-                    <div style={{marginBottom: '2px'}} onClick={incrementCounter}>
+                    <div style={{marginBottom: '2px'}} onClick={() => handleMaxTimePerThread('increase')}>
                       <img src={up} alt="up" width={10} height={7} />
                     </div>
-                    <div style={{marginTop: '2px'}} onClick={decrementCounter}>
+                    <div style={{marginTop: '2px'}} onClick={() => handleMaxTimePerThread('descrease')}>
                       <img src={down} alt="down" width={10} height={7} />
                     </div>
                   </div>
                   <div className="-input-sub-settings">
                     <input
-                      name="numbersProfiles"
-                      value="500"
+                      name="maxTimePerThread"
+                      value={settings.maxTimePerThread}
                       onChange={() => {}}
                     ></input>
                     <span>seconds(s)</span>
@@ -166,17 +278,17 @@ const SettingsPage = () => {
                 <p>Delay in each new thread open</p>
                 <div className="-options-sub-settings">
                   <div className="-count-settings">
-                    <div style={{marginBottom: '2px'}} onClick={incrementCounter}>
+                    <div style={{marginBottom: '2px'}} onClick={() => handleDelayInEachNewThread('increase')}>
                       <img src={up} alt="up" width={10} height={7} />
                     </div>
-                    <div style={{marginTop: '2px'}} onClick={decrementCounter}>
+                    <div style={{marginTop: '2px'}} onClick={() => handleDelayInEachNewThread('descrease')}>
                       <img src={down} alt="down" width={10} height={7} />
                     </div>
                   </div>
                   <div className="-input-sub-settings">
                     <input
-                      name="numbersProfiles"
-                      value="05"
+                      name="delayInEachNewThread"
+                      value={settings.delayInEachNewThread}
                       onChange={() => {}}
                     ></input>
                     <span>seconds(s)</span>
@@ -187,17 +299,17 @@ const SettingsPage = () => {
                 <p>Stop if RAM reaches</p>
                 <div className="-options-sub-settings">
                   <div className="-count-settings">
-                    <div style={{marginBottom: '2px'}} onClick={incrementCounter}>
+                    <div style={{marginBottom: '2px'}} onClick={() => handlestopIfRamReaches('increase')}>
                       <img src={up} alt="up" width={10} height={7} />
                     </div>
-                    <div style={{marginTop: '2px'}} onClick={decrementCounter}>
+                    <div style={{marginTop: '2px'}} onClick={() => handlestopIfRamReaches('descrease')}>
                       <img src={down} alt="down" width={10} height={7} />
                     </div>
                   </div>
                   <div className="-input-sub-settings">
                     <input
-                      name="numbersProfiles"
-                      value="90"
+                      name="stopIfRamReaches"
+                      value={settings.stopIfRamReaches}
                       onChange={() => {}}
                     ></input>
                     <span>%</span>
@@ -208,17 +320,17 @@ const SettingsPage = () => {
                 <p>Stop if CPU reaches</p>
                 <div className="-options-sub-settings">
                   <div className="-count-settings">
-                    <div style={{marginBottom: '2px'}} onClick={incrementCounter}>
+                    <div style={{marginBottom: '2px'}} onClick={() => handleStopIfCPUReaches('increase')}>
                       <img src={up} alt="up" width={10} height={7} />
                     </div>
-                    <div style={{marginTop: '2px'}} onClick={decrementCounter}>
+                    <div style={{marginTop: '2px'}} onClick={() => handleStopIfCPUReaches('descrease')}>
                       <img src={down} alt="down" width={10} height={7} />
                     </div>
                   </div>
                   <div className="-input-sub-settings">
                     <input
-                      name="numbersProfiles"
-                      value="90"
+                      name="stopIfCPUReaches"
+                      value={settings.stopIfCPUReaches}
                       onChange={() => {}}
                     ></input>
                     <span>%</span>
@@ -229,17 +341,17 @@ const SettingsPage = () => {
                 <p>Stop if CPU reaches</p>
                 <div className="-options-sub-settings">
                   <div className="-count-settings">
-                    <div style={{marginBottom: '2px'}} onClick={incrementCounter}>
+                    <div style={{marginBottom: '2px'}} onClick={() => handleStopIfDiskReaches('increase')}>
                       <img src={up} alt="up" width={10} height={7} />
                     </div>
-                    <div style={{marginTop: '2px'}} onClick={decrementCounter}>
+                    <div style={{marginTop: '2px'}} onClick={() => handleStopIfDiskReaches('descrease')}>
                       <img src={down} alt="down" width={10} height={7} />
                     </div>
                   </div>
                   <div className="-input-sub-settings">
                     <input
-                      name="numbersProfiles"
-                      value="90"
+                      name="stopIfDiskReaches"
+                      value={settings.stopIfDiskReaches}
                       onChange={() => {}}
                     ></input>
                     <span>%</span>

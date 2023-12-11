@@ -112,13 +112,22 @@ const ProxySettingsPage = () => {
               <p>Add proxy</p>
               <div className="-add-proxys">
                 <div className="-type-proxys">
-                  <div className="-input-type-proxys">
-                    <input
-                      name="typeProxy"
-                      value="Choose the proxy type"
-                      onChange={() => {}}
-                    ></input>
-                    <img src={downup} alt="downup"></img>
+                  <div className="-type-proxys__nav">
+                    <div className="-type-proxys__nav__select">
+                      <select
+                        name="url"
+                        className="-type-proxys__nav__select__details"
+                        // onChange={handleOnchangeTypeProxy}
+                        // value={}
+                      >
+                        <option value="http">HTTP</option>
+                        <option value="socks4">Socks 4</option>
+                        <option value="socks5">Socks 5</option>
+                        <option value="ssh">SSH</option>
+                        <option value="tm">TM</option>
+                        <option value="tinsoft">Tinsoft</option>
+                      </select>
+                    </div>
                   </div>
                   <div className="-icon-proxys">
                     <svg

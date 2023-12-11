@@ -11,6 +11,7 @@
       margin-left: 24px;
       margin-top: 36px;
       max-width: 1233px;
+      height: 90%;
    }
    .-title-profiles {
       color: #01162B;
@@ -85,6 +86,7 @@
    }
    .-content-profiles {
       margin: auto 0;
+      height: 80%;
       & thead.ant-table-thead {
          background-color: #D4E7FF;
       }
@@ -100,6 +102,29 @@
          font-weight: 700;
          color: rgba(1, 22, 43, 0.50);
       }
+      .scrollable-container {
+         height: 100%; 
+         overflow-y: auto;
+     /* overflow-x: hidden; */
+         border-radius: 15px;
+         background: #fff;
+     /* box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25); */
+         padding-right: 6px;
+         scrollbar-width: thin;
+       }
+       .scrollable-container::-webkit-scrollbar {
+         width: 5px;
+       }
+       .scrollable-container::-webkit-scrollbar-thumb {
+         background-color: #ccc; /* Màu của thanh cuộn */
+         border-radius: 20px; /* Bo tròn góc của thanh cuộn */
+     
+         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Bóng mờ */
+       }
+       .scrollable-container::-webkit-scrollbar-track {
+         background-color: #f0f0f0; /* Màu của phần bên dưới thanh cuộn */
+         border-radius: 20px;
+       }
    }
    .-expand-icon {
       cursor: pointer;
@@ -114,16 +139,21 @@
    }
 }
 .-tag-profiles {
+   padding: 0;
+   border: none;
+   max-width: fit-content;
+   background: transparent;
    color: #2A86FF;
    font-size: 15px;
    font-style: normal;
    font-weight: 400;
    line-height: normal;
+   cursor: pointer;
 }
 .-status-profiles {
    width: 64px;
    height: 20px;
-   padding: 4px 10px;
+   padding: 5px 10px;
    border: none;
    border-radius: 14px;
    background: rgba(241, 180, 76, 0.2);
@@ -133,9 +163,10 @@
    margin: 0;
    line-height: 12px;
 }
-.-status-profiles-s {
+.-status-profiles-ready {
    color: #34C38F;
    background-color: rgba(52, 195, 143, 0.20);
+   padding: 5px 15px;
 }
 .-wrapper-option-profiles {
    display: flex;

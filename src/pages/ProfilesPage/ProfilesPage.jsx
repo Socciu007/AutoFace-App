@@ -1,32 +1,48 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./style.scss";
-import { Table } from "antd";
+import { Input, Table } from "antd";
 import display from "../../assets/pictures/icon-display-setting.png";
 import search from "../../assets/pictures/icon-search.svg";
 import refresh from "../../assets/pictures/icon-refresh.png";
 import settings from "../../assets/pictures/icon-settings.png";
 import plus from "../../assets/pictures/icon-plus.png";
-import plus1 from "../../assets/pictures/icon-plus.svg";
 import closePopup from "../../assets/pictures/icon-x.svg";
-import usaProxy from "../../assets/pictures/icon-usa-proxy.png";
-import circle from "../../assets/pictures/icon-circle.svg";
-import script from "../../assets/pictures/icon-script.svg";
+import usaProxy from "../../assets/pictures/icon-usa.png";
 import options from "../../assets/pictures/icon-options.png";
-import addProxy from "../../assets/pictures/icon-addproxy.svg";
+import addProxy from "../../assets/pictures/icon-addProxy.png";
 import deleted from "../../assets/pictures/icon-delete.svg";
 import foxy from "../../assets/pictures/icon-foxy.png";
 import ghosty from "../../assets/pictures/icon-ghosty.png";
-import { useNavigate } from "react-router-dom";
+import yourScript from "../../assets/pictures/icon-yourScripts.svg"
 import PopupComponent from "../../components/PopupComponent/PopupComponent";
-// import downup from "../../assets/pictures/icon-down.svg";
 import proxy from "../../assets/pictures/icon-proxy.svg"
+import { useNavigate } from "react-router-dom";
+import profiles from "../../resources/profiles";
+import scripts from "../../resources/scripts.json"
+import Popup from "reactjs-popup";
 
 const ProfilesPage = () => {
   const [openScripts, setOpenScripts] = useState(false)
   const [openProfiles, setOpenProfiles] = useState(false)
   const [openAddProxy, setOpenAddProxy] =useState(false)
   const [openDeleteProfile, setOpenDeleteProfile] =useState(false)
+  const [openOptions, setOpenOptions] = useState(false)
   const [typeProxy, setTypeProxy] = useState('')
+  const navigate = useNavigate();
+  // const [tags, setTags] =useState('')
+  // const renderTag = (tag) => {
+  //   return (
+  //     <>
+  //       <Input 
+  //         name="tag" 
+  //         value={tag} 
+  //         className="-tag-profiles" 
+  //         onChange={(e) => tag = e.target.value}
+  //       >
+  //       </Input>
+  //     </>
+  //   );
+  // }
   const columns = [
     {
       title: "#",
@@ -35,7 +51,7 @@ const ProfilesPage = () => {
     {
       title: "Profile",
       dataIndex: "profile",
-      sorter: (a, b) => a.profile - b.profile,
+      sorter: (a, b) => a.profile.length - b.profile.length,
     },
     {
       title: "UID",
@@ -49,11 +65,19 @@ const ProfilesPage = () => {
       title: "Status",
       dataIndex: "status",
       render: (status) => {
-        return (
-          <>
-            <div className="-status-profiles">{status}</div>
-          </>
-        );
+        if (status[0] === 'Running') {
+          return (
+            <>
+              <div className="-status-profiles">{status}</div>
+            </>
+          );
+        } else {
+          return (
+            <>
+              <div className="-status-profiles -status-profiles-ready">{status}</div>
+            </>
+          );
+        }
       },
       sorter: (a, b) => a.status - b.status,
       sortDirections: ["descend"],
@@ -65,7 +89,7 @@ const ProfilesPage = () => {
         return (
           <>
             <div className="-proxy-profiles">
-              <img src={usaProxy}></img>
+              <img src={usaProxy} alt="icon-usa"></img>
               <span>{profile}</span>
             </div>
           </>
@@ -78,7 +102,13 @@ const ProfilesPage = () => {
       render: (tag) => {
         return (
           <>
-            <span className="-tag-profiles">{tag}</span>
+            <Input 
+              name="tag" 
+              value={tag} 
+              className="-tag-profiles" 
+              onChange={(e) => e.target.value}
+            >
+            </Input>
           </>
         );
       },
@@ -88,7 +118,7 @@ const ProfilesPage = () => {
     {
       title: "Folder",
       dataIndex: "folder",
-      sorter: (a, b) => a.folfer.length - b.name.length,
+      sorter: (a, b) => a.folder.length - b.folder.length,
       sortDirections: ["descend"],
     },
     Table.EXPAND_COLUMN,
@@ -135,11 +165,19 @@ const ProfilesPage = () => {
       title: "Status",
       dataIndex: "status",
       render: (status) => {
-        return (
-          <>
-            <div className="-status-profiles">{status}</div>
-          </>
-        );
+        if (status[0] === 'Running') {
+          return (
+            <>
+              <div className="-status-profiles">{status}</div>
+            </>
+          );
+        } else {
+          return (
+            <>
+              <div className="-status-profiles -status-profiles-ready">{status}</div>
+            </>
+          );
+        }
       },
       sorter: (a, b) => a.status - b.status,
       sortDirections: ["descend"],
@@ -163,167 +201,8 @@ const ProfilesPage = () => {
       dataIndex: "notes",
     }
   ];
-  const data = [
-    {
-      key: "1",
-      profile: "tienvm",
-      uid: "1001228343452345",
-      name: "John Brown",
-      age: 32,
-      proxy: "127.0.0.1:40001",
-      status: ["Running"],
-      tag: "#Group",
-      folder: "Group",
-    },
-    {
-      key: "2",
-      name: "John Brown",
-      age: 32,
-      proxy: "127.0.0.1:40001",
-      status: ["Running"],
-      tag: "#Group",
-      folder: "Group",
-    },
-    {
-      key: "3",
-      name: "John Brown",
-      age: 32,
-      proxy: "127.0.0.1:40001",
-      status: ["Running"],
-      tag: "#Group",
-      folder: "Group",
-    },
-    {
-      key: "4",
-      name: "John Brown",
-      age: 32,
-      proxy: "127.0.0.1:40001",
-      status: ["Running"],
-      tag: "#Group",
-      folder: "Group",
-    },
-  ];
-  const dataScripts = [
-    {
-      scripts: "automation-x",
-      notes: "add cookie",
-    },
-    {
-      scripts: "automation-x",
-      notes: "",
-    },
-    {
-      scripts: "automation-x",
-      notes: "Meta marks",
-    },
-    {
-      scripts: "automation-x",
-      notes: "X",
-    },
-    {
-      scripts: "automation-x",
-      notes: "",
-    },
-    {
-      scripts: "automation-x",
-      notes: "",
-    },
-    {
-      scripts: "automation-x",
-      notes: "",
-    },
-    {
-      scripts: "automation-x",
-      notes: "",
-    },
-    {
-      scripts: "automation-x",
-      notes: "",
-    },
-    {
-      scripts: "automation-x",
-      notes: "",
-    },
-    {
-      scripts: "automation-x",
-      notes: "",
-    },
-    {
-      scripts: "automation-x",
-      notes: "",
-    },
-  ]
-  const dataProfiles = [
-    {
-      key: "1",
-      profile: "tienvm",
-      uid: "1001228343452345",
-      browser: "Chorm",
-      notes: "Cookie Added",
-      name: "John Brown",
-      age: 32,
-      proxy: "127.0.0.1:40001",
-      status: ["Running"],
-      tag: "#Group",
-      folder: "Group",
-    },
-    {
-      key: "2",
-      name: "John Brown",
-      age: 32,
-      proxy: "127.0.0.1:40001",
-      browser: "Chorm",
-      notes: "Cookie Added",
-      status: ["Running"],
-      tag: "#Group",
-      folder: "Group",
-    },
-    {
-      key: "3",
-      name: "John Brown",
-      age: 32,
-      proxy: "127.0.0.1:40001",
-      status: ["Running"],
-      browser: "Chorm",
-      notes: "Cookie Added",
-      tag: "#Group",
-      folder: "Group",
-    },
-    {
-      key: "4",
-      name: "John Brown",
-      age: 32,
-      proxy: "127.0.0.1:40001",
-      status: ["Running"],
-      browser: "Chorm",
-      notes: "Cookie Added",
-      tag: "#Group",
-      folder: "Group",
-    },
-    {
-      key: "5",
-      name: "John Brown",
-      age: 32,
-      proxy: "127.0.0.1:40001",
-      status: ["Running"],
-      browser: "Chorm",
-      notes: "Cookie Added",
-      tag: "#Group",
-      folder: "Group",
-    },
-    {
-      key: "6",
-      name: "John Brown",
-      age: 32,
-      proxy: "127.0.0.1:40001",
-      status: ["Running"],
-      browser: "Chorm",
-      notes: "Cookie Added",
-      tag: "#Group",
-      folder: "Group",
-    },
-  
-  ];
+  const dataProfiles = profiles
+  const dataScripts = scripts
   // rowSelection object indicates the need for row selection
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
@@ -332,26 +211,21 @@ const ProfilesPage = () => {
       );
     },
   };
-  const rowSelectionScript = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-      );
-    },
-  };
-  const navigate = useNavigate();
+  //
   const handleSettings = () => {
     navigate("/settings");
   };
   const handleSettingsProxy = () => {
     navigate("/settings-proxy");
   };
+  //
   const handleOpenScripts = () => {
     setOpenScripts(true)
   }
   const handleCloseScripts = () => {
     setOpenScripts(false)
   }
+  //
   const handleOpenProfiles = () => {
     setOpenProfiles(true)
   }
@@ -367,6 +241,14 @@ const ProfilesPage = () => {
   const onChangeTypeProxy = (e) => {
     setTypeProxy(e.target.value)
   }
+  //
+  // const handleOpenPopup = () => {
+  //   return (
+  //     <>
+
+  //     </>
+  //   )
+  // }
   return (
     <div className="layout-profiles" style={{ opacity: openAddProxy || openDeleteProfile || openScripts || openProfiles ? 0.2 : 1 }}>
       <div className="-container-profiles">
@@ -394,12 +276,7 @@ const ProfilesPage = () => {
                 <img src={settings} alt="image-settings"></img>
               </span>
               <span className="-option-profiles">
-                <img
-                  src={circle}
-                  alt="circle"
-                  style={{ position: "absolute" }}
-                ></img>
-                <img src={script} alt="script"></img>
+                <img src={yourScript} alt="icon-yourscripts"></img>
               </span>
               <span className="-option-profiles" onClick={handleOpenProfiles}>
                 <img src={plus} alt="image-plus"></img>
@@ -424,15 +301,10 @@ const ProfilesPage = () => {
                           <img src={settings} alt="image-settings"></img>
                         </span>
                         <span className="-option-profiles" onClick={handleOpenScripts}>
-                          <img
-                            src={circle}
-                            alt="circle"
-                            style={{ position: "absolute" }}
-                          ></img>
-                          <img src={script} alt="script"></img>
+                          <img src={yourScript} alt="icon-yourscripts"></img>
                         </span>
                         <div>
-                          <button>Run</button>
+                          <button>ADD</button>
                         </div>
                       </div>
                     </div>
@@ -475,7 +347,7 @@ const ProfilesPage = () => {
                               <span>
                                 <img
                                   src={search}
-                                  alt="search"
+                                  alt="icon-search"
                                   style={{ marginLeft: "11px" }}
                                 ></img>
                               </span>
@@ -506,8 +378,7 @@ const ProfilesPage = () => {
           <div className="-btn-profiles">
             <div className="-select-profile" onClick={() => setOpenAddProxy(o => !o)}>
               <div style={{position: 'relative'}}>
-                <img src={addProxy} alt="icon-add-proxy"></img>
-                <img src={plus1} alt="icon-plus" style={{position: 'absolute', top: '12%', left:'52%'}}></img>
+                <img src={addProxy} alt="icon-add-proxy" width={15} height={15}></img>
               </div>
               <p>Add Proxy</p>
             </div>
@@ -605,12 +476,7 @@ const ProfilesPage = () => {
                           <img src={settings} alt="image-settings"></img>
                         </span>
                         <span className="-option-profiles" onClick={handleOpenScripts}>
-                          <img
-                            src={circle}
-                            alt="circle"
-                            style={{ position: "absolute" }}
-                          ></img>
-                          <img src={script} alt="script"></img>
+                          <img src={yourScript} alt="icon-yourscripts"></img>
                         </span>
                         <div>
                           <button>Run</button>
@@ -648,7 +514,7 @@ const ProfilesPage = () => {
                             <div className="-container-scripts__right__main__content__table">
                               <Table
                                 rowSelection={{
-                                  ...rowSelectionScript,
+                                  ...rowSelection,
                                 }}
                                 columns={columnsScripts}
                                 dataSource={dataScripts}
@@ -662,36 +528,45 @@ const ProfilesPage = () => {
                   </div>
                 </div>
               }
-              </PopupComponent>
+            </PopupComponent>
           </div>
         </div>
         <div className="-content-profiles">
-          <Table
-            rowSelection={{
-              ...rowSelection,
-            }}
-            expandable={{
-              expandIcon: () => {
-                return (
-                  <div className="-expand-icon">
-                    <img src={options} alt="image-option"></img>
-                  </div>
-                );
-              },
-              expandedRowRender: (record) => (
-                <p
-                  style={{
-                    margin: 0,
-                  }}
-                >
-                  {record.description}
-                </p>
-              ),
-            }}
-            columns={columns}
-            dataSource={data}
-            pagination={false}
-          />
+          <div className="scrollable-container">
+            <Table
+              rowSelection={{
+                ...rowSelection,
+              }}
+
+              expandable={{
+                expandedRowRender: record => (
+                  <p style={{ margin: 0 }}>{record.description}</p>
+                ),
+                expandIcon: () => {
+                  return (
+                 
+                      <div className="-expand-icon" onClick={() => setOpenOptions(true)}>
+                        <img src={options} alt="image-option"></img>
+                        <PopupComponent open={openOptions} position={'left'} onClose={() => setOpenOptions(false)}>
+                          {
+                            <div className="-options">
+                              <div className="">
+                                <img src={proxy} alt=""></img>
+                                <p>Pin</p>
+                              </div>
+                            </div>
+                          }
+                        </PopupComponent>                    
+                      </div>
+                    
+                  )
+                },
+              }}
+              columns={columns}
+              dataSource={dataProfiles}
+              pagination={false}
+            />
+          </div>
         </div>
       </div>
     </div>
