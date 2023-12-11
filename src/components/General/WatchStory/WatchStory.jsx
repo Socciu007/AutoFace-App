@@ -42,11 +42,11 @@ const WatchStory = () => {
   const { textContent, handleTextareaChange } = TextareaComment();
   return (
     <div className="watch-story">
-      <h1 className="watch-story__title">Facebook Automation</h1>
+      {/* <h1 className="watch-story__title">Facebook Automation</h1>
       <div className="goBack">
         <img src={backButton} alt="Back button" />
         <p>Create a new script</p>
-      </div>
+      </div> */}
       <div className="component_container">
         <div className="scrollable-container">
           <div className="component-left">
@@ -163,7 +163,7 @@ const WatchStory = () => {
           </div>
         </div>
 
-        <div className="componet-right">
+        {/* <div className="componet-right">
           <div className="componet-right__header">
             <div className="componet-right__header__inputBox">
               <input
@@ -187,7 +187,7 @@ const WatchStory = () => {
             </div>
           </div>
           <div className="componet-right__content"></div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
