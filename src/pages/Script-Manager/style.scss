@@ -69,7 +69,8 @@ body {
           align-items: center;
           border-radius: 8px;
           background: #f5f5f5;
-          width: 80%;
+          width: 270px;
+          height: 40px;
           svg {
             margin-left: 20px;
             margin-right: 15px;
@@ -129,6 +130,7 @@ body {
           margin-top: 15px;
           padding: 10px 5px 10px 5px;
           border-radius: 5px;
+          cursor: pointer;
           p {
             padding: 5px 10px 5px 10px;
             color: #01162b;
@@ -188,16 +190,19 @@ body {
       &__edit {
         display: flex;
         align-items: center;
+        justify-content: space-between;
         padding: 23px 0px 18px 31px;
         border-radius: 15px;
         background: #fff;
         width: 100%;
         height: 64px;
         box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
+        h3 {
+          font-size: 18px;
+        }
         .edit-input {
           display: flex;
           align-items: center;
-          margin-left: 10%;
           height: 40px;
           width: 50%;
           border-radius: 5px;
@@ -214,12 +219,11 @@ body {
           display: flex;
           align-items: center;
           justify-content: center;
-          width: 15%;
+          width: 99.134px;
           height: 40px;
           gap: 11.308px;
-          flex-shrink: 0;
           padding-top: 2px;
-          margin-left: 15px;
+          margin-right: 5%;
           border: none;
           border-radius: 8px;
           background: #2a86ff;
@@ -323,6 +327,7 @@ body {
         border: none;
         font-weight: 700;
         box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
+        cursor: pointer;
       }
       .deleteBtn {
         border-radius: 36px;
@@ -333,7 +338,7 @@ body {
       }
     }
   }
-  @media screen and (max-width: 1280px) {
+  @media screen and (max-width: 1279px) {
     /* Adjust styles for smaller screens */
     .right-content {
       width: 100%; /* Allow right content to take full width on smaller screens */

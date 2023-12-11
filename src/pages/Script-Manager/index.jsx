@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./style.scss";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../components/loading/Loading";
-import DnDFlow from "../Create-Script/drag";
+import DnDFlow from "../../components/drag/drag";
 const ScriptManager = () => {
   const navigate = useNavigate();
   const [isMenu1Open, setMenu1Open] = useState(false);

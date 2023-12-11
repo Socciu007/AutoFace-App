@@ -4,7 +4,7 @@ body {
   font-family: "GoogleSansBold", sans-serif;
 }
 .create-script {
-  width: 1280px;
+  min-width: 1280px;
   height: 720px;
   border: 1px;
   padding: 30px;
@@ -35,253 +35,165 @@ body {
   }
   &__content {
     display: flex;
-  }
-  .scrollable-container {
-    width: 40%;
-    height: 70vh;
-    overflow-y: auto;
-    overflow-x: hidden;
-    border-radius: 15px;
-    background: #fff;
-    box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
-    scrollbar-width: thin;
-  }
-  .scrollable-container::-webkit-scrollbar {
-    width: 5px;
-  }
-  .scrollable-container::-webkit-scrollbar-thumb {
-    background-color: #ccc; /* Màu của thanh cuộn */
-    border-radius: 20px; /* Bo tròn góc của thanh cuộn */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Bóng mờ */
-  }
-  .scrollable-container::-webkit-scrollbar-track {
-    background-color: #f0f0f0; /* Màu của phần bên dưới thanh cuộn */
-    border-radius: 20px;
-  }
-  .left-content {
-    border-radius: 15px;
-    width: 100%;
-    padding: 15px;
-    height: 100%;
-    &__top {
-      display: flex;
-      margin-top: 10px;
-      .search {
-        display: flex;
-        align-items: center;
-        border-radius: 8px;
-        background: #f5f5f5;
-        width: 100%;
-        height: 40px;
-        svg {
-          margin-left: 20px;
-          margin-right: 15px;
-        }
-        .inputSearch {
-          border: none;
-          background: #f5f5f5;
-        }
-      }
-    }
-    &__category {
-      .category-left,
-      .category-middle,
-      .category-right {
-        border: none;
-        background-color: #fff;
-        cursor: pointer;
-        margin-right: 30px;
-        margin-top: 20px;
-        padding: 5px;
-      }
-    }
-    &__container {
-      cursor: pointer;
-      .grid-container {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-        margin-top: 20px;
-      }
-      .card {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 100px;
-        border: none;
-        border-radius: 5px;
-        text-align: center;
-        background: #fff;
-        margin-bottom: 20px;
-        box-shadow: 0px 4px 5px 0px rgba(107, 127, 148, 0.15);
-        p {
-          margin-top: 12px;
-          font-size: 12px;
-          font-weight: 700;
-        }
-      }
-    }
-  }
-  .right-content {
-    width: 70%;
-    margin-left: 20px;
-    display: flex;
-    flex-direction: column;
-    &__edit {
-      display: flex;
-      align-items: center;
+    .scrollable-container {
+      width: 440px;
+      height: 70vh;
+      overflow-y: auto;
+      overflow-x: hidden;
       border-radius: 15px;
       background: #fff;
-      width: 100%;
-      height: 64px;
       box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
-      .edit-input,
-      .note-input {
-        display: flex;
-        align-items: center;
-        height: 40px;
-        width: 28%;
-        margin-left: 17px;
-        border-radius: 5px;
-        border: 1px dashed rgba(1, 22, 43, 0.2);
-        background: #f5f5f5;
-        svg {
-          margin-left: 15px;
-        }
-        input {
-          border: none;
-          background-color: #f5f5f5;
-          margin-left: 10px;
-        }
-      }
-
-      .debug,
-      .test,
-      .more {
-        border: none;
-        background-color: #fff;
-        margin-left: 3%;
-      }
-      .editBtn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 15%;
-        height: 40px;
-        gap: 11.308px;
-        flex-shrink: 0;
-        padding-top: 2px;
-        margin-left: 3%;
-        border: none;
-        border-radius: 8px;
-        background: #2a86ff;
-        color: #fff;
-        box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
-      }
+      scrollbar-width: thin;
     }
-    &__container {
+    .scrollable-container::-webkit-scrollbar {
+      width: 5px;
+    }
+    .scrollable-container::-webkit-scrollbar-thumb {
+      background-color: #ccc; /* Màu của thanh cuộn */
+      border-radius: 20px; /* Bo tròn góc của thanh cuộn */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Bóng mờ */
+    }
+    .scrollable-container::-webkit-scrollbar-track {
+      background-color: #f0f0f0; /* Màu của phần bên dưới thanh cuộn */
+      border-radius: 20px;
+    }
+    .left-content {
       border-radius: 15px;
-      border: 1px dashed rgba(1, 22, 43, 0.5);
-      margin-top: 15px;
-      background: #f5f5f5;
-      height: 100%;
-    }
-  }
-  .makeCopy {
-    display: none;
-    position: fixed;
-    top: 40%;
-    left: 35%;
-    border-radius: 15px;
-    background: #fff;
-    box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
-    width: 636px;
-    height: 154px;
-    flex-shrink: 0;
-    padding: 20px;
-    &__top {
-      margin-bottom: 20px;
-      display: flex;
-      justify-content: space-between;
-
-      h1 {
-        color: #01162b;
-        font-size: 22px;
-        font-style: normal;
-        font-weight: 700;
-        line-height: 200%;
-      }
-      .close {
-        background-color: #f5f5f5;
-        padding: 15px;
-        border-radius: 100%;
-        cursor: pointer;
-      }
-    }
-
-    input {
-      border-radius: 8px;
-      border: 1px dashed rgba(1, 22, 43, 0.2);
-      background: #f5f5f5;
-      width: 80%;
-      height: 40px;
+      width: 100%;
       padding: 15px;
-    }
-    button {
-      font-size: 15px;
-      border-radius: 25px;
-      padding: 10px 30px 10px 30px;
-      border: none;
-      font-weight: 700;
-      background-color: #2a86ff;
-      color: #fff;
-      margin-left: 13px;
-      cursor: pointer;
-    }
-  }
-  .delete {
-    display: none;
-    position: fixed;
-    top: 40%;
-    left: 35%;
-    border-radius: 15px;
-    background: #fff;
-    box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
-    width: 636px;
-    height: 154px;
-    flex-shrink: 0;
-    padding: 20px;
-    h1 {
-      color: #01162b;
-      font-size: 22px;
-      font-style: normal;
-      font-weight: 700;
-      line-height: 200%;
-    }
-    p {
-      margin-bottom: 10px;
-      margin-top: 5px;
-    }
-    div {
-      display: flex;
-      justify-content: end;
-      gap: 10px;
-      button {
-        padding: 9px 30px;
-        border-radius: 36px;
-        background: #f5f5f5;
-        border: none;
-        font-weight: 700;
-        box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
+      height: 100%;
+      &__top {
+        display: flex;
+        margin-top: 10px;
+        .search {
+          display: flex;
+          align-items: center;
+          border-radius: 8px;
+          background: #f5f5f5;
+          width: 100%;
+          height: 40px;
+          svg {
+            margin-left: 20px;
+            margin-right: 15px;
+          }
+          .inputSearch {
+            border: none;
+            background: #f5f5f5;
+          }
+        }
       }
-      .deleteBtn {
-        border-radius: 36px;
-        background: #2a86ff;
+      &__category {
+        border-style: none none inset none;
+        .category-left,
+        .category-middle,
+        .category-right {
+          border-style: none none solid none;
+          background-color: #fff;
+          cursor: pointer;
+          margin-right: 30px;
+          margin-top: 20px;
+          padding: 5px;
+        }
+      }
+      &__container {
+        cursor: pointer;
+        .grid-container {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 12px;
+          margin-top: 20px;
+        }
+        .card {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          height: 100px;
+          border: none;
+          border-radius: 5px;
+          text-align: center;
+          background: #fff;
+          margin-bottom: 20px;
+          box-shadow: 0px 4px 5px 0px rgba(107, 127, 148, 0.15);
+          p {
+            margin-top: 12px;
+            font-size: 12px;
+            font-weight: 700;
+          }
+        }
+      }
+    }
+    .right-content {
+      margin-left: 20px;
+      display: flex;
+
+      flex-direction: column;
+      min-width: calc(100vw - 500px);
+      &__edit {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-radius: 15px;
+        background: #fff;
+        width: 100%;
+        height: 64px;
         box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
-        color: #fff;
-        font-weight: 700;
+        .edit-input,
+        .note-input {
+          display: flex;
+          align-items: center;
+          height: 40px;
+          width: 28%;
+          margin-left: 17px;
+          border-radius: 5px;
+          border: 1px dashed rgba(1, 22, 43, 0.2);
+          background: #f5f5f5;
+          svg {
+            margin-left: 15px;
+          }
+          input {
+            border: none;
+            background-color: #f5f5f5;
+            margin-left: 10px;
+          }
+        }
+
+        .debug,
+        .test,
+        .more {
+          border: none;
+          background-color: #fff;
+        }
+        .saveBtn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 103.75px;
+          height: 40px;
+          gap: 11.308px;
+          flex-shrink: 0;
+          padding-top: 2px;
+          margin-right: 2%;
+          border: none;
+          border-radius: 8px;
+          background: #2a86ff;
+          color: #fff;
+          box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
+        }
+      }
+      &__container {
+        border-radius: 15px;
+        border: 1px dashed rgba(1, 22, 43, 0.5);
+        margin-top: 15px;
+        background: #f5f5f5;
+        height: 100%;
+      }
+    }
+    @media screen and (max-width: 1279px) {
+      /* Adjust styles for smaller screens */
+      .right-content {
+        width: 100%; /* Allow right content to take full width on smaller screens */
       }
     }
   }

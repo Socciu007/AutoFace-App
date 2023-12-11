@@ -8,19 +8,18 @@ import ReactFlow, {
   MiniMap,
 } from "reactflow";
 import "reactflow/dist/style.css";
-import TextUpdaterNode from "../../components/nodes/node";
-import "./style.scss";
-import watchStoryNode from "../../components/nodes/watchStory";
-import watchVideoNode from "../../components/nodes/watchVideo";
-import newsFeedNode from "../../components/nodes/newsfeed";
-import createPostNode from "../../components/nodes/createPost";
-import postInteractNode from "../../components/nodes/postInteract";
-import deletePostNode from "../../components/nodes/deletePost";
-import viewNotiNode from "../../components/nodes/viewNoti";
-import sendMsgNode from "../../components/nodes/sendMsg";
-import replyMsgNode from "../../components/nodes/replyMsg";
-import addFriendNode from "../../components/nodes/addFriend";
-import cancelFriendNode from "../../components/nodes/cancelFriend";
+import TextUpdaterNode from "../nodes/node";
+import watchStoryNode from "../nodes/watchStory";
+import watchVideoNode from "../nodes/watchVideo";
+import newsFeedNode from "../nodes/newsfeed";
+import createPostNode from "../nodes/createPost";
+import postInteractNode from "../nodes/postInteract";
+import deletePostNode from "../nodes/deletePost";
+import viewNotiNode from "../nodes/viewNoti";
+import sendMsgNode from "../nodes/sendMsg";
+import replyMsgNode from "../nodes/replyMsg";
+import addFriendNode from "../nodes/addFriend";
+import cancelFriendNode from "../nodes/cancelFriend";
 
 const initialNodes = [
   {
@@ -108,7 +107,6 @@ const DnDFlow = () => {
             onInit={setReactFlowInstance}
             onDrop={onDrop}
             onDragOver={onDragOver}
-            fitViewOptions={0.8}
             nodeTypes={nodeTypes}
           >
             <Controls />
