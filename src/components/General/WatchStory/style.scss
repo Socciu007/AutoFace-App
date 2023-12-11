@@ -275,6 +275,8 @@
       &__content {
         position: absolute;
         top: 70px;
+        right: 0;
+        left: 0;
         height: calc((100% - 70px));
         border-radius: 15px;
         background: #f5f5f5;
