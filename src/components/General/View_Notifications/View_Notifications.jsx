@@ -1,7 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState, useRef } from 'react';
 import './style.scss';
-import saveIcon from '../../../assets/img/Page-1.png';
 import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
@@ -10,6 +9,8 @@ import Edit from '../../../assets/icon/icon-edit.svg';
 import Debug from '../../../assets/icon/icon-debug.svg';
 import RunTest from '../../../assets/icon/icon-runTest.svg';
 import iconOptions from '../../../assets/icon/icon-options.svg';
+import iconSave from '../../../assets/icon/icon-save.svg';
+
 import { DelayTime, Notification } from './View_Notifications';
 const View_Notifications = () => {
   const {
@@ -120,7 +121,7 @@ const View_Notifications = () => {
               <img src={RunTest} alt="Run test button" />
               <img src={iconOptions} alt="icon option" />
               <button type="submit" className="btnSave">
-                <img src={saveIcon} alt="SaveButton" />
+                <img src={iconSave} alt="SaveButton" />
                 <span>Save</span>
               </button>
             </div>

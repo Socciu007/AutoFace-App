@@ -273,22 +273,19 @@
     }
     .componet-right {
       position: relative;
-      border-radius: 15px;
-      background: #fff;
       margin-left: 1%;
-      width: calc(100% - 500px);
-      border: 1px dashed rgba(1, 22, 43, 0.5);
-      box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.15);
+      width: calc(100% - 460px);
       &__header {
         position: absolute;
         top: 0;
         display: flex;
         justify-content: space-between;
         width: 100%;
-        // height: 10%;
+        height: 64px;
         border-radius: 15px;
         background: #fff;
         box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
+        padding: 12px 0;
         &__inputBox {
           position: relative;
           width: 60%;
@@ -296,7 +293,7 @@
           margin-left: 3%;
           align-items: center;
           input {
-            height: 70%;
+            // height: 70%;
             border-radius: 5px;
             border: 1px dashed rgba(1, 22, 43, 0.2);
             background: #f5f5f5;
@@ -340,31 +337,20 @@
             }
           }
         }
-      }
-      &__content {
-        &__footer {
-          &__left {
-            position: absolute;
-            bottom: 5%;
-            left: 5%;
-            transform: translate(-5%, -5%);
-            width: 267px;
-            height: 37px;
-            border-radius: 25px;
-            background: #fff;
-            box-shadow: 0px 4px 5px 0px rgba(107, 127, 148, 0.15);
-          }
-          &__right {
-            position: absolute;
-            bottom: 8%;
-            right: 5%;
-            transform: translate(-8%, -5%);
-            width: 128px;
-            height: 52px;
-            border-radius: 3px;
-            background: #ededed;
+        @media screen and (width >= 1400px) {
+          &__function {
+            width: 25%;
           }
         }
+      }
+      &__content {
+        position: absolute;
+        top: 70px;
+        height: calc((100% - 70px));
+        border-radius: 15px;
+        background: #f5f5f5;
+        border: 1px dashed rgba(1, 22, 43, 0.5);
+        box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.15);
       }
     }
   }
