@@ -1,54 +1,50 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./style.scss";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../components/loading/Loading";
 import DnDFlow from "../../components/drag/drag";
 const ScriptManager = () => {
   const navigate = useNavigate();
-  const [isMenu1Open, setMenu1Open] = useState(false);
-  const [isMenu2Open, setMenu2Open] = useState(false);
-  const [isButton1Active, setButton1Active] = useState(true);
-  const [isScript1Active, setScript1Active] = useState(false);
+  const menuRef = useRef(null);
+  const initialContentArray = [
+    { id: 1, content: "Auto watch Live videos" },
+    { id: 2, content: "Make 50 random friends" },
+    { id: 3, content: "Auto post on the fanpage" },
+    { id: 4, content: "Log in" },
+    { id: 5, content: "Auto post on the fanpage" },
+    { id: 6, content: "Auto post on the fanpage" },
+    { id: 7, content: "Auto post on the fanpage" },
+    { id: 8, content: "Auto post on the fanpage" },
+  ];
 
-  const toggleMenu1 = () => {
-    setMenu1Open(!isMenu1Open);
-  };
-  const toggleMenu2 = () => {
-    setMenu2Open(!isMenu2Open);
-  };
-  // Handle the button click
+  const [isButton1Active, setButton1Active] = useState(true);
+  const [isScriptActive, setScriptActive] = useState(false);
+  const [contentArray, setContentArray] = useState(initialContentArray);
+  const [menuStates, setMenuStates] = useState([]);
+  const [isPinned, setIsPinned] = useState(false);
+  // Handle the button add
   const handleAddClick = () => {
-    // Navigate to the desired route when the button is clicked
     navigate("/create");
   };
-  const handleScript1Click = (button) => {
-    // Swap the colors between button 1 and button 2
-    setScript1Active(button === isButton1Active ? null : button);
-  };
-
+  // Handle category button
   const handleButtonClick = () => {
     // Toggle the active state
     setButton1Active(!isButton1Active);
   };
-
+  // Handle each script div
+  const handleScriptClick = (button) => {
+    setScriptActive(button === isButton1Active ? null : button);
+  };
+  // Handle option in menu
   const handleOptionClick = (className) => {
     const optionElement = document.querySelector(`.${className}`);
-    setMenu1Open(!isMenu1Open);
     if (optionElement) {
       const currentDisplay = getComputedStyle(optionElement).display;
       optionElement.style.display =
         currentDisplay === "none" ? "block" : "none";
     }
   };
-  const handleOption1Click = (className) => {
-    const optionElement = document.querySelector(`.${className}`);
-    setMenu2Open(!isMenu2Open);
-    if (optionElement) {
-      const currentDisplay = getComputedStyle(optionElement).display;
-      optionElement.style.display =
-        currentDisplay === "none" ? "block" : "none";
-    }
-  };
+  // Close dialog
   const handleClose = (className) => {
     const closeButton = document.querySelector(`.${className}`);
     if (closeButton) {
@@ -56,6 +52,33 @@ const ScriptManager = () => {
       closeButton.style.display = closeStyle === "none" ? "block" : "none";
     }
   };
+  // Handle toggle Menu
+  const handleToggleMenu = (scriptId) => {
+    setMenuStates((prevMenuStates) => {
+      return { ...prevMenuStates, [scriptId]: !prevMenuStates[scriptId] };
+    });
+  };
+  // Handle Pin
+  const handleTogglePin = () => {
+    setIsPinned(!isPinned);
+  };
+  // handle toggle outside menu and close it
+  useEffect(() => {
+    const handleDocumentClick = (event) => {
+      // Close the menu when clicking outside of it
+      if (menuRef.current) {
+        if (!menuRef.current.contains(event.target)) {
+          setMenuStates({});
+        }
+      }
+    };
+
+    document.addEventListener("click", handleDocumentClick);
+
+    return () => {
+      document.removeEventListener("click", handleDocumentClick);
+    };
+  }, []);
   return (
     <>
       <div className="script-manager">
@@ -166,332 +189,73 @@ const ScriptManager = () => {
                 </button>
               </div>
               <div className="left-content__content">
-                <div
-                  className={
-                    isScript1Active === 1 ? "script selected" : "script"
-                  }
-                  onClick={() => handleScript1Click(1)}
-                >
-                  <p className={isScript1Active === 1 ? "inputSelected" : ""}>
-                    Auto watch Live videos
-                  </p>
-                  <div>
-                    <div className="more" onClick={toggleMenu2}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="3"
-                        height="15"
-                        viewBox="0 0 3 15"
-                        fill="none"
-                      >
-                        <circle
-                          opacity="0.5"
-                          cx="1.5"
-                          cy="1.5"
-                          r="1.5"
-                          fill="#2A3042"
-                        />
-                        <circle
-                          opacity="0.5"
-                          cx="1.5"
-                          cy="7.5"
-                          r="1.5"
-                          fill="#2A3042"
-                        />
-                        <circle
-                          opacity="0.5"
-                          cx="1.5"
-                          cy="13.5"
-                          r="1.5"
-                          fill="#2A3042"
-                        />
-                      </svg>
-                    </div>
-                    {isMenu2Open && (
-                      <div className="menu-options">
-                        <div>Unpin</div>
-                        <div className="divider"></div>
-                        <div>Edit</div>
-                        <div className="divider"></div>
-                        <div onClick={() => handleOption1Click("makeCopy")}>
-                          Make a Copy
-                        </div>
-                        <div className="divider"></div>
-                        <div>Rename</div>
-                        <div className="divider"></div>
-                        <div onClick={() => handleOption1Click("delete")}>
-                          Delete
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div
-                  className={
-                    isScript1Active === 2 ? "script selected" : "script"
-                  }
-                  onClick={() => handleScript1Click(2)}
-                >
-                  <p className={isScript1Active === 2 ? "inputSelected" : ""}>
-                    Make 50 random friends
-                  </p>
-                  <div>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="10"
-                      height="10"
-                      viewBox="0 0 10 10"
-                      fill="none"
+                {contentArray.map((item) => (
+                  <div
+                    className={
+                      isScriptActive === item.id ? "script selected" : "script"
+                    }
+                    onClick={() => handleScriptClick(item.id)}
+                    key={item.id}
+                  >
+                    <p
+                      className={
+                        isScriptActive === item.id ? "inputSelected" : ""
+                      }
                     >
-                      <path
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
-                        d="M6.57467 0.482869C6.18414 0.0923447 5.55098 0.092345 5.16045 0.482869L4.91089 0.732436C4.52036 1.12296 4.52036 1.75613 4.91089 2.14665L5.03567 2.27143L3.95433 3.35277C2.92322 3.01925 1.75778 3.2165 0.88554 3.94454L2.95594 6.01494L0.668244 8.30264C0.553385 8.4175 0.553385 8.60372 0.668245 8.71858C0.783105 8.83344 0.96933 8.83344 1.08419 8.71858L3.37189 6.43089L5.44228 8.50128C6.17032 7.62904 6.36758 6.46361 6.03406 5.4325L7.11539 4.35116L7.24018 4.47594C7.6307 4.86647 8.26387 4.86647 8.65439 4.47594L8.90396 4.22638C9.29448 3.83585 9.29448 3.20269 8.90396 2.81216L6.57467 0.482869Z"
-                        fill="#F7931A"
-                      />
-                    </svg>
-                    <div className="more" onClick={toggleMenu1}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="3"
-                        height="15"
-                        viewBox="0 0 3 15"
-                        fill="none"
-                      >
-                        <circle
-                          opacity="0.5"
-                          cx="1.5"
-                          cy="1.5"
-                          r="1.5"
-                          fill="#2A3042"
-                        />
-                        <circle
-                          opacity="0.5"
-                          cx="1.5"
-                          cy="7.5"
-                          r="1.5"
-                          fill="#2A3042"
-                        />
-                        <circle
-                          opacity="0.5"
-                          cx="1.5"
-                          cy="13.5"
-                          r="1.5"
-                          fill="#2A3042"
-                        />
-                      </svg>
-                    </div>
-                    {isMenu1Open && (
-                      <div className="menu-options">
-                        <div>Unpin</div>
-                        <div className="divider"></div>
-                        <div>Edit</div>
-                        <div className="divider"></div>
-                        <div onClick={() => handleOptionClick("makeCopy")}>
-                          Make a Copy
-                        </div>
-                        <div className="divider"></div>
-                        <div>Rename</div>
-                        <div className="divider"></div>
-                        <div onClick={() => handleOptionClick("delete")}>
-                          Delete
-                        </div>
+                      {item.content}
+                    </p>
+                    <div onClick={() => handleToggleMenu(item.id)}>
+                      <div className="more">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="3"
+                          height="15"
+                          viewBox="0 0 3 15"
+                          fill="none"
+                        >
+                          <circle
+                            opacity="0.5"
+                            cx="1.5"
+                            cy="1.5"
+                            r="1.5"
+                            fill="#2A3042"
+                          />
+                          <circle
+                            opacity="0.5"
+                            cx="1.5"
+                            cy="7.5"
+                            r="1.5"
+                            fill="#2A3042"
+                          />
+                          <circle
+                            opacity="0.5"
+                            cx="1.5"
+                            cy="13.5"
+                            r="1.5"
+                            fill="#2A3042"
+                          />
+                        </svg>
                       </div>
-                    )}
+                      {menuStates[item.id] && (
+                        <div className="menu-options">
+                          <div>Unpin</div>
+                          <div className="divider"></div>
+                          <div>Edit</div>
+                          <div className="divider"></div>
+                          <div onClick={() => handleOptionClick("makeCopy")}>
+                            Make a Copy
+                          </div>
+                          <div className="divider"></div>
+                          <div>Rename</div>
+                          <div className="divider"></div>
+                          <div onClick={() => handleOptionClick("delete")}>
+                            Delete
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <div className="script">
-                  <p>Auto post on the fanpage</p>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="3"
-                    height="15"
-                    viewBox="0 0 3 15"
-                    fill="none"
-                  >
-                    <circle
-                      opacity="0.5"
-                      cx="1.5"
-                      cy="1.5"
-                      r="1.5"
-                      fill="#2A3042"
-                    />
-                    <circle
-                      opacity="0.5"
-                      cx="1.5"
-                      cy="7.5"
-                      r="1.5"
-                      fill="#2A3042"
-                    />
-                    <circle
-                      opacity="0.5"
-                      cx="1.5"
-                      cy="13.5"
-                      r="1.5"
-                      fill="#2A3042"
-                    />
-                  </svg>
-                </div>
-                <div className="script">
-                  <p>Log in</p>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="3"
-                    height="15"
-                    viewBox="0 0 3 15"
-                    fill="none"
-                  >
-                    <circle
-                      opacity="0.5"
-                      cx="1.5"
-                      cy="1.5"
-                      r="1.5"
-                      fill="#2A3042"
-                    />
-                    <circle
-                      opacity="0.5"
-                      cx="1.5"
-                      cy="7.5"
-                      r="1.5"
-                      fill="#2A3042"
-                    />
-                    <circle
-                      opacity="0.5"
-                      cx="1.5"
-                      cy="13.5"
-                      r="1.5"
-                      fill="#2A3042"
-                    />
-                  </svg>
-                </div>
-                <div className="script">
-                  <p>Auto post on the fanpage</p>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="3"
-                    height="15"
-                    viewBox="0 0 3 15"
-                    fill="none"
-                  >
-                    <circle
-                      opacity="0.5"
-                      cx="1.5"
-                      cy="1.5"
-                      r="1.5"
-                      fill="#2A3042"
-                    />
-                    <circle
-                      opacity="0.5"
-                      cx="1.5"
-                      cy="7.5"
-                      r="1.5"
-                      fill="#2A3042"
-                    />
-                    <circle
-                      opacity="0.5"
-                      cx="1.5"
-                      cy="13.5"
-                      r="1.5"
-                      fill="#2A3042"
-                    />
-                  </svg>
-                </div>
-                <div className="script">
-                  <p>Auto post on the fanpage</p>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="3"
-                    height="15"
-                    viewBox="0 0 3 15"
-                    fill="none"
-                  >
-                    <circle
-                      opacity="0.5"
-                      cx="1.5"
-                      cy="1.5"
-                      r="1.5"
-                      fill="#2A3042"
-                    />
-                    <circle
-                      opacity="0.5"
-                      cx="1.5"
-                      cy="7.5"
-                      r="1.5"
-                      fill="#2A3042"
-                    />
-                    <circle
-                      opacity="0.5"
-                      cx="1.5"
-                      cy="13.5"
-                      r="1.5"
-                      fill="#2A3042"
-                    />
-                  </svg>
-                </div>
-                <div className="script">
-                  <p>Auto post on the fanpage</p>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="3"
-                    height="15"
-                    viewBox="0 0 3 15"
-                    fill="none"
-                  >
-                    <circle
-                      opacity="0.5"
-                      cx="1.5"
-                      cy="1.5"
-                      r="1.5"
-                      fill="#2A3042"
-                    />
-                    <circle
-                      opacity="0.5"
-                      cx="1.5"
-                      cy="7.5"
-                      r="1.5"
-                      fill="#2A3042"
-                    />
-                    <circle
-                      opacity="0.5"
-                      cx="1.5"
-                      cy="13.5"
-                      r="1.5"
-                      fill="#2A3042"
-                    />
-                  </svg>
-                </div>
-                <div className="script">
-                  <p>Auto post on the fanpage</p>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="3"
-                    height="15"
-                    viewBox="0 0 3 15"
-                    fill="none"
-                  >
-                    <circle
-                      opacity="0.5"
-                      cx="1.5"
-                      cy="1.5"
-                      r="1.5"
-                      fill="#2A3042"
-                    />
-                    <circle
-                      opacity="0.5"
-                      cx="1.5"
-                      cy="7.5"
-                      r="1.5"
-                      fill="#2A3042"
-                    />
-                    <circle
-                      opacity="0.5"
-                      cx="1.5"
-                      cy="13.5"
-                      r="1.5"
-                      fill="#2A3042"
-                    />
-                  </svg>
-                </div>
+                ))}
               </div>
             </div>
           </div>

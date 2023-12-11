@@ -4,6 +4,7 @@ import Loading from "../../components/loading/Loading";
 import DnDFlow from "../../components/drag/drag";
 import { useNavigate } from "react-router-dom";
 const CreateScript = () => {
+  const [activeCategory, setActiveCategory] = useState(null);
   const navigate = useNavigate();
   const onDragStart = (event, nodeType) => {
     event.dataTransfer.setData("application/reactflow", nodeType);
@@ -12,6 +13,11 @@ const CreateScript = () => {
   const handleReturnClick = () => {
     // Navigate to the desired route when the button is clicked
     navigate("/");
+  };
+  const handleCategoryClick = (categoryNumber) => {
+    setActiveCategory(
+      categoryNumber === activeCategory ? null : categoryNumber
+    );
   };
   return (
     <>
@@ -66,9 +72,31 @@ const CreateScript = () => {
                 </div>
               </div>
               <div className="left-content__category">
-                <button className="category-left">General</button>
-                <button className="category-middle">Group</button>
-                <button className="category-right">Seeding</button>
+                <button
+                  className={
+                    activeCategory === 1 ? "categoryActive" : "categoryBtn"
+                  }
+                  onClick={() => handleCategoryClick(1)}
+                >
+                  General
+                </button>
+                <button
+                  className={
+                    activeCategory === 2 ? "categoryActive" : "categoryBtn"
+                  }
+                  onClick={() => handleCategoryClick(2)}
+                >
+                  Group
+                </button>
+                <button
+                  className={
+                    activeCategory === 3 ? "categoryActive" : "categoryBtn"
+                  }
+                  onClick={() => handleCategoryClick(3)}
+                >
+                  Seeding
+                </button>
+                <hr />
               </div>
               <div className="left-content__container">
                 <div class="grid-container">

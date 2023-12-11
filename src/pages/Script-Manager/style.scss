@@ -168,6 +168,12 @@ body {
                 width: 100%;
               }
             }
+            .show-menu {
+              display: block;
+            }
+            .hide-menu {
+              display: none;
+            }
           }
           .inputSelected {
             font-weight: 900;

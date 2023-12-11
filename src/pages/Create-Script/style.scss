@@ -83,16 +83,28 @@ body {
         }
       }
       &__category {
-        border-style: none none inset none;
-        .category-left,
-        .category-middle,
-        .category-right {
-          border-style: none none solid none;
+        margin-top: 20px;
+        hr {
+          margin-top: -2px;
+          height: 2px;
+          background: rgba(1, 22, 43, 0.1);
+          border: none;
+        }
+        .categoryBtn {
+          border: none;
           background-color: #fff;
           cursor: pointer;
           margin-right: 30px;
-          margin-top: 20px;
-          padding: 5px;
+          margin-bottom: 10px;
+        }
+        .categoryActive {
+          border: none;
+          background-color: #fff;
+          cursor: pointer;
+          margin-right: 30px;
+          padding-bottom: 8px;
+          border-bottom: 2px solid;
+          font-weight: 700;
         }
       }
       &__container {
