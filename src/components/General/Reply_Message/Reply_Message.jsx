@@ -4,15 +4,10 @@ import './style.scss';
 import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
-import Edit from '../../../assets/icon/icon-edit.svg';
-import Debug from '../../../assets/icon/icon-debug.svg';
-import RunTest from '../../../assets/icon/icon-runTest.svg';
-import iconOptions from '../../../assets/icon/icon-options.svg';
-import iconSave from '../../../assets/icon/icon-save.svg';
 
 import { DelayTime, MessageTextarea, NumberOfFriend } from './Reply_Message';
 
-const Reply_Message = () => {
+const Reply_Message = ({ onGoBackClick }) => {
   const {
     inputValueNumberOfFriendStart,
     handleIncrementNumberOfFriendStart,
@@ -37,16 +32,11 @@ const Reply_Message = () => {
   const { textContentMessage, handleTextareaChangeMessage } = MessageTextarea();
   return (
     <div className="replyMessage">
-      <h1 className="watch-video__title">Facebook Automation</h1>
-      <div className="goBack">
-        <img src={backButton} alt="Back button" />
-        <p>Create a new script</p>
-      </div>
       <div className="component_container">
         <div className="scrollable-container">
           <div className="component-left">
             <div className="goBack">
-              <img src={backButton} alt="Back button" />
+            <img src={backButton} alt="Back button" onClick={() => onGoBackClick(true)} />
               <p>Reply message</p>
             </div>
 
@@ -113,32 +103,6 @@ const Reply_Message = () => {
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="componet-right">
-          <div className="componet-right__header">
-            <div className="componet-right__header__inputBox">
-              <input
-                type="text"
-                name="nameScenario"
-                id="nameScenario"
-                className="nameScenario"
-                placeholder="Enter name here"
-              />
-
-              <img src={Edit} alt="Edit button" />
-            </div>
-            <div className="componet-right__header__function">
-              <img src={Debug} alt="Debug button" />
-              <img src={RunTest} alt="Run test button" />
-              <img src={iconOptions} alt="icon option" />
-              <button type="submit" className="btnSave">
-                <img src={iconSave} alt="SaveButton" />
-                <span>Save</span>
-              </button>
-            </div>
-          </div>
-          <div className="componet-right__content"></div>
         </div>
       </div>
     </div>

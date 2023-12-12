@@ -7,11 +7,6 @@ import backButton from '../../../assets/icon/icon-back.svg';
 import DragButton from '../../../assets/icon/icon-drag.svg';
 import DeleteButton from '../../../assets/icon/icon-Delete.svg';
 import downButton from '../../../assets/icon/icon-down.svg';
-import Edit from '../../../assets/icon/icon-edit.svg';
-import Debug from '../../../assets/icon/icon-debug.svg';
-import RunTest from '../../../assets/icon/icon-runTest.svg';
-import iconSave from '../../../assets/icon/icon-save.svg';
-import iconOptions from '../../../assets/icon/icon-options.svg';
 import {
   FriendsOption,
   PostOption,
@@ -23,7 +18,7 @@ import {
   photoVideo,
   showTag,
 } from './CreatePost.js';
-const CreatePost = () => {
+const CreatePost = ({ onGoBackClick }) => {
   const {
     inputValuePostStart,
     handleIncrementPostStart,
@@ -76,19 +71,14 @@ const CreatePost = () => {
 
   const { textContent, handleTextareaChange } = TextBackGround();
 
-  const { handleIconClick, handleFileChange, isFileSelected, selectedFile } = URLImg();
+  const { handleIconClick, handleFileChange, selectedFile, handleDeleteButtonClick } = URLImg();
   return (
     <div className="createPost">
-      <h1 className="createPost__title">Facebook Automation</h1>
-      <div className="goBack">
-        <img src={backButton} alt="Back button" />
-        <p>Create a new script</p>
-      </div>
       <div className="component_container">
         <div className="scrollable-container">
           <div className="component-left">
             <div className="goBack">
-              <img src={backButton} alt="Back button" />
+              <img src={backButton} alt="Back button" onClick={() => onGoBackClick(true)} />
               <p>Create post</p>
             </div>
             <div className="component-item numberOfPost">
@@ -193,8 +183,15 @@ const CreatePost = () => {
                         <input type="text" value={inputValuePhotoVideoEnd} onChange={handleInputChangePhotoVideoEnd} />
                       </div>
                     </div>
-                    {!isFileSelected && (
-                      <div className="component-item dragVideoOrPhoto">
+                    {selectedFile ? (
+                      <div className={`folderPhoto`}>
+                        <p>
+                          <span>Folder:</span> {selectedFile?.name}
+                        </p>
+                        <img src={DeleteButton} alt="Delete Button" onClick={handleDeleteButtonClick} />
+                      </div>
+                    ) : (
+                      <div className={`component-item dragVideoOrPhoto`}>
                         <img src={DragButton} alt="Increase icon" onClick={handleIconClick} />
                         <p>Drag the photo/video folder here</p>
                         <input
@@ -205,14 +202,6 @@ const CreatePost = () => {
                           className="dragVideoOrPhotoInput"
                           onChange={handleFileChange}
                         />
-                      </div>
-                    )}
-                    {isFileSelected && (
-                      <div className="folderPhoto">
-                        <p>
-                          <span>Folder:</span> {selectedFile.name}
-                        </p>
-                        <img src={DeleteButton} alt="Delete Button" />
                       </div>
                     )}
                     <div className="component-item__header">
@@ -295,32 +284,6 @@ const CreatePost = () => {
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="componet-right">
-          <div className="componet-right__header">
-            <div className="componet-right__header__inputBox">
-              <input
-                type="text"
-                name="nameScenario"
-                id="nameScenario"
-                className="nameScenario"
-                placeholder="Enter name here"
-              />
-
-              <img src={Edit} alt="Edit button" />
-            </div>
-            <div className="componet-right__header__function">
-              <img src={Debug} alt="Debug button" />
-              <img src={RunTest} alt="Run test button" />
-              <img src={iconOptions} alt="icon option" />
-              <button type="submit" className="btnSave">
-                <img src={iconSave} alt="SaveButton" />
-                <span>Save</span>
-              </button>
-            </div>
-          </div>
-          <div className="componet-right__content"></div>
         </div>
       </div>
     </div>

@@ -183,33 +183,25 @@ export function TextBackGround() {
 }
 
 export function URLImg() {
-  //Hien thi duong dan cua anh
   const [selectedFile, setSelectedFile] = useState(null);
-  const [isFileSelected, setIsFileSelected] = useState(false);
-
-  const handleIconClick = () => {
-    if (!isFileSelected) {
-      document.getElementById('dragVideoOrPhotoInput').click();
-    }
+  const handleDeleteButtonClick = () => {
+    setSelectedFile(null);
   };
-
+  const handleIconClick = () => {
+    document.getElementById('dragVideoOrPhotoInput').click();
+  };
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
       setSelectedFile(file);
+      event.target.value = ''; // Clear the input value
     }
   };
 
-  useEffect(() => {
-    // Kiểm tra xem có file được chọn không và chưa thực hiện hiển thị
-    if (selectedFile && !isFileSelected) {
-      setIsFileSelected(true);
-    }
-  }, [selectedFile, isFileSelected]);
   return {
     handleIconClick,
     handleFileChange,
-    isFileSelected,
     selectedFile,
+    handleDeleteButtonClick,
   };
 }

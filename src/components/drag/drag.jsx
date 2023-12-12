@@ -36,13 +36,27 @@ const nodeTypes = {
   addFriend: addFriendNode,
   cancelFriend: cancelFriendNode,
 };
-
+const nodeMessage = {
+  watchStory: 'watchStory',
+  watchVideo: 'watchVideo',
+  newsFeed: 'newsFeed',
+  createPost: 'createPost',
+  postInteract: 'postInteract',
+  deletePost: 'deletePost',
+  viewNoti: 'viewNoti',
+  sendMsg: 'sendMsg',
+  replyMsg: 'replyMsg',
+  addFriend: 'addFriend',
+  cancelFriend: 'cancelFriend',
+};
 let id = 0;
 const getId = () => `dndnode_${id++}`;
 
-const DnDFlow = () => {
+const DnDFlow = ({ onMessageChange }) => {
   const reactFlowWrapper = useRef(null);
-
+  const handleNodeButtonClick = (type) => {
+    onMessageChange(type);
+  };
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
@@ -67,7 +81,7 @@ const DnDFlow = () => {
 
       // reactFlowInstance.project was renamed to reactFlowInstance.screenToFlowPosition
       // and you don't need to subtract the reactFlowBounds.left/top anymore
-      // details: https://reactflow.dev/whats-new/2023-11-10
+      // details: https://reactflow.dev/whats-new/202-11-10
       const position = reactFlowInstance.screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
@@ -76,12 +90,15 @@ const DnDFlow = () => {
         id: getId(),
         type,
         position,
-        data: { label: `${type} node` },
+        data: {
+          label: `${type} node`,
+          onButtonClick: () => handleNodeButtonClick(nodeMessage[type]),
+        },
       };
 
       setNodes((nds) => nds.concat(newNode));
     },
-    [reactFlowInstance],
+    [reactFlowInstance, handleNodeButtonClick],
   );
 
   return (
