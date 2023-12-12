@@ -1,41 +1,22 @@
-import { useCallback } from "react";
-import { Handle, Position } from "reactflow";
+import { useCallback } from 'react';
+import { Handle, Position } from 'reactflow';
 
 const handleStyle = { left: 10 };
 
-function watchVideoNode({ data, isConnectable }) {
+function watchVideoNode({ data: { label, onButtonClick }, isConnectable }) {
   const onChange = useCallback((evt) => {
     console.log(evt.target.value);
   }, []);
 
   return (
     <div className="updater-node">
-      <Handle
-        type="target"
-        position={Position.Left}
-        isConnectable={isConnectable}
-      />
+      <Handle type="target" position={Position.Left} isConnectable={isConnectable} />
       <div className="node">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="5"
-          height="40"
-          viewBox="0 0 5 40"
-          fill="none"
-        >
-          <path
-            d="M0 5C0 2.23858 2.23858 0 5 0V40C2.23858 40 0 37.7614 0 35V5Z"
-            fill="#34C38F"
-          />
+        <svg xmlns="http://www.w3.org/2000/svg" width="5" height="40" viewBox="0 0 5 40" fill="none">
+          <path d="M0 5C0 2.23858 2.23858 0 5 0V40C2.23858 40 0 37.7614 0 35V5Z" fill="#34C38F" />
         </svg>
         <div className="content">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="17"
-            height="15"
-            viewBox="0 0 17 15"
-            fill="none"
-          >
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="15" viewBox="0 0 17 15" fill="none">
             <path
               fill-rule="evenodd"
               clip-rule="evenodd"
@@ -64,27 +45,16 @@ function watchVideoNode({ data, isConnectable }) {
                 height="14"
                 viewBox="0 0 8 14"
                 fill="none"
+                onClick={onButtonClick}
               >
-                <rect
-                  width="8"
-                  height="14"
-                  rx="2"
-                  fill="#01162B"
-                  fill-opacity="0.1"
-                />
+                <rect width="8" height="14" rx="2" fill="#01162B" fill-opacity="0.1" />
                 <circle cx="3.92308" cy="3.92308" r="0.923077" fill="#01162B" />
                 <circle cx="3.92308" cy="7.00023" r="0.923077" fill="#01162B" />
                 <circle cx="3.92308" cy="10.0774" r="0.923077" fill="#01162B" />
               </svg>
             </div>
             <div className="right-bottom">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="10"
-                height="10"
-                viewBox="0 0 10 10"
-                fill="none"
-              >
+              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10" fill="none">
                 <path
                   d="M5 9C7.20914 9 9 7.20914 9 5C9 2.79086 7.20914 1 5 1C2.79086 1 1 2.79086 1 5C1 7.20914 2.79086 9 5 9Z"
                   stroke="#01162B"
@@ -104,12 +74,7 @@ function watchVideoNode({ data, isConnectable }) {
         </div>
       </div>
 
-      <Handle
-        type="source"
-        position={Position.Right}
-        id="b"
-        isConnectable={isConnectable}
-      />
+      <Handle type="source" position={Position.Right} id="b" isConnectable={isConnectable} />
     </div>
   );
 }

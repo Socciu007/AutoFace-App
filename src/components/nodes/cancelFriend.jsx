@@ -1,41 +1,22 @@
-import { useCallback } from "react";
-import { Handle, Position } from "reactflow";
+import { useCallback } from 'react';
+import { Handle, Position } from 'reactflow';
 
 const handleStyle = { left: 10 };
 
-function cancelFriendNode({ data, isConnectable }) {
+function cancelFriendNode({ data: { label, onButtonClick }, isConnectable }) {
   const onChange = useCallback((evt) => {
     console.log(evt.target.value);
   }, []);
 
   return (
     <div className="updater-node">
-      <Handle
-        type="target"
-        position={Position.Left}
-        isConnectable={isConnectable}
-      />
+      <Handle type="target" position={Position.Left} isConnectable={isConnectable} />
       <div className="node">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="5"
-          height="40"
-          viewBox="0 0 5 40"
-          fill="none"
-        >
-          <path
-            d="M0 5C0 2.23858 2.23858 0 5 0V40C2.23858 40 0 37.7614 0 35V5Z"
-            fill="#C33481"
-          />
+        <svg xmlns="http://www.w3.org/2000/svg" width="5" height="40" viewBox="0 0 5 40" fill="none">
+          <path d="M0 5C0 2.23858 2.23858 0 5 0V40C2.23858 40 0 37.7614 0 35V5Z" fill="#C33481" />
         </svg>
         <div className="content">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="15"
-            viewBox="0 0 20 15"
-            fill="none"
-          >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="15" viewBox="0 0 20 15" fill="none">
             <path
               d="M6.18348 0.000808672C6.76314 0.00102223 7.33707 0.115636 7.87235 0.33808C8.40764 0.560524 8.89376 0.886425 9.30285 1.2971C9.71194 1.70778 10.036 2.19515 10.2563 2.7313C10.4767 3.26744 10.5891 3.8418 10.5871 4.42146C10.5838 6.77368 8.71719 8.83826 6.17138 8.83716C3.61127 8.83716 1.74523 6.75223 1.75788 4.39891C1.77163 1.84705 3.88626 -0.0448388 6.18348 0.000808672ZM6.16038 7.02226C7.61285 7.02721 8.80023 5.87008 8.78923 4.41871C8.77658 2.92335 7.60515 1.81076 6.18953 1.80031C4.82725 1.78986 3.56397 2.84855 3.56452 4.40991C3.56287 6.11922 4.99389 7.06296 6.16038 7.02226Z"
               fill="#C33481"
@@ -58,27 +39,16 @@ function cancelFriendNode({ data, isConnectable }) {
                 height="14"
                 viewBox="0 0 8 14"
                 fill="none"
+                onClick={onButtonClick}
               >
-                <rect
-                  width="8"
-                  height="14"
-                  rx="2"
-                  fill="#01162B"
-                  fill-opacity="0.1"
-                />
+                <rect width="8" height="14" rx="2" fill="#01162B" fill-opacity="0.1" />
                 <circle cx="3.92308" cy="3.92308" r="0.923077" fill="#01162B" />
                 <circle cx="3.92308" cy="7.00023" r="0.923077" fill="#01162B" />
                 <circle cx="3.92308" cy="10.0774" r="0.923077" fill="#01162B" />
               </svg>
             </div>
             <div className="right-bottom">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="10"
-                height="10"
-                viewBox="0 0 10 10"
-                fill="none"
-              >
+              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10" fill="none">
                 <path
                   d="M5 9C7.20914 9 9 7.20914 9 5C9 2.79086 7.20914 1 5 1C2.79086 1 1 2.79086 1 5C1 7.20914 2.79086 9 5 9Z"
                   stroke="#01162B"
@@ -98,12 +68,7 @@ function cancelFriendNode({ data, isConnectable }) {
         </div>
       </div>
 
-      <Handle
-        type="source"
-        position={Position.Right}
-        id="b"
-        isConnectable={isConnectable}
-      />
+      <Handle type="source" position={Position.Right} id="b" isConnectable={isConnectable} />
     </div>
   );
 }

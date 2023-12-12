@@ -249,6 +249,11 @@ export function URLImg() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [isFileSelected, setIsFileSelected] = useState(false);
 
+  const handleDeleteButtonClick = () => {
+    // Xử lý khi người dùng click vào nút xóa
+    setIsFileSelected(false);
+  };
+
   const handleIconClick = () => {
     if (!isFileSelected) {
       document.getElementById('dragVideoOrPhotoInput').click();
@@ -274,5 +279,6 @@ export function URLImg() {
     handleFileChange,
     isFileSelected,
     selectedFile,
+    handleDeleteButtonClick,
   };
 }
