@@ -147,33 +147,6 @@ body {
               margin-left: 5px;
               cursor: pointer;
             }
-            .menu-options {
-              display: block;
-              position: absolute;
-              top: 5px;
-              right: 20px;
-              background-color: #fff;
-              border: 1px solid #ccc;
-              padding: 10px;
-              border-radius: 10px;
-              width: 160px;
-              box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-              div {
-                margin-top: 5px;
-                cursor: pointer;
-              }
-              .divider {
-                height: 1px;
-                background-color: #ccc;
-                width: 100%;
-              }
-            }
-            .show-menu {
-              display: block;
-            }
-            .hide-menu {
-              display: none;
-            }
           }
           .inputSelected {
             font-weight: 900;
@@ -246,7 +219,6 @@ body {
       }
     }
   }
-
   .makeCopy {
     display: none;
     position: fixed;
@@ -343,6 +315,12 @@ body {
         font-weight: 700;
       }
     }
+  }
+  .hide {
+    display: none;
+  }
+  .show {
+    display: block;
   }
   @media screen and (max-width: 1279px) {
     /* Adjust styles for smaller screens */

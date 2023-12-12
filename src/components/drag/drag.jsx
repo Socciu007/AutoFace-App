@@ -5,7 +5,7 @@ import ReactFlow, {
   useNodesState,
   useEdgesState,
   Controls,
-  MiniMap
+  MiniMap,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import TextUpdaterNode from "../nodes/node";
@@ -26,8 +26,8 @@ const initialNodes = [
     id: "1",
     type: "textUpdater",
     data: { label: "Starting Point" },
-    position: { x: 250, y: 250 }
-  }
+    position: { x: 250, y: 250 },
+  },
 ];
 const nodeTypes = {
   textUpdater: TextUpdaterNode,
@@ -41,7 +41,7 @@ const nodeTypes = {
   sendMsg: sendMsgNode,
   replyMsg: replyMsgNode,
   addFriend: addFriendNode,
-  cancelFriend: cancelFriendNode
+  cancelFriend: cancelFriendNode,
 };
 
 let id = 0;
@@ -49,9 +49,14 @@ const getId = () => `dndnode_${id++}`;
 
 const DnDFlow = ({ onMessageChange }) => {
   const reactFlowWrapper = useRef(null);
-  const handleNodeButtonClick = () => {
-    const props = true;
-    onMessageChange(props);
+  const handleNodeButtonClick = (text) => {
+    onMessageChange(text);
+  };
+  const nodeMessages = {
+    textUpdater: "Hello from the Text Updater node!",
+    watchStory: "Hello from the Watch Story node!",
+    watchVideo: "Hello from the Watch Video node!",
+    // Add other node types and messages as needed
   };
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -83,7 +88,7 @@ const DnDFlow = ({ onMessageChange }) => {
       // details: https://reactflow.dev/whats-new/2023-11-10
       const position = reactFlowInstance.screenToFlowPosition({
         x: event.clientX,
-        y: event.clientY
+        y: event.clientY,
       });
       const newNode = {
         id: getId(),
@@ -91,19 +96,19 @@ const DnDFlow = ({ onMessageChange }) => {
         position,
         data: {
           label: `${type} node`,
-          onButtonClick: handleNodeButtonClick
-        }
+          onButtonClick: () => handleNodeButtonClick(nodeMessages[type]),
+        },
       };
 
       setNodes((nds) => nds.concat(newNode));
     },
-    [reactFlowInstance]
+    [reactFlowInstance, handleNodeButtonClick]
   );
 
   return (
-    <div className='dndflow'>
+    <div className="dndflow">
       <ReactFlowProvider>
-        <div className='reactflow-wrapper' ref={reactFlowWrapper}>
+        <div className="reactflow-wrapper" ref={reactFlowWrapper}>
           <ReactFlow
             nodes={nodes}
             edges={edges}

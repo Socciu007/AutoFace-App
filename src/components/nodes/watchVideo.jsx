@@ -3,7 +3,7 @@ import { Handle, Position } from "reactflow";
 
 const handleStyle = { left: 10 };
 
-function watchVideoNode({ data, isConnectable }) {
+function watchVideoNode({ data: { label, onButtonClick }, isConnectable }) {
   const onChange = useCallback((evt) => {
     console.log(evt.target.value);
   }, []);
@@ -64,6 +64,7 @@ function watchVideoNode({ data, isConnectable }) {
                 height="14"
                 viewBox="0 0 8 14"
                 fill="none"
+                onClick={onButtonClick}
               >
                 <rect
                   width="8"
