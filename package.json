@@ -24,6 +24,8 @@
     "node-sass": "^9.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-flow": "^1.0.3",
+    "react-flow-renderer": "^10.3.17",
     "react-i18next": "^13.5.0",
     "react-nice-avatar": "^1.4.1",
     "react-notifications-component": "^4.0.1",
@@ -35,7 +37,8 @@
     "styled-components": "^5.3.11",
     "toastr": "^2.1.4",
     "yarn": "^1.22.21",
-    "yup": "^1.2.0"
+    "yup": "^1.2.0",
+    "zustand": "^4.4.7"
   },
   "devDependencies": {
     "@types/react": "^18.0.37",

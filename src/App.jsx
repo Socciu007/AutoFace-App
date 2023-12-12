@@ -4,7 +4,6 @@ import 'react-notifications-component/dist/theme.css';
 import { Route, Routes } from 'react-router-dom';
 import Dashboard from './pages/Dashboard/Dashboard';
 import CreateScript from './pages/Create-Script/index.jsx';
-
 function App() {
   return (
     <>

@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import { useCallback, useState } from 'react';
 import { Handle, Position } from 'reactflow';
 
@@ -21,12 +22,13 @@ function watchStoryNode({ data, isConnectable, onSvgClick }) {
               <path
                 d="M0.75 1.5C0.75 1.173 1.08442 0.75 1.70455 0.75H5.11364C5.73377 0.75 6.06818 1.173 6.06818 1.5V13.182L5.40604 12.5161C5.07757 12.1857 4.63094 12 4.16508 12H1.70455C1.08441 12 0.75 11.577 0.75 11.25V1.5Z"
                 stroke="#F0CD00"
+                // eslint-disable-next-line react/no-unknown-property
                 stroke-width="1.5"
               />
               <path
                 d="M14.25 1.5C14.25 1.173 13.9156 0.75 13.2955 0.75H9.88636C9.26623 0.75 8.93182 1.173 8.93182 1.5V13.182L9.59396 12.5161C9.92243 12.1857 10.3691 12 10.8349 12H13.2955C13.9156 12 14.25 11.577 14.25 11.25V1.5Z"
                 stroke="#F0CD00"
-                stroke-width="1.5"
+                strokeWidth="1.5"
               />
             </svg>
             <div className="content-right">
@@ -38,9 +40,9 @@ function watchStoryNode({ data, isConnectable, onSvgClick }) {
                   height="14"
                   viewBox="0 0 8 14"
                   fill="none"
-                  onClick={() => onSvgClick}
+                  onClick={() => onSvgClick()}
                 >
-                  <rect width="8" height="14" rx="2" fill="#01162B" fill-opacity="0.1" />
+                  <rect width="8" height="14" rx="2" fill="#01162B" fillOpacity="0.1" />
                   <circle cx="3.92308" cy="3.92308" r="0.923077" fill="#01162B" />
                   <circle cx="3.92308" cy="7.00023" r="0.923077" fill="#01162B" />
                   <circle cx="3.92308" cy="10.0774" r="0.923077" fill="#01162B" />
@@ -57,8 +59,8 @@ function watchStoryNode({ data, isConnectable, onSvgClick }) {
                     d="M5 3.40039V5.00039L6 6.00039"
                     stroke="#01162B"
                     strokeOpacity="0.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
                 <p>5 min</p>
