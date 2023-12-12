@@ -89,18 +89,16 @@
       height: 80%;
       & thead.ant-table-thead {
          background-color: #D4E7FF;
-      }
-      & th.ant-table-cell {
-         opacity: 0.3;
-         font-size: 15px;
-         font-weight: 700;
-         color: rgba(1, 22, 43, 0.50);
-      }
-      & td.ant-table-cell.ant-table-row-expand-icon-cell {
-         opacity: 0.3;
-         font-size: 15px;
-         font-weight: 700;
-         color: rgba(1, 22, 43, 0.50);
+         & th.ant-table-cell {
+            opacity: 0.3;
+            font-size: 15px;
+            font-weight: 700;
+            color: rgba(1, 22, 43, 0.50);
+            background-color: #D4E7FF;
+         }
+         & td.ant-table-cell {
+            background-color: #D4E7FF;
+         }
       }
       .scrollable-container {
          height: 100%; 
@@ -419,6 +417,10 @@
                            font-size: 15px;
                            font-weight: 700;
                            line-height: normal;
+                           // background-color: #D4E7FF;
+                        }
+                        td.ant-table-cell {
+                           // background-color: #D4E7FF;
                         }
                      }
                    }
@@ -436,6 +438,37 @@
                      border-radius: 20px;
                    }
                }
+            }
+         }
+      }
+   }
+   .-proxy-manage {
+      margin: 20px 35px;
+      width: 94%;
+      &__content {
+         display: block;
+         &__main {
+            margin-left: 0;
+            &__search {
+               height: 60px;
+               border-radius: 15px;
+               background: #FFF;
+               box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
+               justify-content: flex-start;
+               span {
+                  width: 40px;
+                  height: 40px;
+                  background-color: #F5F5F5;
+                  border-radius: 50%;
+                  display: grid;
+                  place-items: center;
+                  cursor: pointer;
+               }
+            }
+            &__table {
+               margin-top: 10px;
+               height: 115%;
+               margin-right: -15px;
             }
          }
       }
