@@ -3,10 +3,10 @@ import "./style.scss";
 import DnDFlow from "../../components/drag/drag";
 import { useNavigate } from "react-router-dom";
 const CreateScript = () => {
-  const [message, setMessage] = useState(false);
+  const [message, setMessage] = useState("");
 
-  const handleMessageChange = (event) => {
-    setMessage(event);
+  const handleMessageChange = (newMessage) => {
+    setMessage(newMessage);
   };
   const [activeCategory, setActiveCategory] = useState(null);
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ const CreateScript = () => {
   return (
     <>
       <div className='create-script'>
-        <h1>FACEBOOK AUTOMATION</h1>
+        <h1>{message}</h1>
         <div className='create-script__title'>
           <button onClick={handleReturnClick}>
             <svg
@@ -102,7 +102,7 @@ const CreateScript = () => {
                 </button>
                 <hr />
               </div>
-              <div className={message ? "left-content__container" : ""}>
+              <div className='left-content__container'>
                 <div className='grid-container'>
                   <div
                     className='card'
@@ -198,7 +198,7 @@ const CreateScript = () => {
                         d='M21 25H4.63636C2.63636 25 1 23.3636 1 21.3636V8.63636C1 6.63636 2.63636 5 4.63636 5H21C23 5 24.6364 6.63636 24.6364 8.63636V21.3636C24.6364 23.3636 23 25 21 25Z'
                         stroke='#01162B'
                         strokeWidth='2'
-                        strokeMiterlimit='10'
+                        stroke-miterlimit='10'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
@@ -206,7 +206,7 @@ const CreateScript = () => {
                         d='M10.9995 10.4541H5.54492V15.9086H10.9995V10.4541Z'
                         stroke='#01162B'
                         strokeWidth='2'
-                        strokeMiterlimit='10'
+                        stroke-miterlimit='10'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
@@ -214,7 +214,7 @@ const CreateScript = () => {
                         d='M14.6367 15.9092H20.0913'
                         stroke='#01162B'
                         strokeWidth='2'
-                        strokeMiterlimit='10'
+                        stroke-miterlimit='10'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
@@ -222,7 +222,7 @@ const CreateScript = () => {
                         d='M5.54492 19.5459H20.0904'
                         stroke='#01162B'
                         strokeWidth='2'
-                        strokeMiterlimit='10'
+                        stroke-miterlimit='10'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
@@ -249,7 +249,7 @@ const CreateScript = () => {
                         d='M21 25H4.63636C2.63636 25 1 23.3636 1 21.3636V8.63636C1 6.63636 2.63636 5 4.63636 5H21C23 5 24.6364 6.63636 24.6364 8.63636V21.3636C24.6364 23.3636 23 25 21 25Z'
                         stroke='#01162B'
                         strokeWidth='2'
-                        strokeMiterlimit='10'
+                        stroke-miterlimit='10'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
@@ -257,7 +257,7 @@ const CreateScript = () => {
                         d='M10.9995 10.4541H5.54492V15.9086H10.9995V10.4541Z'
                         stroke='#01162B'
                         strokeWidth='2'
-                        strokeMiterlimit='10'
+                        stroke-miterlimit='10'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
@@ -265,7 +265,7 @@ const CreateScript = () => {
                         d='M14.6367 15.9092H20.0913'
                         stroke='#01162B'
                         strokeWidth='2'
-                        strokeMiterlimit='10'
+                        stroke-miterlimit='10'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
@@ -273,7 +273,7 @@ const CreateScript = () => {
                         d='M5.54492 19.5459H20.0904'
                         stroke='#01162B'
                         strokeWidth='2'
-                        strokeMiterlimit='10'
+                        stroke-miterlimit='10'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
@@ -300,7 +300,7 @@ const CreateScript = () => {
                         d='M21 27H4.63636C2.63636 27 1 25.3636 1 23.3636V10.6364C1 8.63636 2.63636 7 4.63636 7H21C23 7 24.6364 8.63636 24.6364 10.6364V23.3636C24.6364 25.3636 23 27 21 27Z'
                         stroke='#01162B'
                         strokeWidth='2'
-                        strokeMiterlimit='10'
+                        stroke-miterlimit='10'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
@@ -308,7 +308,7 @@ const CreateScript = () => {
                         d='M10.9995 12.4551H5.54492V17.9096H10.9995V12.4551Z'
                         stroke='#01162B'
                         strokeWidth='2'
-                        strokeMiterlimit='10'
+                        stroke-miterlimit='10'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
@@ -316,7 +316,7 @@ const CreateScript = () => {
                         d='M14.6367 17.9092H20.0913'
                         stroke='#01162B'
                         strokeWidth='2'
-                        strokeMiterlimit='10'
+                        stroke-miterlimit='10'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
@@ -324,7 +324,7 @@ const CreateScript = () => {
                         d='M5.54492 21.5459H20.0904'
                         stroke='#01162B'
                         strokeWidth='2'
-                        strokeMiterlimit='10'
+                        stroke-miterlimit='10'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
@@ -351,14 +351,14 @@ const CreateScript = () => {
                         d='M8.99796 1.96387C5.70769 1.96387 3.03375 4.63781 3.03375 7.92805V10.8008C3.03375 11.4071 2.7753 12.3316 2.46715 12.8485L1.32402 14.7471C0.61826 15.92 1.10533 17.2222 2.39757 17.6596C6.68184 19.091 11.3041 19.091 15.5884 17.6596C16.7912 17.262 17.318 15.8405 16.6619 14.7471L15.5188 12.8485C15.2206 12.3316 14.9621 11.4071 14.9621 10.8008V7.92805C14.9621 4.64775 12.2783 1.96387 8.99796 1.96387Z'
                         stroke='#01162B'
                         strokeWidth='2'
-                        strokeMiterlimit='10'
+                        stroke-miterlimit='10'
                         strokeLinecap='round'
                       />
                       <path
                         d='M10.8361 2.25248C10.528 2.16302 10.2099 2.09343 9.88185 2.05367C8.92758 1.93439 8.01307 2.00397 7.1582 2.25248C7.44647 1.5169 8.16217 1 8.99716 1C9.83214 1 10.5478 1.5169 10.8361 2.25248Z'
                         stroke='#01162B'
                         strokeWidth='2'
-                        strokeMiterlimit='10'
+                        stroke-miterlimit='10'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
@@ -366,7 +366,7 @@ const CreateScript = () => {
                         d='M11.9798 18.0176C11.9798 19.6577 10.6378 20.9997 8.9977 20.9997C8.18259 20.9997 7.42713 20.6617 6.89037 20.1249C6.3536 19.5881 6.01562 18.8327 6.01562 18.0176'
                         stroke='#01162B'
                         strokeWidth='2'
-                        strokeMiterlimit='10'
+                        stroke-miterlimit='10'
                       />
                     </svg>
                     <p>View notifications</p>

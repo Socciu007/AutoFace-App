@@ -5,7 +5,7 @@ import ReactFlow, {
   useNodesState,
   useEdgesState,
   Controls,
-  MiniMap
+  MiniMap,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import TextUpdaterNode from "../nodes/node";
@@ -26,8 +26,8 @@ const initialNodes = [
     id: "1",
     type: "textUpdater",
     data: { label: "Starting Point" },
-    position: { x: 250, y: 250 }
-  }
+    position: { x: 250, y: 250 },
+  },
 ];
 const nodeTypes = {
   textUpdater: TextUpdaterNode,
@@ -41,18 +41,15 @@ const nodeTypes = {
   sendMsg: sendMsgNode,
   replyMsg: replyMsgNode,
   addFriend: addFriendNode,
-  cancelFriend: cancelFriendNode
+  cancelFriend: cancelFriendNode,
 };
 
 let id = 0;
 const getId = () => `dndnode_${id++}`;
 
-const DnDFlow = ({ onMessageChange }) => {
+const DnDFlow = () => {
   const reactFlowWrapper = useRef(null);
-  const handleNodeButtonClick = () => {
-    const props = true;
-    onMessageChange(props);
-  };
+
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
@@ -83,16 +80,13 @@ const DnDFlow = ({ onMessageChange }) => {
       // details: https://reactflow.dev/whats-new/2023-11-10
       const position = reactFlowInstance.screenToFlowPosition({
         x: event.clientX,
-        y: event.clientY
+        y: event.clientY,
       });
       const newNode = {
         id: getId(),
         type,
         position,
-        data: {
-          label: `${type} node`,
-          onButtonClick: handleNodeButtonClick
-        }
+        data: { label: `${type} node` },
       };
 
       setNodes((nds) => nds.concat(newNode));
@@ -101,9 +95,9 @@ const DnDFlow = ({ onMessageChange }) => {
   );
 
   return (
-    <div className='dndflow'>
+    <div className="dndflow">
       <ReactFlowProvider>
-        <div className='reactflow-wrapper' ref={reactFlowWrapper}>
+        <div className="reactflow-wrapper" ref={reactFlowWrapper}>
           <ReactFlow
             nodes={nodes}
             edges={edges}

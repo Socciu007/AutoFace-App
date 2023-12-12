@@ -102,7 +102,7 @@ const CreateScript = () => {
                 </button>
                 <hr />
               </div>
-              <div className={message ? "left-content__container" : ""}>
+              <div className='left-content__container'>
                 <div className='grid-container'>
                   <div
                     className='card'

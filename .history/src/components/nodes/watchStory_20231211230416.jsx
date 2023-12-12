@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { Handle, Position } from "reactflow";
 
-function watchStoryNode({ data: { label, onButtonClick }, isConnectable }) {
+function watchStoryNode({ data, isConnectable, onButtonClick }) {
   const onChange = useCallback((evt) => {
     console.log(evt.target.value);
   }, []);

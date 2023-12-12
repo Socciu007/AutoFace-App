@@ -3,10 +3,10 @@ import "./style.scss";
 import DnDFlow from "../../components/drag/drag";
 import { useNavigate } from "react-router-dom";
 const CreateScript = () => {
-  const [message, setMessage] = useState(false);
+  const [message, setMessage] = useState("");
 
-  const handleMessageChange = (event) => {
-    setMessage(event);
+  const handleMessageChange = (newMessage) => {
+    setMessage(newMessage);
   };
   const [activeCategory, setActiveCategory] = useState(null);
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ const CreateScript = () => {
   return (
     <>
       <div className='create-script'>
-        <h1>FACEBOOK AUTOMATION</h1>
+        <h1>{message}</h1>
         <div className='create-script__title'>
           <button onClick={handleReturnClick}>
             <svg
@@ -62,8 +62,8 @@ const CreateScript = () => {
                   >
                     <g opacity='0.5'>
                       <path
-                        fillRule='evenodd'
-                        clipRule='evenodd'
+                        fill-rule='evenodd'
+                        clip-rule='evenodd'
                         d='M18.6882 13.5584C20.046 9.98396 18.6389 5.89034 15.1813 3.94267C11.3153 1.76501 6.34993 3.09465 4.0907 6.91248C1.83147 10.7303 3.13395 15.5906 6.99987 17.7683C10.5331 19.7585 14.9848 18.8192 17.4495 15.7281L22.2807 18.4529C22.8818 18.7919 23.6536 18.5851 24.0047 17.991C24.3558 17.397 24.1532 16.6406 23.5522 16.3016L18.6882 13.5584ZM13.9117 6.08802C16.5779 7.58985 17.4761 10.9418 15.9181 13.5748C14.36 16.2078 10.9355 17.1248 8.26939 15.6229C5.60324 14.1211 4.70497 10.7692 6.26306 8.13616C7.82115 5.50317 11.2456 4.58619 13.9117 6.08802Z'
                         fill='#01162B'
                       />
@@ -102,7 +102,7 @@ const CreateScript = () => {
                 </button>
                 <hr />
               </div>
-              <div className={message ? "left-content__container" : ""}>
+              <div className='left-content__container'>
                 <div className='grid-container'>
                   <div
                     className='card'
@@ -142,20 +142,20 @@ const CreateScript = () => {
                       fill='none'
                     >
                       <path
-                        fillRule='evenodd'
-                        clipRule='evenodd'
+                        fill-rule='evenodd'
+                        clip-rule='evenodd'
                         d='M18.1818 1.81818H3.63636C2.63221 1.81818 1.81818 2.63221 1.81818 3.63636V12.7273C1.81818 13.7314 2.63221 14.5455 3.63636 14.5455H18.1818C19.186 14.5455 20 13.7314 20 12.7273V3.63636C20 2.63221 19.186 1.81818 18.1818 1.81818ZM3.63636 0C1.62806 0 0 1.62806 0 3.63636V12.7273C0 14.7356 1.62806 16.3636 3.63636 16.3636H18.1818C20.1901 16.3636 21.8182 14.7356 21.8182 12.7273V3.63636C21.8182 1.62806 20.1901 0 18.1818 0H3.63636Z'
                         fill='#01162B'
                       />
                       <path
-                        fillRule='evenodd'
-                        clipRule='evenodd'
+                        fill-rule='evenodd'
+                        clip-rule='evenodd'
                         d='M4.54545 19.0909C4.54545 18.5888 4.95247 18.1818 5.45455 18.1818H16.3636C16.8657 18.1818 17.2727 18.5888 17.2727 19.0909C17.2727 19.593 16.8657 20 16.3636 20H5.45455C4.95247 20 4.54545 19.593 4.54545 19.0909Z'
                         fill='#01162B'
                       />
                       <path
-                        fillRule='evenodd'
-                        clipRule='evenodd'
+                        fill-rule='evenodd'
+                        clip-rule='evenodd'
                         d='M10 7.06017V9.30346L11.8694 8.18182L10 7.06017ZM8.18182 6.0968C8.18182 5.10751 9.26106 4.49646 10.1094 5.00544L13.5844 7.09046C14.4083 7.5848 14.4083 8.77884 13.5844 9.27317L10.1094 11.3582C9.26105 11.8672 8.18182 11.2561 8.18182 10.2668V6.0968Z'
                         fill='#01162B'
                       />
@@ -198,7 +198,7 @@ const CreateScript = () => {
                         d='M21 25H4.63636C2.63636 25 1 23.3636 1 21.3636V8.63636C1 6.63636 2.63636 5 4.63636 5H21C23 5 24.6364 6.63636 24.6364 8.63636V21.3636C24.6364 23.3636 23 25 21 25Z'
                         stroke='#01162B'
                         strokeWidth='2'
-                        strokeMiterlimit='10'
+                        stroke-miterlimit='10'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
@@ -206,7 +206,7 @@ const CreateScript = () => {
                         d='M10.9995 10.4541H5.54492V15.9086H10.9995V10.4541Z'
                         stroke='#01162B'
                         strokeWidth='2'
-                        strokeMiterlimit='10'
+                        stroke-miterlimit='10'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
@@ -214,7 +214,7 @@ const CreateScript = () => {
                         d='M14.6367 15.9092H20.0913'
                         stroke='#01162B'
                         strokeWidth='2'
-                        strokeMiterlimit='10'
+                        stroke-miterlimit='10'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
@@ -222,7 +222,7 @@ const CreateScript = () => {
                         d='M5.54492 19.5459H20.0904'
                         stroke='#01162B'
                         strokeWidth='2'
-                        strokeMiterlimit='10'
+                        stroke-miterlimit='10'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
@@ -249,7 +249,7 @@ const CreateScript = () => {
                         d='M21 25H4.63636C2.63636 25 1 23.3636 1 21.3636V8.63636C1 6.63636 2.63636 5 4.63636 5H21C23 5 24.6364 6.63636 24.6364 8.63636V21.3636C24.6364 23.3636 23 25 21 25Z'
                         stroke='#01162B'
                         strokeWidth='2'
-                        strokeMiterlimit='10'
+                        stroke-miterlimit='10'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
@@ -257,7 +257,7 @@ const CreateScript = () => {
                         d='M10.9995 10.4541H5.54492V15.9086H10.9995V10.4541Z'
                         stroke='#01162B'
                         strokeWidth='2'
-                        strokeMiterlimit='10'
+                        stroke-miterlimit='10'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
@@ -265,7 +265,7 @@ const CreateScript = () => {
                         d='M14.6367 15.9092H20.0913'
                         stroke='#01162B'
                         strokeWidth='2'
-                        strokeMiterlimit='10'
+                        stroke-miterlimit='10'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
@@ -273,7 +273,7 @@ const CreateScript = () => {
                         d='M5.54492 19.5459H20.0904'
                         stroke='#01162B'
                         strokeWidth='2'
-                        strokeMiterlimit='10'
+                        stroke-miterlimit='10'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
@@ -300,7 +300,7 @@ const CreateScript = () => {
                         d='M21 27H4.63636C2.63636 27 1 25.3636 1 23.3636V10.6364C1 8.63636 2.63636 7 4.63636 7H21C23 7 24.6364 8.63636 24.6364 10.6364V23.3636C24.6364 25.3636 23 27 21 27Z'
                         stroke='#01162B'
                         strokeWidth='2'
-                        strokeMiterlimit='10'
+                        stroke-miterlimit='10'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
@@ -308,7 +308,7 @@ const CreateScript = () => {
                         d='M10.9995 12.4551H5.54492V17.9096H10.9995V12.4551Z'
                         stroke='#01162B'
                         strokeWidth='2'
-                        strokeMiterlimit='10'
+                        stroke-miterlimit='10'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
@@ -316,7 +316,7 @@ const CreateScript = () => {
                         d='M14.6367 17.9092H20.0913'
                         stroke='#01162B'
                         strokeWidth='2'
-                        strokeMiterlimit='10'
+                        stroke-miterlimit='10'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
@@ -324,7 +324,7 @@ const CreateScript = () => {
                         d='M5.54492 21.5459H20.0904'
                         stroke='#01162B'
                         strokeWidth='2'
-                        strokeMiterlimit='10'
+                        stroke-miterlimit='10'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
@@ -351,14 +351,14 @@ const CreateScript = () => {
                         d='M8.99796 1.96387C5.70769 1.96387 3.03375 4.63781 3.03375 7.92805V10.8008C3.03375 11.4071 2.7753 12.3316 2.46715 12.8485L1.32402 14.7471C0.61826 15.92 1.10533 17.2222 2.39757 17.6596C6.68184 19.091 11.3041 19.091 15.5884 17.6596C16.7912 17.262 17.318 15.8405 16.6619 14.7471L15.5188 12.8485C15.2206 12.3316 14.9621 11.4071 14.9621 10.8008V7.92805C14.9621 4.64775 12.2783 1.96387 8.99796 1.96387Z'
                         stroke='#01162B'
                         strokeWidth='2'
-                        strokeMiterlimit='10'
+                        stroke-miterlimit='10'
                         strokeLinecap='round'
                       />
                       <path
                         d='M10.8361 2.25248C10.528 2.16302 10.2099 2.09343 9.88185 2.05367C8.92758 1.93439 8.01307 2.00397 7.1582 2.25248C7.44647 1.5169 8.16217 1 8.99716 1C9.83214 1 10.5478 1.5169 10.8361 2.25248Z'
                         stroke='#01162B'
                         strokeWidth='2'
-                        strokeMiterlimit='10'
+                        stroke-miterlimit='10'
                         strokeLinecap='round'
                         strokeLinejoin='round'
                       />
@@ -366,7 +366,7 @@ const CreateScript = () => {
                         d='M11.9798 18.0176C11.9798 19.6577 10.6378 20.9997 8.9977 20.9997C8.18259 20.9997 7.42713 20.6617 6.89037 20.1249C6.3536 19.5881 6.01562 18.8327 6.01562 18.0176'
                         stroke='#01162B'
                         strokeWidth='2'
-                        strokeMiterlimit='10'
+                        stroke-miterlimit='10'
                       />
                     </svg>
                     <p>View notifications</p>
@@ -574,8 +574,8 @@ const CreateScript = () => {
                   fill='none'
                 >
                   <path
-                    fillRule='evenodd'
-                    clipRule='evenodd'
+                    fill-rule='evenodd'
+                    clip-rule='evenodd'
                     d='M5.41406 3C5.41406 2.586 5.76685 2.25 6.20155 2.25C6.63625 2.25 6.98907 2.586 6.98907 3C6.98907 3.414 6.63625 3.75 6.20155 3.75C5.76685 3.75 5.41406 3.414 5.41406 3ZM14.175 12.75C14.175 13.164 13.8222 13.5 13.3875 13.5H12.6V10.5C12.6 9.67125 11.8952 9 11.025 9H4.72499C3.8548 9 3.15001 9.67125 3.15001 10.5V13.5H2.3625C1.9278 13.5 1.575 13.164 1.575 12.75V5.283C1.575 5.18325 1.61673 5.08801 1.68997 5.01826L3.15001 3.62775V4.5C3.15001 5.32875 3.8548 6 4.72499 6H11.025C11.8952 6 12.6 5.32875 12.6 4.5V1.5H13.3875C13.8222 1.5 14.175 1.836 14.175 2.25V12.75ZM11.025 13.5H4.72499V11.25C4.72499 10.836 5.0778 10.5 5.5125 10.5H10.2375C10.6722 10.5 11.025 10.836 11.025 11.25V13.5ZM4.72499 2.12775L5.38415 1.5H11.025V3.75C11.025 4.164 10.6722 4.5 10.2375 4.5H5.5125C5.0778 4.5 4.72499 4.164 4.72499 3.75V2.12775ZM14.175 0H5.05103C4.84235 0 4.6423 0.0787495 4.49425 0.219749L0.230736 4.28025C0.0826858 4.42125 0 4.61175 0 4.8105V13.5C0 14.3287 0.704817 15 1.575 15H14.175C15.0452 15 15.75 14.3287 15.75 13.5V1.5C15.75 0.67125 15.0452 0 14.175 0Z'
                     fill='white'
                   />

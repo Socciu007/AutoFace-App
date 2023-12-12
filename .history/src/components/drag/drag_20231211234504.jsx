@@ -50,8 +50,8 @@ const getId = () => `dndnode_${id++}`;
 const DnDFlow = ({ onMessageChange }) => {
   const reactFlowWrapper = useRef(null);
   const handleNodeButtonClick = () => {
-    const props = true;
-    onMessageChange(props);
+    const newMessage = "Hello from the node!";
+    onMessageChange(newMessage);
   };
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -90,8 +90,7 @@ const DnDFlow = ({ onMessageChange }) => {
         type,
         position,
         data: {
-          label: `${type} node`,
-          onButtonClick: handleNodeButtonClick
+          label: `${type} node`
         }
       };
 

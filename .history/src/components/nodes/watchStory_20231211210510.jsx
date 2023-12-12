@@ -1,7 +1,9 @@
 import { useCallback } from "react";
 import { Handle, Position } from "reactflow";
 
-function watchStoryNode({ data: { label, onButtonClick }, isConnectable }) {
+const handleStyle = { left: 10 };
+
+function watchStoryNode({ data, isConnectable, onButtonClick }) {
   const onChange = useCallback((evt) => {
     console.log(evt.target.value);
   }, []);
@@ -37,12 +39,12 @@ function watchStoryNode({ data: { label, onButtonClick }, isConnectable }) {
             <path
               d='M0.75 1.5C0.75 1.173 1.08442 0.75 1.70455 0.75H5.11364C5.73377 0.75 6.06818 1.173 6.06818 1.5V13.182L5.40604 12.5161C5.07757 12.1857 4.63094 12 4.16508 12H1.70455C1.08441 12 0.75 11.577 0.75 11.25V1.5Z'
               stroke='#F0CD00'
-              strokeWidth='1.5'
+              stroke-width='1.5'
             />
             <path
               d='M14.25 1.5C14.25 1.173 13.9156 0.75 13.2955 0.75H9.88636C9.26623 0.75 8.93182 1.173 8.93182 1.5V13.182L9.59396 12.5161C9.92243 12.1857 10.3691 12 10.8349 12H13.2955C13.9156 12 14.25 11.577 14.25 11.25V1.5Z'
               stroke='#F0CD00'
-              strokeWidth='1.5'
+              stroke-width='1.5'
             />
           </svg>
           <div className='content-right'>
@@ -61,7 +63,7 @@ function watchStoryNode({ data: { label, onButtonClick }, isConnectable }) {
                   height='14'
                   rx='2'
                   fill='#01162B'
-                  fillOpacity='0.1'
+                  fill-opacity='0.1'
                 />
                 <circle cx='3.92308' cy='3.92308' r='0.923077' fill='#01162B' />
                 <circle cx='3.92308' cy='7.00023' r='0.923077' fill='#01162B' />
@@ -79,14 +81,14 @@ function watchStoryNode({ data: { label, onButtonClick }, isConnectable }) {
                 <path
                   d='M5 9C7.20914 9 9 7.20914 9 5C9 2.79086 7.20914 1 5 1C2.79086 1 1 2.79086 1 5C1 7.20914 2.79086 9 5 9Z'
                   stroke='#01162B'
-                  strokeOpacity='0.5'
+                  stroke-opacity='0.5'
                 />
                 <path
                   d='M5 3.40039V5.00039L6 6.00039'
                   stroke='#01162B'
-                  strokeOpacity='0.5'
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
+                  stroke-opacity='0.5'
+                  stroke-linecap='round'
+                  stroke-linejoin='round'
                 />
               </svg>
               <p>5 min</p>

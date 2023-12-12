@@ -3,10 +3,10 @@ import "./style.scss";
 import DnDFlow from "../../components/drag/drag";
 import { useNavigate } from "react-router-dom";
 const CreateScript = () => {
-  const [message, setMessage] = useState(false);
+  const [message, setMessage] = useState("");
 
-  const handleMessageChange = (event) => {
-    setMessage(event);
+  const handleMessageChange = (newMessage) => {
+    setMessage(newMessage);
   };
   const [activeCategory, setActiveCategory] = useState(null);
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ const CreateScript = () => {
   return (
     <>
       <div className='create-script'>
-        <h1>FACEBOOK AUTOMATION</h1>
+        <h1>{message}</h1>
         <div className='create-script__title'>
           <button onClick={handleReturnClick}>
             <svg
@@ -102,7 +102,7 @@ const CreateScript = () => {
                 </button>
                 <hr />
               </div>
-              <div className={message ? "left-content__container" : ""}>
+              <div className='left-content__container'>
                 <div className='grid-container'>
                   <div
                     className='card'
