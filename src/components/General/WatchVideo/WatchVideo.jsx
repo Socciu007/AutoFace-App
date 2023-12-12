@@ -7,11 +7,6 @@ import backButton from '../../../assets/icon/icon-back.svg';
 import DragButton from '../../../assets/icon/icon-drag.svg';
 import DeleteButton from '../../../assets/icon/icon-Delete.svg';
 import downButton from '../../../assets/icon/icon-down.svg';
-import Edit from '../../../assets/icon/icon-edit.svg';
-import Debug from '../../../assets/icon/icon-debug.svg';
-import RunTest from '../../../assets/icon/icon-runTest.svg';
-import iconOptions from '../../../assets/icon/icon-options.svg';
-import iconSave from '../../../assets/icon/icon-save.svg';
 
 import {
   CommentOption,
@@ -104,11 +99,10 @@ const WatchVideo = ({ onGoBackClick }) => {
 
   const { textContent, handleTextareaChange } = CommentTextarea();
 
-  const { handleIconClick, handleFileChange, isFileSelected, selectedFile, handleDeleteButtonClick } = URLImg();
+  const { handleIconClick, handleFileChange, selectedFile, handleDeleteButtonClick } = URLImg();
 
   return (
     <div className="watch-video">
-
       <div className="component_container">
         <div className="scrollable-container">
           <div className="component-left">
@@ -299,8 +293,16 @@ const WatchVideo = ({ onGoBackClick }) => {
                         <input type="text" value={inputValuePhotoVideoEnd} onChange={handleInputChangePhotoVideoEnd} />
                       </div>
                     </div>
-                    {!isFileSelected && (
-                      <div className="component-item dragVideoOrPhoto">
+
+                    {selectedFile ? (
+                      <div className={`folderPhoto`}>
+                        <p>
+                          <span>Folder:</span> {selectedFile?.name}
+                        </p>
+                        <img src={DeleteButton} alt="Delete Button" onClick={handleDeleteButtonClick} />
+                      </div>
+                    ) : (
+                      <div className={`component-item dragVideoOrPhoto`}>
                         <img src={DragButton} alt="Increase icon" onClick={handleIconClick} />
                         <p>Drag the photo/video folder here</p>
                         <input
@@ -313,21 +315,12 @@ const WatchVideo = ({ onGoBackClick }) => {
                         />
                       </div>
                     )}
-                    {isFileSelected && (
-                      <div className="folderPhoto">
-                        <p>
-                          <span>Folder:</span> {selectedFile.name}
-                        </p>
-                        <img src={DeleteButton} alt="Delete Button" onClick={handleDeleteButtonClick} />
-                      </div>
-                    )}
                   </div>
                 )}
               </div>
             </div>
           </div>
         </div>
-
       </div>
     </div>
   );

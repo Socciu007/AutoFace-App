@@ -270,9 +270,8 @@
         display: block;
       }
     }
-
   }
   .hide {
-    display: none;
+    display: none !important;
   }
 }
