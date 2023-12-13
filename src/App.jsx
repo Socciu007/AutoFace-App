@@ -8,12 +8,15 @@ import ProxySettingsPage from "./pages/ProxySettingsPage/ProxySettingsPage";
 import BoostLikeComment from "./pages/BoostLikeCommentPage/BoostLikeComment";
 import BoostFollower from "./pages/BoostFollowerPage/BoostFollower";
 import BoostView from "./pages/BoostViewPage/BoostView";
-
+import CreateScript from "./components/CreateScriptComponent/CreateScript";
+// import ScriptManager from './pages/Script-Manager/index.jsx';
 function App() {
   return (
     <>
       <ReactNotifications />
       <Routes>
+        <Route path="/create" element={<CreateScript></CreateScript>} />
+        {/* <Route path="/scripts" element={<ScriptManager></ScriptManager>} /> */}
         <Route path="/" element={<ProfilesPage></ProfilesPage>} />
         <Route path="/settings" element={<SettingsPage></SettingsPage>} />
         <Route path="/settings-proxy" element={<ProxySettingsPage></ProxySettingsPage>} />
