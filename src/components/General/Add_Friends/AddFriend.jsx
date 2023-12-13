@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState } from 'react';
+import React from 'react';
 import {
   AddFriendOption,
   Comment,
@@ -17,11 +17,6 @@ import backButton from '../../../assets/icon/icon-back.svg';
 import downButton from '../../../assets/icon/icon-down.svg';
 
 const AddFriend = ({ onGoBackClick }) => {
-  const [inputValue, setInputValue] = useState({
-    RequestsStart: 5,
-    RequestsEnd: 10,
-  });
-  
   const {
     inputValueRequestsStart,
     handleIncrementRequestsStart,
