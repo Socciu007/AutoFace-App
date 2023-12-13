@@ -265,19 +265,21 @@ const CreateScript = () => {
                 <img src={newNote} alt="new Note" />
                 <input type="text" placeholder="New note" />
               </div>
-              <button className="debug">
-                <img src={debug} alt="Debug" />
-              </button>
-              <button className="test">
-                <img src={runTest} alt="Debug" />
-              </button>
-              <button className="more">
-                <img src={option} alt="More" />
-              </button>
-              <button className="saveBtn">
-                <img src={save} alt="Save" />
-                SAVE
-              </button>
+              <div className="groupEndBtn">
+                <button className="debug">
+                  <img src={debug} alt="Debug" />
+                </button>
+                <button className="test">
+                  <img src={runTest} alt="Debug" />
+                </button>
+                <button className="more">
+                  <img src={option} alt="More" />
+                </button>
+                <button className="saveBtn">
+                  <img src={save} alt="Save" />
+                  SAVE
+                </button>
+              </div>
             </div>
             <div className="right-content__container">
               <DnDFlow onMessageChange={handleMessageChange}></DnDFlow>
