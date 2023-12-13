@@ -45,7 +45,7 @@ const CreateScript = () => {
     setComponent('default');
   };
 
-  const [activeCategory, setActiveCategory] = useState(null);
+  const [activeCategory, setActiveCategory] = useState(1);
   const navigate = useNavigate();
   const onDragStart = (event, nodeType) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
@@ -115,7 +115,7 @@ const CreateScript = () => {
                 <hr />
               </div>
               <div className="left-content__container">
-                <div className="grid-container">
+                <div className={activeCategory === 1 ? "grid-container" : "hide"}>
                   <div className="card" onDragStart={(event) => onDragStart(event, 'watchStory')} draggable>
                     <img src={watchStory} alt="watch Story General" />
                     <p>Watch story</p>
