@@ -1,17 +1,13 @@
 .layout-profiles {
-   max-width: 1280px;
-   height: 720px;
-   margin: 20px auto;
+   min-width: 1280px;
+   min-height: 720px;
    border: 1px solid #ccc;
    background-color: #fff;
    position: fixed;
    inset: 0px;
-   margin: auto;
    .-container-profiles {
-      margin-left: 24px;
-      margin-top: 36px;
-      max-width: 1233px;
-      height: 90%;
+      padding: 36px 24px;
+      height: 100%;
    }
    .-title-profiles {
       color: #01162B;
