@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import up from '../../../assets/pictures/icon-Increase.svg';
 import down from '../../../assets/pictures/icon-Descrease.svg';
-
-const SeedingFollower = () => {
+import back from '../../../assets/icon/icon-back.svg';
+const SeedingFollower = ({ onGoBackClick }) => {
   const [followers, setFollowers] = useState({
     delayTimeStart: 3,
     delayTimeEnd: 5,
@@ -53,16 +53,7 @@ const SeedingFollower = () => {
         <div className="scrollable-container">
           <div className="-seeding-wrapper-like">
             <div className="-back-home">
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
-                <circle cx="15" cy="15" r="15" fill="#F5F5F5" />
-                <path
-                  d="M14.25 20.25L9 15.75M9 15.75L14.25 11.25M9 15.75L20.625 15.75"
-                  stroke="#01162B"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <img src={back} alt="Back button" onClick={() => onGoBackClick(true)} />
               <p>Boost followers</p>
             </div>
             <div className="-option-boost-like">
