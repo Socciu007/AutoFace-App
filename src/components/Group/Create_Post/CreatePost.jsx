@@ -20,7 +20,7 @@ import {
   UIDListContent,
   URLImg,
 } from './CreatePost';
-const CreatePostGroup = () => {
+const CreatePostGroup = ({ onGoBackClick }) => {
   const {
     inputValuePostStart,
     handleIncrementPostStart,
@@ -75,19 +75,14 @@ const CreatePostGroup = () => {
 
   const { UIDContent, handleTextareaChangeUID, charCount } = UIDListContent();
 
-  const { handleIconClick, handleFileChange, selectedFile, handleDeleteButtonClick } = URLImg();
+  const { files, getRootProps, getInputProps, handleDeleteButtonClick } = URLImg();
   return (
     <div className="createPostGroup">
-      <h1 className="createPost__title">Facebook Automation</h1>
-      <div className="goBack">
-        <img src={backButton} alt="Back button" />
-        <p>Create a new script</p>
-      </div>
       <div className="component_container">
         <div className="scrollable-container">
           <div className="component-left">
             <div className="goBack">
-              <img src={backButton} alt="Back button" />
+              <img src={backButton} alt="Back button" onClick={() => onGoBackClick(true)} />
               <p>Create post</p>
             </div>
             <div className="component-item numberOfPost">
@@ -193,25 +188,23 @@ const CreatePostGroup = () => {
                         <input type="text" value={inputValuePhotoVideoEnd} onChange={handleInputChangePhotoVideoEnd} />
                       </div>
                     </div>
-                    {selectedFile ? (
-                      <div className={`folderPhoto`}>
-                        <p>
-                          <span>Folder:</span> {selectedFile?.name}
-                        </p>
-                        <img src={DeleteButton} alt="Delete Button" onClick={handleDeleteButtonClick} />
+                    {files.length === 0 ? (
+                      <div {...getRootProps({ className: 'component-item dragVideoOrPhoto' })}>
+                        <input {...getInputProps()} />
+                        <img className="mx-auto h-40" src={DragButton} alt="addfile" />
+                        <p>Drop a file here</p>
                       </div>
                     ) : (
-                      <div className={`component-item dragVideoOrPhoto`}>
-                        <img src={DragButton} alt="Increase icon" onClick={handleIconClick} />
-                        <p>Drag the photo/video folder here</p>
-                        <input
-                          type="file"
-                          style={{ display: 'none' }}
-                          name="dragVideoOrPhotoInput"
-                          id="dragVideoOrPhotoInput"
-                          className="dragVideoOrPhotoInput"
-                          onChange={handleFileChange}
-                        />
+                      <div className={`folderPhoto`}>
+                        <div className="URLImg">
+                          <span style={{ opacity: '0.5' }}>Folder:</span>
+                          <span>
+                            {files.map((fileName, index) => (
+                              <span key={index}>{fileName}</span>
+                            ))}
+                          </span>
+                        </div>
+                        <img src={DeleteButton} alt="Delete Button" onClick={handleDeleteButtonClick} />
                       </div>
                     )}
                     <div className="component-item__header">

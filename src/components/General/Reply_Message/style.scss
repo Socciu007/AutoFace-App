@@ -51,13 +51,14 @@
     border-radius: 20px;
   }
   .component_container {
-    height: 85%;
+    height: 100%;
     display: flex;
     .component-left {
       p {
         color: var(--font-color-para);
         font-size: 15px;
         font-weight: 700;
+        display: flex;
       }
       .component-item {
         display: flex;
@@ -150,7 +151,6 @@
         }
       }
     }
-
   }
   .hide {
     display: none;

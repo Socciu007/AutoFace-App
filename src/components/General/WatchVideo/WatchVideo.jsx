@@ -1,6 +1,7 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import './style.scss';
+import { useDropzone } from 'react-dropzone';
 import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
@@ -99,7 +100,7 @@ const WatchVideo = ({ onGoBackClick }) => {
 
   const { textContent, handleTextareaChange } = CommentTextarea();
 
-  const { handleIconClick, handleFileChange, selectedFile, handleDeleteButtonClick } = URLImg();
+  const { files, getRootProps, getInputProps, handleDeleteButtonClick } = URLImg();
 
   return (
     <div className="watch-video">
@@ -177,7 +178,7 @@ const WatchVideo = ({ onGoBackClick }) => {
               <div className="component-item__header">
                 <input type="checkbox" name="randomShare" onChange={handleCheckboxChangeShare} />
                 <p>
-                  Share to Feed <span className={`span__content ${isLiked ? 'show' : 'hide'}`}>(video)</span>:
+                  Share to Feed <span className={`span__content ${isShare ? 'show' : 'hide'}`}>(video)</span>:
                 </p>
               </div>
               <div className={`component-item__content ${isShare ? 'show' : 'hide'}`}>
@@ -294,25 +295,23 @@ const WatchVideo = ({ onGoBackClick }) => {
                       </div>
                     </div>
 
-                    {selectedFile ? (
-                      <div className={`folderPhoto`}>
-                        <p>
-                          <span>Folder:</span> {selectedFile?.name}
-                        </p>
-                        <img src={DeleteButton} alt="Delete Button" onClick={handleDeleteButtonClick} />
+                    {files.length === 0 ? (
+                      <div {...getRootProps({ className: 'component-item dragVideoOrPhoto' })}>
+                        <input {...getInputProps()} />
+                        <img className="mx-auto h-40" src={DragButton} alt="addfile" />
+                        <p>Drop a file here</p>
                       </div>
                     ) : (
-                      <div className={`component-item dragVideoOrPhoto`}>
-                        <img src={DragButton} alt="Increase icon" onClick={handleIconClick} />
-                        <p>Drag the photo/video folder here</p>
-                        <input
-                          type="file"
-                          style={{ display: 'none' }}
-                          name="dragVideoOrPhotoInput"
-                          id="dragVideoOrPhotoInput"
-                          className="dragVideoOrPhotoInput"
-                          onChange={handleFileChange}
-                        />
+                      <div className={`folderPhoto`}>
+                        <div className="URLImg">
+                          <span style={{ opacity: '0.5' }}>Folder:</span>
+                          <span>
+                            {files.map((fileName, index) => (
+                              <span key={index}>{fileName}</span>
+                            ))}
+                          </span>
+                        </div>
+                        <img src={DeleteButton} alt="Delete Button" onClick={handleDeleteButtonClick} />
                       </div>
                     )}
                   </div>

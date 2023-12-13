@@ -13,6 +13,12 @@ import View_Notifications from '../../components/General/View_Notifications/View
 import Send_Message from '../../components/General/Send_Message/Send_Message.jsx';
 import Reply_Message from '../../components/General/Reply_Message/Reply_Message.jsx';
 import AddFriend from '../../components/General/Add_Friends/AddFriend.jsx';
+import JoinGroup from '../../components/Group/Join_Group/JoinGroup.jsx';
+import LeaveGroup from '../../components/Group/Leave_Group/LeaveGroup.jsx';
+import Invite from '../../components/Group/Invite/Invite.jsx';
+import SeedingLikeComment from '../../components/Seeding/SeedingLikeComment/SeedingLikeComment.jsx';
+import SeedingFollower from '../../components/Seeding/SeedingFollower/SeedingFollower.jsx';
+import SeedingView from '../../components/Seeding/SeedingView/SeedingView.jsx';
 
 import search from '../../assets/icon/icon-search.svg';
 import back from '../../assets/icon/icon-back.svg';
@@ -32,6 +38,13 @@ import sendMsg from '../../assets/icon/icon-sendMsgGeneral.svg';
 import reply from '../../assets/icon/icon-replyGeneral.svg';
 import addFriend from '../../assets/icon/icon-addFriendGeneral.svg';
 import cancel from '../../assets/icon/icon-cancelGeneral.svg';
+import joinGroup from '../../assets/icon/icon-joinGroup.svg';
+import leftGroup from '../../assets/icon/icon-leftGroup.svg';
+import invite from '../../assets/icon/icon-inviteGroup.svg';
+import likeComment from '../../assets/icon/icon-likeComment.svg';
+import follower from '../../assets/icon/icon-follower.svg';
+import viewVideo from '../../assets/icon/icon-viewVideo.svg';
+
 const CreateScript = () => {
   const [component, setComponent] = useState('default');
   const handleMessageChange = (event) => {
@@ -53,7 +66,7 @@ const CreateScript = () => {
   };
   const handleReturnClick = () => {
     // Navigate to the desired route when the button is clicked
-    navigate('/');
+    navigate('/scripManager');
   };
   const handleCategoryClick = (categoryNumber) => {
     setActiveCategory(categoryNumber === activeCategory ? null : categoryNumber);
@@ -83,6 +96,18 @@ const CreateScript = () => {
         return <AddFriend onGoBackClick={handleGoBackClick} />;
       case 'cancelFriend':
         return <CancelFriend onGoBackClick={handleGoBackClick} />;
+      case 'joinGroup':
+        return <JoinGroup onGoBackClick={handleGoBackClick} />;
+      case 'leftGroup':
+        return <LeaveGroup onGoBackClick={handleGoBackClick} />;
+      case 'inviteGroup':
+        return <Invite onGoBackClick={handleGoBackClick} />;
+      case 'likeComment':
+        return <SeedingLikeComment onGoBackClick={handleGoBackClick} />;
+      case 'follower':
+        return <SeedingFollower onGoBackClick={handleGoBackClick} />;
+      case 'viewVideo':
+        return <SeedingView onGoBackClick={handleGoBackClick} />;
       default:
         return (
           <div className={messageClickBack ? 'hide' : 'scrollable-container'}>
@@ -115,7 +140,7 @@ const CreateScript = () => {
                 <hr />
               </div>
               <div className="left-content__container">
-                <div className={activeCategory === 1 ? "grid-container" : "hide"}>
+                <div className={activeCategory === 1 ? 'grid-container' : 'hide'}>
                   <div className="card" onDragStart={(event) => onDragStart(event, 'watchStory')} draggable>
                     <img src={watchStory} alt="watch Story General" />
                     <p>Watch story</p>
@@ -161,6 +186,38 @@ const CreateScript = () => {
                     <p>Cancel friend</p>
                   </div>
                 </div>
+                <div className={activeCategory === 2 ? 'grid-container' : 'hide'}>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'joinGroup')} draggable>
+                    <img src={joinGroup} alt="join Group General" />
+                    <p>Join group</p>
+                  </div>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'leftGroup')} draggable>
+                    <img src={leftGroup} alt="left Group General" />
+                    <p>Left group</p>
+                  </div>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'inviteGroup')} draggable>
+                    <img src={invite} alt="invite Group General" />
+                    <p>Invite</p>
+                  </div>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'createPost')} draggable>
+                    <img src={createPost} alt="watch newsfeed General" />
+                    <p>Create post</p>
+                  </div>
+                </div>
+                <div className={activeCategory === 3 ? 'grid-container' : 'hide'}>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'likeComment')} draggable>
+                    <img src={likeComment} alt="Like and Comment" />
+                    <p>Like, comment</p>
+                  </div>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'follower')} draggable>
+                    <img src={follower} alt="Followers" />
+                    <p>Followers</p>
+                  </div>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'viewVideo')} draggable>
+                    <img src={viewVideo} alt="View Video" />
+                    <p>View video</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -170,42 +227,48 @@ const CreateScript = () => {
 
   return (
     <>
-      <div className="create-script">
-        <h1>FACEBOOK AUTOMATION</h1>
-        <div className="create-script__title">
-          <button onClick={handleReturnClick}>
-            <img src={back} alt="Return" />
-          </button>
-          <p>Create a new script</p>
-        </div>
-        <div className="create-script__content">
-          {renderComponent(component)}
-
-          <div className="right-content">
-            <div className="right-content__edit">
-              <div className="edit-input">
-                <input type="text" placeholder="Enter name" />
-              </div>
-              <div className="note-input">
-                <img src={newNote} alt="new Note" />
-                <input type="text" placeholder="New note" />
-              </div>
-              <button className="debug">
-                <img src={debug} alt="Debug" />
+      <div className="wrapper">
+        <div className="create-script">
+          <div className="script-manager__header">
+            <h1>FACEBOOK AUTOMATION</h1>
+            <div className="title">
+              <button onClick={handleReturnClick}>
+                <img src={back} alt="Return" />
               </button>
-              <button className="test">
-                <img src={runTest} alt="Debug" />
-              </button>
-              <button className="more">
-                <img src={option} alt="More" />
-              </button>
-              <button className="saveBtn">
-                <img src={save} alt="Save" />
-                SAVE
-              </button>
+              <p>Create a new script</p>
             </div>
-            <div className="right-content__container">
-              <DnDFlow onMessageChange={handleMessageChange}></DnDFlow>
+          </div>
+          <div className="create-script__content">
+            {renderComponent(component)}
+
+            <div className="right-content">
+              <div className="right-content__edit">
+                <div className="edit-input">
+                  <input type="text" placeholder="Enter name" />
+                </div>
+                <div className="note-input">
+                  <img src={newNote} alt="new Note" />
+                  <input type="text" placeholder="New note" />
+                </div>
+                <div className="groupEndBtn">
+                  <button className="debug">
+                    <img src={debug} alt="Debug" />
+                  </button>
+                  <button className="test">
+                    <img src={runTest} alt="Debug" />
+                  </button>
+                  <button className="more">
+                    <img src={option} alt="More" />
+                  </button>
+                  <button className="saveBtn">
+                    <img src={save} alt="Save" />
+                    SAVE
+                  </button>
+                </div>
+              </div>
+              <div className="right-content__container">
+                <DnDFlow onMessageChange={handleMessageChange}></DnDFlow>
+              </div>
             </div>
           </div>
         </div>

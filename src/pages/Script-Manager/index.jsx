@@ -11,7 +11,7 @@ import add from '../../assets/icon/icon-add.svg';
 import pin from '../../assets/icon/icon-pin.svg';
 import option from '../../assets/icon/icon-options.svg';
 import newNote from '../../assets/icon/icon-newNote.svg';
-import edit from '../../assets/icon/icon-edit.svg';
+import edit from '../../assets/icon/icon-editWhite.svg';
 import close from '../../assets/icon/icon-close.svg';
 const ScriptManager = () => {
   const navigate = useNavigate();
@@ -97,127 +97,129 @@ const ScriptManager = () => {
   };
   return (
     <>
-      <div className="script-manager">
-        <h1>FACEBOOK AUTOMATION</h1>
-        <div className="script-manager__title">
-          <button>
-            <img src={back} alt="" />
-          </button>
-          <p>Script Manager</p>
-        </div>
-        <div className="script-manager__content">
-          <div className="scrollable-container">
-            <div className="left-content">
-              <div className="left-content__top">
-                <div className="search">
-                  <img src={search} alt="Icon-search" />
-                  <input className="inputSearch" placeholder="Search..."></input>
+      <div className="wrapper">
+        <div className="script-manager">
+          <div className="script-manager__header">
+            <h1>FACEBOOK AUTOMATION</h1>
+            <div className="title">
+              <button>
+                <img src={back} alt="" />
+              </button>
+              <p>Script Manager</p>
+            </div>
+          </div>
+          <div className="script-manager__content">
+            <div className="scrollable-container">
+              <div className="left-content">
+                <div className="left-content__top">
+                  <div className="search">
+                    <img src={search} alt="Icon-search" />
+                    <input className="inputSearch" placeholder="Search..."></input>
+                  </div>
+                  <button className="reload">
+                    <img src={reload} alt="Reload" />
+                  </button>
+                  <button className="add" onClick={handleAddClick}>
+                    <img src={add} alt="Add" />
+                  </button>
                 </div>
-                <button className="reload">
-                  <img src={reload} alt="Reload" />
-                </button>
-                <button className="add" onClick={handleAddClick}>
-                  <img src={add} alt="Add" />
-                </button>
-              </div>
-              <div className="left-content__category">
-                <button className={isCategoryActive ? 'category-left' : 'category-right'} onClick={handleButtonClick}>
-                  System's Scripts
-                </button>
-                <button className={isCategoryActive ? 'category-right' : 'category-left'} onClick={handleButtonClick}>
-                  Your Scripts
-                </button>
-              </div>
-              <div className="left-content__content">
-                {contentArray.map((item, index) => (
-                  <div
-                    className={isScriptActive === item.id ? 'script selected' : 'script'}
-                    onClick={() => handleScriptClick(item.id)}
-                    key={item.id}
-                  >
-                    <p className={isScriptActive === item.id ? 'inputSelected' : ''}>{item.content}</p>
-                    <div>
-                      {/* pin */}
-                      {item.isPin ? <img src={pin} alt="Pin" className={'show'} /> : null}
-                      {/* more */}
-                      <div
-                        className="more"
-                        id={`basic-menu-${item.id}`}
-                        aria-controls={open ? `basic-menu-${item.id}` : undefined}
-                        aria-haspopup="true"
-                        aria-expanded={open ? 'true' : undefined}
-                        onClick={(event) => {
-                          handleClick(event, index);
-                        }}
-                      >
-                        <img src={option} alt="More" />
-                      </div>
-                      {indexMenu == index ? (
-                        <Menu
+                <div className="left-content__category">
+                  <button className={isCategoryActive ? 'category-left' : 'category-right'} onClick={handleButtonClick}>
+                    System's Scripts
+                  </button>
+                  <button className={isCategoryActive ? 'category-right' : 'category-left'} onClick={handleButtonClick}>
+                    Your Scripts
+                  </button>
+                </div>
+                <div className="left-content__content">
+                  {contentArray.map((item, index) => (
+                    <div
+                      className={isScriptActive === item.id ? 'script selected' : 'script'}
+                      onClick={() => handleScriptClick(item.id)}
+                      key={item.id}
+                    >
+                      <p className={isScriptActive === item.id ? 'inputSelected' : ''}>{item.content}</p>
+                      <div>
+                        {/* pin */}
+                        {item.isPin ? <img src={pin} alt="Pin" className={'show'} /> : null}
+                        {/* more */}
+                        <div
+                          className="more"
                           id={`basic-menu-${item.id}`}
-                          anchorEl={anchorEl}
-                          open={open}
-                          onClose={handleClose}
-                          MenuListProps={{
-                            'aria-labelledby': 'basic-button',
-                          }}
-                          sx={{
-                            '& .MuiPaper-root': menuStyle,
-                            '& .MuiButtonBase-root': liStyle,
+                          aria-controls={open ? `basic-menu-${item.id}` : undefined}
+                          aria-haspopup="true"
+                          aria-expanded={open ? 'true' : undefined}
+                          onClick={(event) => {
+                            handleClick(event, index);
                           }}
                         >
-                          <MenuItem id={item.id} onClick={() => handleTogglePin(item.id)}>
-                            {item.isPin ? 'Unpin' : 'Pin'}
-                          </MenuItem>
-                          <MenuItem onClick={handleClose}>Edit</MenuItem>
-                          <MenuItem onClick={() => handleOptionClick('makeCopy')}>Make a copy</MenuItem>
-                          <MenuItem onClick={handleClose}>Rename</MenuItem>
-                          <MenuItem onClick={() => handleOptionClick('delete')}>Delete</MenuItem>
-                        </Menu>
-                      ) : null}
+                          <img src={option} alt="More" />
+                        </div>
+                        {indexMenu == index ? (
+                          <Menu
+                            id={`basic-menu-${item.id}`}
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            MenuListProps={{
+                              'aria-labelledby': 'basic-button',
+                            }}
+                            sx={{
+                              '& .MuiPaper-root': menuStyle,
+                              '& .MuiButtonBase-root': liStyle,
+                            }}
+                          >
+                            <MenuItem id={item.id} onClick={() => handleTogglePin(item.id)}>
+                              {item.isPin ? 'Unpin' : 'Pin'}
+                            </MenuItem>
+                            <MenuItem onClick={handleClose}>Edit</MenuItem>
+                            <MenuItem onClick={() => handleOptionClick('makeCopy')}>Make a copy</MenuItem>
+                            <MenuItem onClick={handleClose}>Rename</MenuItem>
+                            <MenuItem onClick={() => handleOptionClick('delete')}>Delete</MenuItem>
+                          </Menu>
+                        ) : null}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="right-content">
+              <div className="right-content__edit">
+                <h3>SCRIPT OVERVIEW</h3>
+                <div className="edit-input">
+                  <img src={newNote} alt="New note" />
+                  <input type="text" placeholder="New note" />
+                </div>
+                <button className="editBtn">
+                  <img src={edit} alt="Edit" />
+                  EDIT
+                </button>
+              </div>
+              <div className="right-content__container">
+                <DnDFlow></DnDFlow>
               </div>
             </div>
           </div>
-
-          <div className="right-content">
-            <div className="right-content__edit">
-              <h3>SCRIPT OVERVIEW</h3>
-              <div className="edit-input">
-                <img src={newNote} alt="New note" />
-                <input type="text" placeholder="New note" />
-              </div>
-              <button className="editBtn">
-                <img src={edit} alt="Edit" />
-                EDIT
+          <div className="makeCopy">
+            <div className="makeCopy__top">
+              <h1>MAKE A COPY</h1>
+              <button className="close" onClick={() => handleCloseDialog('makeCopy')}>
+                <img src={close} alt="Close" />
               </button>
             </div>
-            <div className="right-content__container">
-              <DnDFlow></DnDFlow>
+            <div>
+              <input type="text" placeholder="Enter name here..." />
+              <button>Create</button>
             </div>
           </div>
-        </div>
-        <div className="makeCopy">
-          <div className="makeCopy__top">
-            <h1>MAKE A COPY</h1>
-            <button className="close" onClick={() => handleCloseDialog('makeCopy')}>
-              <img src={close} alt="Close" />
-            </button>
-          </div>
-
-          <div>
-            <input type="text" placeholder="Enter name here..." />
-            <button>Create</button>
-          </div>
-        </div>
-        <div className="delete">
-          <h1>DELETE</h1>
-          <p>Are you sure to delete this script?</p>
-          <div>
-            <button onClick={() => handleCloseDialog('delete')}>Cancel</button>
-            <button className="deleteBtn">Delete</button>
+          <div className="delete">
+            <h1>DELETE</h1>
+            <p>Are you sure to delete this script?</p>
+            <div>
+              <button onClick={() => handleCloseDialog('delete')}>Cancel</button>
+              <button className="deleteBtn">Delete</button>
+            </div>
           </div>
         </div>
       </div>

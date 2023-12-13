@@ -52,13 +52,14 @@
     border-radius: 20px;
   }
   .component_container {
-    height: 85%;
+    height: 100%;
     display: flex;
     .component-left {
       p {
         color: var(--font-color-para);
         font-size: 15px;
         font-weight: 700;
+        display: flex;
       }
       .component-item {
         display: flex;
@@ -240,9 +241,9 @@
         img {
           opacity: 0.5;
           position: absolute;
-          left: 10%;
+          left: 25%;
           top: 50%;
-          transform: translate(-10%, -50%);
+          transform: translate(-25%, -50%);
           margin-right: 0.5rem;
         }
       }
@@ -253,14 +254,21 @@
         background-color: #fff;
         margin-bottom: 2%;
         p {
-          // width: 80%;
           font-weight: 400;
-          span {
-            opacity: 0.5;
-          }
         }
         img {
-          width: 3%;
+          width: 4%;
+        }
+        .URLImg {
+          width: 94%;
+          display: flex;
+          flex-wrap: wrap;
+          margin-right: 5px;
+          span {
+            width: 100%;
+            display: block;
+            margin-right: 5px;
+          }
         }
       }
       .Post,
@@ -268,7 +276,6 @@
         display: block;
       }
     }
-
   }
   .hide {
     display: none;

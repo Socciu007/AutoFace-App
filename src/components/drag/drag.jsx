@@ -1,7 +1,7 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import ReactFlow, { ReactFlowProvider, addEdge, useNodesState, useEdgesState, Controls, MiniMap } from 'reactflow';
 import 'reactflow/dist/style.css';
-import TextUpdaterNode from '../nodes/node';
+import startingPointNode from '../nodes/startingPoint';
 import watchStoryNode from '../nodes/watchStory';
 import watchVideoNode from '../nodes/watchVideo';
 import newsFeedNode from '../nodes/newsfeed';
@@ -13,17 +13,22 @@ import sendMsgNode from '../nodes/sendMsg';
 import replyMsgNode from '../nodes/replyMsg';
 import addFriendNode from '../nodes/addFriend';
 import cancelFriendNode from '../nodes/cancelFriend';
-
+import joinGroupNode from '../nodes/joinGroup';
+import leftGroupNode from '../nodes/leftGroup';
+import inviteGroupNode from '../nodes/invite';
+import likeCommentNode from '../nodes/likeComment';
+import followerNode from '../nodes/follower';
+import viewVideoNode from '../nodes/viewVideo';
 const initialNodes = [
   {
     id: '1',
-    type: 'textUpdater',
+    type: 'startingPoint',
     data: { label: 'Starting Point' },
     position: { x: 250, y: 250 },
   },
 ];
 const nodeTypes = {
-  textUpdater: TextUpdaterNode,
+  startingPoint: startingPointNode,
   watchStory: watchStoryNode,
   watchVideo: watchVideoNode,
   newsFeed: newsFeedNode,
@@ -35,6 +40,12 @@ const nodeTypes = {
   replyMsg: replyMsgNode,
   addFriend: addFriendNode,
   cancelFriend: cancelFriendNode,
+  joinGroup: joinGroupNode,
+  leftGroup: leftGroupNode,
+  inviteGroup: inviteGroupNode,
+  likeComment: likeCommentNode,
+  follower: followerNode,
+  viewVideo: viewVideoNode,
 };
 const nodeMessage = {
   watchStory: 'watchStory',
@@ -48,6 +59,12 @@ const nodeMessage = {
   replyMsg: 'replyMsg',
   addFriend: 'addFriend',
   cancelFriend: 'cancelFriend',
+  joinGroup: 'joinGroup',
+  leftGroup: 'leftGroup',
+  inviteGroup: 'inviteGroup',
+  likeComment: 'likeComment',
+  follower: 'follower',
+  viewVideo: 'viewVideo',
 };
 let id = 0;
 const getId = () => `dndnode_${id++}`;
