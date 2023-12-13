@@ -11,7 +11,7 @@ import add from '../../assets/icon/icon-add.svg';
 import pin from '../../assets/icon/icon-pin.svg';
 import option from '../../assets/icon/icon-options.svg';
 import newNote from '../../assets/icon/icon-newNote.svg';
-import edit from '../../assets/icon/icon-edit.svg';
+import edit from '../../assets/icon/icon-editWhite.svg';
 import close from '../../assets/icon/icon-close.svg';
 const ScriptManager = () => {
   const navigate = useNavigate();

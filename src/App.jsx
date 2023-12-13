@@ -15,10 +15,10 @@ function App() {
       <Routes>
         {/* <Route path="/" element={<Dashboard></Dashboard>} /> */}
         <Route path="/create" element={<CreateScript></CreateScript>} />
-        <Route path="/" element={<ScriptManager></ScriptManager>} />{' '}
+        <Route path="/scripManager" element={<ScriptManager></ScriptManager>} />{' '}
         <Route path="/settings" element={<SettingsPage></SettingsPage>} />
         <Route path="/settings-proxy" element={<ProxySettingsPage></ProxySettingsPage>} />
-        <Route path="/proxyHome" element={<ProfilesPage></ProfilesPage>} />
+        <Route path="/" element={<ProfilesPage></ProfilesPage>} />
       </Routes>
     </>
   );

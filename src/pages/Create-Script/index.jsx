@@ -139,54 +139,6 @@ const CreateScript = () => {
                 </button>
                 <hr />
               </div>
-              {/* <div className="left-content__container">
-                <div className="grid-container">
-                  <div className="card" onDragStart={(event) => onDragStart(event, 'watchStory')} draggable>
-                    <img src={watchStory} alt="watch Story General" />
-                    <p>Watch story</p>
-                  </div>
-                  <div className="card" onDragStart={(event) => onDragStart(event, 'watchVideo')} draggable>
-                    <img src={watchVideo} alt="watch Video General" />
-                    <p>Watch video</p>
-                  </div>
-                  <div className="card" onDragStart={(event) => onDragStart(event, 'newsFeed')} draggable>
-                    <img src={newsfeed} alt="watch newsfeed General" />
-                    <p>Newsfeed</p>
-                  </div>
-                  <div className="card" onDragStart={(event) => onDragStart(event, 'createPost')} draggable>
-                    <img src={createPost} alt="watch newsfeed General" />
-                    <p>Create post</p>
-                  </div>
-                  <div className="card" onDragStart={(event) => onDragStart(event, 'postInteract')} draggable>
-                    <img src={postInteract} alt="watch newsfeed General" />
-                    <p>Post interaction</p>
-                  </div>
-                  <div className="card" onDragStart={(event) => onDragStart(event, 'deletePost')} draggable>
-                    <img src={deletePost} alt="watch newsfeed General" />
-                    <p>Delete post</p>
-                  </div>
-                  <div className="card" onDragStart={(event) => onDragStart(event, 'viewNoti')} draggable>
-                    <img src={viewNoti} alt="watch newsfeed General" />
-                    <p>View notifications</p>
-                  </div>
-                  <div className="card" onDragStart={(event) => onDragStart(event, 'sendMsg')} draggable>
-                    <img src={sendMsg} alt="watch newsfeed General" />
-                    <p>Send message</p>
-                  </div>
-                  <div className="card" onDragStart={(event) => onDragStart(event, 'replyMsg')} draggable>
-                    <img src={reply} alt="watch newsfeed General" />
-                    <p>Reply message</p>
-                  </div>
-                  <div className="card" onDragStart={(event) => onDragStart(event, 'addFriend')} draggable>
-                    <img src={addFriend} alt="watch newsfeed General" />
-                    <p>Add friend</p>
-                  </div>
-                  <div className="card" onDragStart={(event) => onDragStart(event, 'cancelFriend')} draggable>
-                    <img src={cancel} alt="watch newsfeed General" />
-                    <p>Cancel friend</p>
-                  </div>
-                </div>
-              </div> */}
               <div className="left-content__container">
                 <div className={activeCategory === 1 ? 'grid-container' : 'hide'}>
                   <div className="card" onDragStart={(event) => onDragStart(event, 'watchStory')} draggable>
@@ -298,19 +250,21 @@ const CreateScript = () => {
                   <img src={newNote} alt="new Note" />
                   <input type="text" placeholder="New note" />
                 </div>
-                <button className="debug">
-                  <img src={debug} alt="Debug" />
-                </button>
-                <button className="test">
-                  <img src={runTest} alt="Debug" />
-                </button>
-                <button className="more">
-                  <img src={option} alt="More" />
-                </button>
-                <button className="saveBtn">
-                  <img src={save} alt="Save" />
-                  SAVE
-                </button>
+                <div className="groupEndBtn">
+                  <button className="debug">
+                    <img src={debug} alt="Debug" />
+                  </button>
+                  <button className="test">
+                    <img src={runTest} alt="Debug" />
+                  </button>
+                  <button className="more">
+                    <img src={option} alt="More" />
+                  </button>
+                  <button className="saveBtn">
+                    <img src={save} alt="Save" />
+                    SAVE
+                  </button>
+                </div>
               </div>
               <div className="right-content__container">
                 <DnDFlow onMessageChange={handleMessageChange}></DnDFlow>
