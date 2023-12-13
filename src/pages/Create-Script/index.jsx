@@ -13,6 +13,12 @@ import View_Notifications from '../../components/General/View_Notifications/View
 import Send_Message from '../../components/General/Send_Message/Send_Message.jsx';
 import Reply_Message from '../../components/General/Reply_Message/Reply_Message.jsx';
 import AddFriend from '../../components/General/Add_Friends/AddFriend.jsx';
+import JoinGroup from '../../components/Group/Join_Group/JoinGroup.jsx';
+import LeaveGroup from '../../components/Group/Leave_Group/LeaveGroup.jsx';
+import Invite from '../../components/Group/Invite/Invite.jsx';
+import SeedingLikeComment from '../../components/Seeding/SeedingLikeComment/SeedingLikeComment.jsx';
+import SeedingFollower from '../../components/Seeding/SeedingFollower/SeedingFollower.jsx';
+import SeedingView from '../../components/Seeding/SeedingView/SeedingView.jsx';
 
 import search from '../../assets/icon/icon-search.svg';
 import back from '../../assets/icon/icon-back.svg';
@@ -32,6 +38,13 @@ import sendMsg from '../../assets/icon/icon-sendMsgGeneral.svg';
 import reply from '../../assets/icon/icon-replyGeneral.svg';
 import addFriend from '../../assets/icon/icon-addFriendGeneral.svg';
 import cancel from '../../assets/icon/icon-cancelGeneral.svg';
+import joinGroup from '../../assets/icon/icon-joinGroup.svg';
+import leftGroup from '../../assets/icon/icon-leftGroup.svg';
+import invite from '../../assets/icon/icon-inviteGroup.svg';
+import likeComment from '../../assets/icon/icon-likeComment.svg';
+import follower from '../../assets/icon/icon-follower.svg';
+import viewVideo from '../../assets/icon/icon-viewVideo.svg';
+
 const CreateScript = () => {
   const [component, setComponent] = useState('default');
   const handleMessageChange = (event) => {
@@ -45,7 +58,7 @@ const CreateScript = () => {
     setComponent('default');
   };
 
-  const [activeCategory, setActiveCategory] = useState(null);
+  const [activeCategory, setActiveCategory] = useState(1);
   const navigate = useNavigate();
   const onDragStart = (event, nodeType) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
@@ -83,6 +96,18 @@ const CreateScript = () => {
         return <AddFriend onGoBackClick={handleGoBackClick} />;
       case 'cancelFriend':
         return <CancelFriend onGoBackClick={handleGoBackClick} />;
+      case 'joinGroup':
+        return <JoinGroup onGoBackClick={handleGoBackClick} />;
+      case 'leftGroup':
+        return <LeaveGroup onGoBackClick={handleGoBackClick} />;
+      case 'inviteGroup':
+        return <Invite onGoBackClick={handleGoBackClick} />;
+      case 'likeComment':
+        return <SeedingLikeComment onGoBackClick={handleGoBackClick} />;
+      case 'follower':
+        return <SeedingFollower onGoBackClick={handleGoBackClick} />;
+      case 'viewVideo':
+        return <SeedingView onGoBackClick={handleGoBackClick} />;
       default:
         return (
           <div className={messageClickBack ? 'hide' : 'scrollable-container'}>
@@ -114,7 +139,7 @@ const CreateScript = () => {
                 </button>
                 <hr />
               </div>
-              <div className="left-content__container">
+              {/* <div className="left-content__container">
                 <div className="grid-container">
                   <div className="card" onDragStart={(event) => onDragStart(event, 'watchStory')} draggable>
                     <img src={watchStory} alt="watch Story General" />
@@ -159,6 +184,86 @@ const CreateScript = () => {
                   <div className="card" onDragStart={(event) => onDragStart(event, 'cancelFriend')} draggable>
                     <img src={cancel} alt="watch newsfeed General" />
                     <p>Cancel friend</p>
+                  </div>
+                </div>
+              </div> */}
+              <div className="left-content__container">
+                <div className={activeCategory === 1 ? 'grid-container' : 'hide'}>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'watchStory')} draggable>
+                    <img src={watchStory} alt="watch Story General" />
+                    <p>Watch story</p>
+                  </div>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'watchVideo')} draggable>
+                    <img src={watchVideo} alt="watch Video General" />
+                    <p>Watch video</p>
+                  </div>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'newsFeed')} draggable>
+                    <img src={newsfeed} alt="watch newsfeed General" />
+                    <p>Newsfeed</p>
+                  </div>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'createPost')} draggable>
+                    <img src={createPost} alt="watch newsfeed General" />
+                    <p>Create post</p>
+                  </div>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'postInteract')} draggable>
+                    <img src={postInteract} alt="watch newsfeed General" />
+                    <p>Post interaction</p>
+                  </div>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'deletePost')} draggable>
+                    <img src={deletePost} alt="watch newsfeed General" />
+                    <p>Delete post</p>
+                  </div>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'viewNoti')} draggable>
+                    <img src={viewNoti} alt="watch newsfeed General" />
+                    <p>View notifications</p>
+                  </div>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'sendMsg')} draggable>
+                    <img src={sendMsg} alt="watch newsfeed General" />
+                    <p>Send message</p>
+                  </div>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'replyMsg')} draggable>
+                    <img src={reply} alt="watch newsfeed General" />
+                    <p>Reply message</p>
+                  </div>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'addFriend')} draggable>
+                    <img src={addFriend} alt="watch newsfeed General" />
+                    <p>Add friend</p>
+                  </div>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'cancelFriend')} draggable>
+                    <img src={cancel} alt="watch newsfeed General" />
+                    <p>Cancel friend</p>
+                  </div>
+                </div>
+                <div className={activeCategory === 2 ? 'grid-container' : 'hide'}>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'joinGroup')} draggable>
+                    <img src={joinGroup} alt="join Group General" />
+                    <p>Join group</p>
+                  </div>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'leftGroup')} draggable>
+                    <img src={leftGroup} alt="left Group General" />
+                    <p>Left group</p>
+                  </div>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'inviteGroup')} draggable>
+                    <img src={invite} alt="invite Group General" />
+                    <p>Invite</p>
+                  </div>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'createPost')} draggable>
+                    <img src={createPost} alt="watch newsfeed General" />
+                    <p>Create post</p>
+                  </div>
+                </div>
+                <div className={activeCategory === 3 ? 'grid-container' : 'hide'}>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'likeComment')} draggable>
+                    <img src={likeComment} alt="Like and Comment" />
+                    <p>Like, comment</p>
+                  </div>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'follower')} draggable>
+                    <img src={follower} alt="Followers" />
+                    <p>Followers</p>
+                  </div>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'viewVideo')} draggable>
+                    <img src={viewVideo} alt="View Video" />
+                    <p>View video</p>
                   </div>
                 </div>
               </div>

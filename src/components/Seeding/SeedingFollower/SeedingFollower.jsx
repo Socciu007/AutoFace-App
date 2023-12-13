@@ -1,13 +1,12 @@
-import React, { useState } from "react";
-import up from "../../assets/pictures/icon-Increase.svg";
-import down from "../../assets/pictures/icon-Descrease.svg";
-import CreateScript from "../CreateScriptComponent/CreateScript";
+import React, { useState } from 'react';
+import up from '../../../assets/pictures/icon-Increase.svg';
+import down from '../../../assets/pictures/icon-Descrease.svg';
 
 const SeedingFollower = () => {
   const [followers, setFollowers] = useState({
     delayTimeStart: 3,
     delayTimeEnd: 5,
-    selectTypeFollow: "",
+    selectTypeFollow: '',
   });
   //delay time
   const handleUpDelayTimeStart = () => {
@@ -22,8 +21,7 @@ const SeedingFollower = () => {
     setFollowers((prevValue) => {
       return {
         ...prevValue,
-        delayTimeStart:
-          prevValue.delayTimeStart > 0 ? prevValue.delayTimeStart - 1 : 0,
+        delayTimeStart: prevValue.delayTimeStart > 0 ? prevValue.delayTimeStart - 1 : 0,
       };
     });
   };
@@ -39,8 +37,7 @@ const SeedingFollower = () => {
     setFollowers((prevValue) => {
       return {
         ...prevValue,
-        delayTimeEnd:
-          prevValue.delayTimeEnd > 0 ? prevValue.delayTimeEnd - 1 : 0,
+        delayTimeEnd: prevValue.delayTimeEnd > 0 ? prevValue.delayTimeEnd - 1 : 0,
       };
     });
   };
@@ -56,13 +53,7 @@ const SeedingFollower = () => {
         <div className="scrollable-container">
           <div className="-seeding-wrapper-like">
             <div className="-back-home">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="30"
-                height="30"
-                viewBox="0 0 30 30"
-                fill="none"
-              >
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
                 <circle cx="15" cy="15" r="15" fill="#F5F5F5" />
                 <path
                   d="M14.25 20.25L9 15.75M9 15.75L14.25 11.25M9 15.75L20.625 15.75"
@@ -80,16 +71,10 @@ const SeedingFollower = () => {
               </p>
               <div className="-option-boost-like__number">
                 <div className="-option-boost-like__number__icon">
-                  <div
-                    style={{ marginBottom: "2px" }}
-                    onClick={handleUpDelayTimeStart}
-                  >
+                  <div style={{ marginBottom: '2px' }} onClick={handleUpDelayTimeStart}>
                     <img src={up} alt="up" width={10} height={7} />
                   </div>
-                  <div
-                    style={{ marginTop: "2px" }}
-                    onClick={handleDownDelayTimeStart}
-                  >
+                  <div style={{ marginTop: '2px' }} onClick={handleDownDelayTimeStart}>
                     <img src={down} alt="down" width={10} height={7} />
                   </div>
                 </div>
@@ -98,16 +83,10 @@ const SeedingFollower = () => {
               <span>to</span>
               <div className="-option-boost-like__number">
                 <div className="-option-boost-like__number__icon">
-                  <div
-                    style={{ marginBottom: "2px" }}
-                    onClick={handleUpDelayTimeEnd}
-                  >
+                  <div style={{ marginBottom: '2px' }} onClick={handleUpDelayTimeEnd}>
                     <img src={up} alt="up" width={10} height={7} />
                   </div>
-                  <div
-                    style={{ marginTop: "2px" }}
-                    onClick={handleDownDelayTimeEnd}
-                  >
+                  <div style={{ marginTop: '2px' }} onClick={handleDownDelayTimeEnd}>
                     <img src={down} alt="down" width={10} height={7} />
                   </div>
                 </div>
@@ -136,16 +115,15 @@ const SeedingFollower = () => {
               <div className="-option-boost-comment__wrapper">
                 <textarea
                   name="textContent"
-                  style={{ width: "501px" }}
+                  style={{ width: '501px' }}
                   // value={}
                 ></textarea>
                 <div className="-option-boost-comment__wrapper__content">
                   <p>
-                    <span style={{ paddingRight: "7%" }}>1</span>Enter the UID
-                    here
+                    <span style={{ paddingRight: '7%' }}>1</span>Enter the UID here
                   </p>
                   <p>
-                    <span style={{ paddingRight: "6%" }}>2</span>Each UID/line
+                    <span style={{ paddingRight: '6%' }}>2</span>Each UID/line
                   </p>
                 </div>
               </div>
@@ -166,7 +144,6 @@ const SeedingFollower = () => {
           </div>
         </div>
       </div>
-      <CreateScript></CreateScript>
     </div>
   );
 };
