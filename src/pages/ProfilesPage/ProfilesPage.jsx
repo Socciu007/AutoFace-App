@@ -1,16 +1,17 @@
-import React, { useState } from "react";
+import React, {useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./style.scss";
-import { Input, Table } from "antd";
+import { Input, Popover, Table } from "antd";
 import display from "../../assets/pictures/icon-display-setting.png";
 import search from "../../assets/pictures/icon-search.svg";
 import refresh from "../../assets/pictures/icon-refresh.png";
 import settings from "../../assets/pictures/icon-settings.png";
 import plus from "../../assets/pictures/icon-plus.png";
-import closePopup from "../../assets/pictures/icon-x.svg";
 import usaProxy from "../../assets/pictures/icon-usa.png";
 import options from "../../assets/pictures/icon-options.png";
 import addProxy from "../../assets/pictures/icon-addProxy.png";
 import deleted from "../../assets/pictures/icon-delete.svg";
+<<<<<<< HEAD
 import foxy from "../../assets/pictures/icon-foxy.png";
 import ghosty from "../../assets/pictures/icon-ghosty.png";
 import yourScript from "../../assets/pictures/icon-yourScripts.svg";
@@ -36,6 +37,38 @@ const ProfilesPage = () => {
   const [dataProfiles, setDataProfiles] = useState(profiles);
   const [dataScripts, setDataScripts] = useState(scripts);
   const navigate = useNavigate();
+=======
+import yourScript from "../../assets/pictures/icon-yourScripts.svg";
+import pin from "../../assets/pictures/icon-pin.svg";
+import profiles from "../../resources/profiles.json";
+import scripts from "../../resources/scripts.json"
+import { EditableCell, EditableRow } from "../../components/EditableTable/EditableTable";
+import PopupProfile from "../../components/PopupProfile/PopupProfile";
+import PopupAddProxy from "../../components/PopupAddProxy/PopupAddProxy";
+import PopupProxyManage from "../../components/PopupProxyManage/PopupProxyManage";
+import PopupDeleteProfile from "../../components/PopupDeleteProfile/PopupDeleteProfile";
+import PopupScript from "../../components/PopupScript/PopupScript";
+
+const ProfilesPage = () => {
+  const [dataProfiles, setDataProfiles] = useState(profiles)
+  const [dataScripts, setDataScripts] = useState(scripts)
+  const [rowKeys, setRowKeys] = useState([])
+  const [openScripts, setOpenScripts] = useState(false)
+  const [openProfiles, setOpenProfiles] = useState(false)
+  const [openAddProxy, setOpenAddProxy] =useState(false)
+  const [openDeleteProfile, setOpenDeleteProfile] =useState(false)
+  const [openProxyManage, setOpenProxyManage] = useState(false)
+  const [openOptions, setOpenOptions] = useState(false)
+  const [typeProxy, setTypeProxy] = useState('')
+  const navigate = useNavigate();
+  //Pin and remove
+  const handleActionProfiles = () => {
+    setOpenOptions(true)
+  }
+  const handleCloseAction = () => {
+    setOpenOptions(false)
+  }
+>>>>>>> d50fd2e0e8d44c7473451ae2742e0aec6a56548b
   const defaultColumns = [
     {
       title: "#",
@@ -118,6 +151,7 @@ const ProfilesPage = () => {
       sorter: (a, b) => a.folder.length - b.folder.length,
       sortDirections: ["descend"],
     },
+<<<<<<< HEAD
     Table.EXPAND_COLUMN,
   ];
   const handleSave = (row) => {
@@ -152,39 +186,52 @@ const ProfilesPage = () => {
     };
   });
   const columnsScripts = [
+=======
+>>>>>>> d50fd2e0e8d44c7473451ae2742e0aec6a56548b
     {
-      title: "Scripts",
-      dataIndex: "scripts",
-    },
-    {
-      title: "Notes",
-      dataIndex: "notes",
-    },
-  ];
-  const columnsProfiles = [
-    {
-      title: "#",
-      dataIndex: "key",
-    },
-    {
-      title: "Profile",
-      dataIndex: "profile",
-      sorter: (a, b) => a.profile - b.profile,
-    },
-    {
-      title: "Source",
-      dataIndex: "source",
-      render: () => {
+      title: '',
+      dataIndex: 'key',
+      render: (key) => {
         return (
+<<<<<<< HEAD
           <>
             <div style={{ display: "flex", gap: "5px" }}>
               <img src={foxy} alt="icon-foxy"></img>
               <img src={ghosty} alt="icon-ghosty"></img>
             </div>
           </>
+=======
+          <div 
+            className="-expand-icon" 
+            onClick={handleActionProfiles}
+          >
+            <img src={options} alt="image-option"></img>
+            {rowKeys === key  && 
+                <Popover 
+                  open={openOptions} 
+                  onClose={handleCloseAction} 
+                  placement="leftTop"
+                  content={
+                    <div className="-popover-options" onMouseLeave={handleCloseAction}>
+                      <div className="-popover-options__attribute border-bottom">
+                        <img src={pin} alt="icon-pin"></img>
+                        <p>Pin</p>
+                      </div>
+                      <div className="-popover-options__attribute">
+                        <img src={deleted} alt="icon-deleted"></img>
+                        <p>Remove</p>
+                      </div>
+                    </div>
+                  }
+                  >
+                </Popover>             
+            }
+          </div>
+>>>>>>> d50fd2e0e8d44c7473451ae2742e0aec6a56548b
         );
-      },
+      }     
     },
+<<<<<<< HEAD
     {
       title: "Browser",
       dataIndex: "browser",
@@ -232,6 +279,40 @@ const ProfilesPage = () => {
     },
   ];
 
+=======
+  ];
+  const handleSave = (row) => {
+    const newData = [...dataProfiles];
+    const index = newData.findIndex((profile) => row.key === profile.key);
+    const profile = newData[index];
+    newData.splice(index, 1, {
+      ...profile,
+      ...row,
+    });
+    setDataProfiles(newData);
+  };
+  const components = {
+    body: {
+      row: EditableRow,
+      cell: EditableCell,
+    },
+  };
+  const columns = defaultColumns.map((col) => {
+    if (!col.editable) {
+      return col;
+    }
+    return {
+      ...col,
+      onCell: (record) => ({
+        record,
+        editable: col.editable,
+        dataIndex: col.dataIndex,
+        title: col.title,
+        handleSave,
+      }),
+    };
+  });
+>>>>>>> d50fd2e0e8d44c7473451ae2742e0aec6a56548b
   // rowSelection object indicates the need for row selection
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
@@ -239,27 +320,51 @@ const ProfilesPage = () => {
       setRowSelectedKeys(selectedRowKeys);
     },
   };
-  //
+  //handle filter folder
+  const handleFilterFolder = (type) => {
+      const facebookFolder = profiles.filter((profile) => profile.folder === type);
+      setDataProfiles(facebookFolder);
+  };
+  
   const handleSettings = () => {
     navigate("/settings");
   };
   const handleSettingsProxy = () => {
     navigate("/settings-proxy");
   };
-  //
+  //scripts
   const handleOpenScripts = () => {
     setOpenScripts(true);
   };
   const handleCloseScripts = () => {
+<<<<<<< HEAD
     setOpenScripts(false);
   };
   //
+=======
+    setOpenScripts(false)
+  }
+  //profiles
+>>>>>>> d50fd2e0e8d44c7473451ae2742e0aec6a56548b
   const handleOpenProfiles = () => {
     setOpenProfiles(true);
   };
   const handleCloseProfiles = () => {
+<<<<<<< HEAD
     setOpenProfiles(false);
   };
+=======
+    setOpenProfiles(false)
+  }
+  //proxy
+  const handleOpenProxyManage = () => {
+    setOpenProxyManage(true)
+  }
+  const handleCloseProxyManage = () => {
+    setOpenProxyManage(false)
+  }
+  //
+>>>>>>> d50fd2e0e8d44c7473451ae2742e0aec6a56548b
   const handleCloseAdd = () => {
     setOpenAddProxy(false);
   };
@@ -267,8 +372,13 @@ const ProfilesPage = () => {
     setOpenDeleteProfile(false);
   };
   const onChangeTypeProxy = (e) => {
+<<<<<<< HEAD
     setTypeProxy(e.target.value);
   };
+=======
+    setTypeProxy(e.target.value)
+  }
+>>>>>>> d50fd2e0e8d44c7473451ae2742e0aec6a56548b
 
   return (
     <div
@@ -310,6 +420,7 @@ const ProfilesPage = () => {
               <span className="-option-profiles" onClick={handleOpenProfiles}>
                 <img src={plus} alt="image-plus"></img>
               </span>
+<<<<<<< HEAD
               <PopupComponent
                 open={openProfiles}
                 onClose={handleCloseProfiles}
@@ -428,6 +539,17 @@ const ProfilesPage = () => {
                   </div>
                 }
               </PopupComponent>
+=======
+              <PopupProfile
+                dataProfiles={dataProfiles}
+                openProfiles={openProfiles}
+                handleCloseProfiles={handleCloseProfiles}
+                handleSettings={handleSettings}
+                handleOpenScripts={handleOpenScripts}
+                handleFilterFolder={handleFilterFolder}
+              >
+              </PopupProfile>
+>>>>>>> d50fd2e0e8d44c7473451ae2742e0aec6a56548b
             </div>
           </div>
           <div className="-btn-profiles">
@@ -445,6 +567,7 @@ const ProfilesPage = () => {
               </div>
               <p>Add Proxy</p>
             </div>
+<<<<<<< HEAD
             <PopupComponent
               open={openAddProxy}
               onClose={handleCloseAdd}
@@ -634,6 +757,34 @@ const ProfilesPage = () => {
                 </div>
               }
             </PopupComponent>
+=======
+              <PopupAddProxy
+                typeProxy={typeProxy}
+                openAddProxy={openAddProxy}
+                handleCloseAdd={handleCloseAdd}
+                handleOpenProxyManage={handleOpenProxyManage}
+                onChangeTypeProxy={onChangeTypeProxy}
+              ></PopupAddProxy>
+              <PopupProxyManage
+                openProxyManage={openProxyManage}
+                handleCloseProxyManage={handleCloseProxyManage}
+              ></PopupProxyManage>
+            <div className="-select-profile" onClick={() => setOpenDeleteProfile(o => !o)}>
+              <div><img src={deleted} alt="icon-delete"></img></div>
+                <p>Remove</p>
+            </div>
+            <PopupDeleteProfile openDeleteProfile={openDeleteProfile} handleCloseDelete={handleCloseDelete}></PopupDeleteProfile>
+            <div onClick={handleOpenScripts}>
+              <button>Run</button>
+            </div>
+            <PopupScript
+              dataScripts={dataScripts}
+              openScripts={openScripts}
+              handleCloseScripts={handleCloseScripts}
+              handleSettings={handleSettings}
+              handleOpenScripts={handleOpenScripts}
+            ></PopupScript>
+>>>>>>> d50fd2e0e8d44c7473451ae2742e0aec6a56548b
           </div>
         </div>
         <div className="-content-profiles">
@@ -642,6 +793,7 @@ const ProfilesPage = () => {
               rowSelection={{
                 ...rowSelection,
               }}
+<<<<<<< HEAD
               onRow={(record, index) => {
                 return {
                   onClick: () => {
@@ -686,13 +838,24 @@ const ProfilesPage = () => {
                     </div>
                   );
                 },
+=======
+              onRow={(record, rowIndex) => {
+                return {
+                  onClick: () => {
+                    setRowKeys(record.key)
+                  },
+                };
+>>>>>>> d50fd2e0e8d44c7473451ae2742e0aec6a56548b
               }}
+              components={components}
+              rowClassName={() => 'editable-row'}
               columns={columns}
               dataSource={dataProfiles}
+              // scroll={{ y: 720 }}
               pagination={false}
-            />
+            /> 
           </div>
-        </div>
+        </div> 
       </div>
     </div>
   );

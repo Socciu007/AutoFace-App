@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Form, Input } from "antd";
+=======
+import { Form, Input } from "antd";
+import React, { useContext, useEffect, useRef, useState } from "react";
+>>>>>>> d50fd2e0e8d44c7473451ae2742e0aec6a56548b
 
 const EditableContext = React.createContext(null);
 const EditableRow = ({ index, ...props }) => {
@@ -67,9 +72,15 @@ const EditableCell = ({
     ) : (
       <div
         className="editable-cell-value-wrap"
+<<<<<<< HEAD
         // style={{
         //   paddingRight: 24,
         // }}
+=======
+        style={{
+          paddingRight: 24,
+        }}
+>>>>>>> d50fd2e0e8d44c7473451ae2742e0aec6a56548b
         onClick={toggleEdit}
       >
         {children}
@@ -79,6 +90,7 @@ const EditableCell = ({
   return <td {...restProps}>{childNode}</td>;
 };
 
+<<<<<<< HEAD
 const expandableProps = () => {
   return {
     columnWidth: 48,
@@ -96,3 +108,6 @@ const expandableProps = () => {
 };
 
 export { EditableRow, EditableCell, expandableProps };
+=======
+export { EditableCell, EditableRow };
+>>>>>>> d50fd2e0e8d44c7473451ae2742e0aec6a56548b

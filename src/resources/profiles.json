@@ -7,7 +7,7 @@
       "proxy": "127.0.0.1:40001",
       "status": ["Running"],
       "tag": "#Group",
-      "folder": "Group",
+      "folder": "Facebook Ads 1",
       "browser": "Chorm",
       "notes": "Cookie Added"
     },
@@ -19,7 +19,7 @@
       "proxy": "127.0.0.1:40001",
       "status": ["Ready"],
       "tag": "#Private",
-      "folder": "Private",
+      "folder": "Facebook Ads 1",
       "browser": "Chorm",
       "notes": "Cookie Added"
     },
@@ -29,7 +29,7 @@
       "proxy": "127.0.0.1:40001",
       "status": ["Running"],
       "tag": "#Private",
-      "folder": "Group"
+      "folder": "Seeding 1"
     },
     {
       "key": "4",
@@ -39,7 +39,7 @@
       "proxy": "127.0.0.1:40001",
       "status": ["Ready"],
       "tag": "#Group",
-      "folder": "Group"
+      "folder": "Seeding 1"
     },
     {
         "key": "5",
@@ -47,7 +47,7 @@
         "proxy": "127.0.0.1:40001",
         "status": ["Running"],
         "tag": "#Group",
-        "folder": "Group"
+        "folder": "Mail 1 Brono"
     },
     {
         "key": "6",
