@@ -11,7 +11,6 @@ body {
     border: 1px;
     padding: 30px;
     &__header {
-      height: 10%;
       margin-bottom: 20px;
       h1 {
         color: #01162b;
@@ -23,7 +22,7 @@ body {
       .title {
         display: flex;
         font-weight: 700;
-        margin-top: 20px;
+        margin-top: 10px;
         button {
           border: none;
           background-color: #fff;
@@ -40,7 +39,7 @@ body {
     }
     &__content {
       display: flex;
-      height:calc(90% - 20px);
+      height: calc(90% - 20px);
       .scrollable-container {
         width: 440px;
         height: 100%;

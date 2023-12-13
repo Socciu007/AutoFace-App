@@ -11,8 +11,7 @@ body {
     border: 1px;
     padding: 30px;
     &__header {
-      height: 10%;
-      margin-bottom: 20px;
+        margin-bottom: 20px;
       h1 {
         color: #01162b;
         font-size: 25px;
@@ -23,7 +22,7 @@ body {
       .title {
         display: flex;
         font-weight: 700;
-        margin-top: 20px;
+        margin-top: 10px;
         button {
           border: none;
           background-color: #fff;

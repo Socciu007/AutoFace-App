@@ -1,7 +1,7 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import ReactFlow, { ReactFlowProvider, addEdge, useNodesState, useEdgesState, Controls, MiniMap } from 'reactflow';
 import 'reactflow/dist/style.css';
-
+import startingPointNode from '../nodes/startingPoint';
 import watchStoryNode from '../nodes/watchStory';
 import watchVideoNode from '../nodes/watchVideo';
 import newsFeedNode from '../nodes/newsfeed';
@@ -17,12 +17,13 @@ import cancelFriendNode from '../nodes/cancelFriend';
 const initialNodes = [
   {
     id: '1',
-    type: 'textUpdater',
+    type: 'startingPoint',
     data: { label: 'Starting Point' },
     position: { x: 250, y: 250 },
   },
 ];
 const nodeTypes = {
+  startingPoint: startingPointNode,
   watchStory: watchStoryNode,
   watchVideo: watchVideoNode,
   newsFeed: newsFeedNode,
