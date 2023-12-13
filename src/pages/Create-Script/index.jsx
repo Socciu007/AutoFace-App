@@ -66,7 +66,7 @@ const CreateScript = () => {
   };
   const handleReturnClick = () => {
     // Navigate to the desired route when the button is clicked
-    navigate('/');
+    navigate('/scripManager');
   };
   const handleCategoryClick = (categoryNumber) => {
     setActiveCategory(categoryNumber === activeCategory ? null : categoryNumber);
