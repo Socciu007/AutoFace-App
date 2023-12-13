@@ -20,7 +20,12 @@ import sendMsgNode from "../nodes/sendMsg";
 import replyMsgNode from "../nodes/replyMsg";
 import addFriendNode from "../nodes/addFriend";
 import cancelFriendNode from "../nodes/cancelFriend";
-
+import joinGroupNode from "../nodes/joinGroup";
+import leftGroupNode from "../nodes/leftGroup";
+import inviteGroupNode from "../nodes/invite";
+import likeCommentNode from "../nodes/likeComment";
+import followerNode from "../nodes/follower";
+import viewVideoNode from "../nodes/viewVideo";
 const initialNodes = [
   {
     id: "1",
@@ -42,6 +47,12 @@ const nodeTypes = {
   replyMsg: replyMsgNode,
   addFriend: addFriendNode,
   cancelFriend: cancelFriendNode,
+  joinGroup: joinGroupNode,
+  leftGroup: leftGroupNode,
+  inviteGroup: inviteGroupNode,
+  likeComment: likeCommentNode,
+  follower: followerNode,
+  viewVideo: viewVideoNode,
 };
 
 let id = 0;
