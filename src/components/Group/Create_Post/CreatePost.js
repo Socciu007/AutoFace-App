@@ -1,127 +1,65 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-export function handleInputChange(event, setInputValue) {
+export function handleInputChange(event, setValues) {
   // Nếu giá trị mới là chuỗi rỗng, thiết lập về giá trị mặc định hoặc giá trị mong muốn
   const newValue = event.target.value === '' ? '' : parseInt(event.target.value, 10);
 
   // Kiểm tra xem có phải là số hay không
   if (!isNaN(newValue)) {
-    setInputValue(newValue);
+    setValues((prevValues) => ({
+      ...prevValues,
+      [event.target.name]: newValue,
+    }));
   }
 }
-export function NumberPost() {
-  //Value post start
-  const [inputValuePostStart, setInputValuePostStart] = useState(5);
-  const handleIncrementPostStart = () => {
-    setInputValuePostStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementPostStart = () => {
-    setInputValuePostStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Value post end
-  const [inputValuePostEnd, setInputValuePostEnd] = useState(10);
-  const handleIncrementPostEnd = () => {
-    setInputValuePostEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementPostEnd = () => {
-    setInputValuePostEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+
+export function useRangeValues(initialValues) {
+  const [values, setValues] = useState(initialValues);
+
+  const createHandlers = (prefix) => ({
+    handleIncrement: () => {
+      setValues((prevValues) => ({
+        ...prevValues,
+        [`${prefix}Start`]: prevValues[`${prefix}Start`] + 1,
+      }));
+    },
+    handleDecrement: () => {
+      setValues((prevValues) => ({
+        ...prevValues,
+        [`${prefix}Start`]: prevValues[`${prefix}Start`] > 0 ? prevValues[`${prefix}Start`] - 1 : 0,
+      }));
+    },
+    handleIncrementEnd: () => {
+      setValues((prevValues) => ({
+        ...prevValues,
+        [`${prefix}End`]: prevValues[`${prefix}End`] + 1,
+      }));
+    },
+    handleDecrementEnd: () => {
+      setValues((prevValues) => ({
+        ...prevValues,
+        [`${prefix}End`]: prevValues[`${prefix}End`] > 0 ? prevValues[`${prefix}End`] - 1 : 0,
+      }));
+    },
+    handleInputChangeStart: (event) => handleInputChange(event, setValues),
+    handleInputChangeEnd: (event) => handleInputChange(event, setValues),
+  });
+
+  const postValues = useRangeValues({ ...initialValues, prefix: 'Post' });
+  const delayTimeValues = useRangeValues({ ...initialValues, prefix: 'DelayTime' });
+  const photoVideoValues = useRangeValues({ ...initialValues, prefix: 'PhotoVideo' });
+  const friendValues = useRangeValues({ ...initialValues, prefix: 'NumberFriend' });
+
   return {
-    inputValuePostStart,
-    handleIncrementPostStart,
-    handleDecrementPostStart,
-    inputValuePostEnd,
-    handleIncrementPostEnd,
-    handleDecrementPostEnd,
-    handleInputChangePostStart: (event) => handleInputChange(event, setInputValuePostStart),
-    handleInputChangePostEnd: (event) => handleInputChange(event, setInputValuePostEnd),
+    ...values,
+    ...postValues,
+    ...delayTimeValues,
+    ...photoVideoValues,
+    ...friendValues,
   };
 }
-export function DelayTime() {
-  //Delay time start
-  const [inputValueDelayTimeStart, setInputValueDelayTimeStart] = useState(5);
-  const handleIncrementDelayTimeStart = () => {
-    setInputValueDelayTimeStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementDelayTimeStart = () => {
-    setInputValueDelayTimeStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Delay time end
-  const [inputValueDelayTimeEnd, setInputValueDelayTimeEnd] = useState(10);
-  const handleIncrementDelayTimeEnd = () => {
-    setInputValueDelayTimeEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementDelayTimeEnd = () => {
-    setInputValueDelayTimeEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  return {
-    inputValueDelayTimeStart,
-    handleIncrementDelayTimeStart,
-    handleDecrementDelayTimeStart,
-    inputValueDelayTimeEnd,
-    handleIncrementDelayTimeEnd,
-    handleDecrementDelayTimeEnd,
-    handleInputChangeDelayTimeStart: (event) => handleInputChange(event, setInputValueDelayTimeStart),
-    handleInputChangeDelayTimeEnd: (event) => handleInputChange(event, setInputValueDelayTimeEnd),
-  };
-}
-export function NumberPhotoVideo() {
-  //Random PhotoVideo start
-  const [inputValuePhotoVideoStart, setInputValuePhotoVideoStart] = useState(5);
-  const handleIncrementPhotoVideoStart = () => {
-    setInputValuePhotoVideoStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementPhotoVideoStart = () => {
-    setInputValuePhotoVideoStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Random PhotoVideo end
-  const [inputValuePhotoVideoEnd, setInputValuePhotoVideoEnd] = useState(10);
-  const handleIncrementPhotoVideoEnd = () => {
-    setInputValuePhotoVideoEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementPhotoVideoEnd = () => {
-    setInputValuePhotoVideoEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  return {
-    inputValuePhotoVideoStart,
-    handleIncrementPhotoVideoStart,
-    handleDecrementPhotoVideoStart,
-    inputValuePhotoVideoEnd,
-    handleIncrementPhotoVideoEnd,
-    handleDecrementPhotoVideoEnd,
-    handleInputChangePhotoVideoStart: (event) => handleInputChange(event, setInputValuePhotoVideoStart),
-    handleInputChangePhotoVideoEnd: (event) => handleInputChange(event, setInputValuePhotoVideoEnd),
-  };
-}
-export function NumberFriend() {
-  //Random NumberFriend start
-  const [inputValueNumberFriendStart, setInputValueNumberFriendStart] = useState(5);
-  const handleIncrementNumberFriendStart = () => {
-    setInputValueNumberFriendStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementNumberFriendStart = () => {
-    setInputValueNumberFriendStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Random NumberFriend end
-  const [inputValueNumberFriendEnd, setInputValueNumberFriendEnd] = useState(10);
-  const handleIncrementNumberFriendEnd = () => {
-    setInputValueNumberFriendEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementNumberFriendEnd = () => {
-    setInputValueNumberFriendEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  return {
-    inputValueNumberFriendStart,
-    handleIncrementNumberFriendStart,
-    handleDecrementNumberFriendStart,
-    inputValueNumberFriendEnd,
-    handleIncrementNumberFriendEnd,
-    handleDecrementNumberFriendEnd,
-    handleInputChangeNumberFriendStart: (event) => handleInputChange(event, setInputValueNumberFriendStart),
-    handleInputChangeNumberFriendEnd: (event) => handleInputChange(event, setInputValueNumberFriendEnd),
-  };
-}
+
 export function ShowTag() {
   // Hien thi tag
   const [isTag, setIsTag] = useState(false);
