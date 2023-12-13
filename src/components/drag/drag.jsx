@@ -1,41 +1,29 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
-import ReactFlow, {
-  ReactFlowProvider,
-  addEdge,
-  useNodesState,
-  useEdgesState,
-  Controls,
-  MiniMap,
-} from "reactflow";
-import "reactflow/dist/style.css";
-import TextUpdaterNode from "../nodes/node";
-import watchStoryNode from "../nodes/watchStory";
-import watchVideoNode from "../nodes/watchVideo";
-import newsFeedNode from "../nodes/newsfeed";
-import createPostNode from "../nodes/createPost";
-import postInteractNode from "../nodes/postInteract";
-import deletePostNode from "../nodes/deletePost";
-import viewNotiNode from "../nodes/viewNoti";
-import sendMsgNode from "../nodes/sendMsg";
-import replyMsgNode from "../nodes/replyMsg";
-import addFriendNode from "../nodes/addFriend";
-import cancelFriendNode from "../nodes/cancelFriend";
-import joinGroupNode from "../nodes/joinGroup";
-import leftGroupNode from "../nodes/leftGroup";
-import inviteGroupNode from "../nodes/invite";
-import likeCommentNode from "../nodes/likeComment";
-import followerNode from "../nodes/follower";
-import viewVideoNode from "../nodes/viewVideo";
+import React, { useState, useRef, useCallback, useEffect } from 'react';
+import ReactFlow, { ReactFlowProvider, addEdge, useNodesState, useEdgesState, Controls, MiniMap } from 'reactflow';
+import 'reactflow/dist/style.css';
+import startingPointNode from '../nodes/startingPoint';
+import watchStoryNode from '../nodes/watchStory';
+import watchVideoNode from '../nodes/watchVideo';
+import newsFeedNode from '../nodes/newsfeed';
+import createPostNode from '../nodes/createPost';
+import postInteractNode from '../nodes/postInteract';
+import deletePostNode from '../nodes/deletePost';
+import viewNotiNode from '../nodes/viewNoti';
+import sendMsgNode from '../nodes/sendMsg';
+import replyMsgNode from '../nodes/replyMsg';
+import addFriendNode from '../nodes/addFriend';
+import cancelFriendNode from '../nodes/cancelFriend';
+
 const initialNodes = [
   {
-    id: "1",
-    type: "textUpdater",
-    data: { label: "Starting Point" },
+    id: '1',
+    type: 'startingPoint',
+    data: { label: 'Starting Point' },
     position: { x: 250, y: 250 },
   },
 ];
 const nodeTypes = {
-  textUpdater: TextUpdaterNode,
+  startingPoint: startingPointNode,
   watchStory: watchStoryNode,
   watchVideo: watchVideoNode,
   newsFeed: newsFeedNode,
@@ -47,56 +35,53 @@ const nodeTypes = {
   replyMsg: replyMsgNode,
   addFriend: addFriendNode,
   cancelFriend: cancelFriendNode,
-  joinGroup: joinGroupNode,
-  leftGroup: leftGroupNode,
-  inviteGroup: inviteGroupNode,
-  likeComment: likeCommentNode,
-  follower: followerNode,
-  viewVideo: viewVideoNode,
 };
-
+const nodeMessage = {
+  watchStory: 'watchStory',
+  watchVideo: 'watchVideo',
+  newsFeed: 'newsFeed',
+  createPost: 'createPost',
+  postInteract: 'postInteract',
+  deletePost: 'deletePost',
+  viewNoti: 'viewNoti',
+  sendMsg: 'sendMsg',
+  replyMsg: 'replyMsg',
+  addFriend: 'addFriend',
+  cancelFriend: 'cancelFriend',
+};
 let id = 0;
 const getId = () => `dndnode_${id++}`;
 
 const DnDFlow = ({ onMessageChange }) => {
   const reactFlowWrapper = useRef(null);
-  const handleNodeButtonClick = (text) => {
-    onMessageChange(text);
-  };
-  const nodeMessages = {
-    textUpdater: "Hello from the Text Updater node!",
-    watchStory: "Hello from the Watch Story node!",
-    watchVideo: "Hello from the Watch Video node!",
-    // Add other node types and messages as needed
+  const handleNodeButtonClick = (type) => {
+    onMessageChange(type);
   };
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
-  const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge(params, eds)),
-    []
-  );
+  const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
 
   const onDragOver = useCallback((event) => {
     event.preventDefault();
-    event.dataTransfer.dropEffect = "move";
+    event.dataTransfer.dropEffect = 'move';
   }, []);
 
   const onDrop = useCallback(
     (event) => {
       event.preventDefault();
 
-      const type = event.dataTransfer.getData("application/reactflow");
+      const type = event.dataTransfer.getData('application/reactflow');
 
       // check if the dropped element is valid
-      if (typeof type === "undefined" || !type) {
+      if (typeof type === 'undefined' || !type) {
         return;
       }
 
       // reactFlowInstance.project was renamed to reactFlowInstance.screenToFlowPosition
       // and you don't need to subtract the reactFlowBounds.left/top anymore
-      // details: https://reactflow.dev/whats-new/2023-11-10
+      // details: https://reactflow.dev/whats-new/202-11-10
       const position = reactFlowInstance.screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
@@ -107,13 +92,13 @@ const DnDFlow = ({ onMessageChange }) => {
         position,
         data: {
           label: `${type} node`,
-          onButtonClick: () => handleNodeButtonClick(nodeMessages[type]),
+          onButtonClick: () => handleNodeButtonClick(nodeMessage[type]),
         },
       };
 
       setNodes((nds) => nds.concat(newNode));
     },
-    [reactFlowInstance, handleNodeButtonClick]
+    [reactFlowInstance, handleNodeButtonClick],
   );
 
   return (

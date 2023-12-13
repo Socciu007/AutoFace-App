@@ -1,38 +1,38 @@
-import React, { useEffect, useState, useRef } from "react";
-import "./style.scss";
-import { useNavigate } from "react-router-dom";
-import DnDFlow from "../../components/drag/drag";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import back from "../../assets/icon/icon-back.svg";
-import search from "../../assets/icon/icon-search.svg";
-import reload from "../../assets/icon/icon-reload.svg";
-import add from "../../assets/icon/icon-add.svg";
-import pin from "../../assets/icon/icon-pin.svg";
-import option from "../../assets/icon/icon-options.svg";
-import newNote from "../../assets/icon/icon-newNote.svg";
-import edit from "../../assets/icon/icon-editWhite.svg";
-import close from "../../assets/icon/icon-close.svg";
+import React, { useEffect, useState, useRef } from 'react';
+import './style.scss';
+import { useNavigate } from 'react-router-dom';
+import DnDFlow from '../../components/drag/drag';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import back from '../../assets/icon/icon-back.svg';
+import search from '../../assets/icon/icon-search.svg';
+import reload from '../../assets/icon/icon-reload.svg';
+import add from '../../assets/icon/icon-add.svg';
+import pin from '../../assets/icon/icon-pin.svg';
+import option from '../../assets/icon/icon-options.svg';
+import newNote from '../../assets/icon/icon-newNote.svg';
+import edit from '../../assets/icon/icon-edit.svg';
+import close from '../../assets/icon/icon-close.svg';
 const ScriptManager = () => {
   const navigate = useNavigate();
 
   const initialContentArray = [
-    { id: 1, content: "Auto watch Live videos" },
-    { id: 2, content: "Make 50 random friends" },
-    { id: 3, content: "Auto post on the fanpage" },
-    { id: 4, content: "Log in" },
-    { id: 5, content: "Auto post on the fanpage" },
-    { id: 6, content: "Auto post on the fanpage" },
-    { id: 7, content: "Auto post on the fanpage" },
-    { id: 8, content: "Auto post on the fanpage" },
+    { id: 1, content: 'Auto watch Live videos' },
+    { id: 2, content: 'Make 50 random friends' },
+    { id: 3, content: 'Auto post on the fanpage' },
+    { id: 4, content: 'Log in' },
+    { id: 5, content: 'Auto post on the fanpage' },
+    { id: 6, content: 'Auto post on the fanpage' },
+    { id: 7, content: 'Auto post on the fanpage' },
+    { id: 8, content: 'Auto post on the fanpage' },
   ];
   // for style menu materials UI
   const menuStyle = {
     boxShadow:
-      "0px 5px 5px -3px rgb(233 232 232 / 20%), 0px 8px 10px 1px rgb(255 255 255 / 14%), 0px 3px 14px 2px rgb(241 232 232 / 12%)",
+      '0px 5px 5px -3px rgb(233 232 232 / 20%), 0px 8px 10px 1px rgb(255 255 255 / 14%), 0px 3px 14px 2px rgb(241 232 232 / 12%)',
   };
   const liStyle = {
-    fontFamily: "GOOGLESANS",
+    fontFamily: 'GOOGLESANS',
   };
   // State for
   const [isCategoryActive, setCategoryActive] = useState(true);
@@ -40,13 +40,13 @@ const ScriptManager = () => {
   const [contentArray, setContentArray] = useState(
     initialContentArray.map((e) => {
       return { ...e, isPin: false };
-    })
+    }),
   );
   const [indexMenu, setIndexMenu] = useState(-1);
   const [anchorEl, setAnchorEl] = useState(null);
   // Handle the button add
   const handleAddClick = () => {
-    navigate("/create");
+    navigate('/create');
   };
   // Handle category button
   const handleButtonClick = () => {
@@ -63,8 +63,7 @@ const ScriptManager = () => {
     setAnchorEl(false);
     if (optionElement) {
       const currentDisplay = getComputedStyle(optionElement).display;
-      optionElement.style.display =
-        currentDisplay === "none" ? "block" : "none";
+      optionElement.style.display = currentDisplay === 'none' ? 'block' : 'none';
     }
   };
   // Close dialog
@@ -72,7 +71,7 @@ const ScriptManager = () => {
     const closeButton = document.querySelector(`.${className}`);
     if (closeButton) {
       const closeStyle = getComputedStyle(closeButton).display;
-      closeButton.style.display = closeStyle === "none" ? "block" : "none";
+      closeButton.style.display = closeStyle === 'none' ? 'block' : 'none';
     }
   };
   const handleTogglePin = (scriptId) => {
@@ -115,10 +114,7 @@ const ScriptManager = () => {
                 <div className="left-content__top">
                   <div className="search">
                     <img src={search} alt="Icon-search" />
-                    <input
-                      className="inputSearch"
-                      placeholder="Search..."
-                    ></input>
+                    <input className="inputSearch" placeholder="Search..."></input>
                   </div>
                   <button className="reload">
                     <img src={reload} alt="Reload" />
@@ -128,55 +124,31 @@ const ScriptManager = () => {
                   </button>
                 </div>
                 <div className="left-content__category">
-                  <button
-                    className={
-                      isCategoryActive ? "category-left" : "category-right"
-                    }
-                    onClick={handleButtonClick}
-                  >
+                  <button className={isCategoryActive ? 'category-left' : 'category-right'} onClick={handleButtonClick}>
                     System's Scripts
                   </button>
-                  <button
-                    className={
-                      isCategoryActive ? "category-right" : "category-left"
-                    }
-                    onClick={handleButtonClick}
-                  >
+                  <button className={isCategoryActive ? 'category-right' : 'category-left'} onClick={handleButtonClick}>
                     Your Scripts
                   </button>
                 </div>
                 <div className="left-content__content">
                   {contentArray.map((item, index) => (
                     <div
-                      className={
-                        isScriptActive === item.id
-                          ? "script selected"
-                          : "script"
-                      }
+                      className={isScriptActive === item.id ? 'script selected' : 'script'}
                       onClick={() => handleScriptClick(item.id)}
                       key={item.id}
                     >
-                      <p
-                        className={
-                          isScriptActive === item.id ? "inputSelected" : ""
-                        }
-                      >
-                        {item.content}
-                      </p>
+                      <p className={isScriptActive === item.id ? 'inputSelected' : ''}>{item.content}</p>
                       <div>
                         {/* pin */}
-                        {item.isPin ? (
-                          <img src={pin} alt="Pin" className={"show"} />
-                        ) : null}
+                        {item.isPin ? <img src={pin} alt="Pin" className={'show'} /> : null}
                         {/* more */}
                         <div
                           className="more"
                           id={`basic-menu-${item.id}`}
-                          aria-controls={
-                            open ? `basic-menu-${item.id}` : undefined
-                          }
+                          aria-controls={open ? `basic-menu-${item.id}` : undefined}
                           aria-haspopup="true"
-                          aria-expanded={open ? "true" : undefined}
+                          aria-expanded={open ? 'true' : undefined}
                           onClick={(event) => {
                             handleClick(event, index);
                           }}
@@ -190,31 +162,20 @@ const ScriptManager = () => {
                             open={open}
                             onClose={handleClose}
                             MenuListProps={{
-                              "aria-labelledby": "basic-button",
+                              'aria-labelledby': 'basic-button',
                             }}
                             sx={{
-                              "& .MuiPaper-root": menuStyle,
-                              "& .MuiButtonBase-root": liStyle,
+                              '& .MuiPaper-root': menuStyle,
+                              '& .MuiButtonBase-root': liStyle,
                             }}
                           >
-                            <MenuItem
-                              id={item.id}
-                              onClick={() => handleTogglePin(item.id)}
-                            >
-                              {item.isPin ? "Unpin" : "Pin"}
+                            <MenuItem id={item.id} onClick={() => handleTogglePin(item.id)}>
+                              {item.isPin ? 'Unpin' : 'Pin'}
                             </MenuItem>
                             <MenuItem onClick={handleClose}>Edit</MenuItem>
-                            <MenuItem
-                              onClick={() => handleOptionClick("makeCopy")}
-                            >
-                              Make a copy
-                            </MenuItem>
+                            <MenuItem onClick={() => handleOptionClick('makeCopy')}>Make a copy</MenuItem>
                             <MenuItem onClick={handleClose}>Rename</MenuItem>
-                            <MenuItem
-                              onClick={() => handleOptionClick("delete")}
-                            >
-                              Delete
-                            </MenuItem>
+                            <MenuItem onClick={() => handleOptionClick('delete')}>Delete</MenuItem>
                           </Menu>
                         ) : null}
                       </div>
@@ -243,10 +204,7 @@ const ScriptManager = () => {
           <div className="makeCopy">
             <div className="makeCopy__top">
               <h1>MAKE A COPY</h1>
-              <button
-                className="close"
-                onClick={() => handleCloseDialog("makeCopy")}
-              >
+              <button className="close" onClick={() => handleCloseDialog('makeCopy')}>
                 <img src={close} alt="Close" />
               </button>
             </div>
@@ -259,9 +217,7 @@ const ScriptManager = () => {
             <h1>DELETE</h1>
             <p>Are you sure to delete this script?</p>
             <div>
-              <button onClick={() => handleCloseDialog("delete")}>
-                Cancel
-              </button>
+              <button onClick={() => handleCloseDialog('delete')}>Cancel</button>
               <button className="deleteBtn">Delete</button>
             </div>
           </div>
