@@ -177,7 +177,7 @@ const WatchVideo = ({ onGoBackClick }) => {
               <div className="component-item__header">
                 <input type="checkbox" name="randomShare" onChange={handleCheckboxChangeShare} />
                 <p>
-                  Share to Feed <span className={`span__content ${isLiked ? 'show' : 'hide'}`}>(video)</span>:
+                  Share to Feed <span className={`span__content ${isShare ? 'show' : 'hide'}`}>(video)</span>:
                 </p>
               </div>
               <div className={`component-item__content ${isShare ? 'show' : 'hide'}`}>

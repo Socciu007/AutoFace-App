@@ -59,6 +59,7 @@
         color: var(--font-color-para);
         font-size: 15px;
         font-weight: 700;
+        display: flex;
       }
       .component-item {
         display: flex;
@@ -191,7 +192,6 @@
         display: block;
       }
     }
-
   }
   .hide {
     display: none;

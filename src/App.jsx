@@ -12,7 +12,7 @@ function App() {
       <Routes>
         {/* <Route path="/" element={<Dashboard></Dashboard>} /> */}
         <Route path="/create" element={<CreateScript></CreateScript>} />
-        <Route path="/" element={<ScriptManager></ScriptManager>} />
+         <Route path="/" element={<ScriptManager></ScriptManager>} />
       </Routes>
     </>
   );

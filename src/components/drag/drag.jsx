@@ -1,7 +1,7 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import ReactFlow, { ReactFlowProvider, addEdge, useNodesState, useEdgesState, Controls, MiniMap } from 'reactflow';
 import 'reactflow/dist/style.css';
-import TextUpdaterNode from '../nodes/node';
+
 import watchStoryNode from '../nodes/watchStory';
 import watchVideoNode from '../nodes/watchVideo';
 import newsFeedNode from '../nodes/newsfeed';
@@ -23,7 +23,6 @@ const initialNodes = [
   },
 ];
 const nodeTypes = {
-  textUpdater: TextUpdaterNode,
   watchStory: watchStoryNode,
   watchVideo: watchVideoNode,
   newsFeed: newsFeedNode,

@@ -27,9 +27,9 @@ const Dashboard = () => {
   return (
     <>
       <div className="dashboard ">
-        <WatchVideo></WatchVideo>
+        {/* <WatchVideo></WatchVideo> */}
         <WatchStory></WatchStory>
-        <Newsfeed></Newsfeed>
+        {/* <Newsfeed></Newsfeed>
         <CreatePost></CreatePost>
         <Post_Interaction></Post_Interaction>
         <Delete_Post></Delete_Post>
@@ -41,7 +41,7 @@ const Dashboard = () => {
         <JoinGroup></JoinGroup>
         <LeaveGroup></LeaveGroup>
         <Invite></Invite>
-        <CreatePostGroup></CreatePostGroup>
+        <CreatePostGroup></CreatePostGroup> */}
       </div>
     </>
   );
