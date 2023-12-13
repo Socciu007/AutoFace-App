@@ -16,11 +16,11 @@ import pin from '../../assets/pictures/icon-pin.svg';
 import profiles from '../../resources/profiles.json';
 import scripts from '../../resources/scripts.json';
 import { EditableCell, EditableRow } from '../../components/EditableTable/EditableTable';
-import PopupProfile from '../../components/PopupProfile/PopupProfile';
-import PopupAddProxy from '../../components/PopupAddProxy/PopupAddProxy';
-import PopupProxyManage from '../../components/PopupProxyManage/PopupProxyManage';
-import PopupDeleteProfile from '../../components/PopupDeleteProfile/PopupDeleteProfile';
-import PopupScript from '../../components/PopupScript/PopupScript';
+import PopupProfile from '../../components/PopupHome/PopupProfile/PopupProfile';
+import PopupAddProxy from '../../components/PopupHome/PopupAddProxy/PopupAddProxy';
+import PopupProxyManage from '../../components/PopupHome/PopupProxyManage/PopupProxyManage';
+import PopupDeleteProfile from '../../components/PopupHome/PopupDeleteProfile/PopupDeleteProfile';
+import PopupScript from '../../components/PopupHome/PopupScript/PopupScript';
 
 const ProfilesPage = () => {
   const [dataProfiles, setDataProfiles] = useState(profiles);

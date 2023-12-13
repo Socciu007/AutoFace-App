@@ -5,14 +5,9 @@ import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
 import downButton from '../../../assets/icon/icon-down.svg';
-import Edit from '../../../assets/icon/icon-edit.svg';
-import Debug from '../../../assets/icon/icon-debug.svg';
-import RunTest from '../../../assets/icon/icon-runTest.svg';
-import iconOptions from '../../../assets/icon/icon-options.svg';
-import iconSave from '../../../assets/icon/icon-save.svg';
 
 import { DelayTime, KeywordTextarea, LeaveGroupOption, NumberGroup, NumberOfMember } from './LeaveGroup';
-const LeaveGroup = () => {
+const LeaveGroup = ({ onGoBackClick }) => {
   const {
     inputValueGroupsStart,
     handleIncrementGroupsStart,
@@ -48,16 +43,11 @@ const LeaveGroup = () => {
 
   return (
     <div className="leaveGroup">
-      <h1 className="createPost__title">Facebook Automation</h1>
-      <div className="goBack">
-        <img src={backButton} alt="Back button" />
-        <p>Create a new script</p>
-      </div>
       <div className="component_container">
         <div className="scrollable-container">
           <div className="component-left">
             <div className="goBack titleLeaveGroup">
-              <img src={backButton} alt="Back button" />
+              <img src={backButton} alt="Back button" onClick={() => onGoBackClick(true)} />
               <p>Leave group</p>
             </div>
             <div className="component-content__leaveGroup">
@@ -158,32 +148,6 @@ const LeaveGroup = () => {
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="componet-right">
-          <div className="componet-right__header">
-            <div className="componet-right__header__inputBox">
-              <input
-                type="text"
-                name="nameScenario"
-                id="nameScenario"
-                className="nameScenario"
-                placeholder="Enter name here"
-              />
-
-              <img src={Edit} alt="Edit button" />
-            </div>
-            <div className="componet-right__header__function">
-              <img src={Debug} alt="Debug button" />
-              <img src={RunTest} alt="Run test button" />
-              <img src={iconOptions} alt="icon option" />
-              <button type="submit" className="btnSave">
-                <img src={iconSave} alt="SaveButton" />
-                <span>Save</span>
-              </button>
-            </div>
-          </div>
-          <div className="componet-right__content"></div>
         </div>
       </div>
     </div>
