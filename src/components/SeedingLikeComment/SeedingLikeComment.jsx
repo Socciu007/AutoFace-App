@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import up from "../../assets/pictures/icon-Increase.svg";
 import down from "../../assets/pictures/icon-Descrease.svg";
 import drag from "../../assets/pictures/icon-drag.svg"
-import deleted from "../../assets/pictures/icon-delete.png"
+import deleted from "../../assets/pictures/icon-delete.svg"
 import './style.scss'
 import CreateScript from '../CreateScriptComponent/CreateScript';
 

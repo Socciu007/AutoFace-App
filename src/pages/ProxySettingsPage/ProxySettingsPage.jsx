@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import edit from "../../assets/pictures/icon-edit.png";
-import deleted from "../../assets/pictures/icon-delete.png";
+import deleted from "../../assets/pictures/icon-delete.svg";
 import onOption from "../../assets/pictures/icon-on-option.svg";
-import downup from "../../assets/pictures/icon-down.svg";
 import question from "../../assets/pictures/icon-question.svg";
 import x from "../../assets/pictures/icon-x.svg"
 import "./style.scss";

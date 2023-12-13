@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, {useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./style.scss";
 import { Input, Popover, Table } from "antd";
 import display from "../../assets/pictures/icon-display-setting.png";
@@ -10,8 +11,8 @@ import usaProxy from "../../assets/pictures/icon-usa.png";
 import options from "../../assets/pictures/icon-options.png";
 import addProxy from "../../assets/pictures/icon-addProxy.png";
 import deleted from "../../assets/pictures/icon-delete.svg";
-import yourScript from "../../assets/pictures/icon-yourScripts.svg"
-import { useNavigate } from "react-router-dom";
+import yourScript from "../../assets/pictures/icon-yourScripts.svg";
+import pin from "../../assets/pictures/icon-pin.svg";
 import profiles from "../../resources/profiles.json";
 import scripts from "../../resources/scripts.json"
 import { EditableCell, EditableRow } from "../../components/EditableTable/EditableTable";
@@ -30,32 +31,16 @@ const ProfilesPage = () => {
   const [openAddProxy, setOpenAddProxy] =useState(false)
   const [openDeleteProfile, setOpenDeleteProfile] =useState(false)
   const [openProxyManage, setOpenProxyManage] = useState(false)
-  // const [openOptions, setOpenOptions] = useState(false)
+  const [openOptions, setOpenOptions] = useState(false)
   const [typeProxy, setTypeProxy] = useState('')
   const navigate = useNavigate();
-  // useEffect(() => {
-  //   setDataProfiles(profiles)
-  // }, [profiles])
-  // const getDetailsProfile = async (rowKeys) => {
-  //   const res = dataProfiles.filter((profile) => profile.key === rowKeys);
-  //   return res
-  // }
-  // useEffect(() => {
-  //   if (rowKeys) {
-  //     getDetailsProfile(rowKeys)
-  //   }
-  // }, [rowKeys])
-  // //Pin and remove
-  // const handleActionProfiles = () => {
-  //   console.log('key', rowKeys);
-  //   if (rowKeys) {
-  //     getDetailsProfile(rowKeys)
-  //     setOpenOptions(true)
-  //   }
-  // }
-  // const handleCloseAction = () => {
-  //   setOpenOptions(false)
-  // }
+  //Pin and remove
+  const handleActionProfiles = () => {
+    setOpenOptions(true)
+  }
+  const handleCloseAction = () => {
+    setOpenOptions(false)
+  }
   const defaultColumns = [
     {
       title: "#",
@@ -138,25 +123,34 @@ const ProfilesPage = () => {
     },
     {
       title: '',
-      dataIndex: 'action',
-      render: () => {
+      dataIndex: 'key',
+      render: (key) => {
         return (
           <div 
             className="-expand-icon" 
-            // onClick={handleActionProfiles}
+            onClick={handleActionProfiles}
           >
             <img src={options} alt="image-option"></img>
-            {/* {action && 
-              <Popover open={openOptions} onClose={handleCloseAction} placement="leftTop" title={<span>Title</span>} 
-                content={
-                  <div>
-                    <p>Content</p>
-                    <p>Content</p>
-                  </div>
-                }
-                >
-              </Popover>                
-            } */}
+            {rowKeys === key  && 
+                <Popover 
+                  open={openOptions} 
+                  onClose={handleCloseAction} 
+                  placement="leftTop"
+                  content={
+                    <div className="-popover-options" onMouseLeave={handleCloseAction}>
+                      <div className="-popover-options__attribute border-bottom">
+                        <img src={pin} alt="icon-pin"></img>
+                        <p>Pin</p>
+                      </div>
+                      <div className="-popover-options__attribute">
+                        <img src={deleted} alt="icon-deleted"></img>
+                        <p>Remove</p>
+                      </div>
+                    </div>
+                  }
+                  >
+                </Popover>             
+            }
           </div>
         );
       }     

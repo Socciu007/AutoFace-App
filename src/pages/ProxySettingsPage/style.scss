@@ -1,7 +1,9 @@
 .layout-proxy {
+    position: fixed;
+    inset: 0px;
     max-width: 1280px;
     height: 720px;
-    margin: 20px auto;
+    margin: auto;
     border: 1px solid #ccc;
     background-color: #fff;
     .-container-proxy {
@@ -34,7 +36,7 @@
         .-settings-proxys {
             margin-top: 18px;
             max-width: 1210px;
-            max-height: 500px;
+            max-height: 80%;
             border-radius: 15px;
             background: #FEFBF2;
             display: flex;
@@ -221,6 +223,8 @@
                             .-info-proxys {
                                 width: 514px;
                                 height: 211px;
+                                max-width: 514px;
+                                max-height: 211px;
                                 margin-bottom: 10px;
                                 border-radius: 8px;
                                 border: 1px dashed rgba(1, 22, 43, 0.20);

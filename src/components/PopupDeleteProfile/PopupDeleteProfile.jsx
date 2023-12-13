@@ -1,5 +1,6 @@
 import React from 'react'
 import PopupComponent from '../PopupComponent/PopupComponent'
+import "./style.scss"
 
 const PopupDeleteProfile = ({openDeleteProfile, handleCloseDelete}) => {
   return (

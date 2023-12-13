@@ -8,6 +8,7 @@ import foxy from "../../assets/pictures/icon-foxy.png";
 import ghosty from "../../assets/pictures/icon-ghosty.png";
 import usaProxy from "../../assets/pictures/icon-usa.png";
 import { Table } from 'antd';
+import './style.scss'
 
 const PopupProfile = ({dataProfiles, openProfiles, handleCloseProfiles, handleSettings, handleOpenScripts, handleFilterFolder}) => {
     // rowSelection object indicates the need for row selection

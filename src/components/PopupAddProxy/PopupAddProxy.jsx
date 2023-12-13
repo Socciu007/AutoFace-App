@@ -2,6 +2,7 @@ import React from 'react'
 import closePopup from "../../assets/pictures/icon-x.svg";
 import PopupComponent from '../PopupComponent/PopupComponent';
 import proxy from "../../assets/pictures/icon-proxy.svg";
+import './style.scss'
 
 const PopupAddProxy = ({typeProxy ,openAddProxy, handleCloseAdd, handleOpenProxyManage, onChangeTypeProxy}) => {
   return (
