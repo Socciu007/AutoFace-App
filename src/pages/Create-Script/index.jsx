@@ -170,42 +170,46 @@ const CreateScript = () => {
 
   return (
     <>
-      <div className="create-script">
-        <h1>FACEBOOK AUTOMATION</h1>
-        <div className="create-script__title">
-          <button onClick={handleReturnClick}>
-            <img src={back} alt="Return" />
-          </button>
-          <p>Create a new script</p>
-        </div>
-        <div className="create-script__content">
-          {renderComponent(component)}
-
-          <div className="right-content">
-            <div className="right-content__edit">
-              <div className="edit-input">
-                <input type="text" placeholder="Enter name" />
-              </div>
-              <div className="note-input">
-                <img src={newNote} alt="new Note" />
-                <input type="text" placeholder="New note" />
-              </div>
-              <button className="debug">
-                <img src={debug} alt="Debug" />
+      <div className="wrapper">
+        <div className="create-script">
+          <div className="script-manager__header">
+            <h1>FACEBOOK AUTOMATION</h1>
+            <div className="title">
+              <button onClick={handleReturnClick}>
+                <img src={back} alt="Return" />
               </button>
-              <button className="test">
-                <img src={runTest} alt="Debug" />
-              </button>
-              <button className="more">
-                <img src={option} alt="More" />
-              </button>
-              <button className="saveBtn">
-                <img src={save} alt="Save" />
-                SAVE
-              </button>
+              <p>Create a new script</p>
             </div>
-            <div className="right-content__container">
-              <DnDFlow onMessageChange={handleMessageChange}></DnDFlow>
+          </div>
+          <div className="create-script__content">
+            {renderComponent(component)}
+
+            <div className="right-content">
+              <div className="right-content__edit">
+                <div className="edit-input">
+                  <input type="text" placeholder="Enter name" />
+                </div>
+                <div className="note-input">
+                  <img src={newNote} alt="new Note" />
+                  <input type="text" placeholder="New note" />
+                </div>
+                <button className="debug">
+                  <img src={debug} alt="Debug" />
+                </button>
+                <button className="test">
+                  <img src={runTest} alt="Debug" />
+                </button>
+                <button className="more">
+                  <img src={option} alt="More" />
+                </button>
+                <button className="saveBtn">
+                  <img src={save} alt="Save" />
+                  SAVE
+                </button>
+              </div>
+              <div className="right-content__container">
+                <DnDFlow onMessageChange={handleMessageChange}></DnDFlow>
+              </div>
             </div>
           </div>
         </div>
