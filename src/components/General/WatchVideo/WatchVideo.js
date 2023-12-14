@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
@@ -247,29 +246,6 @@ export function CommentTextarea() {
   };
 }
 export function URLImg() {
-<<<<<<< HEAD
-  const [files, setFiles] = useState([]);
-
-  const { getRootProps, getInputProps } = useDropzone({
-    maxFiles: 2,
-    accept: {
-      'image/png': ['.png', '.jpg', '.jpeg'],
-    },
-    onDrop: (acceptedFiles) => {
-      const newFiles = acceptedFiles.map((file) => file.name);
-      setFiles((prevFiles) => [...prevFiles, ...newFiles]);
-    },
-  });
-
-  const handleDeleteButtonClick = () => {
-    setFiles([]);
-  };
-
-  return {
-    files,
-    getRootProps,
-    getInputProps,
-=======
   const [selectedFile, setSelectedFile] = useState(null);
   const handleDeleteButtonClick = () => {
     setSelectedFile(null);
@@ -289,7 +265,6 @@ export function URLImg() {
     handleIconClick,
     handleFileChange,
     selectedFile,
->>>>>>> tienvm
     handleDeleteButtonClick,
   };
 }

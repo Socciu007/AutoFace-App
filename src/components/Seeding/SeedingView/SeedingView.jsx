@@ -3,10 +3,11 @@ import up from '../../../assets/pictures/icon-Increase.svg';
 import down from '../../../assets/pictures/icon-Descrease.svg';
 import back from '../../../assets/icon/icon-back.svg';
 
-const SeedingView = () => {
+const SeedingView = ({ onGoBackClick }) => {
   const [videoView, setVideoView] = useState({
     viewTimeStart: 30,
     viewTimeEnd: 50,
+    videoID: '',
   });
   const [openText, setOpenText] = useState(false);
   //
@@ -40,6 +41,13 @@ const SeedingView = () => {
         ...prevValue,
         viewTimeEnd: prevValue.viewTimeEnd > 0 ? prevValue.viewTimeEnd - 1 : 0,
       };
+    });
+  };
+
+  const handleOnchangeVideoID = (e) => {
+    setVideoView({
+      ...videoView,
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -86,21 +94,20 @@ const SeedingView = () => {
               </p>
               <div className="-option-boost-comment__wrapper">
                 <textarea
-                  name="textContent"
+                  name="videoID"
                   style={{ width: '501px' }}
-                  // defaultValue={"Video ID"}
-                  // value={}
+                  value={videoView.videoID}
                   onClick={() => setOpenText(true)}
+                  onChange={handleOnchangeVideoID}
                 ></textarea>
-                <div
-                  className="-option-boost-comment__wrapper__content"
-                  style={{ display: openText ? 'none' : 'block' }}
-                >
+                <div className="-option-boost-comment__wrapper__content">
                   <p>
-                    <span style={{ paddingRight: '7%' }}>1</span>Enter the ID here
+                    <span style={{ paddingRight: '7%' }}>1</span>
+                    <div style={{ display: openText ? 'none' : 'inline' }}>Enter the ID here</div>
                   </p>
                   <p>
-                    <span style={{ paddingRight: '6%' }}>2</span>Each ID/line
+                    <span style={{ paddingRight: '6%' }}>2</span>
+                    <div style={{ display: openText ? 'none' : 'inline' }}>Each ID/line</div>
                   </p>
                 </div>
               </div>

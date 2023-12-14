@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 import { useEffect, useState } from 'react';
 
 export function handleInputChange(event, setInputValue) {

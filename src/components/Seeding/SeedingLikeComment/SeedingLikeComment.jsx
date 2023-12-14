@@ -22,6 +22,8 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
     tagFriendStart: 0,
     tagFriendEnd: 0,
   });
+  const [openWriteText, setOpenWriteText] = useState(false);
+  const [openWritePostID, setOpenWritePostID] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [isFileSelected, setIsFileSelected] = useState(false);
   const handleFileChange = (event) => {
@@ -41,6 +43,26 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
     if (!isFileSelected) {
       document.getElementById('dragVideoOrPhotoInput').click();
     }
+  };
+  //Post ID
+  const handleWritePostID = () => {
+    setOpenWritePostID(true);
+  };
+  const handleOnchangePostID = (e) => {
+    setLikeComment({
+      ...likeComment,
+      [e.target.name]: e.target.value,
+    });
+  };
+  //Post ID
+  const handleWriteText = () => {
+    setOpenWriteText(true);
+  };
+  const handleOnchangeText = (e) => {
+    setLikeComment({
+      ...likeComment,
+      [e.target.name]: e.target.value,
+    });
   };
   //Post view time
   const handleUpViewTimeStart = () => {
@@ -305,13 +327,21 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
                 Post ID: <span style={{ float: 'inline-end' }}>(0)</span>
               </p>
               <div className="-option-boost-comment__wrapper">
-                <textarea name="textContent" style={{ width: '501px' }} value={likeComment.postID}></textarea>
+                <textarea
+                  name="postID"
+                  style={{ width: '501px' }}
+                  value={likeComment.postID}
+                  onClick={handleWritePostID}
+                  onChange={handleOnchangePostID}
+                ></textarea>
                 <div className="-option-boost-comment__wrapper__content">
                   <p>
-                    <span style={{ paddingRight: '7%' }}>1</span>Enter the ID here
+                    <span style={{ paddingRight: '7%' }}>1</span>
+                    <div style={{ display: openWritePostID ? 'none' : 'inline' }}>Enter the ID here</div>
                   </p>
                   <p>
-                    <span style={{ paddingRight: '6%' }}>2</span>Each ID/line
+                    <span style={{ paddingRight: '6%' }}>2</span>
+                    <div style={{ display: openWritePostID ? 'none' : 'inline' }}>Each ID/line</div>
                   </p>
                 </div>
               </div>
@@ -337,13 +367,21 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
             <div className="-option-boost-like -option-boost-comment">
               <p>Text</p>
               <div className="-option-boost-comment__wrapper">
-                <textarea name="textContent" style={{ width: '501px' }} value={likeComment.textComment}></textarea>
+                <textarea
+                  name="textComment"
+                  style={{ width: '501px' }}
+                  value={likeComment.textComment}
+                  onClick={handleWriteText}
+                  onChange={handleOnchangeText}
+                ></textarea>
                 <div className="-option-boost-comment__wrapper__content">
                   <p>
-                    <span style={{ paddingRight: '7%' }}>1</span>Enter the content here
+                    <span style={{ paddingRight: '7%' }}>1</span>
+                    <div style={{ display: openWriteText ? 'none' : 'inline' }}>Enter the content here</div>
                   </p>
                   <p>
-                    <span style={{ paddingRight: '6%' }}>2</span>Each content/line
+                    <span style={{ paddingRight: '6%' }}>2</span>
+                    <div style={{ display: openWriteText ? 'none' : 'inline' }}>Each content/line</div>
                   </p>
                 </div>
               </div>

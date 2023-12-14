@@ -7,7 +7,9 @@ const SeedingFollower = ({ onGoBackClick }) => {
     delayTimeStart: 3,
     delayTimeEnd: 5,
     selectTypeFollow: '',
+    UIDList: '',
   });
+  const [openUIDList, setOpenUIDList] = useState(false);
   //delay time
   const handleUpDelayTimeStart = () => {
     setFollowers((prevValue) => {
@@ -41,7 +43,18 @@ const SeedingFollower = ({ onGoBackClick }) => {
       };
     });
   };
+  //type follower
   const handleOnchangeTypeFollower = (e) => {
+    setFollowers({
+      ...followers,
+      [e.target.name]: e.target.value,
+    });
+  };
+  //UID list
+  const handleUIDList = () => {
+    setOpenUIDList(true);
+  };
+  const handleOnchangeUIDList = (e) => {
     setFollowers({
       ...followers,
       [e.target.name]: e.target.value,
@@ -105,16 +118,20 @@ const SeedingFollower = ({ onGoBackClick }) => {
               <p>UID list</p>
               <div className="-option-boost-comment__wrapper">
                 <textarea
-                  name="textContent"
+                  name="UIDList"
                   style={{ width: '501px' }}
-                  // value={}
+                  onClick={handleUIDList}
+                  onChange={handleOnchangeUIDList}
+                  value={followers.UIDList}
                 ></textarea>
                 <div className="-option-boost-comment__wrapper__content">
                   <p>
-                    <span style={{ paddingRight: '7%' }}>1</span>Enter the UID here
+                    <span style={{ paddingRight: '7%' }}>1</span>
+                    <div style={{ display: openUIDList ? 'none' : 'inline' }}>Enter the UID here</div>
                   </p>
                   <p>
-                    <span style={{ paddingRight: '6%' }}>2</span>Each UID/line
+                    <span style={{ paddingRight: '6%' }}>2</span>
+                    <div style={{ display: openUIDList ? 'none' : 'inline' }}>Each UID/line</div>
                   </p>
                 </div>
               </div>
