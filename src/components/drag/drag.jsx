@@ -1,6 +1,15 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import ReactFlow, { ReactFlowProvider, addEdge, useNodesState, useEdgesState, Controls, MiniMap } from 'reactflow';
+import ReactFlow, {
+  ReactFlowProvider,
+  addEdge,
+  useNodesState,
+  useEdgesState,
+  Controls,
+  MiniMap,
+  MarkerType,
+} from 'reactflow';
 import 'reactflow/dist/style.css';
+
 import startingPointNode from '../nodes/startingPoint';
 import watchStoryNode from '../nodes/watchStory';
 import watchVideoNode from '../nodes/watchVideo';
@@ -68,6 +77,7 @@ const nodeMessage = {
   follower: 'follower',
   viewVideo: 'viewVideo',
 };
+
 let id = 0;
 const getId = () => `dndnode_${id++}`;
 
@@ -80,7 +90,22 @@ const DnDFlow = ({ onMessageChange }) => {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
-  const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
+  const onConnect = useCallback((params) => {
+    const newEdge = {
+      ...params,
+      markerEnd: {
+        type: MarkerType.ArrowClosed,
+        width: 10,
+        height: 10,
+        color: '#333',
+      },
+      style: {
+        strokeWidth: 2,
+        stroke: '#333',
+      },
+    };
+    setEdges((eds) => addEdge(newEdge, eds)), [];
+  }, []);
 
   const onDragOver = useCallback((event) => {
     event.preventDefault();
