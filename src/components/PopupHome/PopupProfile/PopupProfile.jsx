@@ -14,8 +14,6 @@ const PopupProfile = ({
   dataProfiles,
   openProfiles,
   handleCloseProfiles,
-  handleSettings,
-  handleOpenScripts,
   handleFilterFolder,
 }) => {
   // rowSelection object indicates the need for row selection
@@ -105,15 +103,7 @@ const PopupProfile = ({
                 <h1>CHOOSE PROFILES</h1>
               </div>
               <div className="-wrapper-option-profiles -nav-scripts__btn">
-                <span className="-option-profiles" onClick={handleSettings}>
-                  <img src={settings} alt="image-settings"></img>
-                </span>
-                <span className="-option-profiles" onClick={handleOpenScripts}>
-                  <img src={yourScript} alt="icon-yourscripts"></img>
-                </span>
-                <div>
-                  <button>ADD</button>
-                </div>
+                <button>ADD</button>
               </div>
             </div>
             <div className="-container-scripts">
@@ -143,24 +133,15 @@ const PopupProfile = ({
                         <div className="-option-item__icon" style={{ background: '#F6A01D' }}></div>
                         <p>Seeding 1</p>
                       </li>
-                      <li
-                        className="-option-item"
-                        // onClick={handleFilterFolder('Mail 1 - Alcie')}
-                      >
+                      <li className="-option-item" onClick={() => handleFilterFolder('Mail 1 - Alcie')}>
                         <div className="-option-item__icon" style={{ background: '#FFDE50' }}></div>
                         <p>Mail 1 - Alcie</p>
                       </li>
-                      <li
-                        className="-option-item"
-                        // onClick={handleFilterFolder('Mail 1 - Brono')}
-                      >
+                      <li className="-option-item" onClick={() => handleFilterFolder('Mail 1 - Brono')}>
                         <div className="-option-item__icon" style={{ background: '#81BC06' }}></div>
                         <p>Mail 1 - Brono</p>
                       </li>
-                      <li
-                        className="-option-item"
-                        // onClick={handleFilterFolder('Mail 3 - Kazza')}
-                      >
+                      <li className="-option-item" onClick={() => handleFilterFolder('Mail 3 - Kazza')}>
                         <div className="-option-item__icon" style={{ background: '#00ADEF' }}></div>
                         <p>Mail 3 - Kazza</p>
                       </li>

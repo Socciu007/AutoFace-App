@@ -1,5 +1,5 @@
-import { Form, Input } from "antd";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { Form, Input } from 'antd';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
 const EditableContext = React.createContext(null);
 const EditableRow = ({ index, ...props }) => {
@@ -12,15 +12,7 @@ const EditableRow = ({ index, ...props }) => {
     </Form>
   );
 };
-const EditableCell = ({
-  title,
-  editable,
-  children,
-  dataIndex,
-  record,
-  handleSave,
-  ...restProps
-}) => {
+const EditableCell = ({ title, editable, children, dataIndex, record, handleSave, ...restProps }) => {
   const [editing, setEditing] = useState(false);
   const inputRef = useRef(null);
   const form = useContext(EditableContext);
@@ -44,7 +36,7 @@ const EditableCell = ({
         ...values,
       });
     } catch (errInfo) {
-      console.log("Save failed:", errInfo);
+      console.log('Save failed:', errInfo);
     }
   };
   let childNode = children;

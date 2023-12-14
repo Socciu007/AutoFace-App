@@ -183,10 +183,15 @@ const ProfilesPage = () => {
       console.log(`selectedRowKeys: ${selectedRowKeys}`);
     },
   };
-  //handle filter folder
+  //handle filter folder profile
   const handleFilterFolder = (type) => {
     const facebookFolder = profiles.filter((profile) => profile.folder === type);
     setDataProfiles(facebookFolder);
+  };
+  //handle type scrip
+  const handleTypeScript = (type) => {
+    const scrip = scripts.filter((scrip) => scrip.isSystem === type);
+    setDataScripts(scrip);
   };
 
   const handleSettings = () => {
@@ -265,8 +270,6 @@ const ProfilesPage = () => {
                 dataProfiles={dataProfiles}
                 openProfiles={openProfiles}
                 handleCloseProfiles={handleCloseProfiles}
-                handleSettings={handleSettings}
-                handleOpenScripts={handleOpenScripts}
                 handleFilterFolder={handleFilterFolder}
               ></PopupProfile>
             </div>
@@ -307,7 +310,8 @@ const ProfilesPage = () => {
               openScripts={openScripts}
               handleCloseScripts={handleCloseScripts}
               handleSettings={handleSettings}
-              handleOpenScripts={handleOpenScripts}
+              handleOpenScripts={handleScript}
+              handleTypeScript={handleTypeScript}
             ></PopupScript>
           </div>
         </div>

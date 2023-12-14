@@ -1,0 +1,12 @@
+@mixin center {
+  @content;
+}
+@mixin title {
+  @content;
+}
+
+.dashboard {
+  height: 100vh;
+  background: #fff;
+  width: 100%;
+}

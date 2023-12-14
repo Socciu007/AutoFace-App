@@ -6,9 +6,13 @@ import onOption from '../../assets/pictures/icon-on-option.svg';
 import question from '../../assets/pictures/icon-question.svg';
 import x from '../../assets/pictures/icon-x.svg';
 import './style.scss';
+import PopupProxyManage from '../../components/PopupHome/PopupProxyManage/PopupProxyManage';
 
 const ProxySettingsPage = () => {
   const [editProxy, setEditProxy] = useState(false);
+  const [keyList, setKeyList] = useState('');
+  const [openProxyManage, setOpenProxyManage] = useState(false);
+  const [openWriteText, setOpenWriteText] = useState(false);
   const navigate = useNavigate();
   const data = [
     {
@@ -28,14 +32,29 @@ const ProxySettingsPage = () => {
       proxy: '123.120.9.22:1232:username:123jbsdf',
     },
   ];
-  const handleOpenEdit = () => {
+  //proxy
+  const handleOpenProxyManage = () => {
+    setOpenProxyManage(true);
+  };
+  const handleCloseProxyManage = () => {
+    setOpenProxyManage(false);
+  };
+  const handleOpenEdit = (key) => {
+    setKeyList(key);
     setEditProxy(true);
   };
-  const handleCloseEdit = () => {
+  const handleCloseEdit = (key) => {
+    setKeyList(key);
     setEditProxy(false);
   };
+  const handleOpenWriteText = () => {
+    setOpenWriteText(true);
+  };
+  const handleAddProxy = () => {
+    // setOpenWriteText(false)
+  };
   return (
-    <div className="layout-proxy">
+    <div className="layout-proxy" style={{ opacity: openProxyManage ? 0.3 : 1 }}>
       <div className="-container-proxy">
         <h1 className="-title-profiles">FACEBOOK AUTOMATION</h1>
         <div className="-return-profiles">
@@ -56,7 +75,9 @@ const ProxySettingsPage = () => {
         <div className="-settings-proxys">
           <div className="-details-proxys">
             <div className="-list-proxys">
-              <p>Proxy {} (0)</p>
+              <p>
+                Proxy {} ({data?.length})
+              </p>
               <div className="-info-list">
                 <div className="-scroll-list">
                   <ul>
@@ -66,30 +87,28 @@ const ProxySettingsPage = () => {
                           <div className="-key-proxys">
                             <p>{proxy.key}</p>
                           </div>
-                          <div className={editProxy ? '-action-proxys -action-proxys-active' : '-action-proxys'}>
-                            {editProxy ? (
-                              <>
-                                <input type="text" placeholder={proxy.proxy}></input>
-                                <div className="-action-icon-proxys">
-                                  <div className="-action-icon" onClick={handleCloseEdit}>
-                                    <img src={x} alt="icon-x"></img>
-                                  </div>
+                          {proxy?.key === keyList && editProxy ? (
+                            <div className="-action-proxys -action-proxys-active">
+                              <input type="text" placeholder={proxy.proxy}></input>
+                              <div className="-action-icon-proxys">
+                                <div className="-action-icon" onClick={() => handleCloseEdit(proxy?.key)}>
+                                  <img src={x} alt="icon-x"></img>
                                 </div>
-                              </>
-                            ) : (
-                              <>
-                                <span>{proxy.proxy}</span>
-                                <div className="-action-icon-proxys">
-                                  <div className="-action-icon" onClick={handleOpenEdit}>
-                                    <img src={edit} alt="icon-edit"></img>
-                                  </div>
-                                  <div className="-action-icon">
-                                    <img src={deleted} alt="icon-remove"></img>
-                                  </div>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="-action-proxys">
+                              <span>{proxy.proxy}</span>
+                              <div className="-action-icon-proxys">
+                                <div className="-action-icon" onClick={() => handleOpenEdit(proxy?.key)}>
+                                  <img src={edit} alt="icon-edit"></img>
                                 </div>
-                              </>
-                            )}
-                          </div>
+                                <div className="-action-icon">
+                                  <img src={deleted} alt="icon-remove"></img>
+                                </div>
+                              </div>
+                            </div>
+                          )}
                         </li>
                       ))}
                   </ul>
@@ -112,7 +131,7 @@ const ProxySettingsPage = () => {
                       </select>
                     </div>
                   </div>
-                  <div className="-icon-proxys">
+                  <div className="-icon-proxys" onClick={handleOpenProxyManage}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none">
                       <path
                         fillRule="evenodd"
@@ -128,14 +147,19 @@ const ProxySettingsPage = () => {
                       />
                     </svg>
                   </div>
+                  <PopupProxyManage
+                    openProxyManage={openProxyManage}
+                    handleCloseProxyManage={handleCloseProxyManage}
+                  ></PopupProxyManage>
                 </div>
                 <div className="-info-add-proxys">
-                  <textarea className="-info-proxys"></textarea>
+                  <textarea className="-info-proxys" onClick={handleOpenWriteText}></textarea>
                   <div className="-list-info">
                     <div className="-list-info__item">
                       <div className="-stt-info">
                         <p>
-                          <span>1</span>Enter the proxy here
+                          <span>1</span>
+                          <div style={{ display: openWriteText ? 'none' : 'inline' }}>Enter the proxy here</div>
                         </p>
                       </div>
                     </div>
@@ -143,13 +167,15 @@ const ProxySettingsPage = () => {
                       <div className="-stt-info">
                         <p>
                           <span>2</span>
-                          <b>Proxy format:</b> Host:Port:Username:Password
+                          <div style={{ display: openWriteText ? 'none' : 'inline' }}>
+                            <b>Proxy format:</b> Host:Port:Username:Password
+                          </div>
                         </p>
                       </div>
                     </div>
                   </div>
                 </div>
-                <button>ADD</button>
+                <button onClick={handleAddProxy}>ADD</button>
                 <div className="-setting-proxys">
                   <img src={onOption} alt="image-on-option"></img>
                   <p>

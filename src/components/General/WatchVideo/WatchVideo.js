@@ -247,6 +247,7 @@ export function CommentTextarea() {
   };
 }
 export function URLImg() {
+<<<<<<< HEAD
   const [files, setFiles] = useState([]);
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -268,6 +269,27 @@ export function URLImg() {
     files,
     getRootProps,
     getInputProps,
+=======
+  const [selectedFile, setSelectedFile] = useState(null);
+  const handleDeleteButtonClick = () => {
+    setSelectedFile(null);
+  };
+  const handleIconClick = () => {
+    document.getElementById('dragVideoOrPhotoInput').click();
+  };
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      event.target.value = ''; // Clear the input value
+    }
+  };
+
+  return {
+    handleIconClick,
+    handleFileChange,
+    selectedFile,
+>>>>>>> tienvm
     handleDeleteButtonClick,
   };
 }

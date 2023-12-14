@@ -187,11 +187,11 @@ const CreatePostGroup = ({ onGoBackClick }) => {
                       <div className={`folderPhoto`}>
                         <div className="URLImg">
                           <span style={{ opacity: '0.5' }}>Folder:</span>
-                          <span>
+                          <div>
                             {files.map((fileName, index) => (
                               <span key={index}>{fileName}</span>
                             ))}
-                          </span>
+                          </div>
                         </div>
                         <img src={DeleteButton} alt="Delete Button" onClick={handleDeleteButtonClick} />
                       </div>
