@@ -7,15 +7,14 @@ import time from '../../assets/icon/icon-time.svg';
 import Popup from 'reactjs-popup';
 const handleStyle = { left: 10 };
 
-function addFriendNode({ data: { label, onButtonClick }, isConnectable }) {
+function addFriendNode({ data: { label, onButtonClick }, isConnectable, nodeId }) {
   const onChange = useCallback((evt) => {
     console.log(evt.target.value);
   }, []);
-
   const [optionClick, setOptionClick] = useState(false);
 
   return (
-    <div className="updater-node">
+    <div className={`updater-node${(open = { optionClick } ? ' nodrag' : '')}`}>
       <Handle type="target" position={Position.Left} isConnectable={isConnectable} />
       <div className="node">
         <img src={addFriendLeft} alt="addFriendLeft" />
@@ -36,7 +35,9 @@ function addFriendNode({ data: { label, onButtonClick }, isConnectable }) {
                   <button type="button" onClick={onButtonClick}>
                     Sửa
                   </button>
-                  <button type="button">Xóa</button>
+                  <button type="button" >
+                    Xóa
+                  </button>
                 </div>
               </Popup>
             </div>

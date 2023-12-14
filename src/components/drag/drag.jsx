@@ -139,7 +139,6 @@ const DnDFlow = ({ onMessageChange }) => {
           onButtonClick: () => handleNodeButtonClick(nodeMessage[type]),
         },
       };
-
       setNodes((nds) => nds.concat(newNode));
     },
     [reactFlowInstance, handleNodeButtonClick],
