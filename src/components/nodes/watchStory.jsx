@@ -1,9 +1,9 @@
-import { useCallback } from "react";
-import { Handle, Position } from "reactflow";
-import watchStoryLeft from "../../assets/icon/icon-watchStoryLeft.svg";
-import watchStoryIcon from "../../assets/icon/icon-watchStory.svg";
-import optionNode from "../../assets/icon/icon-optionNode.svg";
-import time from "../../assets/icon/icon-time.svg";
+import { useCallback } from 'react';
+import { Handle, Position } from 'reactflow';
+import watchStoryLeft from '../../assets/icon/icon-watchStoryLeft.svg';
+import watchStoryIcon from '../../assets/icon/icon-watchStory.svg';
+import optionNode from '../../assets/icon/icon-optionNode.svg';
+import time from '../../assets/icon/icon-time.svg';
 function watchStoryNode({ data: { label, onButtonClick }, isConnectable }) {
   const onChange = useCallback((evt) => {
     console.log(evt.target.value);
@@ -11,11 +11,7 @@ function watchStoryNode({ data: { label, onButtonClick }, isConnectable }) {
 
   return (
     <div className="updater-node">
-      <Handle
-        type="target"
-        position={Position.Left}
-        isConnectable={isConnectable}
-      />
+      <Handle type="target" position={Position.Left} isConnectable={isConnectable} />
       <div className="node">
         <img src={watchStoryLeft} alt="watchStoryLeft" />
         <div className="content">
@@ -23,7 +19,9 @@ function watchStoryNode({ data: { label, onButtonClick }, isConnectable }) {
           <div className="content-right">
             <div className="right-top">
               <p>Watch story</p>
-              <img src={optionNode} alt="More" onClick={onButtonClick} />
+              <div style={{ padding: '0 5px' }} onClick={onButtonClick}>
+                <img src={optionNode} alt="More" />
+              </div>
             </div>
             <div className="right-bottom">
               <img src={time} alt="Time" />
@@ -33,12 +31,7 @@ function watchStoryNode({ data: { label, onButtonClick }, isConnectable }) {
         </div>
       </div>
 
-      <Handle
-        type="source"
-        position={Position.Right}
-        id="b"
-        isConnectable={isConnectable}
-      />
+      <Handle type="source" position={Position.Right} id="b" isConnectable={isConnectable} />
     </div>
   );
 }

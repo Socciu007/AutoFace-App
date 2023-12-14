@@ -1,9 +1,9 @@
-import { useCallback } from "react";
-import { Handle, Position } from "reactflow";
-import createPostLeft from "../../assets/icon/icon-createPostLeft.svg";
-import createPostIcon from "../../assets/icon/icon-createPost.svg";
-import optionNode from "../../assets/icon/icon-optionNode.svg";
-import time from "../../assets/icon/icon-time.svg";
+import { useCallback } from 'react';
+import { Handle, Position } from 'reactflow';
+import createPostLeft from '../../assets/icon/icon-createPostLeft.svg';
+import createPostIcon from '../../assets/icon/icon-createPost.svg';
+import optionNode from '../../assets/icon/icon-optionNode.svg';
+import time from '../../assets/icon/icon-time.svg';
 const handleStyle = { left: 10 };
 
 function createPostNode({ data: { label, onButtonClick }, isConnectable }) {
@@ -13,11 +13,7 @@ function createPostNode({ data: { label, onButtonClick }, isConnectable }) {
 
   return (
     <div className="updater-node">
-      <Handle
-        type="target"
-        position={Position.Left}
-        isConnectable={isConnectable}
-      />
+      <Handle type="target" position={Position.Left} isConnectable={isConnectable} />
       <div className="node">
         <img src={createPostLeft} alt="createPostLeft" />
         <div className="content">
@@ -25,7 +21,9 @@ function createPostNode({ data: { label, onButtonClick }, isConnectable }) {
           <div className="content-right">
             <div className="right-top">
               <p>Create post</p>
-              <img src={optionNode} alt="More" onClick={onButtonClick} />
+              <div style={{ padding: '0 5px' }} onClick={onButtonClick}>
+                <img src={optionNode} alt="More" />
+              </div>
             </div>
             <div className="right-bottom">
               <img src={time} alt="Time" />
@@ -35,12 +33,7 @@ function createPostNode({ data: { label, onButtonClick }, isConnectable }) {
         </div>
       </div>
 
-      <Handle
-        type="source"
-        position={Position.Right}
-        id="b"
-        isConnectable={isConnectable}
-      />
+      <Handle type="source" position={Position.Right} id="b" isConnectable={isConnectable} />
     </div>
   );
 }

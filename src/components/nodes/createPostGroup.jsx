@@ -21,7 +21,9 @@ function createPostGroupNode({ data: { label, onButtonClick }, isConnectable }) 
           <div className="content-right">
             <div className="right-top">
               <p>Create post</p>
-              <img src={optionNode} alt="More" onClick={onButtonClick} />
+              <div style={{ padding: '0 5px' }} onClick={onButtonClick}>
+                <img src={optionNode} alt="More" />
+              </div>
             </div>
             <div className="right-bottom">
               <img src={time} alt="Time" />
