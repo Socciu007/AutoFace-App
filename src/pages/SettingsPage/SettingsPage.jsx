@@ -5,6 +5,7 @@ import down from '../../assets/pictures/icon-Descrease.svg';
 // import downup from "../../assets/pictures/icon-down.svg";
 import onOption from '../../assets/pictures/icon-on-option.svg';
 import { useNavigate } from 'react-router-dom';
+import { Switch } from 'antd';
 
 const SettingsPage = () => {
   const navigate = useNavigate();
@@ -263,11 +264,11 @@ const SettingsPage = () => {
                 </div>
               </div>
               <div className="-sub-settings -sub1-settings">
-                <img src={onOption} alt="on-option"></img>
+                <Switch defaultChecked onChange={() => {}} />
                 <p>Mute Audio</p>
               </div>
               <div className="-sub-settings -sub1-settings" style={{ marginTop: '10px' }}>
-                <img src={onOption} alt="on-option"></img>
+                <Switch defaultChecked onChange={() => {}} />
                 <p>Don’t show images</p>
               </div>
             </div>

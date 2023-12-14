@@ -7,6 +7,7 @@ import question from '../../assets/pictures/icon-question.svg';
 import x from '../../assets/pictures/icon-x.svg';
 import './style.scss';
 import PopupProxyManage from '../../components/PopupHome/PopupProxyManage/PopupProxyManage';
+import { Switch } from 'antd';
 
 const ProxySettingsPage = () => {
   const [editProxy, setEditProxy] = useState(false);
@@ -52,6 +53,10 @@ const ProxySettingsPage = () => {
   };
   const handleAddProxy = () => {
     // setOpenWriteText(false)
+  };
+  //
+  const onChange = (checked) => {
+    console.log(`switch to ${checked}`);
   };
   return (
     <div className="layout-proxy" style={{ opacity: openProxyManage ? 0.3 : 1 }}>
@@ -175,16 +180,17 @@ const ProxySettingsPage = () => {
                     </div>
                   </div>
                 </div>
-                <button onClick={handleAddProxy}>ADD</button>
+                <button className="-add" onClick={handleAddProxy}>
+                  ADD
+                </button>
                 <div className="-setting-proxys">
-                  <img src={onOption} alt="image-on-option"></img>
-                  <p>
-                    Assign proxy here to all selected profiles
-                    <img src={question} alt="question"></img>
-                  </p>
+                  <Switch defaultChecked onChange={onChange} width={32} height={20} />
+                  {/* <img src={onOption} alt="image-on-option"></img> */}
+                  <p>Assign proxy here to all selected profiles </p>
+                  <img src={question} alt="question"></img>
                 </div>
                 <div className="-setting-proxys">
-                  <img src={onOption} alt="image-on-option"></img>
+                  <Switch defaultChecked onChange={onChange} width={32} height={20} />
 
                   <p>
                     API change: Do not assign a proxy to the next profile if the IP address does not change
