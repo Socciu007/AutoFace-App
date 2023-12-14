@@ -1,10 +1,5 @@
-<<<<<<< HEAD
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { Form, Input } from "antd";
-=======
-import { Form, Input } from "antd";
-import React, { useContext, useEffect, useRef, useState } from "react";
->>>>>>> d50fd2e0e8d44c7473451ae2742e0aec6a56548b
+import { Form, Input } from 'antd';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
 const EditableContext = React.createContext(null);
 const EditableRow = ({ index, ...props }) => {
@@ -17,15 +12,7 @@ const EditableRow = ({ index, ...props }) => {
     </Form>
   );
 };
-const EditableCell = ({
-  title,
-  editable,
-  children,
-  dataIndex,
-  record,
-  handleSave,
-  ...restProps
-}) => {
+const EditableCell = ({ title, editable, children, dataIndex, record, handleSave, ...restProps }) => {
   const [editing, setEditing] = useState(false);
   const inputRef = useRef(null);
   const form = useContext(EditableContext);
@@ -49,7 +36,7 @@ const EditableCell = ({
         ...values,
       });
     } catch (errInfo) {
-      console.log("Save failed:", errInfo);
+      console.log('Save failed:', errInfo);
     }
   };
   let childNode = children;
@@ -72,15 +59,9 @@ const EditableCell = ({
     ) : (
       <div
         className="editable-cell-value-wrap"
-<<<<<<< HEAD
-        // style={{
-        //   paddingRight: 24,
-        // }}
-=======
         style={{
           paddingRight: 24,
         }}
->>>>>>> d50fd2e0e8d44c7473451ae2742e0aec6a56548b
         onClick={toggleEdit}
       >
         {children}
@@ -90,24 +71,4 @@ const EditableCell = ({
   return <td {...restProps}>{childNode}</td>;
 };
 
-<<<<<<< HEAD
-const expandableProps = () => {
-  return {
-    columnWidth: 48,
-    expandedRowRender: (record) => (
-      <p
-        style={{
-          margin: 0,
-        }}
-      >
-        🎉 Expanded {record.address1}
-      </p>
-    ),
-    rowExpandable: (record) => record.id % 2 === 0,
-  };
-};
-
-export { EditableRow, EditableCell, expandableProps };
-=======
 export { EditableCell, EditableRow };
->>>>>>> d50fd2e0e8d44c7473451ae2742e0aec6a56548b

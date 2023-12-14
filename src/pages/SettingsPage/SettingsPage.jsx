@@ -33,6 +33,11 @@ const SettingsPage = () => {
       });
     }
   };
+  const onChangeNumberProfile = (e) => {
+    if (!isNaN(e.target.value)) {
+      setSettings({ ...settings, [e.target.name]: e.target.value });
+    }
+  };
   //
   const handleNumberLoop = (type) => {
     if (type === 'increase') {
@@ -45,6 +50,11 @@ const SettingsPage = () => {
         ...settings,
         numberLoop: settings.numberLoop > 0 ? settings.numberLoop - 1 : 0,
       });
+    }
+  };
+  const onChangeNumberLoop = (e) => {
+    if (!isNaN(e.target.value)) {
+      setSettings({ ...settings, [e.target.name]: e.target.value });
     }
   };
   //
@@ -61,6 +71,11 @@ const SettingsPage = () => {
       });
     }
   };
+  const onChangeMaxTimePerThread = (e) => {
+    if (!isNaN(e.target.value)) {
+      setSettings({ ...settings, [e.target.name]: e.target.value });
+    }
+  };
   //
   const handleDelayInEachNewThread = (type) => {
     if (type === 'increase') {
@@ -73,6 +88,11 @@ const SettingsPage = () => {
         ...settings,
         delayInEachNewThread: settings.delayInEachNewThread > 0 ? settings.delayInEachNewThread - 1 : 0,
       });
+    }
+  };
+  const onChangeDelayInEachNewThread = (e) => {
+    if (!isNaN(e.target.value)) {
+      setSettings({ ...settings, [e.target.name]: e.target.value });
     }
   };
   //
@@ -89,6 +109,11 @@ const SettingsPage = () => {
       });
     }
   };
+  const onChangeStopIfRamReaches = (e) => {
+    if (!isNaN(e.target.value)) {
+      setSettings({ ...settings, [e.target.name]: e.target.value });
+    }
+  };
   //
   const handleStopIfCPUReaches = (type) => {
     if (type === 'increase') {
@@ -103,6 +128,11 @@ const SettingsPage = () => {
       });
     }
   };
+  const onChangeStopIfCPUReaches = (e) => {
+    if (!isNaN(e.target.value)) {
+      setSettings({ ...settings, [e.target.name]: e.target.value });
+    }
+  };
   //
   const handleStopIfDiskReaches = (type) => {
     if (type === 'increase') {
@@ -115,6 +145,11 @@ const SettingsPage = () => {
         ...settings,
         stopIfDiskReaches: settings.stopIfDiskReaches > 0 ? settings.stopIfDiskReaches - 1 : 0,
       });
+    }
+  };
+  const onChangeStopIfDiskReaches = (e) => {
+    if (!isNaN(e.target.value)) {
+      setSettings({ ...settings, [e.target.name]: e.target.value });
     }
   };
   //
@@ -167,7 +202,7 @@ const SettingsPage = () => {
                         <img src={down} alt="down" width={10} height={7} />
                       </div>
                     </div>
-                    <input name="numberProfile" value={settings.numberProfile} onChange={() => {}}></input>
+                    <input name="numberProfile" value={settings.numberProfile} onChange={onChangeNumberProfile}></input>
                   </div>
                   <div className="-input-sub-settings">
                     <span>profile(s)</span>
@@ -186,7 +221,7 @@ const SettingsPage = () => {
                         <img src={down} alt="down" width={10} height={7} />
                       </div>
                     </div>
-                    <input name="numberLoop" value={settings.numberLoop} onChange={() => {}}></input>
+                    <input name="numberLoop" value={settings.numberLoop} onChange={onChangeNumberLoop}></input>
                   </div>
                   <div className="-input-sub-settings">
                     <span>loops(s)</span>
@@ -252,7 +287,11 @@ const SettingsPage = () => {
                         <img src={down} alt="down" width={10} height={7} />
                       </div>
                     </div>
-                    <input name="maxTimePerThread" value={settings.maxTimePerThread} onChange={() => {}}></input>
+                    <input
+                      name="maxTimePerThread"
+                      value={settings.maxTimePerThread}
+                      onChange={onChangeMaxTimePerThread}
+                    ></input>
                   </div>
                   <div className="-input-sub-settings">
                     <span>seconds(s)</span>
@@ -274,7 +313,7 @@ const SettingsPage = () => {
                     <input
                       name="delayInEachNewThread"
                       value={settings.delayInEachNewThread}
-                      onChange={() => {}}
+                      onChange={onChangeDelayInEachNewThread}
                     ></input>
                   </div>
                   <div className="-input-sub-settings">
@@ -294,7 +333,11 @@ const SettingsPage = () => {
                         <img src={down} alt="down" width={10} height={7} />
                       </div>
                     </div>
-                    <input name="stopIfRamReaches" value={settings.stopIfRamReaches} onChange={() => {}}></input>
+                    <input
+                      name="stopIfRamReaches"
+                      value={settings.stopIfRamReaches}
+                      onChange={onChangeStopIfRamReaches}
+                    ></input>
                   </div>
                   <div className="-input-sub-settings">
                     <span>%</span>
@@ -313,7 +356,11 @@ const SettingsPage = () => {
                         <img src={down} alt="down" width={10} height={7} />
                       </div>
                     </div>
-                    <input name="stopIfCPUReaches" value={settings.stopIfCPUReaches} onChange={() => {}}></input>
+                    <input
+                      name="stopIfCPUReaches"
+                      value={settings.stopIfCPUReaches}
+                      onChange={onChangeStopIfCPUReaches}
+                    ></input>
                   </div>
                   <div className="-input-sub-settings">
                     <span>%</span>
@@ -332,7 +379,11 @@ const SettingsPage = () => {
                         <img src={down} alt="down" width={10} height={7} />
                       </div>
                     </div>
-                    <input name="stopIfDiskReaches" value={settings.stopIfDiskReaches} onChange={() => {}}></input>
+                    <input
+                      name="stopIfDiskReaches"
+                      value={settings.stopIfDiskReaches}
+                      onChange={onChangeStopIfDiskReaches}
+                    ></input>
                   </div>
                   <div className="-input-sub-settings">
                     <span>%</span>

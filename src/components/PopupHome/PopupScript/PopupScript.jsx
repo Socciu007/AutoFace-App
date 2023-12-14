@@ -6,7 +6,14 @@ import yourScript from '../../../assets/pictures/icon-yourScripts.svg';
 import search from '../../../assets/pictures/icon-search.svg';
 import { Table } from 'antd';
 
-const PopupScript = ({ dataScripts, openScripts, handleCloseScripts, handleSettings, handleOpenScripts }) => {
+const PopupScript = ({
+  dataScripts,
+  openScripts,
+  handleCloseScripts,
+  handleSettings,
+  handleOpenScripts,
+  handleTypeScript,
+}) => {
   const columnsScripts = [
     {
       title: 'Scripts',
@@ -55,8 +62,8 @@ const PopupScript = ({ dataScripts, openScripts, handleCloseScripts, handleSetti
                   </div>
                   <div className="-container-scripts__left__options__list">
                     <ul>
-                      <li>System’s script</li>
-                      <li>Your script</li>
+                      <li onClick={() => handleTypeScript(true)}>System’s script</li>
+                      <li onClick={() => handleTypeScript(false)}>Your script</li>
                     </ul>
                   </div>
                 </div>

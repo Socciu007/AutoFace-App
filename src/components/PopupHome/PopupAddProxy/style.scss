@@ -80,12 +80,15 @@
                 position: relative;
                 display: block;
                 textarea {
+                    font-size: 15px;
+                    line-height: 31.5px;
+                    color: #01162B;
                     width: 100%;
                     height: 310px;
                     border-radius: 8px;
                     border: 1px dashed rgba(1, 22, 43, 0.20);
                     background: #F5F5F5;
-                    padding: 21px 20px;
+                    padding: 15px 45px;
                 }
                 .-form-instruct {
                     max-width: 50%;
