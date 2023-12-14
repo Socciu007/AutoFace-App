@@ -48,6 +48,10 @@ const ScriptManager = () => {
   const handleAddClick = () => {
     navigate('/create');
   };
+  // Handle the button add
+  const handleBackClick = () => {
+    navigate('/');
+  };
   // Handle category button
   const handleButtonClick = () => {
     // Toggle the active state
@@ -103,7 +107,7 @@ const ScriptManager = () => {
             <h1>FACEBOOK AUTOMATION</h1>
             <div className="title">
               <button>
-                <img src={back} alt="" />
+                <img src={back} alt="" onClick={handleBackClick} />
               </button>
               <p>Script Manager</p>
             </div>
