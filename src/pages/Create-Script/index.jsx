@@ -44,6 +44,7 @@ import invite from '../../assets/icon/icon-inviteGroup.svg';
 import likeComment from '../../assets/icon/icon-likeComment.svg';
 import follower from '../../assets/icon/icon-follower.svg';
 import viewVideo from '../../assets/icon/icon-viewVideo.svg';
+import CreatePostGroup from '../../components/Group/Create_Post/CreatePost.jsx';
 
 const CreateScript = () => {
   const [component, setComponent] = useState('default');
@@ -102,6 +103,8 @@ const CreateScript = () => {
         return <LeaveGroup onGoBackClick={handleGoBackClick} />;
       case 'inviteGroup':
         return <Invite onGoBackClick={handleGoBackClick} />;
+      case 'createPostGroup':
+        return <CreatePostGroup onGoBackClick={handleGoBackClick} />;
       case 'likeComment':
         return <SeedingLikeComment onGoBackClick={handleGoBackClick} />;
       case 'follower':

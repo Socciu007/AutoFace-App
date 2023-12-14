@@ -187,7 +187,7 @@ const CreatePost = ({ onGoBackClick }) => {
                       <div {...getRootProps({ className: 'component-item dragVideoOrPhoto' })}>
                         <input {...getInputProps()} />
                         <img className="mx-auto h-40" src={DragButton} alt="addfile" />
-                        <p>Drop a file here</p>
+                        <p>Drag the photo/video folder here</p>
                       </div>
                     ) : (
                       <div className={`folderPhoto`}>

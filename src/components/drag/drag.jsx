@@ -19,6 +19,7 @@ import inviteGroupNode from '../nodes/invite';
 import likeCommentNode from '../nodes/likeComment';
 import followerNode from '../nodes/follower';
 import viewVideoNode from '../nodes/viewVideo';
+import createPostGroupNode from '../nodes/createPostGroup';
 const initialNodes = [
   {
     id: '1',
@@ -43,6 +44,7 @@ const nodeTypes = {
   joinGroup: joinGroupNode,
   leftGroup: leftGroupNode,
   inviteGroup: inviteGroupNode,
+  createPostGroup: createPostGroupNode,
   likeComment: likeCommentNode,
   follower: followerNode,
   viewVideo: viewVideoNode,
