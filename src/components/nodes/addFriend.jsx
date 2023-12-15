@@ -1,20 +1,20 @@
-import { useCallback, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Handle, Position } from 'reactflow';
 import addFriendLeft from '../../assets/icon/icon-addFriendLeft.svg';
 import addFriendIcon from '../../assets/icon/icon-addFriend.svg';
 import optionNode from '../../assets/icon/icon-optionNode.svg';
 import time from '../../assets/icon/icon-time.svg';
-import Popup from 'reactjs-popup';
+import PopupComponent from '../PopupHome/PopupComponent/PopupComponent';
 const handleStyle = { left: 10 };
 
-function addFriendNode({ data: { label, onButtonClick }, isConnectable, nodeId }) {
+function addFriendNode({ data: { label, onButtonClick }, isConnectable, id }) {
   const onChange = useCallback((evt) => {
     console.log(evt.target.value);
   }, []);
   const [optionClick, setOptionClick] = useState(false);
 
   return (
-    <div className={`updater-node${(open = { optionClick } ? ' nodrag' : '')}`}>
+    <div className={`updater-node${optionClick ? ' nodrag' : ''}`}>
       <Handle type="target" position={Position.Left} isConnectable={isConnectable} />
       <div className="node">
         <img src={addFriendLeft} alt="addFriendLeft" />
@@ -23,24 +23,28 @@ function addFriendNode({ data: { label, onButtonClick }, isConnectable, nodeId }
           <div className="content-right">
             <div className="right-top">
               <p>Add friend</p>
-              <Popup
-                trigger={<img src={optionNode} alt="More" />}
+              <img src={optionNode} alt="More" onClick={() => setOptionClick(true)} />
+              <PopupComponent
                 open={optionClick}
-                onClose={() => {
-                  setOptionClick(false);
-                }}
+                onClose={() => setOptionClick(false)}
+                closeOnDocumentClick
                 position={'top right'}
               >
                 <div className="ButtonOption">
-                  <button type="button" onClick={onButtonClick}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onButtonClick();
+                      setOptionClick(false);
+                    }}
+                  >
                     Sửa
                   </button>
-                  <button type="button" >
-                    Xóa
-                  </button>
+                  <button type="button">Xóa</button>
                 </div>
-              </Popup>
+              </PopupComponent>
             </div>
+
             <div className="right-bottom">
               <img src={time} alt="Time" />
               <p>5 min</p>
