@@ -223,7 +223,7 @@ const SettingsPage = () => {
     console.log(`switch to ${checked}`);
   };
   return (
-    <div className="layout-settings">
+    <div className="layout-settings" style={{ opacity: openProxyManage ? 0.3 : 1 }}>
       <div className="-layout-page">
         <h1 className="-title-profiles">FACEBOOK AUTOMATION</h1>
         <div className="-return-profiles">

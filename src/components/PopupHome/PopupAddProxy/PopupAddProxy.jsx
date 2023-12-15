@@ -3,7 +3,7 @@ import closePopup from '../../../assets/pictures/icon-x.svg';
 import PopupComponent from '../PopupComponent/PopupComponent';
 import proxy from '../../../assets/pictures/icon-proxy.svg';
 import './style.scss';
-import { display } from '@mui/system';
+// import { display } from '@mui/system';
 
 const PopupAddProxy = ({ typeProxy, openAddProxy, handleCloseAdd, handleOpenProxyManage, onChangeTypeProxy }) => {
   const [openWriteText, setOpenWriteText] = useState(false);

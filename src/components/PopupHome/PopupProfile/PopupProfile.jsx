@@ -6,16 +6,12 @@ import yourScript from '../../../assets/pictures/icon-yourScripts.svg';
 import search from '../../../assets/pictures/icon-search.svg';
 import foxy from '../../../assets/pictures/icon-foxy.png';
 import ghosty from '../../../assets/pictures/icon-ghosty.png';
+import ghosty01 from '../../../assets/pictures/icon-ghosty01.png';
 import usaProxy from '../../../assets/pictures/icon-usa.png';
 import { Table } from 'antd';
 import './style.scss';
 
-const PopupProfile = ({
-  dataProfiles,
-  openProfiles,
-  handleCloseProfiles,
-  handleFilterFolder,
-}) => {
+const PopupProfile = ({ dataProfiles, openProfiles, handleCloseProfiles, handleFilterFolder }) => {
   // rowSelection object indicates the need for row selection
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
@@ -35,12 +31,13 @@ const PopupProfile = ({
     {
       title: 'Source',
       dataIndex: 'source',
-      render: () => {
+      render: (source) => {
         return (
           <>
-            <div style={{ display: 'flex', gap: '5px' }}>
-              <img src={foxy} alt="icon-foxy"></img>
-              <img src={ghosty} alt="icon-ghosty"></img>
+            <div className="-style-source-profile">
+              {source === 'Foxy' && <img src={foxy} alt="icon-foxy"></img>}
+              {source === 'Ghosty' && <img src={ghosty} alt="icon-ghosty"></img>}
+              {source === 'Ghosty-Fake' && <img src={ghosty01} alt="icon-ghosty"></img>}
             </div>
           </>
         );
