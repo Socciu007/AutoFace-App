@@ -246,25 +246,27 @@ export function CommentTextarea() {
   };
 }
 export function URLImg() {
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [files, setFiles] = useState([]);
+
+  const { getRootProps, getInputProps } = useDropzone({
+    maxFiles: 2,
+    accept: {
+      'image/png': ['.png', '.jpg', '.jpeg'],
+    },
+    onDrop: (acceptedFiles) => {
+      const newFiles = acceptedFiles.map((file) => file.name);
+      setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+    },
+  });
+
   const handleDeleteButtonClick = () => {
-    setSelectedFile(null);
-  };
-  const handleIconClick = () => {
-    document.getElementById('dragVideoOrPhotoInput').click();
-  };
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setSelectedFile(file);
-      event.target.value = ''; // Clear the input value
-    }
+    setFiles([]);
   };
 
   return {
-    handleIconClick,
-    handleFileChange,
-    selectedFile,
+    files,
+    getRootProps,
+    getInputProps,
     handleDeleteButtonClick,
   };
 }

@@ -48,7 +48,6 @@ const AddFriend = ({ onGoBackClick }) => {
     handleInputChangeStart: handleInputChangeStopTime,
   } = useRangeValues(initialValues);
 
-
   const {
     setTextContentAddFriendRequest,
     placeholderText,
