@@ -254,14 +254,20 @@
         background-color: #fff;
         margin-bottom: 2%;
         p {
-          // width: 80%;
           font-weight: 400;
-          span {
-            opacity: 0.5;
-          }
         }
         img {
-          width: 3%;
+          width: 4%;
+        }
+        .URLImg {
+          width: 94%;
+          display: flex;
+          flex-wrap: wrap;
+          margin-right: 5px;
+          span {
+            display: block;
+            margin-right: 5px;
+          }
         }
       }
       .Post,

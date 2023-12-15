@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './style.scss';
-import DnDFlow from '../../components/drag/drag';
+import DnDFlow from '../../components/drag/drag.jsx';
 import WatchStory from '../../components/General/WatchStory/WatchStory.jsx';
 import WatchVideo from '../../components/General/WatchVideo/WatchVideo.jsx';
 import CancelFriend from '../../components/General/Cancel_Friend/CancelFriend.jsx';
@@ -46,7 +46,7 @@ import follower from '../../assets/icon/icon-follower.svg';
 import viewVideo from '../../assets/icon/icon-viewVideo.svg';
 import CreatePostGroup from '../../components/Group/Create_Post/CreatePost.jsx';
 
-const CreateScript = () => {
+const Edit = () => {
   const [component, setComponent] = useState('default');
   const handleMessageChange = (event) => {
     setComponent(event);
@@ -238,7 +238,7 @@ const CreateScript = () => {
               <button onClick={handleReturnClick}>
                 <img src={back} alt="Return" />
               </button>
-              <p>Create a new script</p>
+              <p>Edit</p>
             </div>
           </div>
           <div className="create-script__content">
@@ -280,4 +280,4 @@ const CreateScript = () => {
   );
 };
 
-export default CreateScript;
+export default Edit;

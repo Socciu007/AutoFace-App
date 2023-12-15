@@ -195,6 +195,9 @@ const ProfilesPage = () => {
   const handleSettingsProxy = () => {
     navigate('/settings-proxy');
   };
+  const handleScript = () => {
+    navigate('/scripManager');
+  };
   //scripts
   const handleOpenScripts = () => {
     setOpenScripts(true);
@@ -252,7 +255,7 @@ const ProfilesPage = () => {
               <span className="-option-profiles" onClick={handleSettings}>
                 <img src={settings} alt="image-settings"></img>
               </span>
-              <span className="-option-profiles">
+              <span className="-option-profiles" onClick={handleScript}>
                 <img src={yourScript} alt="icon-yourscripts"></img>
               </span>
               <span className="-option-profiles" onClick={handleOpenProfiles}>

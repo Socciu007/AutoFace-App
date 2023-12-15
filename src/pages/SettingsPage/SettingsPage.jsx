@@ -137,7 +137,7 @@ const SettingsPage = () => {
       <div className="-layout-page">
         <h1 className="-title-profiles">FACEBOOK AUTOMATION</h1>
         <div className="-return-profiles">
-          <span onClick={() => navigate('/proxyHome')}>
+          <span onClick={() => navigate('/')}>
             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
               <circle cx="15" cy="15" r="15" fill="#F5F5F5" />
               <path
@@ -159,15 +159,17 @@ const SettingsPage = () => {
                 <p>Numbers of profiles running simultaneously</p>
                 <div className="-options-sub-settings">
                   <div className="-count-settings">
-                    <div style={{ marginBottom: '2px' }} onClick={() => handleNumberProfile('increase')}>
-                      <img src={up} alt="up" width={10} height={7} />
+                    <div className="Icon-Upn_Down">
+                      <div style={{ marginBottom: '2px' }} onClick={() => handleNumberProfile('increase')}>
+                        <img src={up} alt="up" width={10} height={7} />
+                      </div>
+                      <div style={{ marginTop: '2px' }} onClick={() => handleNumberProfile('descrease')}>
+                        <img src={down} alt="down" width={10} height={7} />
+                      </div>
                     </div>
-                    <div style={{ marginTop: '2px' }} onClick={() => handleNumberProfile('descrease')}>
-                      <img src={down} alt="down" width={10} height={7} />
-                    </div>
+                    <input name="numberProfile" value={settings.numberProfile} onChange={() => {}}></input>
                   </div>
                   <div className="-input-sub-settings">
-                    <input name="numberProfile" value={settings.numberProfile} onChange={() => {}}></input>
                     <span>profile(s)</span>
                   </div>
                 </div>
@@ -176,15 +178,17 @@ const SettingsPage = () => {
                 <p>Numbers of loops</p>
                 <div className="-options-sub-settings">
                   <div className="-count-settings">
-                    <div style={{ marginBottom: '2px' }} onClick={() => handleNumberLoop('increase')}>
-                      <img src={up} alt="up" width={10} height={7} />
+                    <div className="Icon-Upn_Down">
+                      <div style={{ marginBottom: '2px' }} onClick={() => handleNumberLoop('increase')}>
+                        <img src={up} alt="up" width={10} height={7} />
+                      </div>
+                      <div style={{ marginTop: '2px' }} onClick={() => handleNumberLoop('descrease')}>
+                        <img src={down} alt="down" width={10} height={7} />
+                      </div>
                     </div>
-                    <div style={{ marginTop: '2px' }} onClick={() => handleNumberLoop('descrease')}>
-                      <img src={down} alt="down" width={10} height={7} />
-                    </div>
+                    <input name="numberLoop" value={settings.numberLoop} onChange={() => {}}></input>
                   </div>
                   <div className="-input-sub-settings">
-                    <input name="numberLoop" value={settings.numberLoop} onChange={() => {}}></input>
                     <span>loops(s)</span>
                   </div>
                 </div>
@@ -240,15 +244,17 @@ const SettingsPage = () => {
                 <p>Maximum time per thread</p>
                 <div className="-options-sub-settings">
                   <div className="-count-settings">
-                    <div style={{ marginBottom: '2px' }} onClick={() => handleMaxTimePerThread('increase')}>
-                      <img src={up} alt="up" width={10} height={7} />
+                    <div className="Icon-Upn_Down">
+                      <div style={{ marginBottom: '2px' }} onClick={() => handleMaxTimePerThread('increase')}>
+                        <img src={up} alt="up" width={10} height={7} />
+                      </div>
+                      <div style={{ marginTop: '2px' }} onClick={() => handleMaxTimePerThread('descrease')}>
+                        <img src={down} alt="down" width={10} height={7} />
+                      </div>
                     </div>
-                    <div style={{ marginTop: '2px' }} onClick={() => handleMaxTimePerThread('descrease')}>
-                      <img src={down} alt="down" width={10} height={7} />
-                    </div>
+                    <input name="maxTimePerThread" value={settings.maxTimePerThread} onChange={() => {}}></input>
                   </div>
                   <div className="-input-sub-settings">
-                    <input name="maxTimePerThread" value={settings.maxTimePerThread} onChange={() => {}}></input>
                     <span>seconds(s)</span>
                   </div>
                 </div>
@@ -257,19 +263,21 @@ const SettingsPage = () => {
                 <p>Delay in each new thread open</p>
                 <div className="-options-sub-settings">
                   <div className="-count-settings">
-                    <div style={{ marginBottom: '2px' }} onClick={() => handleDelayInEachNewThread('increase')}>
-                      <img src={up} alt="up" width={10} height={7} />
+                    <div className="Icon-Upn_Down">
+                      <div style={{ marginBottom: '2px' }} onClick={() => handleDelayInEachNewThread('increase')}>
+                        <img src={up} alt="up" width={10} height={7} />
+                      </div>
+                      <div style={{ marginTop: '2px' }} onClick={() => handleDelayInEachNewThread('descrease')}>
+                        <img src={down} alt="down" width={10} height={7} />
+                      </div>
                     </div>
-                    <div style={{ marginTop: '2px' }} onClick={() => handleDelayInEachNewThread('descrease')}>
-                      <img src={down} alt="down" width={10} height={7} />
-                    </div>
-                  </div>
-                  <div className="-input-sub-settings">
                     <input
                       name="delayInEachNewThread"
                       value={settings.delayInEachNewThread}
                       onChange={() => {}}
                     ></input>
+                  </div>
+                  <div className="-input-sub-settings">
                     <span>seconds(s)</span>
                   </div>
                 </div>
@@ -278,15 +286,17 @@ const SettingsPage = () => {
                 <p>Stop if RAM reaches</p>
                 <div className="-options-sub-settings">
                   <div className="-count-settings">
-                    <div style={{ marginBottom: '2px' }} onClick={() => handlestopIfRamReaches('increase')}>
-                      <img src={up} alt="up" width={10} height={7} />
+                    <div className="Icon-Upn_Down">
+                      <div style={{ marginBottom: '2px' }} onClick={() => handlestopIfRamReaches('increase')}>
+                        <img src={up} alt="up" width={10} height={7} />
+                      </div>
+                      <div style={{ marginTop: '2px' }} onClick={() => handlestopIfRamReaches('descrease')}>
+                        <img src={down} alt="down" width={10} height={7} />
+                      </div>
                     </div>
-                    <div style={{ marginTop: '2px' }} onClick={() => handlestopIfRamReaches('descrease')}>
-                      <img src={down} alt="down" width={10} height={7} />
-                    </div>
-                  </div>
-                  <div className="-input-sub-settings">
                     <input name="stopIfRamReaches" value={settings.stopIfRamReaches} onChange={() => {}}></input>
+                  </div>
+                  <div className="-input-sub-settings">
                     <span>%</span>
                   </div>
                 </div>
@@ -295,15 +305,17 @@ const SettingsPage = () => {
                 <p>Stop if CPU reaches</p>
                 <div className="-options-sub-settings">
                   <div className="-count-settings">
-                    <div style={{ marginBottom: '2px' }} onClick={() => handleStopIfCPUReaches('increase')}>
-                      <img src={up} alt="up" width={10} height={7} />
+                    <div className="Icon-Upn_Down">
+                      <div style={{ marginBottom: '2px' }} onClick={() => handleStopIfCPUReaches('increase')}>
+                        <img src={up} alt="up" width={10} height={7} />
+                      </div>
+                      <div style={{ marginTop: '2px' }} onClick={() => handleStopIfCPUReaches('descrease')}>
+                        <img src={down} alt="down" width={10} height={7} />
+                      </div>
                     </div>
-                    <div style={{ marginTop: '2px' }} onClick={() => handleStopIfCPUReaches('descrease')}>
-                      <img src={down} alt="down" width={10} height={7} />
-                    </div>
-                  </div>
-                  <div className="-input-sub-settings">
                     <input name="stopIfCPUReaches" value={settings.stopIfCPUReaches} onChange={() => {}}></input>
+                  </div>
+                  <div className="-input-sub-settings">
                     <span>%</span>
                   </div>
                 </div>
@@ -312,15 +324,17 @@ const SettingsPage = () => {
                 <p>Stop if CPU reaches</p>
                 <div className="-options-sub-settings">
                   <div className="-count-settings">
-                    <div style={{ marginBottom: '2px' }} onClick={() => handleStopIfDiskReaches('increase')}>
-                      <img src={up} alt="up" width={10} height={7} />
+                    <div className="Icon-Upn_Down">
+                      <div style={{ marginBottom: '2px' }} onClick={() => handleStopIfDiskReaches('increase')}>
+                        <img src={up} alt="up" width={10} height={7} />
+                      </div>
+                      <div style={{ marginTop: '2px' }} onClick={() => handleStopIfDiskReaches('descrease')}>
+                        <img src={down} alt="down" width={10} height={7} />
+                      </div>
                     </div>
-                    <div style={{ marginTop: '2px' }} onClick={() => handleStopIfDiskReaches('descrease')}>
-                      <img src={down} alt="down" width={10} height={7} />
-                    </div>
+                    <input name="stopIfDiskReaches" value={settings.stopIfDiskReaches} onChange={() => {}}></input>
                   </div>
                   <div className="-input-sub-settings">
-                    <input name="stopIfDiskReaches" value={settings.stopIfDiskReaches} onChange={() => {}}></input>
                     <span>%</span>
                   </div>
                 </div>

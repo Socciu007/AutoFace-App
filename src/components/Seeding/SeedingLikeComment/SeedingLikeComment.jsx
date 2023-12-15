@@ -3,9 +3,11 @@ import up from '../../../assets/pictures/icon-Increase.svg';
 import down from '../../../assets/pictures/icon-Descrease.svg';
 import drag from '../../../assets/pictures/icon-drag.svg';
 import deleted from '../../../assets/pictures/icon-delete.svg';
+import back from '../../../assets/icon/icon-back.svg';
+
 import './style.scss';
 
-const SeedingLikeComment = () => {
+const SeedingLikeComment = ({ onGoBackClick }) => {
   const [likeComment, setLikeComment] = useState({
     viewTimeStart: 3,
     viewTimeEnd: 3,
@@ -211,16 +213,7 @@ const SeedingLikeComment = () => {
         <div className="scrollable-container">
           <div className="-seeding-wrapper-like">
             <div className="-back-home">
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
-                <circle cx="15" cy="15" r="15" fill="#F5F5F5" />
-                <path
-                  d="M14.25 20.25L9 15.75M9 15.75L14.25 11.25M9 15.75L20.625 15.75"
-                  stroke="#01162B"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <img src={back} alt="Back button" onClick={() => onGoBackClick(true)} />
               <p>Boost like, comment</p>
             </div>
             <div className="-option-boost-like">

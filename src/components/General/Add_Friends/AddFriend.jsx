@@ -91,6 +91,7 @@ const AddFriend = ({ onGoBackClick }) => {
                     <option value="suggestions">By suggestions</option>
                     <option value="acceptFriendRequests">Accept friend requests</option>
                     <option value="UID">By UID</option>
+                    <option value="UIDList">UID list</option>
                     <option value="keywords">By keywords</option>
                     <option value="groupMembers">Group members</option>
                     <option value="friendOfFriends">Friend of friends</option>
@@ -167,7 +168,8 @@ const AddFriend = ({ onGoBackClick }) => {
                     )}
                   </div>
                 )}
-                {(selectedValueTypeAddFriend === 'UID' ||
+                {(selectedValueTypeAddFriend === 'UIDList' ||
+                  selectedValueTypeAddFriend === 'UID' ||
                   selectedValueTypeAddFriend === 'keywords' ||
                   selectedValueTypeAddFriend === 'groupMembers' ||
                   selectedValueTypeAddFriend === 'friendOfUID') && (
@@ -235,7 +237,7 @@ const AddFriend = ({ onGoBackClick }) => {
                         <input type="text" value={inputValueDelayTimeEnd} onChange={handleIncrementDelayTimeEnd} />
                       </div>
                     </div>
-                    {selectedValueTypeAddFriend === 'UID' && (
+                    {(selectedValueTypeAddFriend === 'UIDList' || selectedValueTypeAddFriend === 'UID') && (
                       <div>
                         <div className="component-item autoDelete">
                           <input type="checkbox" name="autoDelete" id="autoDelete" />
@@ -246,88 +248,102 @@ const AddFriend = ({ onGoBackClick }) => {
                           <input type="checkbox" name="Interact" onChange={handleCheckboxInteract} />
                           <p>Interact before sending friend request</p>
                         </div>
-
-                        <div className={`component-item InteractContent ${isInteract ? 'show' : 'hide'}`}>
-                          <div className="component-item numberOfPost">
-                            <p className="component-item__header">Number of posts:</p>
-                            <div className="component-item__number">
-                              <div className="component-item__number__icon">
-                                <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementNumberPostStart} />
-                                <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementNumberPostStart} />
+                        {selectedValueTypeAddFriend === 'UIDList' && (
+                          <div className={`component-item InteractContent ${isInteract ? 'show' : 'hide'}`}>
+                            <div className="component-item numberOfPost">
+                              <p className="component-item__header">Number of posts:</p>
+                              <div className="component-item__number">
+                                <div className="component-item__number__icon">
+                                  <img
+                                    src={iconIncrease}
+                                    alt="Increase icon"
+                                    onClick={handleIncrementNumberPostStart}
+                                  />
+                                  <img
+                                    src={iconDecrease}
+                                    alt="Decrease icon"
+                                    onClick={handleDecrementNumberPostStart}
+                                  />
+                                </div>
+                                <input
+                                  type="text"
+                                  value={inputValueNumberPostStart}
+                                  onChange={handleInputChangeNumberPostStart}
+                                />
                               </div>
-                              <input
-                                type="text"
-                                value={inputValueNumberPostStart}
-                                onChange={handleInputChangeNumberPostStart}
-                              />
-                            </div>
-                            <span>to</span>
-                            <div className="component-item__number">
-                              <div className="component-item__number__icon">
-                                <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementNumberPostEnd} />
-                                <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementNumberPostEnd} />
+                              <span>to</span>
+                              <div className="component-item__number">
+                                <div className="component-item__number__icon">
+                                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementNumberPostEnd} />
+                                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementNumberPostEnd} />
+                                </div>
+                                <input
+                                  type="text"
+                                  value={inputValueNumberPostEnd}
+                                  onChange={handleInputChangeNumberPostEnd}
+                                />
                               </div>
-                              <input
-                                type="text"
-                                value={inputValueNumberPostEnd}
-                                onChange={handleInputChangeNumberPostEnd}
-                              />
                             </div>
-                          </div>
-                          <div className="component-item delayTime">
-                            <p className="component-item__header">
-                              Delay time<span>(s):</span>
-                            </p>
-                            <div className="component-item__number">
-                              <div className="component-item__number__icon">
-                                <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeStart} />
-                                <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeStart} />
-                              </div>
-                              <input
-                                type="text"
-                                value={inputValueDelayTimeStart}
-                                onChange={handleInputChangeDelayTimeStart}
-                              />
-                            </div>
-                            <span>to</span>
-                            <div className="component-item__number">
-                              <div className="component-item__number__icon">
-                                <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeEnd} />
-                                <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeEnd} />
-                              </div>
-                              <input
-                                type="text"
-                                value={inputValueDelayTimeEnd}
-                                onChange={handleInputChangeDelayTimeEnd}
-                              />
-                            </div>
-                          </div>
-                          <div className="inputLike">
-                            <input type="checkbox" name="Like" id="inputLike" />
-                            <p>Like</p>
-                          </div>
-                          <div className="inputComment">
-                            <input type="checkbox" name="Comment" id="inputComment" onChange={handleCheckboxComment} />
-                            <p>Comment</p>
-                          </div>
-                          <div className={`component-item textComment ${isComment ? 'show' : 'hide'}`}>
-                            <textarea
-                              id="textContentComment"
-                              name="textContentComment"
-                              rows="10"
-                              value={textContentComment}
-                              onChange={handleTextareaChangeComment}
-                            ></textarea>
-                            <div className={`placeholder ${textContentComment ? 'hide' : ''}`}>
-                              <p>
-                                <span>1</span>Enter the content here
+                            <div className="component-item delayTime">
+                              <p className="component-item__header">
+                                Delay time<span>(s):</span>
                               </p>
-                              <p>
-                                <span>2</span>Each content/line
-                              </p>
+                              <div className="component-item__number">
+                                <div className="component-item__number__icon">
+                                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeStart} />
+                                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeStart} />
+                                </div>
+                                <input
+                                  type="text"
+                                  value={inputValueDelayTimeStart}
+                                  onChange={handleInputChangeDelayTimeStart}
+                                />
+                              </div>
+                              <span>to</span>
+                              <div className="component-item__number">
+                                <div className="component-item__number__icon">
+                                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeEnd} />
+                                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeEnd} />
+                                </div>
+                                <input
+                                  type="text"
+                                  value={inputValueDelayTimeEnd}
+                                  onChange={handleInputChangeDelayTimeEnd}
+                                />
+                              </div>
+                            </div>
+                            <div className="inputLike">
+                              <input type="checkbox" name="Like" id="inputLike" />
+                              <p>Like</p>
+                            </div>
+                            <div className="inputComment">
+                              <input
+                                type="checkbox"
+                                name="Comment"
+                                id="inputComment"
+                                onChange={handleCheckboxComment}
+                              />
+                              <p>Comment</p>
+                            </div>
+                            <div className={`component-item textComment ${isComment ? 'show' : 'hide'}`}>
+                              <textarea
+                                id="textContentComment"
+                                name="textContentComment"
+                                rows="10"
+                                value={textContentComment}
+                                onChange={handleTextareaChangeComment}
+                              ></textarea>
+                              <div className={`placeholder ${textContentComment ? 'hide' : ''}`}>
+                                <p>
+                                  <span>1</span>Enter the content here
+                                </p>
+                                <p>
+                                  <span>2</span>Each content/line
+                                </p>
+                              </div>
                             </div>
                           </div>
-                        </div>
+                        )}
                       </div>
                     )}
                   </div>

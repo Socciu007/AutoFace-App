@@ -39,7 +39,7 @@ const ProxySettingsPage = () => {
       <div className="-container-proxy">
         <h1 className="-title-profiles">FACEBOOK AUTOMATION</h1>
         <div className="-return-profiles">
-          <span onClick={() => navigate('/proxyHome')}>
+          <span onClick={() => navigate('/')}>
             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
               <circle cx="15" cy="15" r="15" fill="#F5F5F5" />
               <path
@@ -96,18 +96,13 @@ const ProxySettingsPage = () => {
                 </div>
               </div>
             </div>
-            <div className="-list-proxys" style={{ marginLeft: '1.5rem', flex: 1, maxWidth: '514px' }}>
+            <div className="-add-Listproxys" style={{ marginLeft: '1.5rem' }}>
               <p>Add proxy</p>
               <div className="-add-proxys">
                 <div className="-type-proxys">
                   <div className="-type-proxys__nav">
                     <div className="-type-proxys__nav__select">
-                      <select
-                        name="url"
-                        className="-type-proxys__nav__select__details"
-                        // onChange={handleOnchangeTypeProxy}
-                        // value={}
-                      >
+                      <select name="url" className="-type-proxys__nav__select__details">
                         <option value="http">HTTP</option>
                         <option value="socks4">Socks 4</option>
                         <option value="socks5">Socks 5</option>
@@ -153,8 +148,8 @@ const ProxySettingsPage = () => {
                       </div>
                     </div>
                   </div>
-                  <button>ADD</button>
                 </div>
+                <button>ADD</button>
                 <div className="-setting-proxys">
                   <img src={onOption} alt="image-on-option"></img>
                   <p>
@@ -163,7 +158,7 @@ const ProxySettingsPage = () => {
                   </p>
                 </div>
                 <div className="-setting-proxys">
-                  <img src={onOption} alt="image-on-option" width={42} height={20}></img>
+                  <img src={onOption} alt="image-on-option"></img>
 
                   <p>
                     API change: Do not assign a proxy to the next profile if the IP address does not change
