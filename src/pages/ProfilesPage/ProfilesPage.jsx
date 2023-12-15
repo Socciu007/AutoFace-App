@@ -77,22 +77,22 @@ const ProfilesPage = () => {
       title: 'Name',
       dataIndex: 'name',
     },
-    {
-      title: 'Friends',
-      dataIndex: 'friends',
-    },
-    {
-      title: 'Sex',
-      dataIndex: 'sex',
-    },
-    {
-      title: 'Password',
-      dataIndex: 'password',
-    },
-    {
-      title: 'Group',
-      dataIndex: 'group',
-    },
+    // {
+    //   title: 'Friends',
+    //   dataIndex: 'friends',
+    // },
+    // {
+    //   title: 'Sex',
+    //   dataIndex: 'sex',
+    // },
+    // {
+    //   title: 'Password',
+    //   dataIndex: 'password',
+    // },
+    // {
+    //   title: 'Group',
+    //   dataIndex: 'group',
+    // },
     {
       title: 'Status',
       dataIndex: 'status',
@@ -120,7 +120,7 @@ const ProfilesPage = () => {
       render: (proxy) => {
         return (
           <div className="-proxy-profiles">
-            <img src={usaProxy} alt="icon-usa"></img>
+            <img src={usaProxy} alt="icon-usa" width={22.89} height={15}></img>
             <span>{proxy}</span>
           </div>
         );
@@ -132,11 +132,7 @@ const ProfilesPage = () => {
       width: 150,
       editable: true,
       render: (tag) => {
-        return (
-          <>
-            <Input name="tag" value={tag} className="-tag-profiles" onChange={(e) => e.target.value}></Input>
-          </>
-        );
+        return <Input name="tag" value={tag} className="-tag-profiles" onChange={(e) => e.target.value}></Input>;
       },
       sorter: (a, b) => a.tag.length - b.tag.length,
       sortDirections: ['descend'],
@@ -270,7 +266,7 @@ const ProfilesPage = () => {
   return (
     <div
       className="layout-profiles"
-      style={{ opacity: openAddProxy || openDeleteProfile || openScripts || openProfiles ? 0.2 : 1 }}
+      style={{ opacity: openAddProxy || openDeleteProfile || openScripts || openProfiles || openProxyManage ? 0.2 : 1 }}
     >
       <div className="-container-profiles">
         <h1 className="-title-profiles">FACEBOOK AUTOMATION</h1>
@@ -333,6 +329,7 @@ const ProfilesPage = () => {
             <PopupDeleteProfile
               openDeleteProfile={openDeleteProfile}
               handleCloseDelete={handleCloseDelete}
+              handleRemove={handleCloseDelete}
             ></PopupDeleteProfile>
             <div onClick={handleOpenScripts}>
               <button>Run</button>
@@ -364,6 +361,7 @@ const ProfilesPage = () => {
               rowClassName={() => 'editable-row'}
               columns={columns}
               dataSource={dataProfiles}
+              scroll={{ x: 1000 }}
               pagination={false}
             />
           </div>

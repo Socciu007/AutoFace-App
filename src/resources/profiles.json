@@ -8,6 +8,7 @@
     "status": ["Running"],
     "tag": "#Group",
     "folder": "Facebook Ads 1",
+    "source": "Ghosty",
     "browser": "Chorm",
     "notes": "Cookie Added"
   },
@@ -20,6 +21,7 @@
     "status": ["Ready"],
     "tag": "#Private",
     "folder": "Facebook Ads 1",
+    "source": "Ghosty",
     "browser": "Chorm",
     "notes": "Cookie Added"
   },
@@ -30,6 +32,7 @@
     "proxy": "127.0.0.1:40001",
     "status": ["Running"],
     "tag": "#Private",
+    "source": "Foxy",
     "folder": "Seeding 1"
   },
   {
@@ -40,6 +43,7 @@
     "proxy": "127.0.0.1:40001",
     "status": ["Ready"],
     "tag": "#Group",
+    "source": "Ghosty",
     "folder": "Seeding 1"
   },
   {
@@ -49,6 +53,7 @@
     "proxy": "127.0.0.1:40001",
     "status": ["Running"],
     "tag": "#Group",
+    "source": "Foxy",
     "folder": "Mail 1 Brono"
   },
   {
@@ -58,6 +63,7 @@
     "proxy": "127.0.0.1:40001",
     "status": ["Running"],
     "tag": "#Group",
+    "source": "Ghosty-Fake",
     "folder": "Group"
   },
   {
@@ -67,6 +73,7 @@
     "proxy": "127.0.0.1:40001",
     "status": ["Running"],
     "tag": "#Group",
+    "source": "Ghosty",
     "folder": "Group"
   },
   {
@@ -76,6 +83,7 @@
     "proxy": "127.0.0.1:40001",
     "status": ["Running"],
     "tag": "#Group",
+    "source": "Ghosty",
     "folder": "Group"
   },
   {
@@ -85,6 +93,7 @@
     "proxy": "127.0.0.1:40001",
     "status": ["Running"],
     "tag": "#Group",
+    "source": "Ghosty",
     "folder": "Group"
   }
 ]

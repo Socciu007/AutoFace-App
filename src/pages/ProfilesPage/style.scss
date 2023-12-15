@@ -1,3 +1,15 @@
+@font-face {
+  font-family: 'GoogleSans';
+  font-style: normal;
+  font-weight: normal;
+  src: local('GoogleSans'), url('./assets/fonts/GoogleSansTTF/GoogleSans-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'GoogleSansBold';
+  font-style: normal;
+  font-weight: 700;
+  src: local('GoogleSans'), url('../../assets/fonts/GoogleSansTTF/GoogleSans-Bold.ttf') format('truetype');
+}
 .layout-profiles {
   min-width: 1280px;
   min-height: 720px;
@@ -29,20 +41,6 @@
     .-subnav-profiles {
       display: flex;
       gap: 23px;
-      // .-wrapper-option-profiles {
-      //    display: flex;
-      //    align-items: center;
-      //    gap: 22px;
-      //    .-option-profiles {
-      //       width: 40px;
-      //       height: 40px;
-      //       background-color: #F5F5F5;
-      //       border-radius: 50%;
-      //       display: grid;
-      //       place-items: center;
-      //       cursor: pointer;
-      //    }
-      // }
     }
     .-btn-profiles {
       display: flex;
@@ -89,8 +87,20 @@
       & th.ant-table-cell {
         font-size: 15px;
         font-weight: 700;
+        line-height: normal;
         color: rgba(1, 22, 43, 0.5);
         background-color: transparent;
+        .ant-table-column-sorters {
+          display: inline;
+          span.ant-table-column-title {
+            margin-right: 5px;
+          }
+          span.ant-table-column-sorter-inner {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+          }
+        }
       }
       & td.ant-table-cell {
         background-color: transparent;
@@ -99,10 +109,9 @@
     .scrollable-container {
       height: 100%;
       overflow-y: auto;
-      /* overflow-x: hidden; */
       border-radius: 15px;
       background: #fff;
-      /* box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25); */
+      box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
       padding-right: 6px;
       scrollbar-width: thin;
     }
@@ -125,21 +134,18 @@
   }
 }
 .-proxy-profiles {
+  align-items: center;
   display: inline-flex;
   gap: 10px;
-  img {
-    padding: 1px;
-    border-radius: 6px;
-  }
 }
 .-tag-profiles {
+  font-family: 'GoogleSans';
   padding: 0;
   border: none;
-  max-width: fit-content;
+  // max-width: fit-content;
   background: transparent;
   color: #2a86ff;
   font-size: 15px;
-  font-style: normal;
   font-weight: 400;
   line-height: normal;
   cursor: pointer;
