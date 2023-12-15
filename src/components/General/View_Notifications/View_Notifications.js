@@ -1,11 +1,11 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from 'react';
 export function handleInputChange(event, setInputValue) {
-  // Nếu giá trị mới là chuỗi rỗng, thiết lập về giá trị mặc định hoặc giá trị mong muốn
-  const newValue = event.target.value === '' ? '' : parseInt(event.target.value, 10);
+  const inputValue = event.target.value;
+  const isNumber = /^\d*$/.test(inputValue); // Check if the input is a number
 
-  // Kiểm tra xem có phải là số hay không
-  if (!isNaN(newValue)) {
+  if (isNumber && inputValue.length < 6) {
+    const newValue = inputValue === '' ? '' : parseInt(inputValue, 10);
     setInputValue(newValue);
   }
 }
