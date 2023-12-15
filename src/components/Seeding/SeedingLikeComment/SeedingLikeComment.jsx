@@ -3,9 +3,11 @@ import up from '../../../assets/pictures/icon-Increase.svg';
 import down from '../../../assets/pictures/icon-Descrease.svg';
 import drag from '../../../assets/pictures/icon-drag.svg';
 import deleted from '../../../assets/pictures/icon-delete.svg';
+import back from '../../../assets/icon/icon-back.svg';
+
 import './style.scss';
 
-const SeedingLikeComment = () => {
+const SeedingLikeComment = ({ onGoBackClick }) => {
   const [likeComment, setLikeComment] = useState({
     viewTimeStart: 3,
     viewTimeEnd: 3,
@@ -20,6 +22,8 @@ const SeedingLikeComment = () => {
     tagFriendStart: 0,
     tagFriendEnd: 0,
   });
+  const [openWriteText, setOpenWriteText] = useState(false);
+  const [openWritePostID, setOpenWritePostID] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [isFileSelected, setIsFileSelected] = useState(false);
   const handleFileChange = (event) => {
@@ -39,6 +43,26 @@ const SeedingLikeComment = () => {
     if (!isFileSelected) {
       document.getElementById('dragVideoOrPhotoInput').click();
     }
+  };
+  //Post ID
+  const handleWritePostID = () => {
+    setOpenWritePostID(true);
+  };
+  const handleOnchangePostID = (e) => {
+    setLikeComment({
+      ...likeComment,
+      [e.target.name]: e.target.value,
+    });
+  };
+  //Post ID
+  const handleWriteText = () => {
+    setOpenWriteText(true);
+  };
+  const handleOnchangeText = (e) => {
+    setLikeComment({
+      ...likeComment,
+      [e.target.name]: e.target.value,
+    });
   };
   //Post view time
   const handleUpViewTimeStart = () => {
@@ -211,16 +235,7 @@ const SeedingLikeComment = () => {
         <div className="scrollable-container">
           <div className="-seeding-wrapper-like">
             <div className="-back-home">
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
-                <circle cx="15" cy="15" r="15" fill="#F5F5F5" />
-                <path
-                  d="M14.25 20.25L9 15.75M9 15.75L14.25 11.25M9 15.75L20.625 15.75"
-                  stroke="#01162B"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <img src={back} alt="Back button" onClick={() => onGoBackClick(true)} />
               <p>Boost like, comment</p>
             </div>
             <div className="-option-boost-like">
@@ -312,13 +327,21 @@ const SeedingLikeComment = () => {
                 Post ID: <span style={{ float: 'inline-end' }}>(0)</span>
               </p>
               <div className="-option-boost-comment__wrapper">
-                <textarea name="textContent" style={{ width: '501px' }} value={likeComment.postID} onClick={handleOpen }></textarea>
+                <textarea
+                  name="postID"
+                  style={{ width: '501px' }}
+                  value={likeComment.postID}
+                  onClick={handleWritePostID}
+                  onChange={handleOnchangePostID}
+                ></textarea>
                 <div className="-option-boost-comment__wrapper__content">
                   <p>
-                    <span style={{ paddingRight: '7%' }}>1</span><div style={{display: openWriteText ? 'none' : 'inline'}}>Enter the ID here</div>
+                    <span style={{ paddingRight: '7%' }}>1</span>
+                    <div style={{ display: openWritePostID ? 'none' : 'inline' }}>Enter the ID here</div>
                   </p>
                   <p>
-                    <span style={{ paddingRight: '6%' }}>2</span><div style={{display: openWriteText ? 'none' : 'inline'}}>Each ID/line</div>
+                    <span style={{ paddingRight: '6%' }}>2</span>
+                    <div style={{ display: openWritePostID ? 'none' : 'inline' }}>Each ID/line</div>
                   </p>
                 </div>
               </div>
@@ -344,13 +367,21 @@ const SeedingLikeComment = () => {
             <div className="-option-boost-like -option-boost-comment">
               <p>Text</p>
               <div className="-option-boost-comment__wrapper">
-                <textarea name="textContent" style={{ width: '501px' }} value={likeComment.textComment}></textarea>
+                <textarea
+                  name="textComment"
+                  style={{ width: '501px' }}
+                  value={likeComment.textComment}
+                  onClick={handleWriteText}
+                  onChange={handleOnchangeText}
+                ></textarea>
                 <div className="-option-boost-comment__wrapper__content">
                   <p>
-                    <span style={{ paddingRight: '7%' }}>1</span>Enter the content here
+                    <span style={{ paddingRight: '7%' }}>1</span>
+                    <div style={{ display: openWriteText ? 'none' : 'inline' }}>Enter the content here</div>
                   </p>
                   <p>
-                    <span style={{ paddingRight: '6%' }}>2</span>Each content/line
+                    <span style={{ paddingRight: '6%' }}>2</span>
+                    <div style={{ display: openWriteText ? 'none' : 'inline' }}>Each content/line</div>
                   </p>
                 </div>
               </div>

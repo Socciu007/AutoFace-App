@@ -2,8 +2,11 @@ import React, { useEffect, useState } from 'react';
 import './style.scss';
 import Loading from '../../components/loading/Loading.jsx';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import WatchVideo from '../../components/WacthVideo/WatchVideo';
 =======
+=======
+>>>>>>> be9e47477442178c698b54ae311a87f8f6f28ba7
 import WatchVideo from '../../components/General/WatchVideo/WatchVideo.jsx';
 import WatchStory from '../../components/General/WatchStory/WatchStory.jsx';
 import Newsfeed from '../../components/General/Newsfeed/Newsfeed.jsx';
@@ -19,7 +22,10 @@ import JoinGroup from '../../components/Group/Join_Group/JoinGroup.jsx';
 import LeaveGroup from '../../components/Group/Leave_Group/LeaveGroup.jsx';
 import Invite from '../../components/Group/Invite/Invite.jsx';
 import CreatePostGroup from '../../components/Group/Create_Post/CreatePost.jsx';
+<<<<<<< HEAD
 >>>>>>> tienvm
+=======
+>>>>>>> be9e47477442178c698b54ae311a87f8f6f28ba7
 import i18n from 'i18next';
 import { useTranslation } from 'react-i18next';
 const Dashboard = () => {
@@ -32,8 +38,11 @@ const Dashboard = () => {
     <>
       <div className="dashboard ">
 <<<<<<< HEAD
+<<<<<<< HEAD
         <WatchVideo></WatchVideo>
 =======
+=======
+>>>>>>> be9e47477442178c698b54ae311a87f8f6f28ba7
         {/* <WatchVideo></WatchVideo> */}
         <WatchStory></WatchStory>
         {/* <Newsfeed></Newsfeed>
@@ -49,7 +58,10 @@ const Dashboard = () => {
         <LeaveGroup></LeaveGroup>
         <Invite></Invite>
         <CreatePostGroup></CreatePostGroup> */}
+<<<<<<< HEAD
 >>>>>>> tienvm
+=======
+>>>>>>> be9e47477442178c698b54ae311a87f8f6f28ba7
       </div>
     </>
   );

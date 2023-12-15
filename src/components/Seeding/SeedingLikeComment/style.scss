@@ -9,18 +9,17 @@
   background: #fff;
   box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
   .-seeding-wrapper-like {
-    margin-left: 21px;
-    margin-right: 14px;
+    padding: 15px;
+
     .-back-home {
       display: flex;
-      margin-top: 22px;
       p {
         color: #01162b;
         font-size: 15px;
         font-weight: 700;
         line-height: 30px;
       }
-      svg {
+      img {
         width: 30px;
         height: 30px;
         flex-shrink: 0;
@@ -119,7 +118,9 @@
           border: 1px dashed rgba(1, 22, 43, 0.2);
           background: #f5f5f5;
           font-size: 15px;
-          padding: 3% 4%;
+          line-height: 30px;
+          color: #01162b;
+          padding: 1% 10%;
         }
         &__content {
           position: absolute;
@@ -200,7 +201,6 @@
       display: block;
       .PostContent {
         margin-top: 10px;
-        // width: 100%;
         border-radius: 5px;
         background: #f5f5f5;
       }
@@ -210,16 +210,13 @@
         align-items: center;
         .PostType,
         .TagType {
-          top: 0;
-          width: 100%;
+          width: 95%;
           border-radius: 5px;
           background: var(--bg-input);
           height: 40px;
           font-size: 15px;
-          padding: 0 3%;
-          appearance: none;
-          -webkit-appearance: none;
-          -moz-appearance: none;
+          margin: 0 3%;
+          // -moz-appearance: none;
           border: 0;
           option {
             font-weight: 400;
@@ -239,11 +236,9 @@
   .scrollable-container {
     height: 100%;
     overflow-y: auto;
-    /* overflow-x: hidden; */
     border-radius: 15px;
     background: #fff;
-    /* box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25); */
-    padding: 0px 8px;
+    // padding: 0px 15px;
     scrollbar-width: thin;
   }
   .scrollable-container::-webkit-scrollbar {

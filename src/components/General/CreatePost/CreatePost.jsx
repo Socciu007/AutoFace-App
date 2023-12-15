@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-unused-vars
-import React, { useEffect, useState } from 'react';
+// import React, { useEffect, useState } from 'react';
 import './style.scss';
 import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
@@ -71,7 +70,7 @@ const CreatePost = ({ onGoBackClick }) => {
 
   const { textContent, handleTextareaChange } = TextBackGround();
 
-  const { handleIconClick, handleFileChange, selectedFile, handleDeleteButtonClick } = URLImg();
+  const { files, getRootProps, getInputProps, handleDeleteButtonClick } = URLImg();
   return (
     <div className="createPost">
       <div className="component_container">
@@ -183,25 +182,23 @@ const CreatePost = ({ onGoBackClick }) => {
                         <input type="text" value={inputValuePhotoVideoEnd} onChange={handleInputChangePhotoVideoEnd} />
                       </div>
                     </div>
-                    {selectedFile ? (
-                      <div className={`folderPhoto`}>
-                        <p>
-                          <span>Folder:</span> {selectedFile?.name}
-                        </p>
-                        <img src={DeleteButton} alt="Delete Button" onClick={handleDeleteButtonClick} />
+                    {files.length === 0 ? (
+                      <div {...getRootProps({ className: 'component-item dragVideoOrPhoto' })}>
+                        <input {...getInputProps()} />
+                        <img className="mx-auto h-40" src={DragButton} alt="addfile" />
+                        <p>Drag the photo/video folder here</p>
                       </div>
                     ) : (
-                      <div className={`component-item dragVideoOrPhoto`}>
-                        <img src={DragButton} alt="Increase icon" onClick={handleIconClick} />
-                        <p>Drag the photo/video folder here</p>
-                        <input
-                          type="file"
-                          style={{ display: 'none' }}
-                          name="dragVideoOrPhotoInput"
-                          id="dragVideoOrPhotoInput"
-                          className="dragVideoOrPhotoInput"
-                          onChange={handleFileChange}
-                        />
+                      <div className={`folderPhoto`}>
+                        <div className="URLImg">
+                          <span style={{ opacity: '0.5' }}>Folder:</span>
+                          <div>
+                            {files.map((fileName, index) => (
+                              <span key={index}>{fileName}</span>
+                            ))}
+                          </div>
+                        </div>
+                        <img src={DeleteButton} alt="Delete Button" onClick={handleDeleteButtonClick} />
                       </div>
                     )}
                     <div className="component-item__header">

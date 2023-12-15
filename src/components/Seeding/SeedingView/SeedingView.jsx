@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import up from '../../../assets/pictures/icon-Increase.svg';
 import down from '../../../assets/pictures/icon-Descrease.svg';
-const SeedingView = () => {
+import back from '../../../assets/icon/icon-back.svg';
+
+const SeedingView = ({ onGoBackClick }) => {
   const [videoView, setVideoView] = useState({
     viewTimeStart: 30,
     viewTimeEnd: 50,
+    videoID: '',
   });
   const [openText, setOpenText] = useState(false);
   //
@@ -41,22 +44,20 @@ const SeedingView = () => {
     });
   };
 
+  const handleOnchangeVideoID = (e) => {
+    setVideoView({
+      ...videoView,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   return (
     <div className="-layout-component">
       <div className="-seeding-like">
         <div className="scrollable-container">
           <div className="-seeding-wrapper-like">
             <div className="-back-home">
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
-                <circle cx="15" cy="15" r="15" fill="#F5F5F5" />
-                <path
-                  d="M14.25 20.25L9 15.75M9 15.75L14.25 11.25M9 15.75L20.625 15.75"
-                  stroke="#01162B"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              <img src={back} alt="Back Button" onClick={() => onGoBackClick(true)} />
               <p>Boost followers</p>
             </div>
             <div className="-option-boost-like">
@@ -93,21 +94,20 @@ const SeedingView = () => {
               </p>
               <div className="-option-boost-comment__wrapper">
                 <textarea
-                  name="textContent"
+                  name="videoID"
                   style={{ width: '501px' }}
-                  // defaultValue={"Video ID"}
-                  // value={}
+                  value={videoView.videoID}
                   onClick={() => setOpenText(true)}
+                  onChange={handleOnchangeVideoID}
                 ></textarea>
-                <div
-                  className="-option-boost-comment__wrapper__content"
-                  style={{ display: openText ? 'none' : 'block' }}
-                >
+                <div className="-option-boost-comment__wrapper__content">
                   <p>
-                    <span style={{ paddingRight: '7%' }}>1</span>Enter the ID here
+                    <span style={{ paddingRight: '7%' }}>1</span>
+                    <div style={{ display: openText ? 'none' : 'inline' }}>Enter the ID here</div>
                   </p>
                   <p>
-                    <span style={{ paddingRight: '6%' }}>2</span>Each ID/line
+                    <span style={{ paddingRight: '6%' }}>2</span>
+                    <div style={{ display: openText ? 'none' : 'inline' }}>Each ID/line</div>
                   </p>
                 </div>
               </div>

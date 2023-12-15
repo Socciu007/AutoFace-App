@@ -1,6 +1,15 @@
-import React, { useState, useRef, useCallback } from 'react';
-import ReactFlow, { ReactFlowProvider, addEdge, useNodesState, useEdgesState, Controls, MiniMap } from 'reactflow';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
+import ReactFlow, {
+  ReactFlowProvider,
+  addEdge,
+  useNodesState,
+  useEdgesState,
+  Controls,
+  MiniMap,
+  MarkerType,
+} from 'reactflow';
 import 'reactflow/dist/style.css';
+
 import startingPointNode from '../nodes/startingPoint';
 import watchStoryNode from '../nodes/watchStory';
 import watchVideoNode from '../nodes/watchVideo';
@@ -19,6 +28,7 @@ import inviteGroupNode from '../nodes/invite';
 import likeCommentNode from '../nodes/likeComment';
 import followerNode from '../nodes/follower';
 import viewVideoNode from '../nodes/viewVideo';
+import createPostGroupNode from '../nodes/createPostGroup';
 const initialNodes = [
   {
     id: '1',
@@ -43,6 +53,7 @@ const nodeTypes = {
   joinGroup: joinGroupNode,
   leftGroup: leftGroupNode,
   inviteGroup: inviteGroupNode,
+  createPostGroup: createPostGroupNode,
   likeComment: likeCommentNode,
   follower: followerNode,
   viewVideo: viewVideoNode,
@@ -66,19 +77,41 @@ const nodeMessage = {
   follower: 'follower',
   viewVideo: 'viewVideo',
 };
+
 let id = 0;
 const getId = () => `dndnode_${id++}`;
 
 const DnDFlow = ({ onMessageChange }) => {
   const reactFlowWrapper = useRef(null);
-  const handleNodeButtonClick = (type) => {
-    onMessageChange(type);
-  };
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
-  const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
+  // click edit button in node (listen event from child node)
+  const handleNodeButtonClick = (type) => {
+    onMessageChange(type);
+  };
+  const handleDeleteNodeClick = (idToDelete) => {
+    setNodes((prevNodes) => prevNodes.filter((node) => node.id !== idToDelete));
+  };
+
+  const onConnect = useCallback((params) => {
+    const newEdge = {
+      ...params,
+      markerEnd: {
+        type: MarkerType.ArrowClosed,
+        width: 10,
+        height: 10,
+        color: '#333',
+      },
+      style: {
+        strokeWidth: 2,
+        stroke: '#333',
+      },
+    };
+
+    setEdges((eds) => addEdge(newEdge, eds)), [];
+  }, []);
 
   const onDragOver = useCallback((event) => {
     event.preventDefault();
@@ -110,9 +143,10 @@ const DnDFlow = ({ onMessageChange }) => {
         data: {
           label: `${type} node`,
           onButtonClick: () => handleNodeButtonClick(nodeMessage[type]),
+          onDeleteNode: handleDeleteNodeClick,
         },
+        dragging: false,
       };
-
       setNodes((nds) => nds.concat(newNode));
     },
     [reactFlowInstance, handleNodeButtonClick],

@@ -14,7 +14,6 @@ const PopupProfile = ({
   dataProfiles,
   openProfiles,
   handleCloseProfiles,
-
   handleFilterFolder,
 }) => {
   // rowSelection object indicates the need for row selection

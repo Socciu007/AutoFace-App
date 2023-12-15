@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import DnDFlow from '../../components/drag/drag';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Dialog from '@mui/material/Dialog';
 import back from '../../assets/icon/icon-back.svg';
 import search from '../../assets/icon/icon-search.svg';
 import reload from '../../assets/icon/icon-reload.svg';
@@ -11,8 +12,9 @@ import add from '../../assets/icon/icon-add.svg';
 import pin from '../../assets/icon/icon-pin.svg';
 import option from '../../assets/icon/icon-options.svg';
 import newNote from '../../assets/icon/icon-newNote.svg';
-import edit from '../../assets/icon/icon-edit.svg';
+import edit from '../../assets/icon/icon-editWhite.svg';
 import close from '../../assets/icon/icon-close.svg';
+
 const ScriptManager = () => {
   const navigate = useNavigate();
 
@@ -34,7 +36,34 @@ const ScriptManager = () => {
   const liStyle = {
     fontFamily: 'GOOGLESANS',
   };
-  // State for
+  const makeCopy = {
+    position: 'fixed',
+    top: '40%',
+    left: '35%',
+    borderRadius: '15px',
+    background: '#fff',
+    boxShadow: '0px 4px 10px 0px rgba(8, 35, 106, 0.25)',
+    width: '636px',
+    maxWidth: '636px',
+    flexShrink: '0',
+    padding: '25px',
+    zIndex: '99999',
+    margin: '0',
+  };
+  const dialog_delete = {
+    position: 'fixed',
+    top: '40%',
+    left: '35%',
+    borderRadius: '15px',
+    background: '#fff',
+    boxShadow: '0px 4px 10px 0px rgba(8, 35, 106, 0.25)',
+    width: '636px',
+    maxWidth: '636px',
+    flexShrink: '0',
+    margin: '0',
+    padding: '25px 25px 35px 25px',
+  };
+
   const [isCategoryActive, setCategoryActive] = useState(true);
   const [isScriptActive, setScriptActive] = useState(false);
   const [contentArray, setContentArray] = useState(
@@ -48,6 +77,14 @@ const ScriptManager = () => {
   const handleAddClick = () => {
     navigate('/create');
   };
+  // Handle the button back
+  const handleBackClick = () => {
+    navigate('/');
+  };
+  // Handle the button edit
+  const handleEditClick = () => {
+    navigate('/edit');
+  };
   // Handle category button
   const handleButtonClick = () => {
     // Toggle the active state
@@ -57,23 +94,41 @@ const ScriptManager = () => {
   const handleScriptClick = (button) => {
     setScriptActive(button === isCategoryActive ? null : button);
   };
-  // Handle option in menu
-  const handleOptionClick = (className) => {
-    const optionElement = document.querySelector(`.${className}`);
-    setAnchorEl(false);
-    if (optionElement) {
-      const currentDisplay = getComputedStyle(optionElement).display;
-      optionElement.style.display = currentDisplay === 'none' ? 'block' : 'none';
+
+  const openCopy = Boolean(anchorEl);
+  const descriptionElementRef = React.useRef(null);
+  React.useEffect(() => {
+    if (openCopy) {
+      const { current: descriptionElement } = descriptionElementRef;
+      if (descriptionElement !== null) {
+        descriptionElement.focus();
+      }
     }
-  };
+  }, [openCopy]);
+
+  const [makeCopyDialogOpen, setMakeCopyDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
   // Close dialog
   const handleCloseDialog = (className) => {
-    const closeButton = document.querySelector(`.${className}`);
-    if (closeButton) {
-      const closeStyle = getComputedStyle(closeButton).display;
-      closeButton.style.display = closeStyle === 'none' ? 'block' : 'none';
+    // Close logic for each dialog type
+    if (className === 'makeCopy') {
+      setMakeCopyDialogOpen(false);
+    } else if (className === 'delete') {
+      setDeleteDialogOpen(false);
     }
   };
+
+  const handleOptionClick = (className) => {
+    // Set the state to open the corresponding dialog
+    if (className === 'makeCopy') {
+      setMakeCopyDialogOpen(true);
+    } else if (className === 'delete') {
+      setDeleteDialogOpen(true);
+    }
+    handleClose();
+  };
+
   const handleTogglePin = (scriptId) => {
     const index = contentArray.findIndex((e) => e.id == scriptId);
 
@@ -90,11 +145,11 @@ const ScriptManager = () => {
   const handleClick = (event, index) => {
     setAnchorEl(event.currentTarget);
     setIndexMenu(index);
-    console.log(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   return (
     <>
       <div className="wrapper">
@@ -103,7 +158,7 @@ const ScriptManager = () => {
             <h1>FACEBOOK AUTOMATION</h1>
             <div className="title">
               <button>
-                <img src={back} alt="" />
+                <img src={back} alt="" onClick={handleBackClick} />
               </button>
               <p>Script Manager</p>
             </div>
@@ -172,7 +227,7 @@ const ScriptManager = () => {
                             <MenuItem id={item.id} onClick={() => handleTogglePin(item.id)}>
                               {item.isPin ? 'Unpin' : 'Pin'}
                             </MenuItem>
-                            <MenuItem onClick={handleClose}>Edit</MenuItem>
+                            <MenuItem onClick={handleEditClick}>Edit</MenuItem>
                             <MenuItem onClick={() => handleOptionClick('makeCopy')}>Make a copy</MenuItem>
                             <MenuItem onClick={handleClose}>Rename</MenuItem>
                             <MenuItem onClick={() => handleOptionClick('delete')}>Delete</MenuItem>
@@ -191,7 +246,7 @@ const ScriptManager = () => {
                   <img src={newNote} alt="New note" />
                   <input type="text" placeholder="New note" />
                 </div>
-                <button className="editBtn">
+                <button className="editBtn" onClick={handleEditClick}>
                   <img src={edit} alt="Edit" />
                   EDIT
                 </button>
@@ -201,26 +256,47 @@ const ScriptManager = () => {
               </div>
             </div>
           </div>
-          <div className="makeCopy">
-            <div className="makeCopy__top">
-              <h1>MAKE A COPY</h1>
-              <button className="close" onClick={() => handleCloseDialog('makeCopy')}>
-                <img src={close} alt="Close" />
-              </button>
+          <Dialog
+            sx={{
+              '& .MuiPaper-root': makeCopy,
+            }}
+            open={makeCopyDialogOpen}
+            onClose={() => handleCloseDialog('makeCopy')}
+            aria-labelledby="scroll-dialog-title"
+            aria-describedby="scroll-dialog-description"
+          >
+            <div className="makeCopy">
+              <div className="makeCopy__top">
+                <p>MAKE A COPY</p>
+                <button className="close" onClick={() => handleCloseDialog('makeCopy')}>
+                  <img src={close} alt="Close" />
+                </button>
+              </div>
+              <div className="makeCopy__bottom">
+                <input type="text" placeholder="Enter name here..." />
+                <button>Create</button>
+              </div>
             </div>
-            <div>
-              <input type="text" placeholder="Enter name here..." />
-              <button>Create</button>
+          </Dialog>
+
+          <Dialog
+            open={deleteDialogOpen}
+            onClose={() => handleCloseDialog('delete')}
+            aria-labelledby="scroll-dialog-title"
+            aria-describedby="scroll-dialog-description"
+            sx={{
+              '& .MuiPaper-root': dialog_delete,
+            }}
+          >
+            <div className="dialog_delete">
+              <h1>DELETE</h1>
+              <p>Are you sure to delete this script?</p>
+              <div>
+                <button onClick={() => handleCloseDialog('delete')}>Cancel</button>
+                <button className="deleteBtn">Delete</button>
+              </div>
             </div>
-          </div>
-          <div className="delete">
-            <h1>DELETE</h1>
-            <p>Are you sure to delete this script?</p>
-            <div>
-              <button onClick={() => handleCloseDialog('delete')}>Cancel</button>
-              <button className="deleteBtn">Delete</button>
-            </div>
-          </div>
+          </Dialog>
         </div>
       </div>
     </>

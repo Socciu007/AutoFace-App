@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
 export function handleInputChange(event, setInputValue) {
-  // Nếu giá trị mới là chuỗi rỗng, thiết lập về giá trị mặc định hoặc giá trị mong muốn
-  const newValue = event.target.value === '' ? '' : parseInt(event.target.value, 10);
+  const inputValue = event.target.value;
+  const isNumber = /^\d*$/.test(inputValue); // Check if the input is a number
 
-  // Kiểm tra xem có phải là số hay không
-  if (!isNaN(newValue)) {
+  if (isNumber && inputValue.length < 6) {
+    const newValue = inputValue === '' ? '' : parseInt(inputValue, 10);
     setInputValue(newValue);
   }
 }
@@ -183,25 +184,27 @@ export function TextBackGround() {
 }
 
 export function URLImg() {
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [files, setFiles] = useState([]);
+
+  const { getRootProps, getInputProps } = useDropzone({
+    maxFiles: 2,
+    accept: {
+      'image/png': ['.png', '.jpg', '.jpeg'],
+    },
+    onDrop: (acceptedFiles) => {
+      const newFiles = acceptedFiles.map((file) => file.name);
+      setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+    },
+  });
+
   const handleDeleteButtonClick = () => {
-    setSelectedFile(null);
-  };
-  const handleIconClick = () => {
-    document.getElementById('dragVideoOrPhotoInput').click();
-  };
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setSelectedFile(file);
-      event.target.value = ''; // Clear the input value
-    }
+    setFiles([]);
   };
 
   return {
-    handleIconClick,
-    handleFileChange,
-    selectedFile,
+    files,
+    getRootProps,
+    getInputProps,
     handleDeleteButtonClick,
   };
 }

@@ -1,100 +1,90 @@
 [
-    {
-      "key": "1",
-      "profile": "tienvm1",
-      "uid": "1001228343452345",
-      "name": "John Brown",
-      "proxy": "127.0.0.1:40001",
-      "status": ["Running"],
-      "tag": "#Group",
-      "folder": "Facebook Ads 1",
-      "browser": "Chorm",
-      "notes": "Cookie Added"
-    },
-    {
-      "key": "2",
-      "name": "John Brown",
-      "profile": "tienvm2",
-      "uid": "1001228343452345",
-      "proxy": "127.0.0.1:40001",
-      "status": ["Ready"],
-      "tag": "#Private",
-      "folder": "Facebook Ads 1",
-      "browser": "Chorm",
-      "notes": "Cookie Added"
-    },
-    {
-      "key": "3",
-      "name": "John Brown",
-      "proxy": "127.0.0.1:40001",
-      "status": ["Running"],
-      "tag": "#Private",
-      "folder": "Seeding 1"
-    },
-    {
-      "key": "4",
-      "name": "John Brown",
-      "profile": "tienvm",
-      "uid": "1001228343452345",
-      "proxy": "127.0.0.1:40001",
-      "status": ["Ready"],
-      "tag": "#Group",
-      "folder": "Seeding 1"
-    },
-    {
-        "key": "5",
-        "name": "John Brown",
-        "proxy": "127.0.0.1:40001",
-        "status": ["Running"],
-        "tag": "#Group",
-        "folder": "Mail 1 Brono"
-    },
-    {
-        "key": "6",
-        "name": "John Brown",
-        "proxy": "127.0.0.1:40001",
-        "status": ["Running"],
-        "tag": "#Group",
-        "folder": "Group"
-      },
-      {
-        "key": "7",
-        "name": "John Brown",
-        "proxy": "127.0.0.1:40001",
-        "status": ["Running"],
-        "tag": "#Group",
-        "folder": "Group"
-      },
-      {
-        "key": "8",
-        "name": "John Brown",
-        "proxy": "127.0.0.1:40001",
-        "status": ["Running"],
-        "tag": "#Group",
-        "folder": "Group"
-      },
-      {
-        "key": "9",
-        "name": "John Brown",
-        "proxy": "127.0.0.1:40001",
-        "status": ["Running"],
-        "tag": "#Group",
-        "folder": "Group"
-      },
-      {
-        "key": "10",
-        "name": "John Brown",
-        "proxy": "127.0.0.1:40001",
-        "status": ["Running"],
-        "tag": "#Group",
-        "folder": "Group"
-      },
-      {
-        "key": "11",
-        "name": "John Brown",
-        "proxy": "127.0.0.1:40001",
-        "status": ["Running"],
-        "tag": "#Group",
-        "folder": "Group"
-      }
-  ]
+  {
+    "key": "1",
+    "profile": "tienvm1",
+    "uid": "1001228343452345",
+    "name": "John Brown",
+    "proxy": "127.0.0.1:40001",
+    "status": ["Running"],
+    "tag": "#Group",
+    "folder": "Facebook Ads 1",
+    "browser": "Chorm",
+    "notes": "Cookie Added"
+  },
+  {
+    "key": "2",
+    "name": "John Brown",
+    "profile": "tienvm2",
+    "uid": "1001228343452345",
+    "proxy": "127.0.0.1:40001",
+    "status": ["Ready"],
+    "tag": "#Private",
+    "folder": "Facebook Ads 1",
+    "browser": "Chorm",
+    "notes": "Cookie Added"
+  },
+  {
+    "key": "3",
+    "profile": "test",
+    "name": "John Brown",
+    "proxy": "127.0.0.1:40001",
+    "status": ["Running"],
+    "tag": "#Private",
+    "folder": "Seeding 1"
+  },
+  {
+    "key": "4",
+    "name": "John Brown",
+    "profile": "test1",
+    "uid": "1001228343452345",
+    "proxy": "127.0.0.1:40001",
+    "status": ["Ready"],
+    "tag": "#Group",
+    "folder": "Seeding 1"
+  },
+  {
+    "key": "5",
+    "profile": "test2",
+    "name": "John Brown",
+    "proxy": "127.0.0.1:40001",
+    "status": ["Running"],
+    "tag": "#Group",
+    "folder": "Mail 1 Brono"
+  },
+  {
+    "key": "6",
+    "name": "John Brown",
+    "profile": "test3",
+    "proxy": "127.0.0.1:40001",
+    "status": ["Running"],
+    "tag": "#Group",
+    "folder": "Group"
+  },
+  {
+    "key": "7",
+    "name": "John Brown",
+    "profile": "test4",
+    "proxy": "127.0.0.1:40001",
+    "status": ["Running"],
+    "tag": "#Group",
+    "folder": "Group"
+  },
+  {
+    "key": "8",
+    "name": "John Brown",
+    "profile": "test5",
+    "proxy": "127.0.0.1:40001",
+    "status": ["Running"],
+    "tag": "#Group",
+    "folder": "Group"
+  },
+  {
+    "key": "9",
+    "name": "John Brown",
+    "profile": "test6",
+    "proxy": "127.0.0.1:40001",
+    "status": ["Running"],
+    "tag": "#Group",
+    "folder": "Group"
+  }
+]

@@ -13,6 +13,11 @@ import addProxy from '../../assets/pictures/icon-addProxy.png';
 import deleted from '../../assets/pictures/icon-delete.svg';
 import yourScript from '../../assets/pictures/icon-yourScripts.svg';
 import pin from '../../assets/pictures/icon-pin.svg';
+import shareIcon from '../../assets/pictures/icon-share.svg';
+import iosIcon from '../../assets/pictures/icon-ios.png';
+import linuxIcon from '../../assets/pictures/icon-linux.png';
+import windowIcon from '../../assets/pictures/icon-window.svg';
+import androidIcon from '../../assets/pictures/icon-android.png';
 import profiles from '../../resources/profiles.json';
 import scripts from '../../resources/scripts.json';
 import { EditableCell, EditableRow } from '../../components/EditableTable/EditableTable';
@@ -49,6 +54,19 @@ const ProfilesPage = () => {
     {
       title: 'Profile',
       dataIndex: 'profile',
+      render: (profile) => {
+        return (
+          <div className="-text-profile">
+            <span>{profile}</span>
+            {profile === 'tienvm1' && <img src={pin} alt="icon-pin"></img>}
+            {profile && <img src={shareIcon} alt="icon-share"></img>}
+            {profile === 'test' && <img src={windowIcon} alt="icon-window"></img>}
+            {profile === 'test1' && <img src={iosIcon} alt="icon-ios" width={15} height={14}></img>}
+            {profile === 'test2' && <img src={linuxIcon} alt="icon-linux" width={11.04} height={13}></img>}
+            {profile === 'tienvm2' && <img src={androidIcon} alt="icon-android" width={13} height={13}></img>}
+          </div>
+        );
+      },
       sorter: (a, b) => a.profile.length - b.profile.length,
     },
     {
@@ -58,6 +76,22 @@ const ProfilesPage = () => {
     {
       title: 'Name',
       dataIndex: 'name',
+    },
+    {
+      title: 'Friends',
+      dataIndex: 'friends',
+    },
+    {
+      title: 'Sex',
+      dataIndex: 'sex',
+    },
+    {
+      title: 'Password',
+      dataIndex: 'password',
+    },
+    {
+      title: 'Group',
+      dataIndex: 'group',
     },
     {
       title: 'Status',
@@ -83,14 +117,12 @@ const ProfilesPage = () => {
     {
       title: 'Proxy',
       dataIndex: 'proxy',
-      render: (profile) => {
+      render: (proxy) => {
         return (
-          <>
-            <div className="-proxy-profiles">
-              <img src={usaProxy} alt="icon-usa"></img>
-              <span>{profile}</span>
-            </div>
-          </>
+          <div className="-proxy-profiles">
+            <img src={usaProxy} alt="icon-usa"></img>
+            <span>{proxy}</span>
+          </div>
         );
       },
     },
@@ -197,11 +229,11 @@ const ProfilesPage = () => {
   const handleSettings = () => {
     navigate('/settings');
   };
-  const handleSettingsProxy = () => {
-    navigate('/settings-proxy');
-  };
   const handleScript = () => {
     navigate('/scripManager');
+  };
+  const handleReloadPage = () => {
+    navigate('/');
   };
   //scripts
   const handleOpenScripts = () => {
@@ -251,10 +283,10 @@ const ProfilesPage = () => {
               <input placeholder="Search..."></input>
             </div>
             <div className="-wrapper-option-profiles">
-              <span className="-option-profiles">
+              <span className="-option-profiles" onClick={handleReloadPage}>
                 <img src={refresh} alt="image-refresh"></img>
               </span>
-              <span className="-option-profiles" onClick={handleSettingsProxy}>
+              <span className="-option-profiles">
                 <img src={display} alt="display-setting"></img>
               </span>
               <span className="-option-profiles" onClick={handleSettings}>
