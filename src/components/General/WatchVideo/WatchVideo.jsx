@@ -131,7 +131,7 @@ const WatchVideo = ({ onGoBackClick }) => {
             </div>
             <div className="component-item watchingTime">
               <p className="component-item__header">
-                Watching time/video <span>(s):</span>
+                Watching time/video <span  > (s):</span>
               </p>
               <div className="component-item__number">
                 <div className="component-item__number__icon">

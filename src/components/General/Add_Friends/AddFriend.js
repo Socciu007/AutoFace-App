@@ -1,120 +1,62 @@
 // eslint-disable-next-line no-unused-vars
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-export function handleInputChange(event, setInputValue) {
-  // Nếu giá trị mới là chuỗi rỗng, thiết lập về giá trị mặc định hoặc giá trị mong muốn
-  const newValue = event.target.value === '' ? '' : parseInt(event.target.value, 10);
+export function handleInputChange(event, setValues) {
+  const inputValue = event.target.value;
+  const isNumber = /^\d*$/.test(inputValue); // Check if the input is a number
 
-  // Kiểm tra xem có phải là số hay không
-  if (!isNaN(newValue)) {
-    setInputValue(newValue);
+  if (isNumber && inputValue.length < 6) {
+    const newValue = inputValue === '' ? '' : parseInt(inputValue, 10);
+
+    setValues((prevValues) => ({
+      ...prevValues,
+      [event.target.name]: newValue,
+    }));
   }
 }
+export function useRangeValues(initialValues) {
+  const [values, setValues] = useState(initialValues);
 
-export function numberOfRequests() {
-  //Value number of Requests start
-  const [inputValueRequestsStart, setInputValueRequestsStart] = useState(5);
-  const handleIncrementRequestsStart = () => {
-    setInputValueRequestsStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementRequestsStart = () => {
-    setInputValueRequestsStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Value number of Requests end
-  const [inputValueRequestsEnd, setInputValueRequestsEnd] = useState(10);
-  const handleIncrementRequestsEnd = () => {
-    setInputValueRequestsEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementRequestsEnd = () => {
-    setInputValueRequestsEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  return {
-    inputValueRequestsStart,
-    handleIncrementRequestsStart,
-    handleDecrementRequestsStart,
-    inputValueRequestsEnd,
-    handleIncrementRequestsEnd,
-    handleDecrementRequestsEnd,
-    handleInputChangeRequestsStart: (event) => handleInputChange(event, setInputValueRequestsStart),
-    handleInputChangeRequestsEnd: (event) => handleInputChange(event, setInputValueRequestsEnd),
-  };
-}
+  const createHandlers = (prefix) => ({
+    handleIncrement: () => {
+      setValues((prevValues) => ({
+        ...prevValues,
+        [`${prefix}Start`]: prevValues[`${prefix}Start`] + 1,
+      }));
+    },
+    handleDecrement: () => {
+      setValues((prevValues) => ({
+        ...prevValues,
+        [`${prefix}Start`]: prevValues[`${prefix}Start`] > 0 ? prevValues[`${prefix}Start`] - 1 : 0,
+      }));
+    },
+    handleIncrementEnd: () => {
+      setValues((prevValues) => ({
+        ...prevValues,
+        [`${prefix}End`]: prevValues[`${prefix}End`] + 1,
+      }));
+    },
+    handleDecrementEnd: () => {
+      setValues((prevValues) => ({
+        ...prevValues,
+        [`${prefix}End`]: prevValues[`${prefix}End`] > 0 ? prevValues[`${prefix}End`] - 1 : 0,
+      }));
+    },
+    handleInputChangeStart: (event) => handleInputChange(event, setValues),
+    handleInputChangeEnd: (event) => handleInputChange(event, setValues),
+  });
 
-export function delayTime() {
-  //Delay time start
-  const [inputValueDelayTimeStart, setInputValueDelayTimeStart] = useState(3);
-  const handleIncrementDelayTimeStart = () => {
-    setInputValueDelayTimeStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementDelayTimeStart = () => {
-    setInputValueDelayTimeStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Delay time end
-  const [inputValueDelayTimeEnd, setInputValueDelayTimeEnd] = useState(5);
-  const handleIncrementDelayTimeEnd = () => {
-    setInputValueDelayTimeEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementDelayTimeEnd = () => {
-    setInputValueDelayTimeEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
+  const postValues = useRangeValues({ ...initialValues, prefix: 'Post' });
+  const delayTimeValues = useRangeValues({ ...initialValues, prefix: 'DelayTime' });
+  const requestsValues = useRangeValues({ ...initialValues, prefix: 'Requests' });
+  const stopTimeValues = useRangeValues({ ...initialValues, prefix: 'StopTime' });
 
   return {
-    inputValueDelayTimeStart,
-    handleIncrementDelayTimeStart,
-    handleDecrementDelayTimeStart,
-    inputValueDelayTimeEnd,
-    handleIncrementDelayTimeEnd,
-    handleDecrementDelayTimeEnd,
-    handleInputChangeDelayTimeStart: (event) => handleInputChange(event, setInputValueDelayTimeStart),
-    handleInputChangeDelayTimeEnd: (event) => handleInputChange(event, setInputValueDelayTimeEnd),
-  };
-}
-
-export function stopAfterWarning() {
-  //Stop after Facebook warning (times)
-  const [inputValueStopTime, setInputValueStopTime] = useState(5);
-  const handleIncrementStopTime = () => {
-    setInputValueStopTime((prevValue) => prevValue + 1);
-  };
-  const handleDecrementStopTime = () => {
-    setInputValueStopTime((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-
-  return {
-    inputValueStopTime,
-    handleIncrementStopTime,
-    handleDecrementStopTime,
-    handleInputChangeStopTime: (event) => handleInputChange(event, setInputValueStopTime),
-  };
-}
-
-export function NumberPost() {
-  //Random NumberPost start
-  const [inputValueNumberPostStart, setInputValueNumberPostStart] = useState(5);
-  const handleIncrementNumberPostStart = () => {
-    setInputValueNumberPostStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementNumberPostStart = () => {
-    setInputValueNumberPostStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Random NumberPost end
-  const [inputValueNumberPostEnd, setInputValueNumberPostEnd] = useState(10);
-  const handleIncrementNumberPostEnd = () => {
-    setInputValueNumberPostEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementNumberPostEnd = () => {
-    setInputValueNumberPostEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-
-  return {
-    inputValueNumberPostStart,
-    handleIncrementNumberPostStart,
-    handleDecrementNumberPostStart,
-    inputValueNumberPostEnd,
-    handleIncrementNumberPostEnd,
-    handleDecrementNumberPostEnd,
-    handleInputChangeNumberPostStart: (event) => handleInputChange(event, setInputValueNumberPostStart),
-    handleInputChangeNumberPostEnd: (event) => handleInputChange(event, setInputValueNumberPostEnd),
+    ...values,
+    ...requestsValues,
+    ...delayTimeValues,
+    ...postValues,
+    ...stopTimeValues,
   };
 }
 
