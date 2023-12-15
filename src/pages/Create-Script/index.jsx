@@ -63,7 +63,6 @@ const CreateScript = () => {
   const onDragStart = (event, nodeType) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
     event.dataTransfer.effectAllowed = 'move';
-    
   };
   const handleReturnClick = () => {
     // Navigate to the desired route when the button is clicked

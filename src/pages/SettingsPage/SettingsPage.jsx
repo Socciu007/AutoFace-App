@@ -1,14 +1,34 @@
 import React, { useState } from 'react';
 import './style.scss';
-import up from '../../assets/pictures/icon-Increase.svg';
-import down from '../../assets/pictures/icon-Descrease.svg';
-// import downup from "../../assets/pictures/icon-down.svg";
-import onOption from '../../assets/pictures/icon-on-option.svg';
 import { useNavigate } from 'react-router-dom';
-import { Switch } from 'antd';
+import SettingNormal from '../../components/SettingsComponent/SettingNormal/SettingNormal';
+import SettingAdvenced from '../../components/SettingsComponent/SettingAdvanced/SettingAdvenced';
+import SettingProxy from '../../components/SettingsComponent/SettingProxy/SettingProxy';
 
 const SettingsPage = () => {
+  const data = [
+    {
+      key: 1,
+      proxy: '123.120.9.22:1232:username:123jbsdf',
+    },
+    {
+      key: 2,
+      proxy: '123.120.9.22:1232:username:123jbsdf',
+    },
+    {
+      key: 3,
+      proxy: '123.120.9.22:1232:username:123jbsdf',
+    },
+    {
+      key: 4,
+      proxy: '123.120.9.22:1232:username:123jbsdf',
+    },
+  ];
   const navigate = useNavigate();
+  const [editProxy, setEditProxy] = useState(false);
+  const [keyList, setKeyList] = useState('');
+  const [openProxyManage, setOpenProxyManage] = useState(false);
+  const [openWriteText, setOpenWriteText] = useState(false);
   const [settings, setSettings] = useState({
     numberProfile: 5,
     numberLoop: 1,
@@ -35,7 +55,11 @@ const SettingsPage = () => {
     }
   };
   const onChangeNumberProfile = (e) => {
-    if (!isNaN(e.target.value)) {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    // if (decimalRegex.test(e.target.value)) {
+    //   console.log('so thap phan');
+    // }
+    if (!isNaN(e.target.value) && decimalRegex.test(e.target.value)) {
       setSettings({ ...settings, [e.target.name]: e.target.value });
     }
   };
@@ -54,11 +78,12 @@ const SettingsPage = () => {
     }
   };
   const onChangeNumberLoop = (e) => {
-    if (!isNaN(e.target.value)) {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    if (!isNaN(e.target.value) && decimalRegex.test(e.target.value)) {
       setSettings({ ...settings, [e.target.name]: e.target.value });
     }
   };
-  //
+
   const handleMaxTimePerThread = (type) => {
     if (type === 'increase') {
       setSettings({
@@ -73,7 +98,8 @@ const SettingsPage = () => {
     }
   };
   const onChangeMaxTimePerThread = (e) => {
-    if (!isNaN(e.target.value)) {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    if (!isNaN(e.target.value) && decimalRegex.test(e.target.value)) {
       setSettings({ ...settings, [e.target.name]: e.target.value });
     }
   };
@@ -92,7 +118,8 @@ const SettingsPage = () => {
     }
   };
   const onChangeDelayInEachNewThread = (e) => {
-    if (!isNaN(e.target.value)) {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    if (!isNaN(e.target.value) && decimalRegex.test(e.target.value)) {
       setSettings({ ...settings, [e.target.name]: e.target.value });
     }
   };
@@ -101,7 +128,7 @@ const SettingsPage = () => {
     if (type === 'increase') {
       setSettings({
         ...settings,
-        stopIfRamReaches: settings.stopIfRamReaches + 1,
+        stopIfRamReaches: settings.stopIfRamReaches < 100 ? settings.stopIfRamReaches + 1 : 100,
       });
     } else {
       setSettings({
@@ -111,7 +138,8 @@ const SettingsPage = () => {
     }
   };
   const onChangeStopIfRamReaches = (e) => {
-    if (!isNaN(e.target.value)) {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    if (!isNaN(e.target.value) && decimalRegex.test(e.target.value)) {
       setSettings({ ...settings, [e.target.name]: e.target.value });
     }
   };
@@ -120,7 +148,7 @@ const SettingsPage = () => {
     if (type === 'increase') {
       setSettings({
         ...settings,
-        stopIfCPUReaches: settings.stopIfCPUReaches + 1,
+        stopIfCPUReaches: settings.stopIfCPUReaches < 100 ? settings.stopIfCPUReaches + 1 : 100,
       });
     } else {
       setSettings({
@@ -130,7 +158,8 @@ const SettingsPage = () => {
     }
   };
   const onChangeStopIfCPUReaches = (e) => {
-    if (!isNaN(e.target.value)) {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    if (!isNaN(e.target.value) && decimalRegex.test(e.target.value)) {
       setSettings({ ...settings, [e.target.name]: e.target.value });
     }
   };
@@ -139,7 +168,7 @@ const SettingsPage = () => {
     if (type === 'increase') {
       setSettings({
         ...settings,
-        stopIfDiskReaches: settings.stopIfDiskReaches + 1,
+        stopIfDiskReaches: settings.stopIfDiskReaches < 100 ? settings.stopIfDiskReaches + 1 : 100,
       });
     } else {
       setSettings({
@@ -149,11 +178,12 @@ const SettingsPage = () => {
     }
   };
   const onChangeStopIfDiskReaches = (e) => {
-    if (!isNaN(e.target.value)) {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    if (!isNaN(e.target.value) && decimalRegex.test(e.target.value)) {
       setSettings({ ...settings, [e.target.name]: e.target.value });
     }
   };
-  //
+
   const handleOnChangeTypeProfile = (e) => {
     setSettings({
       ...settings,
@@ -167,7 +197,31 @@ const SettingsPage = () => {
       [e.target.name]: e.target.value,
     });
   };
-
+  //proxy
+  const handleOpenProxyManage = () => {
+    setOpenProxyManage(true);
+  };
+  const handleCloseProxyManage = () => {
+    setOpenProxyManage(false);
+  };
+  const handleOpenEdit = (key) => {
+    setKeyList(key);
+    setEditProxy(true);
+  };
+  const handleCloseEdit = (key) => {
+    setKeyList(key);
+    setEditProxy(false);
+  };
+  const handleOpenWriteText = () => {
+    setOpenWriteText(true);
+  };
+  const handleAddProxy = () => {
+    // setOpenWriteText(false)
+  };
+  //
+  const onChange = (checked) => {
+    console.log(`switch to ${checked}`);
+  };
   return (
     <div className="layout-settings">
       <div className="-layout-page">
@@ -187,211 +241,46 @@ const SettingsPage = () => {
           </span>
           <p className="-btn-profiles">Automation settings</p>
         </div>
-        <div className="-settings-profiles">
-          <div className="-normal-settings">
-            <div className="-content-settings">
-              <h2>RUNNING SETTINGS</h2>
-              <div className="-sub-settings">
-                <p>Numbers of profiles running simultaneously</p>
-                <div className="-options-sub-settings">
-                  <div className="-count-settings">
-                    <div className="Icon-Upn_Down">
-                      <div style={{ marginBottom: '2px' }} onClick={() => handleNumberProfile('increase')}>
-                        <img src={up} alt="up" width={10} height={7} />
-                      </div>
-                      <div style={{ marginTop: '2px' }} onClick={() => handleNumberProfile('descrease')}>
-                        <img src={down} alt="down" width={10} height={7} />
-                      </div>
-                    </div>
-                    <input name="numberProfile" value={settings.numberProfile} onChange={onChangeNumberProfile}></input>
-                  </div>
-                  <div className="-input-sub-settings">
-                    <span>profile(s)</span>
-                  </div>
-                </div>
-              </div>
-              <div className="-sub-settings">
-                <p>Numbers of loops</p>
-                <div className="-options-sub-settings">
-                  <div className="-count-settings">
-                    <div className="Icon-Upn_Down">
-                      <div style={{ marginBottom: '2px' }} onClick={() => handleNumberLoop('increase')}>
-                        <img src={up} alt="up" width={10} height={7} />
-                      </div>
-                      <div style={{ marginTop: '2px' }} onClick={() => handleNumberLoop('descrease')}>
-                        <img src={down} alt="down" width={10} height={7} />
-                      </div>
-                    </div>
-                    <input name="numberLoop" value={settings.numberLoop} onChange={onChangeNumberLoop}></input>
-                  </div>
-                  <div className="-input-sub-settings">
-                    <span>loops(s)</span>
-                  </div>
-                </div>
-              </div>
-              <div className="-sub-settings">
-                <p>Profile running type</p>
-                <div className="-options-sub-settings">
-                  <div className="-options-sub-settings__select">
-                    <select
-                      name="typeProfile"
-                      className="-options-sub-settings__select__details"
-                      onChange={handleOnChangeTypeProfile}
-                      value={settings.typeProfile}
-                    >
-                      <option value="random">Random</option>
-                      <option value="friend">Friend</option>
-                      <option value="group">Group</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <div className="-sub-settings">
-                <p>URL</p>
-                <div className="-options-sub-settings">
-                  <div className="-options-sub-settings__select">
-                    <select
-                      name="url"
-                      className="-options-sub-settings__select__details"
-                      onChange={handleOnchangeUrl}
-                      value={settings.url}
-                    >
-                      <option value="random">www.fb.com</option>
-                      <option value="friend">Friend</option>
-                      <option value="group">Group</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <div className="-sub-settings -sub1-settings">
-                <Switch defaultChecked onChange={() => {}} />
-                <p>Mute Audio</p>
-              </div>
-              <div className="-sub-settings -sub1-settings" style={{ marginTop: '10px' }}>
-                <Switch defaultChecked onChange={() => {}} />
-                <p>Don’t show images</p>
-              </div>
+        <div className="scroll-settings">
+          <div className="-container-content">
+            <div className="-settings-profiles">
+              <SettingNormal
+                settings={settings}
+                handleNumberProfile={handleNumberProfile}
+                onChangeNumberProfile={onChangeNumberProfile}
+                onChangeNumberLoop={onChangeNumberLoop}
+                handleNumberLoop={handleNumberLoop}
+                handleOnChangeTypeProfile={handleOnChangeTypeProfile}
+                handleOnchangeUrl={handleOnchangeUrl}
+              ></SettingNormal>
+              <SettingAdvenced
+                settings={settings}
+                handleDelayInEachNewThread={handleDelayInEachNewThread}
+                handleMaxTimePerThread={handleMaxTimePerThread}
+                handleStopIfCPUReaches={handleStopIfCPUReaches}
+                handleStopIfDiskReaches={handleStopIfDiskReaches}
+                handlestopIfRamReaches={handlestopIfRamReaches}
+                onChangeDelayInEachNewThread={onChangeDelayInEachNewThread}
+                onChangeMaxTimePerThread={onChangeMaxTimePerThread}
+                onChangeStopIfCPUReaches={onChangeStopIfCPUReaches}
+                onChangeStopIfDiskReaches={onChangeStopIfDiskReaches}
+                onChangeStopIfRamReaches={onChangeStopIfRamReaches}
+              ></SettingAdvenced>
             </div>
-          </div>
-          <div className="-normal-settings -advanced-settings">
-            <div className="-content-settings">
-              <h2>ADVANCED SETTINGS</h2>
-              <div className="-sub-settings">
-                <p>Maximum time per thread</p>
-                <div className="-options-sub-settings">
-                  <div className="-count-settings">
-                    <div className="Icon-Upn_Down">
-                      <div style={{ marginBottom: '2px' }} onClick={() => handleMaxTimePerThread('increase')}>
-                        <img src={up} alt="up" width={10} height={7} />
-                      </div>
-                      <div style={{ marginTop: '2px' }} onClick={() => handleMaxTimePerThread('descrease')}>
-                        <img src={down} alt="down" width={10} height={7} />
-                      </div>
-                    </div>
-                    <input
-                      name="maxTimePerThread"
-                      value={settings.maxTimePerThread}
-                      onChange={onChangeMaxTimePerThread}
-                    ></input>
-                  </div>
-                  <div className="-input-sub-settings">
-                    <span>seconds(s)</span>
-                  </div>
-                </div>
-              </div>
-              <div className="-sub-settings">
-                <p>Delay in each new thread open</p>
-                <div className="-options-sub-settings">
-                  <div className="-count-settings">
-                    <div className="Icon-Upn_Down">
-                      <div style={{ marginBottom: '2px' }} onClick={() => handleDelayInEachNewThread('increase')}>
-                        <img src={up} alt="up" width={10} height={7} />
-                      </div>
-                      <div style={{ marginTop: '2px' }} onClick={() => handleDelayInEachNewThread('descrease')}>
-                        <img src={down} alt="down" width={10} height={7} />
-                      </div>
-                    </div>
-                    <input
-                      name="delayInEachNewThread"
-                      value={settings.delayInEachNewThread}
-                      onChange={onChangeDelayInEachNewThread}
-                    ></input>
-                  </div>
-                  <div className="-input-sub-settings">
-                    <span>seconds(s)</span>
-                  </div>
-                </div>
-              </div>
-              <div className="-sub-settings">
-                <p>Stop if RAM reaches</p>
-                <div className="-options-sub-settings">
-                  <div className="-count-settings">
-                    <div className="Icon-Upn_Down">
-                      <div style={{ marginBottom: '2px' }} onClick={() => handlestopIfRamReaches('increase')}>
-                        <img src={up} alt="up" width={10} height={7} />
-                      </div>
-                      <div style={{ marginTop: '2px' }} onClick={() => handlestopIfRamReaches('descrease')}>
-                        <img src={down} alt="down" width={10} height={7} />
-                      </div>
-                    </div>
-                    <input
-                      name="stopIfRamReaches"
-                      value={settings.stopIfRamReaches}
-                      onChange={onChangeStopIfRamReaches}
-                    ></input>
-                  </div>
-                  <div className="-input-sub-settings">
-                    <span>%</span>
-                  </div>
-                </div>
-              </div>
-              <div className="-sub-settings">
-                <p>Stop if CPU reaches</p>
-                <div className="-options-sub-settings">
-                  <div className="-count-settings">
-                    <div className="Icon-Upn_Down">
-                      <div style={{ marginBottom: '2px' }} onClick={() => handleStopIfCPUReaches('increase')}>
-                        <img src={up} alt="up" width={10} height={7} />
-                      </div>
-                      <div style={{ marginTop: '2px' }} onClick={() => handleStopIfCPUReaches('descrease')}>
-                        <img src={down} alt="down" width={10} height={7} />
-                      </div>
-                    </div>
-                    <input
-                      name="stopIfCPUReaches"
-                      value={settings.stopIfCPUReaches}
-                      onChange={onChangeStopIfCPUReaches}
-                    ></input>
-                  </div>
-                  <div className="-input-sub-settings">
-                    <span>%</span>
-                  </div>
-                </div>
-              </div>
-              <div className="-sub-settings">
-                <p>Stop if CPU reaches</p>
-                <div className="-options-sub-settings">
-                  <div className="-count-settings">
-                    <div className="Icon-Upn_Down">
-                      <div style={{ marginBottom: '2px' }} onClick={() => handleStopIfDiskReaches('increase')}>
-                        <img src={up} alt="up" width={10} height={7} />
-                      </div>
-                      <div style={{ marginTop: '2px' }} onClick={() => handleStopIfDiskReaches('descrease')}>
-                        <img src={down} alt="down" width={10} height={7} />
-                      </div>
-                    </div>
-                    <input
-                      name="stopIfDiskReaches"
-                      value={settings.stopIfDiskReaches}
-                      onChange={onChangeStopIfDiskReaches}
-                    ></input>
-                  </div>
-                  <div className="-input-sub-settings">
-                    <span>%</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <SettingProxy
+              data={data}
+              keyList={keyList}
+              editProxy={editProxy}
+              openProxyManage={openProxyManage}
+              openWriteText={openWriteText}
+              handleOpenEdit={handleOpenEdit}
+              handleCloseEdit={handleCloseEdit}
+              handleOpenProxyManage={handleOpenProxyManage}
+              handleCloseProxyManage={handleCloseProxyManage}
+              handleOpenWriteText={handleOpenWriteText}
+              handleAddProxy={handleAddProxy}
+              onChange={onChange}
+            ></SettingProxy>
           </div>
         </div>
       </div>
