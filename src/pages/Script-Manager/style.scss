@@ -64,10 +64,11 @@ body {
       }
       .left-content {
         border-radius: 15px;
-        width: 100%;
-        padding: 20px;
+        width: 440px;
+        padding: 20px 20px 0 15px;
         &__top {
           display: flex;
+          justify-content: space-between;
           margin-top: 10px;
           .search {
             display: flex;
@@ -92,6 +93,7 @@ body {
             margin-left: 5%;
             background-color: #fff;
             cursor: pointer;
+            height: 40px;
           }
           .add {
             border: none;
@@ -99,9 +101,8 @@ body {
             background-color: #2a86ff;
             border-radius: 100%;
             cursor: pointer;
-            width: 35px;
-            height: 35px;
-            margin-top: 3px;
+            width: 40px;
+            height: 40px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -129,19 +130,20 @@ body {
           }
         }
         &__content {
-          margin-top: 40px;
+          // margin-top: 20px;
           .script {
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-top: 15px;
-            padding: 10px 5px 10px 5px;
+            // margin-top: 15px;
+            margin: 0.5rem 0;
             border-radius: 5px;
             cursor: pointer;
             p {
-              padding: 5px 10px 5px 10px;
+              padding: 10px 0 10px 15px;
               color: #01162b;
-              font-size: 15px;
+              font-size: 14px;
               font-weight: 400;
               line-height: normal;
             }
@@ -158,6 +160,7 @@ body {
             .inputSelected {
               font-weight: 900;
               color: #01162b;
+              font-size: 15px;
             }
           }
           .selected {
@@ -175,7 +178,7 @@ body {
         margin-left: 20px;
         display: flex;
         flex-direction: column;
-        min-width: calc(100vw - 540px);
+        min-width: calc(100vw - 530px);
         &__edit {
           display: flex;
           align-items: center;
@@ -229,103 +232,7 @@ body {
         }
       }
     }
-    .makeCopy {
-      display: none;
-      position: fixed;
-      top: 40%;
-      left: 35%;
-      border-radius: 15px;
-      background: #fff;
-      box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
-      width: 636px;
-      height: 154px;
-      flex-shrink: 0;
-      padding: 20px;
-      &__top {
-        margin-bottom: 20px;
-        display: flex;
-        justify-content: space-between;
 
-        h1 {
-          color: #01162b;
-          font-size: 22px;
-          font-style: normal;
-          font-weight: 700;
-          line-height: 200%;
-        }
-        .close {
-          background-color: #f5f5f5;
-          padding: 15px;
-          border-radius: 100%;
-          cursor: pointer;
-        }
-      }
-
-      input {
-        border-radius: 8px;
-        border: 1px dashed rgba(1, 22, 43, 0.2);
-        background: #f5f5f5;
-        width: 80%;
-        height: 40px;
-        padding: 15px;
-      }
-      button {
-        font-size: 15px;
-        border-radius: 25px;
-        padding: 10px 30px 10px 30px;
-        border: none;
-        font-weight: 700;
-        background-color: #2a86ff;
-        color: #fff;
-        margin-left: 13px;
-        cursor: pointer;
-      }
-    }
-    .delete {
-      display: none;
-      position: fixed;
-      top: 40%;
-      left: 35%;
-      border-radius: 15px;
-      background: #fff;
-      box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
-      width: 636px;
-      height: 154px;
-      flex-shrink: 0;
-      padding: 20px;
-      h1 {
-        color: #01162b;
-        font-size: 22px;
-        font-style: normal;
-        font-weight: 700;
-        line-height: 200%;
-      }
-      p {
-        margin-bottom: 10px;
-        margin-top: 5px;
-      }
-      div {
-        display: flex;
-        justify-content: end;
-        gap: 10px;
-        button {
-          padding: 9px 30px;
-          border-radius: 36px;
-          background: #f5f5f5;
-          border: none;
-          font-weight: 700;
-          box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
-          cursor: pointer;
-        }
-        .deleteBtn {
-          border-radius: 36px;
-          background: #2a86ff;
-          box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
-          color: #fff;
-          font-weight: 700;
-        }
-      }
-    }
     .hide {
       display: none;
     }
@@ -435,6 +342,93 @@ body {
         margin-left: 5px;
         font-weight: 400;
       }
+    }
+  }
+}
+
+.makeCopy {
+  &__top {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    p {
+      color: #01162b;
+      font-size: 22px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 200%;
+      width: 95%;
+    }
+    .close {
+      background-color: #f5f5f5;
+      padding: 10px;
+      border-radius: 50%;
+      cursor: pointer;
+      width: 30px;
+      height: 30px;
+      img {
+        width: 10px;
+        height: 10px;
+        max-width: 10px;
+        line-height: 10px;
+      }
+    }
+  }
+  &__bottom {
+    display: flex;
+  }
+  input {
+    border-radius: 8px;
+    border: 1px dashed rgba(1, 22, 43, 0.2);
+    background: #f5f5f5;
+    width: 80%;
+    height: 40px;
+    padding: 15px;
+  }
+  button {
+    font-size: 15px;
+    border-radius: 25px;
+    padding: 10px 30px 10px 30px;
+    border: none;
+    font-weight: 700;
+    background-color: #2a86ff;
+    color: #fff;
+    margin-left: 13px;
+    cursor: pointer;
+  }
+}
+.dialog_delete {
+  h1 {
+    color: #01162b;
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 200%;
+  }
+  p {
+    margin-bottom: 10px;
+    margin-top: 5px;
+  }
+  div {
+    display: flex;
+    justify-content: end;
+    gap: 10px;
+    button {
+      padding: 9px 30px;
+      border-radius: 36px;
+      background: #f5f5f5;
+      border: none;
+      font-weight: 700;
+      box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
+      cursor: pointer;
+      font-size: 18px;
+    }
+    .deleteBtn {
+      border-radius: 36px;
+      background: #2a86ff;
+      box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
+      color: #fff;
+      font-weight: 700;
     }
   }
 }

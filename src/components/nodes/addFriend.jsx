@@ -1,10 +1,11 @@
 import React, { useCallback, useState } from 'react';
 import { Handle, Position } from 'reactflow';
+
 import addFriendLeft from '../../assets/icon/icon-addFriendLeft.svg';
 import addFriendIcon from '../../assets/icon/icon-addFriend.svg';
 import optionNode from '../../assets/icon/icon-optionNode.svg';
 import time from '../../assets/icon/icon-time.svg';
-import PopupComponent from '../PopupHome/PopupComponent/PopupComponent';
+import 'reactjs-popup/dist/index.css';
 const handleStyle = { left: 10 };
 
 function addFriendNode({ data: { label, onButtonClick }, isConnectable, id }) {
@@ -14,7 +15,7 @@ function addFriendNode({ data: { label, onButtonClick }, isConnectable, id }) {
   const [optionClick, setOptionClick] = useState(false);
 
   return (
-    <div className={`updater-node${optionClick ? ' nodrag' : ''}`}>
+    <div className="updater-node">
       <Handle type="target" position={Position.Left} isConnectable={isConnectable} />
       <div className="node">
         <img src={addFriendLeft} alt="addFriendLeft" />
@@ -23,26 +24,9 @@ function addFriendNode({ data: { label, onButtonClick }, isConnectable, id }) {
           <div className="content-right">
             <div className="right-top">
               <p>Add friend</p>
-              <img src={optionNode} alt="More" onClick={() => setOptionClick(true)} />
-              <PopupComponent
-                open={optionClick}
-                onClose={() => setOptionClick(false)}
-                closeOnDocumentClick
-                position={'top right'}
-              >
-                <div className="ButtonOption">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onButtonClick();
-                      setOptionClick(false);
-                    }}
-                  >
-                    Sửa
-                  </button>
-                  <button type="button">Xóa</button>
-                </div>
-              </PopupComponent>
+              <div style={{ padding: '0 5px' }} onClick={onButtonClick}>
+                <img src={optionNode} alt="More" />
+              </div>
             </div>
 
             <div className="right-bottom">
