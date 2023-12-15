@@ -229,7 +229,7 @@ const ProfilesPage = () => {
     navigate('/scripManager');
   };
   const handleReloadPage = () => {
-    navigate('/');
+    window.location.reload();
   };
   //scripts
   const handleOpenScripts = () => {

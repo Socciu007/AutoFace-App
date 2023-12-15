@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PopupComponent from '../PopupComponent/PopupComponent';
 import closePopup from '../../../assets/pictures/icon-x.svg';
 import settings from '../../../assets/pictures/icon-settings.png';
-import yourScript from '../../../assets/pictures/icon-yourScripts.svg';
+import yourScriptIcon from '../../../assets/pictures/icon-yourScripts.svg';
 import search from '../../../assets/pictures/icon-search.svg';
 import { Table } from 'antd';
 
@@ -14,6 +14,8 @@ const PopupScript = ({
   handleOpenScripts,
   handleTypeScript,
 }) => {
+  const [systemScript, setSystemScript] = useState(false);
+  const [yourScript, setYourScript] = useState(false);
   const columnsScripts = [
     {
       title: 'Scripts',
@@ -29,6 +31,16 @@ const PopupScript = ({
     onChange: (selectedRowKeys, selectedRows) => {
       console.log(`selectedRowKeys: ${selectedRowKeys}`);
     },
+  };
+  const handleSystemScript = () => {
+    setYourScript(false);
+    setSystemScript(true);
+    handleTypeScript(true);
+  };
+  const handleYourScript = () => {
+    setYourScript(true);
+    setSystemScript(false);
+    handleTypeScript(false);
   };
   return (
     <PopupComponent open={openScripts} onClose={handleCloseScripts} style={{ margin: 'auto' }}>
@@ -47,7 +59,7 @@ const PopupScript = ({
                   <img src={settings} alt="image-settings"></img>
                 </span>
                 <span className="-option-profiles" onClick={handleOpenScripts}>
-                  <img src={yourScript} alt="icon-yourscripts"></img>
+                  <img src={yourScriptIcon} alt="icon-yourscripts"></img>
                 </span>
                 <div>
                   <button>Run</button>
@@ -58,12 +70,14 @@ const PopupScript = ({
               <div className="-container-scripts__left">
                 <div className="-container-scripts__left__options">
                   <div className="-container-scripts__left__options__type">
-                    <p>All</p>
+                    {!systemScript && !yourScript && <p>All</p>}
+                    {systemScript && <p>System’s script</p>}
+                    {yourScript && <p>Your script</p>}
                   </div>
                   <div className="-container-scripts__left__options__list">
                     <ul>
-                      <li onClick={() => handleTypeScript(true)}>System’s script</li>
-                      <li onClick={() => handleTypeScript(false)}>Your script</li>
+                      <li onClick={handleSystemScript}>System’s script</li>
+                      <li onClick={handleYourScript}>Your script</li>
                     </ul>
                   </div>
                 </div>

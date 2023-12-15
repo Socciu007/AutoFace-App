@@ -1,4 +1,4 @@
-import { Switch } from 'antd';
+import { Switch, TreeSelect } from 'antd';
 import './style.scss';
 import up from '../../../assets/pictures/icon-Increase.svg';
 import down from '../../../assets/pictures/icon-Descrease.svg';
@@ -59,8 +59,8 @@ const SettingNormal = ({
         <div className="-sub-settings">
           <p>Profile running type</p>
           <div className="-options-sub-settings">
-            <div className="-options-sub-settings__select">
-              <select
+            {/* <div className="-options-sub-settings__select"> */}
+            {/* <select
                 name="typeProfile"
                 className="-options-sub-settings__select__details"
                 onChange={handleOnChangeTypeProfile}
@@ -68,8 +68,43 @@ const SettingNormal = ({
               >
                 <option value="random">Random</option>
                 <option value="friend">TopDown</option>
-              </select>
-            </div>
+              </select> */}
+            <TreeSelect
+              treeDataSimpleMode
+              style={{
+                width: '100%',
+              }}
+              value={settings.typeProfile}
+              dropdownStyle={{
+                maxHeight: 400,
+                overflow: 'auto',
+              }}
+              placeholder="Please select"
+              onChange={handleOnChangeTypeProfile}
+              // loadData={onLoadData}
+              treeData={[
+                {
+                  id: 1,
+                  pId: 0,
+                  value: '1',
+                  title: 'Expand to load',
+                },
+                {
+                  id: 2,
+                  pId: 0,
+                  value: '2',
+                  title: 'Expand to load',
+                },
+                {
+                  id: 3,
+                  pId: 0,
+                  value: '3',
+                  title: 'Tree Node',
+                  isLeaf: true,
+                },
+              ]}
+            />
+            {/* </div> */}
           </div>
         </div>
         <div className="-sub-settings">
