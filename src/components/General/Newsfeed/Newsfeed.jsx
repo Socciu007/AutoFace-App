@@ -5,73 +5,26 @@ import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
 
-import {
-  DelayTime,
-  RandomComment,
-  RandomLike,
-  RandomShare,
-  ScrollTime,
-  ShowComment,
-  ShowLike,
-  ShowShare,
-  ShowText,
-  ShowTextarea,
-} from './Newsfeed';
+import { ShowComment, ShowLike, ShowShare, ShowText, ShowTextarea, useRangeValues } from './Newsfeed';
 const Newsfeed = ({ onGoBackClick }) => {
-  const {
-    inputValueScrollTimeStart,
-    handleIncrementScrollTimeStart,
-    handleDecrementScrollTimeStart,
-    inputValueScrollTimeEnd,
-    handleIncrementScrollTimeEnd,
-    handleDecrementScrollTimeEnd,
-    handleInputChangeScrollTimeStart,
-    handleInputChangeScrollTimeEnd,
-  } = ScrollTime();
+  const initialValues = {
+    ScrollTimeStart: 5,
+    ScrollTimeEnd: 10,
+    DelayTimeStart: 5,
+    DelayTimeEnd: 10,
+    LikeStart: 5,
+    LikeEnd: 10,
+    ShareStart: 5,
+    ShareEnd: 10,
+    CommentStart: 5,
+    CommentEnd: 10,
+  };
 
-  const {
-    inputValueDelayTimeStart,
-    handleIncrementDelayTimeStart,
-    handleDecrementDelayTimeStart,
-    inputValueDelayTimeEnd,
-    handleIncrementDelayTimeEnd,
-    handleDecrementDelayTimeEnd,
-    handleInputChangeDelayTimeStart,
-    handleInputChangeDelayTimeEnd,
-  } = DelayTime();
-
-  const {
-    inputValueLikeStart,
-    handleIncrementLikeStart,
-    handleDecrementLikeStart,
-    inputValueLikeEnd,
-    handleIncrementLikeEnd,
-    handleDecrementLikeEnd,
-    handleInputChangeLikeStart,
-    handleInputChangeLikeEnd,
-  } = RandomLike();
-
-  const {
-    inputValueShareStart,
-    handleIncrementShareStart,
-    handleDecrementShareStart,
-    inputValueShareEnd,
-    handleIncrementShareEnd,
-    handleDecrementShareEnd,
-    handleInputChangeShareStart,
-    handleInputChangeShareEnd,
-  } = RandomShare();
-
-  const {
-    inputValueCommentVideoStart,
-    handleIncrementCommentVideoStart,
-    handleDecrementCommentVideoStart,
-    inputValueCommentVideoEnd,
-    handleIncrementCommentVideoEnd,
-    handleDecrementCommentVideoEnd,
-    handleInputChangeCommentVideoStart,
-    handleInputChangeCommentVideoEnd,
-  } = RandomComment();
+  const scrollTimeValues = useRangeValues(initialValues, 'ScrollTime');
+  const delayTimeValues = useRangeValues(initialValues, 'DelayTime');
+  const likeValues = useRangeValues(initialValues, 'Like');
+  const shareValues = useRangeValues(initialValues, 'Share');
+  const commentValues = useRangeValues(initialValues, 'Comment');
 
   const { isLiked, handleCheckboxChangeLike } = ShowLike();
 
@@ -95,60 +48,94 @@ const Newsfeed = ({ onGoBackClick }) => {
               <p className="component-item__header">Scrolling time (s):</p>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementScrollTimeStart} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementScrollTimeStart} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={scrollTimeValues.handleIncrement} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={scrollTimeValues.handleDecrement} />
                 </div>
-                <input type="text" value={inputValueScrollTimeStart} onChange={handleInputChangeScrollTimeStart} />
+                <input
+                  type="text"
+                  name="Start"
+                  value={scrollTimeValues.ScrollTimeStart}
+                  onChange={(event) => scrollTimeValues.handleInputChangeStart(event)}
+                />
               </div>
               <span>to</span>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementScrollTimeEnd} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementScrollTimeEnd} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={scrollTimeValues.handleIncrementEnd} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={scrollTimeValues.handleDecrementEnd} />
                 </div>
-                <input type="text" value={inputValueScrollTimeEnd} onChange={handleInputChangeScrollTimeEnd} />
+                <input
+                  type="text"
+                  name="End"
+                  value={scrollTimeValues.ScrollTimeEnd}
+                  onChange={(event) => scrollTimeValues.handleInputChangeEnd(event)}
+                />
               </div>
             </div>
             <div className="component-item delayTime">
               <p className="component-item__header">Delay time (s):</p>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeStart} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeStart} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrement} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrement} />
                 </div>
-                <input type="text" value={inputValueDelayTimeStart} onChange={handleInputChangeDelayTimeStart} />
+                <input
+                  name="Start"
+                  type="text"
+                  value={delayTimeValues.DelayTimeStart}
+                  onChange={(event) => delayTimeValues.handleInputChangeStart(event)}
+                />
               </div>
               <span>to</span>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeEnd} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeEnd} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrementEnd} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrementEnd} />
                 </div>
-                <input type="text" value={inputValueDelayTimeEnd} onChange={handleInputChangeDelayTimeEnd} />
+                <input
+                  name="End"
+                  type="text"
+                  value={delayTimeValues.DelayTimeEnd}
+                  onChange={(event) => delayTimeValues.handleInputChangeEnd(event)}
+                />
               </div>
             </div>
             <div className="component-item Like">
               <div className="component-item__header">
                 <input type="checkbox" name="randomLike" onChange={handleCheckboxChangeLike} />
                 <p>
-                  Random Like <span className={`span__content ${isLiked ? 'show' : 'hide'}`}>(post)</span>:
+                  Random Like{' '}
+                  <span style={{ marginLeft: '2px' }} className={`span__content ${isLiked ? 'show' : 'hide'}`}>
+                    (post)
+                  </span>
+                  :
                 </p>
               </div>
               <div className={`component-item__content ${isLiked ? 'show' : 'hide'}`}>
                 <div className="component-item__number">
                   <div className="component-item__number__icon">
-                    <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementLikeStart} />
-                    <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementLikeStart} />
+                    <img src={iconIncrease} alt="Increase icon" onClick={likeValues.handleIncrement} />
+                    <img src={iconDecrease} alt="Decrease icon" onClick={likeValues.handleDecrement} />
                   </div>
-                  <input type="text" value={inputValueLikeStart} onChange={handleInputChangeLikeStart} />
+                  <input
+                    type="text"
+                    name="Start"
+                    value={likeValues.LikeStart}
+                    onChange={(event) => likeValues.handleInputChangeStart(event)}
+                  />
                 </div>
                 <span>to</span>
                 <div className="component-item__number">
                   <div className="component-item__number__icon">
-                    <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementLikeEnd} />
-                    <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementLikeEnd} />
+                    <img src={iconIncrease} alt="Increase icon" onClick={likeValues.handleIncrementEnd} />
+                    <img src={iconDecrease} alt="Decrease icon" onClick={likeValues.handleDecrementEnd} />
                   </div>
-                  <input type="text" value={inputValueLikeEnd} onChange={handleInputChangeLikeEnd} />
+                  <input
+                    type="text"
+                    name="End"
+                    value={likeValues.LikeEnd}
+                    onChange={(event) => likeValues.handleInputChangeEnd(event)}
+                  />
                 </div>
               </div>
             </div>
@@ -162,18 +149,28 @@ const Newsfeed = ({ onGoBackClick }) => {
               <div className={`component-item__content ${isShare ? 'show' : 'hide'}`}>
                 <div className="component-item__number">
                   <div className="component-item__number__icon">
-                    <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementShareStart} />
-                    <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementShareStart} />
+                    <img src={iconIncrease} alt="Increase icon" onClick={shareValues.handleIncrement} />
+                    <img src={iconDecrease} alt="Decrease icon" onClick={shareValues.handleDecrement} />
                   </div>
-                  <input type="text" value={inputValueShareStart} onChange={handleInputChangeShareStart} />
+                  <input
+                    type="text"
+                    name="Start"
+                    value={shareValues.ShareStart}
+                    onChange={(event) => shareValues.handleInputChangeStart(event)}
+                  />
                 </div>
                 <span>to</span>
                 <div className="component-item__number">
                   <div className="component-item__number__icon">
-                    <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementShareEnd} />
-                    <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementShareEnd} />
+                    <img src={iconIncrease} alt="Increase icon" onClick={shareValues.handleIncrementEnd} />
+                    <img src={iconDecrease} alt="Decrease icon" onClick={shareValues.handleDecrementEnd} />
                   </div>
-                  <input type="text" value={inputValueShareEnd} onChange={handleInputChangeShareEnd} />
+                  <input
+                    type="text"
+                    name="End"
+                    value={shareValues.ShareEnd}
+                    onChange={(event) => shareValues.handleInputChangeEnd(event)}
+                  />
                 </div>
               </div>
             </div>
@@ -188,25 +185,27 @@ const Newsfeed = ({ onGoBackClick }) => {
                   <div className="component-item__content">
                     <div className="component-item__number">
                       <div className="component-item__number__icon">
-                        <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementCommentVideoStart} />
-                        <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementCommentVideoStart} />
+                        <img src={iconIncrease} alt="Increase icon" onClick={commentValues.handleIncrement} />
+                        <img src={iconDecrease} alt="Decrease icon" onClick={commentValues.handleDecrement} />
                       </div>
                       <input
                         type="text"
-                        value={inputValueCommentVideoStart}
-                        onChange={handleInputChangeCommentVideoStart}
+                        name="Start"
+                        value={commentValues.CommentStart}
+                        onChange={(event) => commentValues.handleInputChangeStart(event)}
                       />
                     </div>
                     <span>to</span>
                     <div className="component-item__number">
                       <div className="component-item__number__icon">
-                        <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementCommentVideoEnd} />
-                        <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementCommentVideoEnd} />
+                        <img src={iconIncrease} alt="Increase icon" onClick={commentValues.handleIncrementEnd} />
+                        <img src={iconDecrease} alt="Decrease icon" onClick={commentValues.handleDecrementEnd} />
                       </div>
                       <input
                         type="text"
-                        value={inputValueCommentVideoEnd}
-                        onChange={handleInputChangeCommentVideoEnd}
+                        name="End"
+                        value={commentValues.CommentEnd}
+                        onChange={(event) => commentValues.handleInputChangeEnd(event)}
                       />
                     </div>
                   </div>

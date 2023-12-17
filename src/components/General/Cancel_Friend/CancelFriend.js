@@ -1,99 +1,53 @@
 import { useEffect, useState } from 'react';
-export function handleInputChange(event, setInputValue) {
+export function handleInputChange(event, setValues, prefix, values) {
   const inputValue = event.target.value;
-  const isNumber = /^\d*$/.test(inputValue); // Check if the input is a number
+  const isNumber = /^\d*$/.test(inputValue);
 
   if (isNumber && inputValue.length < 6) {
     const newValue = inputValue === '' ? '' : parseInt(inputValue, 10);
-    setInputValue(newValue);
+
+    const updatedValues = {
+      ...values,
+      [`${prefix}${event.target.name}`]: newValue,
+    };
+
+    setValues(updatedValues);
   }
 }
 
-export function numberOfRequests() {
-  //Value number of Requests start
-  const [inputValueRequestsStart, setInputValueRequestsStart] = useState(5);
-  const handleIncrementRequestsStart = () => {
-    setInputValueRequestsStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementRequestsStart = () => {
-    setInputValueRequestsStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Value number of Requests end
-  const [inputValueRequestsEnd, setInputValueRequestsEnd] = useState(10);
-  const handleIncrementRequestsEnd = () => {
-    setInputValueRequestsEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementRequestsEnd = () => {
-    setInputValueRequestsEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  return {
-    inputValueRequestsStart,
-    handleIncrementRequestsStart,
-    handleDecrementRequestsStart,
-    inputValueRequestsEnd,
-    handleIncrementRequestsEnd,
-    handleDecrementRequestsEnd,
-    handleInputChangeRequestsStart: (event) => handleInputChange(event, setInputValueRequestsStart),
-    handleInputChangeRequestsEnd: (event) => handleInputChange(event, setInputValueRequestsEnd),
-  };
-}
+export function useRangeValues(initialValues, prefix) {
+  const [values, setValues] = useState(initialValues);
 
-export function delayTime() {
-  //Delay time start
-  const [inputValueDelayTimeStart, setInputValueDelayTimeStart] = useState(3);
-  const handleIncrementDelayTimeStart = () => {
-    setInputValueDelayTimeStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementDelayTimeStart = () => {
-    setInputValueDelayTimeStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Delay time end
-  const [inputValueDelayTimeEnd, setInputValueDelayTimeEnd] = useState(5);
-  const handleIncrementDelayTimeEnd = () => {
-    setInputValueDelayTimeEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementDelayTimeEnd = () => {
-    setInputValueDelayTimeEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  return {
-    inputValueDelayTimeStart,
-    handleIncrementDelayTimeStart,
-    handleDecrementDelayTimeStart,
-    inputValueDelayTimeEnd,
-    handleIncrementDelayTimeEnd,
-    handleDecrementDelayTimeEnd,
-    handleInputChangeDelayTimeStart: (event) => handleInputChange(event, setInputValueDelayTimeStart),
-    handleInputChangeDelayTimeEnd: (event) => handleInputChange(event, setInputValueDelayTimeEnd),
-  };
-}
+  const createHandlers = () => ({
+    handleIncrement: () => {
+      setValues((prevValues) => ({
+        ...prevValues,
+        [`${prefix}Start`]: prevValues[`${prefix}Start`] + 1,
+      }));
+    },
+    handleDecrement: () => {
+      setValues((prevValues) => ({
+        ...prevValues,
+        [`${prefix}Start`]: prevValues[`${prefix}Start`] > 0 ? prevValues[`${prefix}Start`] - 1 : 0,
+      }));
+    },
+    handleIncrementEnd: () => {
+      setValues((prevValues) => ({
+        ...prevValues,
+        [`${prefix}End`]: prevValues[`${prefix}End`] + 1,
+      }));
+    },
+    handleDecrementEnd: () => {
+      setValues((prevValues) => ({
+        ...prevValues,
+        [`${prefix}End`]: prevValues[`${prefix}End`] > 0 ? prevValues[`${prefix}End`] - 1 : 0,
+      }));
+    },
+    handleInputChangeStart: (event) => handleInputChange(event, setValues, prefix, values),
+    handleInputChangeEnd: (event) => handleInputChange(event, setValues, prefix, values),
+  });
 
-export function numberFriend() {
-  //Random NumberFriend start
-  const [inputValueNumberFriendStart, setInputValueNumberFriendStart] = useState(5);
-  const handleIncrementNumberFriendStart = () => {
-    setInputValueNumberFriendStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementNumberFriendStart = () => {
-    setInputValueNumberFriendStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Random NumberFriend end
-  const [inputValueNumberFriendEnd, setInputValueNumberFriendEnd] = useState(10);
-  const handleIncrementNumberFriendEnd = () => {
-    setInputValueNumberFriendEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementNumberFriendEnd = () => {
-    setInputValueNumberFriendEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  return {
-    inputValueNumberFriendStart,
-    handleIncrementNumberFriendStart,
-    handleDecrementNumberFriendStart,
-    inputValueNumberFriendEnd,
-    handleIncrementNumberFriendEnd,
-    handleDecrementNumberFriendEnd,
-    handleInputChangeNumberFriendStart: (event) => handleInputChange(event, setInputValueNumberFriendStart),
-    handleInputChangeNumberFriendEnd: (event) => handleInputChange(event, setInputValueNumberFriendEnd),
-  };
+  return { ...values, ...createHandlers() };
 }
 
 export function cancelFriendOption() {

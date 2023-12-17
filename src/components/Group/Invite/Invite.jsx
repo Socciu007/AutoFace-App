@@ -6,33 +6,21 @@ import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
 import downButton from '../../../assets/icon/icon-down.svg';
 
-import { DelayTime, InviteOption, NumberGroup_Friends, UIDTextarea } from './Invite';
+import { InviteOption, UIDTextarea, useRangeValues } from './Invite';
 const Invite = ({ onGoBackClick }) => {
-  const {
-    inputValueGroup_FriendsStart,
-    handleIncrementGroup_FriendsStart,
-    handleDecrementGroup_FriendsStart,
-    inputValueGroup_FriendsEnd,
-    handleIncrementGroup_FriendsEnd,
-    handleDecrementGroup_FriendsEnd,
-    handleInputChangeGroup_FriendsStart,
-    handleInputChangeGroup_FriendsEnd,
-  } = NumberGroup_Friends();
+  const initialValues = {
+    Group_FriendsStart: 5,
+    Group_FriendsEnd: 10,
+    DelayTimeStart: 5,
+    DelayTimeEnd: 10,
+  };
 
-  const {
-    inputValueDelayTimeStart,
-    handleIncrementDelayTimeStart,
-    handleDecrementDelayTimeStart,
-    inputValueDelayTimeEnd,
-    handleIncrementDelayTimeEnd,
-    handleDecrementDelayTimeEnd,
-    handleInputChangeDelayTimeStart,
-    handleInputChangeDelayTimeEnd,
-  } = DelayTime();
+  const group_FriendsValues = useRangeValues(initialValues, 'Group_Friends');
+  const delayTimeValues = useRangeValues(initialValues, 'DelayTime');
 
   const { selectedValueInvite, handleSelectChangeInvite } = InviteOption();
 
-  const { UIDContent, handleTextareaChangeUIDContent } = UIDTextarea();
+  const { UIDContent, handleTextareaChangeUIDContent, handleTextareaPaste, lineCount } = UIDTextarea();
 
   return (
     <div className="invite">
@@ -48,42 +36,58 @@ const Invite = ({ onGoBackClick }) => {
                 <p className="component-item__header">Number of friends/group:</p>
                 <div className="component-item__number">
                   <div className="component-item__number__icon">
-                    <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementGroup_FriendsStart} />
-                    <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementGroup_FriendsStart} />
+                    <img src={iconIncrease} alt="Increase icon" onClick={group_FriendsValues.handleIncrement} />
+                    <img src={iconDecrease} alt="Decrease icon" onClick={group_FriendsValues.handleDecrement} />
                   </div>
                   <input
                     type="text"
-                    value={inputValueGroup_FriendsStart}
-                    onChange={handleInputChangeGroup_FriendsStart}
+                    name="Start"
+                    value={group_FriendsValues.Group_FriendsStart}
+                    onChange={(event) => group_FriendsValues.handleInputChangeStart(event)}
                   />
                 </div>
                 <span>to</span>
                 <div className="component-item__number">
                   <div className="component-item__number__icon">
-                    <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementGroup_FriendsEnd} />
-                    <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementGroup_FriendsEnd} />
+                    <img src={iconIncrease} alt="Increase icon" onClick={group_FriendsValues.handleIncrementEnd} />
+                    <img src={iconDecrease} alt="Decrease icon" onClick={group_FriendsValues.handleDecrementEnd} />
                   </div>
-                  <input type="text" value={inputValueGroup_FriendsEnd} onChange={handleInputChangeGroup_FriendsEnd} />
+                  <input
+                    type="text"
+                    name="End"
+                    value={group_FriendsValues.Group_FriendsEnd}
+                    onChange={(event) => group_FriendsValues.handleInputChangeEnd(event)}
+                  />
                 </div>
               </div>
               <div className="component-item delayTime">
                 <p className="component-item__header">
-                  Delay time<span>(s):</span>
+                  Delay time<span style={{ marginLeft: '2px' }}>(s):</span>
                 </p>
                 <div className="component-item__number">
                   <div className="component-item__number__icon">
-                    <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeStart} />
-                    <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeStart} />
+                    <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrement} />
+                    <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrement} />
                   </div>
-                  <input type="text" value={inputValueDelayTimeStart} onChange={handleInputChangeDelayTimeStart} />
+                  <input
+                    name="Start"
+                    type="text"
+                    value={delayTimeValues.DelayTimeStart}
+                    onChange={(event) => delayTimeValues.handleInputChangeStart(event)}
+                  />
                 </div>
                 <span>to</span>
                 <div className="component-item__number">
                   <div className="component-item__number__icon">
-                    <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeEnd} />
-                    <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeEnd} />
+                    <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrementEnd} />
+                    <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrementEnd} />
                   </div>
-                  <input type="text" value={inputValueDelayTimeEnd} onChange={handleInputChangeDelayTimeEnd} />
+                  <input
+                    name="End"
+                    type="text"
+                    value={delayTimeValues.DelayTimeEnd}
+                    onChange={(event) => delayTimeValues.handleInputChangeEnd(event)}
+                  />
                 </div>
               </div>
               <div className="component-item__header">
@@ -107,7 +111,7 @@ const Invite = ({ onGoBackClick }) => {
                     <div className="UIDContent">
                       <div className="UID_Header">
                         <p>Group UID list</p>
-                        <span>(0)</span>
+                        <span>({lineCount})</span>
                       </div>
                       <div className="component-item UIDText">
                         <textarea
@@ -116,6 +120,7 @@ const Invite = ({ onGoBackClick }) => {
                           rows="10"
                           value={UIDContent}
                           onChange={handleTextareaChangeUIDContent}
+                          onPaste={handleTextareaPaste}
                         ></textarea>
                         <div className={`placeholder ${UIDContent ? 'hide' : ''}`}>
                           <p>

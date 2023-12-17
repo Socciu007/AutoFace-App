@@ -1,71 +1,56 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from 'react';
-export function handleInputChange(event, setInputValue) {
+export function handleInputChange(event, setValues, prefix, values) {
   const inputValue = event.target.value;
-  const isNumber = /^\d*$/.test(inputValue); // Check if the input is a number
+  const isNumber = /^\d*$/.test(inputValue);
 
   if (isNumber && inputValue.length < 6) {
     const newValue = inputValue === '' ? '' : parseInt(inputValue, 10);
-    setInputValue(newValue);
+
+    const updatedValues = {
+      ...values,
+      [`${prefix}${event.target.name}`]: newValue,
+    };
+
+    setValues(updatedValues);
   }
 }
-export function NumberStory() {
-  //Story start
-  const [inputValueNumberStoryStart, setInputValueNumberStoryStart] = useState(5);
-  const handleIncrementNumberStoryStart = () => {
-    setInputValueNumberStoryStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementNumberStoryStart = () => {
-    setInputValueNumberStoryStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Story end
-  const [inputValueNumberStoryEnd, setInputValueNumberStoryEnd] = useState(10);
-  const handleIncrementNumberStoryEnd = () => {
-    setInputValueNumberStoryEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementNumberStoryEnd = () => {
-    setInputValueNumberStoryEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  return {
-    inputValueNumberStoryStart,
-    handleIncrementNumberStoryStart,
-    handleDecrementNumberStoryStart,
-    inputValueNumberStoryEnd,
-    handleIncrementNumberStoryEnd,
-    handleDecrementNumberStoryEnd,
-    handleInputChangeNumberStoryStart: (event) => handleInputChange(event, setInputValueNumberStoryStart),
-    handleInputChangeNumberStoryEnd: (event) => handleInputChange(event, setInputValueNumberStoryEnd),
-  };
-}
-export function TimeWatchStory() {
-  //Watching time/story (s) start
-  const [inputValueTimeWatchStoryStart, setInputValueTimeWatchStoryStart] = useState(5);
-  const handleIncrementTimeWatchStoryStart = () => {
-    setInputValueTimeWatchStoryStart((prevValue) => prevValue + 1);
-  };
-  const handleDecrementTimeWatchStoryStart = () => {
-    setInputValueTimeWatchStoryStart((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
-  //Watching time/story (s) end
-  const [inputValueTimeWatchStoryEnd, setInputValueTimeWatchStoryEnd] = useState(10);
-  const handleIncrementTimeWatchStoryEnd = () => {
-    setInputValueTimeWatchStoryEnd((prevValue) => prevValue + 1);
-  };
-  const handleDecrementTimeWatchStoryEnd = () => {
-    setInputValueTimeWatchStoryEnd((prevValue) => (prevValue > 0 ? prevValue - 1 : 0));
-  };
 
-  return {
-    inputValueTimeWatchStoryStart,
-    handleIncrementTimeWatchStoryStart,
-    handleDecrementTimeWatchStoryStart,
-    inputValueTimeWatchStoryEnd,
-    handleIncrementTimeWatchStoryEnd,
-    handleDecrementTimeWatchStoryEnd,
-    handleInputChangeTimeWatchStoryStart: (event) => handleInputChange(event, setInputValueTimeWatchStoryStart),
-    handleInputChangeTimeWatchStoryEnd: (event) => handleInputChange(event, setInputValueTimeWatchStoryEnd),
-  };
+export function useRangeValues(initialValues, prefix) {
+  const [values, setValues] = useState(initialValues);
+
+  const createHandlers = () => ({
+    handleIncrement: () => {
+      setValues((prevValues) => ({
+        ...prevValues,
+        [`${prefix}Start`]: prevValues[`${prefix}Start`] + 1,
+      }));
+    },
+    handleDecrement: () => {
+      setValues((prevValues) => ({
+        ...prevValues,
+        [`${prefix}Start`]: prevValues[`${prefix}Start`] > 0 ? prevValues[`${prefix}Start`] - 1 : 0,
+      }));
+    },
+    handleIncrementEnd: () => {
+      setValues((prevValues) => ({
+        ...prevValues,
+        [`${prefix}End`]: prevValues[`${prefix}End`] + 1,
+      }));
+    },
+    handleDecrementEnd: () => {
+      setValues((prevValues) => ({
+        ...prevValues,
+        [`${prefix}End`]: prevValues[`${prefix}End`] > 0 ? prevValues[`${prefix}End`] - 1 : 0,
+      }));
+    },
+    handleInputChangeStart: (event) => handleInputChange(event, setValues, prefix, values),
+    handleInputChangeEnd: (event) => handleInputChange(event, setValues, prefix, values),
+  });
+
+  return { ...values, ...createHandlers() };
 }
+
 export function ShowReact() {
   // Hien thi react
   const [isReact, setIsReact] = useState(false);

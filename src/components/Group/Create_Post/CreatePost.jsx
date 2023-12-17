@@ -7,8 +7,15 @@ import backButton from '../../../assets/icon/icon-back.svg';
 import DragButton from '../../../assets/icon/icon-drag.svg';
 import DeleteButton from '../../../assets/icon/icon-Delete.svg';
 import downButton from '../../../assets/icon/icon-down.svg';
-import { useRangeValues, handleInputChange } from './CreatePost';
-import { FriendsOption, PostOption, ShowTag, TextOfTextarea, UIDListContent, URLImg } from './CreatePost';
+import {
+  FriendsOption,
+  PostOption,
+  ShowTag,
+  TextOfTextarea,
+  UIDListContent,
+  URLImg,
+  useRangeValues,
+} from './CreatePost';
 const CreatePostGroup = ({ onGoBackClick }) => {
   const initialValues = {
     PostStart: 5,
@@ -187,7 +194,7 @@ const CreatePostGroup = ({ onGoBackClick }) => {
                       <div className={`folderPhoto`}>
                         <div className="URLImg">
                           <span style={{ opacity: '0.5' }}>Folder:</span>
-                          <div>
+                          <div style={{ width: '85%' }}>
                             {files.map((fileName, index) => (
                               <span key={index}>{fileName}</span>
                             ))}

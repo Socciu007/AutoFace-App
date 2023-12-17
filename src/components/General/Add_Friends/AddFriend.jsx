@@ -14,40 +14,13 @@ const AddFriend = ({ onGoBackClick }) => {
     DelayTimeEnd: 10,
     RequestsStart: 5,
     RequestsEnd: 10,
-    StopTime: 10,
+    StopTimeStart: 10,
   };
 
-  const {
-    PostStart,
-    PostEnd,
-    handleIncrementPostStart,
-    handleDecrementPostStart,
-    handleIncrementPostEnd,
-    handleDecrementPostEnd,
-    handleInputChangeStart: handleInputChangePostStart,
-    handleInputChangeEnd: handleInputChangePostEnd,
-    DelayTimeStart,
-    DelayTimeEnd,
-    handleIncrementDelayTimeStart,
-    handleDecrementDelayTimeStart,
-    handleIncrementDelayTimeEnd,
-    handleDecrementDelayTimeEnd,
-    handleInputChangeStart: handleInputChangeDelayTimeStart,
-    handleInputChangeEnd: handleInputChangeDelayTimeEnd,
-    RequestsStart,
-    RequestsEnd,
-    handleIncrementRequestsStart,
-    handleDecrementRequestsStart,
-    handleIncrementRequestsEnd,
-    handleDecrementRequestsEnd,
-    handleInputChangeStart: handleInputChangeRequestsStart,
-    handleInputChangeEnd: handleInputChangeRequestsEnd,
-    StopTime,
-    handleIncrementStopTime,
-    handleDecrementStopTime,
-    handleInputChangeStart: handleInputChangeStopTime,
-  } = useRangeValues(initialValues);
-
+  const postValues = useRangeValues(initialValues, 'Post');
+  const delayTimeValues = useRangeValues(initialValues, 'DelayTime');
+  const requestsValues = useRangeValues(initialValues, 'Requests');
+  const stopTimeValues = useRangeValues(initialValues, 'StopTime');
   const {
     setTextContentAddFriendRequest,
     placeholderText,
@@ -85,7 +58,6 @@ const AddFriend = ({ onGoBackClick }) => {
                   >
                     <option value="suggestions">By suggestions</option>
                     <option value="acceptFriendRequests">Accept friend requests</option>
-                    <option value="UID">By UID</option>
                     <option value="UIDList">UID list</option>
                     <option value="keywords">By keywords</option>
                     <option value="groupMembers">Group members</option>
@@ -102,51 +74,76 @@ const AddFriend = ({ onGoBackClick }) => {
                       <p className="component-item__header">Number of requests:</p>
                       <div className="component-item__number">
                         <div className="component-item__number__icon">
-                          <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementRequestsStart} />
-                          <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementRequestsStart} />
+                          <img src={iconIncrease} alt="Increase icon" onClick={requestsValues.handleIncrement} />
+                          <img src={iconDecrease} alt="Decrease icon" onClick={requestsValues.handleDecrement} />
                         </div>
-                        <input type="text" value={RequestsStart} onChange={handleInputChangeRequestsStart} />
+                        <input
+                          type="text"
+                          name="Start"
+                          value={requestsValues.RequestsStart}
+                          onChange={(event) => requestsValues.handleInputChangeStart(event)}
+                        />
                       </div>
                       <span>to</span>
                       <div className="component-item__number">
                         <div className="component-item__number__icon">
-                          <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementRequestsEnd} />
-                          <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementRequestsEnd} />
+                          <img src={iconIncrease} alt="Increase icon" onClick={requestsValues.handleIncrementEnd} />
+                          <img src={iconDecrease} alt="Decrease icon" onClick={requestsValues.handleDecrementEnd} />
                         </div>
-                        <input type="text" value={RequestsEnd} onChange={handleInputChangeRequestsEnd} />
+                        <input
+                          type="text"
+                          name="End"
+                          value={requestsValues.RequestsEnd}
+                          onChange={(event) => requestsValues.handleInputChangeEnd(event)}
+                        />
                       </div>
                     </div>
                     <div className="component-item delayTime">
                       <p className="component-item__header">
-                        Delay time<span> (s):</span>
+                        Delay time<span style={{ marginLeft: '2px' }}> (s):</span>
                       </p>
                       <div className="component-item__number">
                         <div className="component-item__number__icon">
-                          <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeStart} />
-                          <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeStart} />
+                          <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrement} />
+                          <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrement} />
                         </div>
-                        <input type="text" value={DelayTimeStart} onChange={handleInputChangeDelayTimeStart} />
+                        <input
+                          type="text"
+                          name="Start"
+                          value={delayTimeValues.DelayTimeStart}
+                          onChange={(event) => delayTimeValues.handleInputChangeStart(event)}
+                        />
                       </div>
                       <span>to</span>
                       <div className="component-item__number">
                         <div className="component-item__number__icon">
-                          <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeEnd} />
-                          <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeEnd} />
+                          <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrementEnd} />
+                          <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrementEnd} />
                         </div>
-                        <input type="text" value={DelayTimeEnd} onChange={handleInputChangeDelayTimeEnd} />
+                        <input
+                          type="text"
+                          name="End"
+                          value={delayTimeValues.DelayTimeEnd}
+                          onChange={(event) => delayTimeValues.handleInputChangeEnd(event)}
+                        />
                       </div>
                     </div>
                     {selectedValueTypeAddFriend === 'suggestions' && (
                       <div className="component-item stopTimeAfterWarning">
                         <p>
-                          Stop after Facebook warning <span>(times):</span>
+                          Stop after Facebook warning <span style={{ marginLeft: '2px' }}>(times):</span>
                         </p>
                         <div className="component-item__number">
                           <div className="component-item__number__icon">
-                            <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementStopTime} />
-                            <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementStopTime} />
+                            <img src={iconIncrease} alt="Increase icon" onClick={stopTimeValues.handleIncrement} />
+                            <img src={iconDecrease} alt="Decrease icon" onClick={stopTimeValues.handleDecrement} />
                           </div>
-                          <input type="text" value={StopTime} onChange={handleInputChangeStopTime} />
+                          <input
+                            name="Start"
+                            type="text"
+                            value={stopTimeValues.StopTimeStart}
+                            onChange={(event) => stopTimeValues.handleInputChangeStart(event)}
+                          />
                         </div>
                       </div>
                     )}
@@ -160,7 +157,6 @@ const AddFriend = ({ onGoBackClick }) => {
                   </div>
                 )}
                 {(selectedValueTypeAddFriend === 'UIDList' ||
-                  selectedValueTypeAddFriend === 'UID' ||
                   selectedValueTypeAddFriend === 'keywords' ||
                   selectedValueTypeAddFriend === 'groupMembers' ||
                   selectedValueTypeAddFriend === 'friendOfUID') && (
@@ -190,41 +186,61 @@ const AddFriend = ({ onGoBackClick }) => {
                       <p className="component-item__header">Number of requests:</p>
                       <div className="component-item__number">
                         <div className="component-item__number__icon">
-                          <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementRequestsStart} />
-                          <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementRequestsStart} />
+                          <img src={iconIncrease} alt="Increase icon" onClick={requestsValues.handleIncrement} />
+                          <img src={iconDecrease} alt="Decrease icon" onClick={requestsValues.handleDecrement} />
                         </div>
-                        <input type="text" value={RequestsStart} onChange={handleInputChangeRequestsStart} />
+                        <input
+                          name="Start"
+                          type="text"
+                          value={requestsValues.RequestsStart}
+                          onChange={(event) => requestsValues.handleInputChangeStart(event)}
+                        />
                       </div>
                       <span>to</span>
                       <div className="component-item__number">
                         <div className="component-item__number__icon">
-                          <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementRequestsEnd} />
-                          <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementRequestsEnd} />
+                          <img src={iconIncrease} alt="Increase icon" onClick={requestsValues.handleIncrementEnd} />
+                          <img src={iconDecrease} alt="Decrease icon" onClick={requestsValues.handleDecrementEnd} />
                         </div>
-                        <input type="text" value={RequestsEnd} onChange={handleInputChangeRequestsEnd} />
+                        <input
+                          name="End"
+                          type="text"
+                          value={requestsValues.RequestsEnd}
+                          onChange={(event) => requestsValues.handleInputChangeEnd(event)}
+                        />
                       </div>
                     </div>
                     <div className="component-item delayTime">
                       <p className="component-item__header">
-                        Delay time<span>(s):</span>
+                        Delay time<span style={{ marginLeft: '2px' }}>(s):</span>
                       </p>
                       <div className="component-item__number">
                         <div className="component-item__number__icon">
-                          <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeStart} />
-                          <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeStart} />
+                          <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrement} />
+                          <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrement} />
                         </div>
-                        <input type="text" value={DelayTimeStart} onChange={handleInputChangeDelayTimeStart} />
+                        <input
+                          type="text"
+                          name="Start"
+                          value={delayTimeValues.DelayTimeStart}
+                          onChange={(event) => delayTimeValues.handleInputChangeStart(event)}
+                        />
                       </div>
                       <span>to</span>
                       <div className="component-item__number">
                         <div className="component-item__number__icon">
-                          <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeEnd} />
-                          <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeEnd} />
+                          <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrementEnd} />
+                          <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrementEnd} />
                         </div>
-                        <input type="text" value={DelayTimeEnd} onChange={handleIncrementDelayTimeEnd} />
+                        <input
+                          type="text"
+                          name="End"
+                          value={delayTimeValues.DelayTimeEnd}
+                          onChange={(event) => delayTimeValues.handleInputChangeEnd(event)}
+                        />
                       </div>
                     </div>
-                    {(selectedValueTypeAddFriend === 'UIDList' || selectedValueTypeAddFriend === 'UID') && (
+                    {selectedValueTypeAddFriend === 'UIDList' && (
                       <div>
                         <div className="component-item autoDelete">
                           <input type="checkbox" name="autoDelete" id="autoDelete" />
@@ -235,78 +251,100 @@ const AddFriend = ({ onGoBackClick }) => {
                           <input type="checkbox" name="Interact" onChange={handleCheckboxInteract} />
                           <p>Interact before sending friend request</p>
                         </div>
-                        {selectedValueTypeAddFriend === 'UIDList' && (
-                          <div className={`component-item InteractContent ${isInteract ? 'show' : 'hide'}`}>
-                            <div className="component-item numberOfPost">
-                              <p className="component-item__header">Number of posts:</p>
-                              <div className="component-item__number">
-                                <div className="component-item__number__icon">
-                                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementPostStart} />
-                                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementPostStart} />
-                                </div>
-                                <input type="text" value={PostStart} onChange={handleInputChangePostStart} />
+
+                        <div className={`component-item InteractContent ${isInteract ? 'show' : 'hide'}`}>
+                          <div className="component-item numberOfPost">
+                            <p className="component-item__header">Number of posts:</p>
+                            <div className="component-item__number">
+                              <div className="component-item__number__icon">
+                                <img src={iconIncrease} alt="Increase icon" onClick={postValues.handleIncrement} />
+                                <img src={iconDecrease} alt="Decrease icon" onClick={postValues.handleDecrement} />
                               </div>
-                              <span>to</span>
-                              <div className="component-item__number">
-                                <div className="component-item__number__icon">
-                                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementPostEnd} />
-                                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementPostEnd} />
-                                </div>
-                                <input type="text" value={PostEnd} onChange={handleInputChangePostEnd} />
-                              </div>
-                            </div>
-                            <div className="component-item delayTime">
-                              <p className="component-item__header">
-                                Delay time<span>(s):</span>
-                              </p>
-                              <div className="component-item__number">
-                                <div className="component-item__number__icon">
-                                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeStart} />
-                                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeStart} />
-                                </div>
-                                <input type="text" value={DelayTimeStart} onChange={handleInputChangeDelayTimeStart} />
-                              </div>
-                              <span>to</span>
-                              <div className="component-item__number">
-                                <div className="component-item__number__icon">
-                                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeEnd} />
-                                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeEnd} />
-                                </div>
-                                <input type="text" value={DelayTimeEnd} onChange={handleInputChangeDelayTimeEnd} />
-                              </div>
-                            </div>
-                            <div className="inputLike">
-                              <input type="checkbox" name="Like" id="inputLike" />
-                              <p>Like</p>
-                            </div>
-                            <div className="inputComment">
                               <input
-                                type="checkbox"
-                                name="Comment"
-                                id="inputComment"
-                                onChange={handleCheckboxComment}
+                                name="Start"
+                                type="text"
+                                value={postValues.PostStart}
+                                onChange={(event) => postValues.handleInputChangeStart(event)}
                               />
-                              <p>Comment</p>
                             </div>
-                            <div className={`component-item textComment ${isComment ? 'show' : 'hide'}`}>
-                              <textarea
-                                id="textContentComment"
-                                name="textContentComment"
-                                rows="10"
-                                value={textContentComment}
-                                onChange={handleTextareaChangeComment}
-                              ></textarea>
-                              <div className={`placeholder ${textContentComment ? 'hide' : ''}`}>
-                                <p>
-                                  <span>1</span>Enter the content here
-                                </p>
-                                <p>
-                                  <span>2</span>Each content/line
-                                </p>
+                            <span>to</span>
+                            <div className="component-item__number">
+                              <div className="component-item__number__icon">
+                                <img src={iconIncrease} alt="Increase icon" onClick={postValues.handleIncrementEnd} />
+                                <img src={iconDecrease} alt="Decrease icon" onClick={postValues.handleDecrementEnd} />
                               </div>
+                              <input
+                                name="End"
+                                type="text"
+                                value={postValues.PostEnd}
+                                onChange={(event) => postValues.handleInputChangeEnd(event)}
+                              />
                             </div>
                           </div>
-                        )}
+                          <div className="component-item delayTime">
+                            <p className="component-item__header">
+                              Delay time<span style={{ marginLeft: '2px' }}>(s):</span>
+                            </p>
+                            <div className="component-item__number">
+                              <div className="component-item__number__icon">
+                                <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrement} />
+                                <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrement} />
+                              </div>
+                              <input
+                                name="Start"
+                                type="text"
+                                value={delayTimeValues.DelayTimeStart}
+                                onChange={(event) => delayTimeValues.handleInputChangeStart(event)}
+                              />
+                            </div>
+                            <span>to</span>
+                            <div className="component-item__number">
+                              <div className="component-item__number__icon">
+                                <img
+                                  src={iconIncrease}
+                                  alt="Increase icon"
+                                  onClick={delayTimeValues.handleIncrementEnd}
+                                />
+                                <img
+                                  src={iconDecrease}
+                                  alt="Decrease icon"
+                                  onClick={delayTimeValues.handleDecrementEnd}
+                                />
+                              </div>
+                              <input
+                                name="End"
+                                type="text"
+                                value={delayTimeValues.DelayTimeEnd}
+                                onChange={(event) => delayTimeValues.handleInputChangeEnd(event)}
+                              />
+                            </div>
+                          </div>
+                          <div className="inputLike">
+                            <input type="checkbox" name="Like" id="inputLike" />
+                            <p>Like</p>
+                          </div>
+                          <div className="inputComment">
+                            <input type="checkbox" name="Comment" id="inputComment" onChange={handleCheckboxComment} />
+                            <p>Comment</p>
+                          </div>
+                          <div className={`component-item textComment ${isComment ? 'show' : 'hide'}`}>
+                            <textarea
+                              id="textContentComment"
+                              name="textContentComment"
+                              rows="10"
+                              value={textContentComment}
+                              onChange={handleTextareaChangeComment}
+                            ></textarea>
+                            <div className={`placeholder ${textContentComment ? 'hide' : ''}`}>
+                              <p>
+                                <span>1</span>Enter the content here
+                              </p>
+                              <p>
+                                <span>2</span>Each content/line
+                              </p>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     )}
                   </div>

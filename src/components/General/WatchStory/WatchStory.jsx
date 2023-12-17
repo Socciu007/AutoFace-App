@@ -4,36 +4,19 @@ import './style.scss';
 import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
-import Edit from '../../../assets/icon/icon-edit.svg';
-import Debug from '../../../assets/icon/icon-debug.svg';
-import RunTest from '../../../assets/icon/icon-runTest.svg';
-import iconOptions from '../../../assets/icon/icon-options.svg';
 import iconQuestion from '../../../assets/icon/icon-question.svg';
-import iconSave from '../../../assets/icon/icon-save.svg';
 
-import { NumberStory, ShowComment, ShowReact, TextareaComment, TimeWatchStory } from './WatchStory';
+import { ShowComment, ShowReact, TextareaComment, useRangeValues } from './WatchStory';
 const WatchStory = ({ onGoBackClick }) => {
-  const {
-    inputValueNumberStoryStart,
-    handleIncrementNumberStoryStart,
-    handleDecrementNumberStoryStart,
-    inputValueNumberStoryEnd,
-    handleIncrementNumberStoryEnd,
-    handleDecrementNumberStoryEnd,
-    handleInputChangeNumberStoryStart,
-    handleInputChangeNumberStoryEnd,
-  } = NumberStory();
+  const initialValues = {
+    NumberStoryStart: 5,
+    NumberStoryEnd: 10,
+    DelayTimeStart: 5,
+    DelayTimeEnd: 10,
+  };
 
-  const {
-    inputValueTimeWatchStoryStart,
-    handleIncrementTimeWatchStoryStart,
-    handleDecrementTimeWatchStoryStart,
-    inputValueTimeWatchStoryEnd,
-    handleIncrementTimeWatchStoryEnd,
-    handleDecrementTimeWatchStoryEnd,
-    handleInputChangeTimeWatchStoryStart,
-    handleInputChangeTimeWatchStoryEnd,
-  } = TimeWatchStory();
+  const numberStoryValues = useRangeValues(initialValues, 'NumberStory');
+  const delayTimeValues = useRangeValues(initialValues, 'DelayTime');
 
   const { isReact, handleCheckboxChangeReact } = ShowReact();
 
@@ -54,40 +37,56 @@ const WatchStory = ({ onGoBackClick }) => {
               <p className="component-item__header">Number of stories:</p>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementNumberStoryStart} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementNumberStoryStart} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={numberStoryValues.handleIncrement} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={numberStoryValues.handleDecrement} />
                 </div>
-                <input type="text" value={inputValueNumberStoryStart} onChange={handleInputChangeNumberStoryStart} />
+                <input
+                  type="text"
+                  name="Start"
+                  value={numberStoryValues.NumberStoryStart}
+                  onChange={(event) => numberStoryValues.handleInputChangeStart(event)}
+                />
               </div>
               <span>to</span>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementNumberStoryEnd} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementNumberStoryEnd} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={numberStoryValues.handleIncrementEnd} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={numberStoryValues.handleDecrementEnd} />
                 </div>
-                <input type="text" value={inputValueNumberStoryEnd} onChange={handleInputChangeNumberStoryEnd} />
+                <input
+                  type="text"
+                  name="End"
+                  value={numberStoryValues.NumberStoryEnd}
+                  onChange={(event) => numberStoryValues.handleInputChangeEnd(event)}
+                />
               </div>
             </div>
             <div className="component-item watchingTime">
               <p className="component-item__header">Watching time/story (s):</p>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementTimeWatchStoryStart} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementTimeWatchStoryStart} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrement} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrement} />
                 </div>
                 <input
                   type="text"
-                  value={inputValueTimeWatchStoryStart}
-                  onChange={handleInputChangeTimeWatchStoryStart}
+                  name="Start"
+                  value={delayTimeValues.DelayTimeStart}
+                  onChange={(event) => delayTimeValues.handleInputChangeStart(event)}
                 />
               </div>
               <span>to</span>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementTimeWatchStoryEnd} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementTimeWatchStoryEnd} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrementEnd} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrementEnd} />
                 </div>
-                <input type="text" value={inputValueTimeWatchStoryEnd} onChange={handleInputChangeTimeWatchStoryEnd} />
+                <input
+                  type="text"
+                  name="End"
+                  value={delayTimeValues.DelayTimeEnd}
+                  onChange={(event) => delayTimeValues.handleInputChangeEnd(event)}
+                />
               </div>
             </div>
             <div className="component-item_react">

@@ -6,61 +6,23 @@ import backButton from '../../../assets/icon/icon-back.svg';
 import DragButton from '../../../assets/icon/icon-drag.svg';
 import DeleteButton from '../../../assets/icon/icon-Delete.svg';
 import downButton from '../../../assets/icon/icon-down.svg';
-import {
-  FriendsOption,
-  PostOption,
-  TextBackGround,
-  URLImg,
-  delayTime,
-  numberOfFriend,
-  numberOfPost,
-  photoVideo,
-  showTag,
-} from './CreatePost.js';
+import { FriendsOption, PostOption, TextBackGround, URLImg, showTag, useRangeValues } from './CreatePost.js';
 const CreatePost = ({ onGoBackClick }) => {
-  const {
-    inputValuePostStart,
-    handleIncrementPostStart,
-    handleDecrementPostStart,
-    inputValuePostEnd,
-    handleIncrementPostEnd,
-    handleDecrementPostEnd,
-    handleInputChangePostStart,
-    handleInputChangePostEnd,
-  } = numberOfPost();
+  const initialValues = {
+    PostStart: 5,
+    PostEnd: 10,
+    DelayTimeStart: 5,
+    DelayTimeEnd: 10,
+    PhotoVideoStart: 5,
+    PhotoVideoEnd: 10,
+    NumberFriendStart: 5,
+    NumberFriendEnd: 10,
+  };
 
-  const {
-    inputValueDelayTimeStart,
-    handleIncrementDelayTimeStart,
-    handleDecrementDelayTimeStart,
-    inputValueDelayTimeEnd,
-    handleIncrementDelayTimeEnd,
-    handleDecrementDelayTimeEnd,
-    handleInputChangeDelayTimeStart,
-    handleInputChangeDelayTimeEnd,
-  } = delayTime();
-
-  const {
-    inputValuePhotoVideoStart,
-    handleIncrementPhotoVideoStart,
-    handleDecrementPhotoVideoStart,
-    inputValuePhotoVideoEnd,
-    handleIncrementPhotoVideoEnd,
-    handleDecrementPhotoVideoEnd,
-    handleInputChangePhotoVideoStart,
-    handleInputChangePhotoVideoEnd,
-  } = photoVideo();
-
-  const {
-    inputValueNumberOfFriendStart,
-    handleIncrementNumberOfFriendStart,
-    handleDecrementNumberOfFriendStart,
-    inputValueNumberOfFriendEnd,
-    handleIncrementNumberOfFriendEnd,
-    handleDecrementNumberOfFriendEnd,
-    handleInputChangeNumberOfFriendStart,
-    handleInputChangeNumberOfFriendEnd,
-  } = numberOfFriend();
+  const postValues = useRangeValues(initialValues, 'Post');
+  const delayTimeValues = useRangeValues(initialValues, 'DelayTime');
+  const photoVideoValues = useRangeValues(initialValues, 'PhotoVideo');
+  const numberFriendValues = useRangeValues(initialValues, 'NumberFriend');
 
   const { isTag, handleCheckboxTag } = showTag();
 
@@ -84,38 +46,58 @@ const CreatePost = ({ onGoBackClick }) => {
               <p className="component-item__header">Number of posts:</p>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementPostStart} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementPostStart} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={postValues.handleIncrement} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={postValues.handleDecrement} />
                 </div>
-                <input type="text" value={inputValuePostStart} onChange={handleInputChangePostStart} />
+                <input
+                  name="Start"
+                  type="text"
+                  value={postValues.PostStart}
+                  onChange={(event) => postValues.handleInputChangeStart(event)}
+                />
               </div>
               <span>to</span>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementPostEnd} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementPostEnd} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={postValues.handleIncrementEnd} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={postValues.handleDecrementEnd} />
                 </div>
-                <input type="text" value={inputValuePostEnd} onChange={handleInputChangePostEnd} />
+                <input
+                  name="End"
+                  type="text"
+                  value={postValues.PostEnd}
+                  onChange={(event) => postValues.handleInputChangeEnd(event)}
+                />
               </div>
             </div>
             <div className="component-item delayTime">
               <p className="component-item__header">
-                Delay time <span>(s):</span>
+                Delay time<span style={{ marginLeft: '2px' }}>(s):</span>
               </p>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeStart} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeStart} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrement} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrement} />
                 </div>
-                <input type="text" value={inputValueDelayTimeStart} onChange={handleInputChangeDelayTimeStart} />
+                <input
+                  name="Start"
+                  type="text"
+                  value={delayTimeValues.DelayTimeStart}
+                  onChange={(event) => delayTimeValues.handleInputChangeStart(event)}
+                />
               </div>
               <span>to</span>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeEnd} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeEnd} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrementEnd} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrementEnd} />
                 </div>
-                <input type="text" value={inputValueDelayTimeEnd} onChange={handleInputChangeDelayTimeEnd} />
+                <input
+                  name="End"
+                  type="text"
+                  value={delayTimeValues.DelayTimeEnd}
+                  onChange={(event) => delayTimeValues.handleInputChangeEnd(event)}
+                />
               </div>
             </div>
             <div className="component-item Post">
@@ -164,22 +146,28 @@ const CreatePost = ({ onGoBackClick }) => {
                       <p className="component-item__header numberOfPostText">Number of photo/video:</p>
                       <div className="component-item__number">
                         <div className="component-item__number__icon">
-                          <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementPhotoVideoStart} />
-                          <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementPhotoVideoStart} />
+                          <img src={iconIncrease} alt="Increase icon" onClick={photoVideoValues.handleIncrement} />
+                          <img src={iconDecrease} alt="Decrease icon" onClick={photoVideoValues.handleDecrement} />
                         </div>
                         <input
+                          name="Start"
                           type="text"
-                          value={inputValuePhotoVideoStart}
-                          onChange={handleInputChangePhotoVideoStart}
+                          value={photoVideoValues.PhotoVideoStart}
+                          onChange={(event) => photoVideoValues.handleInputChangeStart(event)}
                         />
                       </div>
                       <span>to</span>
                       <div className="component-item__number">
                         <div className="component-item__number__icon">
-                          <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementPhotoVideoEnd} />
-                          <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementPhotoVideoEnd} />
+                          <img src={iconIncrease} alt="Increase icon" onClick={photoVideoValues.handleIncrementEnd} />
+                          <img src={iconDecrease} alt="Decrease icon" onClick={photoVideoValues.handleDecrementEnd} />
                         </div>
-                        <input type="text" value={inputValuePhotoVideoEnd} onChange={handleInputChangePhotoVideoEnd} />
+                        <input
+                          name="End"
+                          type="text"
+                          value={photoVideoValues.PhotoVideoEnd}
+                          onChange={(event) => photoVideoValues.handleInputChangeEnd(event)}
+                        />
                       </div>
                     </div>
                     {files.length === 0 ? (
@@ -214,30 +202,40 @@ const CreatePost = ({ onGoBackClick }) => {
                               <img
                                 src={iconIncrease}
                                 alt="Increase icon"
-                                onClick={handleIncrementNumberOfFriendStart}
+                                onClick={numberFriendValues.handleIncrement}
                               />
                               <img
                                 src={iconDecrease}
                                 alt="Decrease icon"
-                                onClick={handleDecrementNumberOfFriendStart}
+                                onClick={numberFriendValues.handleDecrement}
                               />
                             </div>
                             <input
+                              name="Start"
                               type="text"
-                              value={inputValueNumberOfFriendStart}
-                              onChange={handleInputChangeNumberOfFriendStart}
+                              value={numberFriendValues.NumberFriendStart}
+                              onChange={(event) => numberFriendValues.handleInputChangeStart(event)}
                             />
                           </div>
                           <span>to</span>
                           <div className="component-item__number">
                             <div className="component-item__number__icon">
-                              <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementNumberOfFriendEnd} />
-                              <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementNumberOfFriendEnd} />
+                              <img
+                                src={iconIncrease}
+                                alt="Increase icon"
+                                onClick={numberFriendValues.handleIncrementEnd}
+                              />
+                              <img
+                                src={iconDecrease}
+                                alt="Decrease icon"
+                                onClick={numberFriendValues.handleDecrementEnd}
+                              />
                             </div>
                             <input
+                              name="End"
                               type="text"
-                              value={inputValueNumberOfFriendEnd}
-                              onChange={handleInputChangeNumberOfFriendEnd}
+                              value={numberFriendValues.NumberFriendEnd}
+                              onChange={(event) => numberFriendValues.handleInputChangeEnd(event)}
                             />
                           </div>
                         </div>

@@ -4,40 +4,19 @@ import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
 import downButton from '../../../assets/icon/icon-down.svg';
-import { UIDText, cancelFriendOption, delayTime, numberFriend, numberOfRequests, unfriendOption } from './CancelFriend';
+import { UIDText, cancelFriendOption, unfriendOption, useRangeValues } from './CancelFriend';
 const CancelFriend = ({ onGoBackClick }) => {
-  const {
-    inputValueRequestsStart,
-    handleIncrementRequestsStart,
-    handleDecrementRequestsStart,
-    inputValueRequestsEnd,
-    handleIncrementRequestsEnd,
-    handleDecrementRequestsEnd,
-    handleInputChangeRequestsStart,
-    handleInputChangeRequestsEnd,
-  } = numberOfRequests();
-
-  const {
-    inputValueDelayTimeStart,
-    handleIncrementDelayTimeStart,
-    handleDecrementDelayTimeStart,
-    inputValueDelayTimeEnd,
-    handleIncrementDelayTimeEnd,
-    handleDecrementDelayTimeEnd,
-    handleInputChangeDelayTimeStart,
-    handleInputChangeDelayTimeEnd,
-  } = delayTime();
-
-  const {
-    inputValueNumberFriendStart,
-    handleIncrementNumberFriendStart,
-    handleDecrementNumberFriendStart,
-    inputValueNumberFriendEnd,
-    handleIncrementNumberFriendEnd,
-    handleDecrementNumberFriendEnd,
-    handleInputChangeNumberFriendStart,
-    handleInputChangeNumberFriendEnd,
-  } = numberFriend();
+  const initialValues = {
+    NumberFriendStart: 5,
+    NumberFriendEnd: 10,
+    DelayTimeStart: 5,
+    DelayTimeEnd: 10,
+    RequestsStart: 5,
+    RequestsEnd: 10,
+  };
+  const numberFriendValues = useRangeValues(initialValues, 'NumberFriend');
+  const delayTimeValues = useRangeValues(initialValues, 'DelayTime');
+  const requestsValues = useRangeValues(initialValues, 'Requests');
 
   const { selectedValueCancelFriend, handleSelectChangeCancelFriend } = cancelFriendOption();
 
@@ -76,40 +55,60 @@ const CancelFriend = ({ onGoBackClick }) => {
                     <p className="component-item__header">Number of requests:</p>
                     <div className="component-item__number">
                       <div className="component-item__number__icon">
-                        <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementRequestsStart} />
-                        <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementRequestsStart} />
+                        <img src={iconIncrease} alt="Increase icon" onClick={requestsValues.handleIncrement} />
+                        <img src={iconDecrease} alt="Decrease icon" onClick={requestsValues.handleDecrement} />
                       </div>
-                      <input type="text" value={inputValueRequestsStart} onChange={handleInputChangeRequestsStart} />
+                      <input
+                        name="Start"
+                        type="text"
+                        value={requestsValues.RequestsStart}
+                        onChange={(event) => requestsValues.handleInputChangeStart(event)}
+                      />
                     </div>
                     <span>to</span>
                     <div className="component-item__number">
                       <div className="component-item__number__icon">
-                        <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementRequestsEnd} />
-                        <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementRequestsEnd} />
+                        <img src={iconIncrease} alt="Increase icon" onClick={requestsValues.handleIncrementEnd} />
+                        <img src={iconDecrease} alt="Decrease icon" onClick={requestsValues.handleDecrementEnd} />
                       </div>
-                      <input type="text" value={inputValueRequestsEnd} onChange={handleInputChangeRequestsEnd} />
+                      <input
+                        name="End"
+                        type="text"
+                        value={requestsValues.RequestsEnd}
+                        onChange={(event) => requestsValues.handleInputChangeEnd(event)}
+                      />
                     </div>
                   </div>
                 )}
                 {(selectedValueCancelFriend === 'cancelRequest' || selectedValueCancelFriend === 'unfriend') && (
                   <div className="component-item delayTime">
                     <p className="component-item__header">
-                      Delay time<span>(s):</span>
+                      Delay time<span style={{ marginLeft: '2px' }}>(s):</span>
                     </p>
                     <div className="component-item__number">
                       <div className="component-item__number__icon">
-                        <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeStart} />
-                        <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeStart} />
+                        <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrement} />
+                        <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrement} />
                       </div>
-                      <input type="text" value={inputValueDelayTimeStart} onChange={handleInputChangeDelayTimeStart} />
+                      <input
+                        name="Start"
+                        type="text"
+                        value={delayTimeValues.DelayTimeStart}
+                        onChange={(event) => delayTimeValues.handleInputChangeStart(event)}
+                      />
                     </div>
                     <span>to</span>
                     <div className="component-item__number">
                       <div className="component-item__number__icon">
-                        <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeEnd} />
-                        <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeEnd} />
+                        <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrementEnd} />
+                        <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrementEnd} />
                       </div>
-                      <input type="text" value={inputValueDelayTimeEnd} onChange={handleInputChangeDelayTimeEnd} />
+                      <input
+                        name="End"
+                        type="text"
+                        value={delayTimeValues.DelayTimeEnd}
+                        onChange={(event) => delayTimeValues.handleInputChangeEnd(event)}
+                      />
                     </div>
                   </div>
                 )}
@@ -140,30 +139,40 @@ const CancelFriend = ({ onGoBackClick }) => {
                                 <img
                                   src={iconIncrease}
                                   alt="Increase icon"
-                                  onClick={handleIncrementNumberFriendStart}
+                                  onClick={numberFriendValues.handleIncrement}
                                 />
                                 <img
                                   src={iconDecrease}
                                   alt="Decrease icon"
-                                  onClick={handleDecrementNumberFriendStart}
+                                  onClick={numberFriendValues.handleDecrement}
                                 />
                               </div>
                               <input
+                                name="Start"
                                 type="text"
-                                value={inputValueNumberFriendStart}
-                                onChange={handleInputChangeNumberFriendStart}
+                                value={numberFriendValues.NumberFriendStart}
+                                onChange={(event) => numberFriendValues.handleInputChangeStart(event)}
                               />
                             </div>
                             <span>to</span>
                             <div className="component-item__number">
                               <div className="component-item__number__icon">
-                                <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementNumberFriendEnd} />
-                                <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementNumberFriendEnd} />
+                                <img
+                                  src={iconIncrease}
+                                  alt="Increase icon"
+                                  onClick={numberFriendValues.handleIncrementEnd}
+                                />
+                                <img
+                                  src={iconDecrease}
+                                  alt="Decrease icon"
+                                  onClick={numberFriendValues.handleDecrementEnd}
+                                />
                               </div>
                               <input
+                                name="End"
                                 type="text"
-                                value={inputValueNumberFriendEnd}
-                                onChange={handleInputChangeNumberFriendEnd}
+                                value={numberFriendValues.NumberFriendEnd}
+                                onChange={(event) => numberFriendValues.handleInputChangeEnd(event)}
                               />
                             </div>
                           </div>
