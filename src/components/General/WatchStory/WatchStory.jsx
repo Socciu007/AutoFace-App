@@ -6,7 +6,7 @@ import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
 import iconQuestion from '../../../assets/icon/icon-question.svg';
 
-import { ShowComment, ShowReact, TextareaComment, useRangeValues } from './WatchStory';
+import { TextareaComment, useRangeValues, useShowCheckbox } from './WatchStory';
 const WatchStory = ({ onGoBackClick }) => {
   const initialValues = {
     NumberStoryStart: 5,
@@ -18,9 +18,9 @@ const WatchStory = ({ onGoBackClick }) => {
   const numberStoryValues = useRangeValues(initialValues, 'NumberStory');
   const delayTimeValues = useRangeValues(initialValues, 'DelayTime');
 
-  const { isReact, handleCheckboxChangeReact } = ShowReact();
+  const { isReact, handleCheckboxChangeReact } = useShowCheckbox(false, 'React');
 
-  const { isComment, handleCheckboxChangeComment } = ShowComment();
+  const { isComment, handleCheckboxChangeComment } = useShowCheckbox(false, 'Comment');
 
   const { textContent, handleTextareaChange } = TextareaComment();
 

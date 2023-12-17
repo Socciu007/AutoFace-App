@@ -51,51 +51,17 @@ export function useRangeValues(initialValues, prefix) {
   return { ...values, ...createHandlers() };
 }
 
-export function ShowLike() {
-  // Hien thi like
-  const [isLiked, setIsLiked] = useState(false);
+// Show react,show comment,show text,show share
+export function useShowCheckbox(initialState, featureName) {
+  const [isFeatureVisible, setIsFeatureVisible] = useState(initialState);
 
-  const handleCheckboxChangeLike = () => {
-    setIsLiked((prevIsLiked) => !prevIsLiked);
-  };
-  return {
-    isLiked,
-    handleCheckboxChangeLike,
-  };
-}
-export function ShowShare() {
-  //Hien thi share
-  const [isShare, setIsShared] = useState(false);
-  const handleCheckboxChangeShare = () => {
-    setIsShared((prevIsShared) => !prevIsShared);
-  };
-  return {
-    isShare,
-    handleCheckboxChangeShare,
-  };
-}
-export function ShowComment() {
-  //Hien thi comment
-  const [isComment, setisComment] = useState(false);
-  const handleCheckboxChangeComment = () => {
-    setisComment((prevIsCommented) => !prevIsCommented);
-  };
-  return {
-    isComment,
-    handleCheckboxChangeComment,
-  };
-}
-export function ShowText() {
-  //Hien thi o text
-  const [isText, setIsText] = useState(false);
-
-  const handleCheckboxChangeText = () => {
-    setIsText((prevIsText) => !prevIsText);
+  const handleCheckboxChange = () => {
+    setIsFeatureVisible((prevState) => !prevState);
   };
 
   return {
-    isText,
-    handleCheckboxChangeText,
+    [`is${featureName}`]: isFeatureVisible,
+    [`handleCheckboxChange${featureName}`]: handleCheckboxChange,
   };
 }
 export function ShowTextarea() {

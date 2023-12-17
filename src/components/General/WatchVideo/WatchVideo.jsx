@@ -8,7 +8,7 @@ import DragButton from '../../../assets/icon/icon-drag.svg';
 import DeleteButton from '../../../assets/icon/icon-Delete.svg';
 import downButton from '../../../assets/icon/icon-down.svg';
 
-import { CommentOption, CommentTextarea, ShowComment, ShowLike, ShowShare, URLImg, useRangeValues } from './WatchVideo';
+import { CommentOption, CommentTextarea, URLImg, useRangeValues, useShowCheckbox } from './WatchVideo';
 const WatchVideo = ({ onGoBackClick }) => {
   const initialValues = {
     NumberVideoStart: 5,
@@ -32,11 +32,11 @@ const WatchVideo = ({ onGoBackClick }) => {
   const commentValues = useRangeValues(initialValues, 'Comment');
   const photoVideoValues = useRangeValues(initialValues, 'PhotoVideo');
 
-  const { isLiked, handleCheckboxChange } = ShowLike();
+  const { isLiked, handleCheckboxChangeLiked } = useShowCheckbox(false, 'Liked');
 
-  const { isShare, handleCheckboxChangeShare } = ShowShare();
+  const { isShare, handleCheckboxChangeShare } = useShowCheckbox(false, 'Share');
 
-  const { isComment, handleCheckboxChangeComment } = ShowComment();
+  const { isComment, handleCheckboxChangeComment } = useShowCheckbox(false, 'Comment');
 
   const { selectedValue, handleSelectChange } = CommentOption();
 
@@ -98,7 +98,7 @@ const WatchVideo = ({ onGoBackClick }) => {
                 />
               </div>
               <span>to</span>
-              
+
               <div className="component-item__number">
                 <div className="component-item__number__icon">
                   <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrementEnd} />
@@ -114,7 +114,7 @@ const WatchVideo = ({ onGoBackClick }) => {
             </div>
             <div className="component-item Like">
               <div className="component-item__header">
-                <input type="checkbox" name="randomLike" onChange={handleCheckboxChange} />
+                <input type="checkbox" name="randomLike" onChange={handleCheckboxChangeLiked} />
                 <p>
                   Random Like <span className={`span__content ${isLiked ? 'show' : 'hide'}`}>(video)</span>:
                 </p>

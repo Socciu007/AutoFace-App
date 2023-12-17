@@ -5,7 +5,7 @@ import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
 
-import { ShowComment, ShowLike, ShowShare, ShowText, ShowTextarea, useRangeValues } from './Newsfeed';
+import { ShowTextarea, useRangeValues, useShowCheckbox } from './Newsfeed';
 const Newsfeed = ({ onGoBackClick }) => {
   const initialValues = {
     ScrollTimeStart: 5,
@@ -26,13 +26,13 @@ const Newsfeed = ({ onGoBackClick }) => {
   const shareValues = useRangeValues(initialValues, 'Share');
   const commentValues = useRangeValues(initialValues, 'Comment');
 
-  const { isLiked, handleCheckboxChangeLike } = ShowLike();
+  const { isLiked, handleCheckboxChangeLiked } = useShowCheckbox(false, 'Liked');
 
-  const { isShare, handleCheckboxChangeShare } = ShowShare();
+  const { isShare, handleCheckboxChangeShare } = useShowCheckbox(false, 'Share');
 
-  const { isComment, handleCheckboxChangeComment } = ShowComment();
+  const { isComment, handleCheckboxChangeComment } = useShowCheckbox(false, 'Comment');
 
-  const { isText, handleCheckboxChangeText } = ShowText();
+  const { isText, handleCheckboxChangeText } = useShowCheckbox(false, 'Text');
 
   const { textContent, handleTextareaChange } = ShowTextarea();
   return (
@@ -102,7 +102,7 @@ const Newsfeed = ({ onGoBackClick }) => {
             </div>
             <div className="component-item Like">
               <div className="component-item__header">
-                <input type="checkbox" name="randomLike" onChange={handleCheckboxChangeLike} />
+                <input type="checkbox" name="randomLike" onChange={handleCheckboxChangeLiked} />
                 <p>
                   Random Like{' '}
                   <span style={{ marginLeft: '2px' }} className={`span__content ${isLiked ? 'show' : 'hide'}`}>

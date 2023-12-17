@@ -52,43 +52,20 @@ export function useRangeValues(initialValues, prefix) {
   return { ...values, ...createHandlers() };
 }
 
-export function ShowLike() {
-  // Hien thi
-  const [isLiked, setIsLiked] = useState(false);
+// Show react,show comment,show share
+export function useShowCheckbox(initialState, featureName) {
+  const [isFeatureVisible, setIsFeatureVisible] = useState(initialState);
 
   const handleCheckboxChange = () => {
-    setIsLiked((prevIsLiked) => !prevIsLiked);
+    setIsFeatureVisible((prevState) => !prevState);
   };
 
   return {
-    isLiked,
-    handleCheckboxChange,
+    [`is${featureName}`]: isFeatureVisible,
+    [`handleCheckboxChange${featureName}`]: handleCheckboxChange,
   };
 }
-export function ShowShare() {
-  //Hien thi share
-  const [isShare, setIsShared] = useState(false);
-  const handleCheckboxChangeShare = () => {
-    setIsShared((prevIsLiked) => !prevIsLiked);
-  };
 
-  return {
-    isShare,
-    handleCheckboxChangeShare,
-  };
-}
-export function ShowComment() {
-  //Hien thi comment
-  const [isComment, setisComment] = useState(false);
-  const handleCheckboxChangeComment = () => {
-    setisComment((prevIsLiked) => !prevIsLiked);
-  };
-
-  return {
-    isComment,
-    handleCheckboxChangeComment,
-  };
-}
 export function CommentOption() {
   //Hien thi select
   const [selectedValue, setSelectedValue] = useState('');

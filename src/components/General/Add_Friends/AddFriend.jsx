@@ -31,9 +31,9 @@ const AddFriend = ({ onGoBackClick }) => {
 
   const { textContentComment, handleTextareaChangeComment } = TextComment();
 
-  const { isInteract, handleCheckboxInteract } = Interact();
+  const { isInteract, handleCheckboxChangeInteract } = useShowCheckbox(false, 'Interact');
 
-  const { isComment, handleCheckboxComment } = Comment();
+  const { isComment, handleCheckboxChangeComment } = useShowCheckbox(false, 'Comment');
 
   return (
     <div className="Add_Friend">
@@ -248,7 +248,7 @@ const AddFriend = ({ onGoBackClick }) => {
                         </div>
 
                         <div className="component-item Interact">
-                          <input type="checkbox" name="Interact" onChange={handleCheckboxInteract} />
+                          <input type="checkbox" name="Interact" onChange={handleCheckboxChangeInteract} />
                           <p>Interact before sending friend request</p>
                         </div>
 
@@ -324,7 +324,12 @@ const AddFriend = ({ onGoBackClick }) => {
                             <p>Like</p>
                           </div>
                           <div className="inputComment">
-                            <input type="checkbox" name="Comment" id="inputComment" onChange={handleCheckboxComment} />
+                            <input
+                              type="checkbox"
+                              name="Comment"
+                              id="inputComment"
+                              onChange={handleCheckboxChangeComment}
+                            />
                             <p>Comment</p>
                           </div>
                           <div className={`component-item textComment ${isComment ? 'show' : 'hide'}`}>

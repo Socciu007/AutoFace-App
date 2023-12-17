@@ -51,31 +51,20 @@ export function useRangeValues(initialValues, prefix) {
   return { ...values, ...createHandlers() };
 }
 
-export function ShowReact() {
-  // Hien thi react
-  const [isReact, setIsReact] = useState(false);
+// Show react,show comment
+export function useShowCheckbox(initialState, featureName) {
+  const [isFeatureVisible, setIsFeatureVisible] = useState(initialState);
 
-  const handleCheckboxChangeReact = () => {
-    setIsReact((prevIsReact) => !prevIsReact);
-  };
-
-  return {
-    isReact,
-    handleCheckboxChangeReact,
-  };
-}
-export function ShowComment() {
-  //Hien thi comment
-  const [isComment, setisComment] = useState(false);
-  const handleCheckboxChangeComment = () => {
-    setisComment((prevIsLiked) => !prevIsLiked);
+  const handleCheckboxChange = () => {
+    setIsFeatureVisible((prevState) => !prevState);
   };
 
   return {
-    isComment,
-    handleCheckboxChangeComment,
+    [`is${featureName}`]: isFeatureVisible,
+    [`handleCheckboxChange${featureName}`]: handleCheckboxChange,
   };
 }
+
 export function TextareaComment() {
   //cai dat cho phan text comment
   const [textContent, setTextContent] = useState('');

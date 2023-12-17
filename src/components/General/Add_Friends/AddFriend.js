@@ -119,30 +119,16 @@ export function TextComment() {
   };
 }
 
-export function Interact() {
-  // Hien thi Interact
-  const [isInteract, setIsInteract] = useState(false);
+// Show Interact,show comment
+export function useShowCheckbox(initialState, featureName) {
+  const [isFeatureVisible, setIsFeatureVisible] = useState(initialState);
 
-  const handleCheckboxInteract = () => {
-    setIsInteract((prevIsInteract) => !prevIsInteract);
+  const handleCheckboxChange = () => {
+    setIsFeatureVisible((prevState) => !prevState);
   };
 
   return {
-    isInteract,
-    handleCheckboxInteract,
-  };
-}
-
-export function Comment() {
-  // Hien thi Comment khi ấn vào check box
-  const [isComment, setIsComment] = useState(false);
-
-  const handleCheckboxComment = () => {
-    setIsComment((prevIsComment) => !prevIsComment);
-  };
-
-  return {
-    isComment,
-    handleCheckboxComment,
+    [`is${featureName}`]: isFeatureVisible,
+    [`handleCheckboxChange${featureName}`]: handleCheckboxChange,
   };
 }
