@@ -22,7 +22,7 @@ const LeaveGroup = ({ onGoBackClick }) => {
 
   const { selectedValueLeaveGroup, handleSelectChangeLeaveGroup } = LeaveGroupOption();
 
-  const { KeywordContent, handleTextareaChangeKeywordContent } = KeywordTextarea();
+  const { KeywordContent, handleTextareaChangeKeywordContent, handleDivClick, textareaRef } = KeywordTextarea();
 
   return (
     <div className="leaveGroup">
@@ -134,8 +134,9 @@ const LeaveGroup = ({ onGoBackClick }) => {
                           rows="10"
                           value={KeywordContent}
                           onChange={handleTextareaChangeKeywordContent}
+                          ref={textareaRef}
                         ></textarea>
-                        <div className={`placeholder ${KeywordContent ? 'hide' : ''}`}>
+                        <div onClick={handleDivClick} className={`placeholder ${KeywordContent ? 'hide' : ''}`}>
                           <p>
                             <span>1 </span>
                             <p>Enter the keyword here</p>

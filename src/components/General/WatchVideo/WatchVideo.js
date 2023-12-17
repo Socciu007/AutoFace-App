@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
 export function handleInputChange(event, setValues, prefix, values) {
@@ -85,14 +85,18 @@ export function CommentOption() {
 export function CommentTextarea() {
   //cai dat cho phan text comment
   const [textContent, setTextContent] = useState('');
-
+  const textareaRef = useRef(null);
   const handleTextareaChange = (event) => {
     setTextContent(event.target.value);
   };
-
+  const handleDivClick = () => {
+    textareaRef.current.focus();
+  };
   return {
     textContent,
     handleTextareaChange,
+    handleDivClick,
+    textareaRef,
   };
 }
 export function URLImg() {

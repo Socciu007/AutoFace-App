@@ -22,7 +22,7 @@ const CancelFriend = ({ onGoBackClick }) => {
 
   const { selectedValueUnfriend, handleSelectChangeUnfriend } = unfriendOption();
 
-  const { UIDContent, handleTextareaChangeUIDContent } = UIDText();
+  const { UIDContent, handleTextareaChangeUIDContent, handleDivClick, textareaRef } = UIDText();
 
   return (
     <div className="CancelFriend">
@@ -48,7 +48,6 @@ const CancelFriend = ({ onGoBackClick }) => {
                     <option value="cancelRequest">Cancel friend requests</option>
                     <option value="unfriend">Unfriend</option>
                   </select>
-                  <img src={downButton} alt="Down Button" />
                 </div>
                 {selectedValueCancelFriend === 'cancelRequest' && (
                   <div className="component-item numberOfRequests">
@@ -185,9 +184,10 @@ const CancelFriend = ({ onGoBackClick }) => {
                             name="UIDContent"
                             rows="10"
                             value={UIDContent}
+                            ref={textareaRef}
                             onChange={handleTextareaChangeUIDContent}
                           ></textarea>
-                          <div className={`placeholder ${UIDContent ? 'hide' : ''}`}>
+                          <div onClick={handleDivClick} className={`placeholder ${UIDContent ? 'hide' : ''}`}>
                             <p>
                               <span>1</span>Enter the UID list here
                             </p>

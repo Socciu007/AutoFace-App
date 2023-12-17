@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 export function handleInputChange(event, setValues, prefix, values) {
   const inputValue = event.target.value;
   const isNumber = /^\d*$/.test(inputValue);
@@ -53,13 +53,18 @@ export function useRangeValues(initialValues, prefix) {
 export function MessageTextarea() {
   //cai dat cho phan message
   const [textContentMessage, setTextContentMessage] = useState('');
+  const textareaRef = useRef(null);
 
   const handleTextareaChangeMessage = (event) => {
     setTextContentMessage(event.target.value);
   };
-
+  const handleDivClick = () => {
+    textareaRef.current.focus();
+  };
   return {
     textContentMessage,
     handleTextareaChangeMessage,
+    handleDivClick,
+    textareaRef,
   };
 }

@@ -34,7 +34,7 @@ const Newsfeed = ({ onGoBackClick }) => {
 
   const { isText, handleCheckboxChangeText } = useShowCheckbox(false, 'Text');
 
-  const { textContent, handleTextareaChange } = ShowTextarea();
+  const { textContent, handleTextareaChange, handleDivClick, textareaRef } = ShowTextarea();
   return (
     <div className="newsfeed">
       <div className="component_container">
@@ -224,8 +224,9 @@ const Newsfeed = ({ onGoBackClick }) => {
                       rows="10"
                       value={textContent}
                       onChange={handleTextareaChange}
+                      ref={textareaRef}
                     ></textarea>
-                    <div className={`placeholder ${textContent ? 'hide' : ''}`}>
+                    <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
                       <p>
                         <span>1</span>Enter the content here
                       </p>

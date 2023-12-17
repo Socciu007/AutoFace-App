@@ -1,5 +1,5 @@
 import React from 'react';
-import { AddFriendOption, Comment, Interact, TextComment, useRangeValues } from './AddFriend';
+import { AddFriendOption, TextComment, useRangeValues, useShowCheckbox } from './AddFriend';
 import './style.scss';
 import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
@@ -64,7 +64,6 @@ const AddFriend = ({ onGoBackClick }) => {
                     <option value="friendOfFriends">Friend of friends</option>
                     <option value="friendOfUID">Friend of UID</option>
                   </select>
-                  <img src={downButton} alt="Down Button" />
                 </div>
                 {(selectedValueTypeAddFriend === 'suggestions' ||
                   selectedValueTypeAddFriend === 'acceptFriendRequests' ||

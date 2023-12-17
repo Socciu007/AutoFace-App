@@ -115,7 +115,6 @@ const CreatePost = ({ onGoBackClick }) => {
                     <option value="background">Using background</option>
                     <option value="photoOrVideo">Text, Photo/video</option>
                   </select>
-                  <img src={downButton} alt="Down Button" />
                 </div>
                 {(selectedValuePost === 'background' || selectedValuePost === 'photoOrVideo') && (
                   <div className="Text">

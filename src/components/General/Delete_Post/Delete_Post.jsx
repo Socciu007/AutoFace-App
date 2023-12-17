@@ -18,7 +18,7 @@ const Delete_Post = ({ onGoBackClick }) => {
   const viewTimeValues = useRangeValues(initialValues, 'ViewTime');
   const delayTimeValues = useRangeValues(initialValues, 'DelayTime');
 
-  const { textContent, handleTextareaChange } = UIDTextarea();
+  const { textContent, handleTextareaChange, handleDivClick, textareaRef } = UIDTextarea();
   return (
     <div className="Delete_Post">
       <div className="component_container">
@@ -39,9 +39,9 @@ const Delete_Post = ({ onGoBackClick }) => {
                   name="textContent"
                   rows="10"
                   value={textContent}
-                  onChange={handleTextareaChange}
+                  onChange={handleTextareaChange} ref={textareaRef} 
                 ></textarea>
-                <div className={`placeholder ${textContent ? 'hide' : ''}`}>
+                <div  onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
                   <p>
                     <span>1</span>Enter the content here
                   </p>

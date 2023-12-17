@@ -22,7 +22,7 @@ const WatchStory = ({ onGoBackClick }) => {
 
   const { isComment, handleCheckboxChangeComment } = useShowCheckbox(false, 'Comment');
 
-  const { textContent, handleTextareaChange } = TextareaComment();
+  const { textContent, handleTextareaChange, handleDivClick, textareaRef } = TextareaComment();
 
   return (
     <div className={`watch-story`}>
@@ -139,8 +139,9 @@ const WatchStory = ({ onGoBackClick }) => {
                     rows="10"
                     value={textContent}
                     onChange={handleTextareaChange}
+                    ref={textareaRef}
                   ></textarea>
-                  <div className={`placeholder ${textContent ? 'hide' : ''}`}>
+                  <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
                     <p>
                       <span>1</span>Enter the content here
                     </p>

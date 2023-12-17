@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 export function handleInputChange(event, setValues, prefix, values) {
   const inputValue = event.target.value;
   const isNumber = /^\d*$/.test(inputValue);
@@ -70,7 +70,7 @@ export function UIDTextarea() {
   //cai dat cho phan UID Text (khi go chu thi placeholder cua textarea se an di)
   const [UIDContent, setUIDContent] = useState('');
   const [lineCount, setLineCount] = useState(0);
-
+  const textareaRef = useRef(null);
   const handleTextareaChangeUIDContent = (event) => {
     const content = event.target.value;
     setUIDContent(content);
@@ -87,10 +87,15 @@ export function UIDTextarea() {
       setLineCount(lines.length);
     }, 0);
   };
+  const handleDivClick = () => {
+    textareaRef.current.focus();
+  };
   return {
     UIDContent,
     handleTextareaChangeUIDContent,
     handleTextareaPaste,
     lineCount,
+    handleDivClick,
+    textareaRef,
   };
 }

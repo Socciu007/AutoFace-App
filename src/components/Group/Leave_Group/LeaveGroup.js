@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 export function handleInputChange(event, setValues, prefix, values) {
   const inputValue = event.target.value;
   const isNumber = /^\d*$/.test(inputValue);
@@ -69,12 +69,18 @@ export function LeaveGroupOption() {
 export function KeywordTextarea() {
   //cai dat cho phan Keyword Text (khi go chu thi placeholder cua textarea se an di)
   const [KeywordContent, setKeywordContent] = useState('');
+  const textareaRef = useRef(null);
 
   const handleTextareaChangeKeywordContent = (event) => {
     setKeywordContent(event.target.value);
   };
+  const handleDivClick = () => {
+    textareaRef.current.focus();
+  };
   return {
     KeywordContent,
     handleTextareaChangeKeywordContent,
+    handleDivClick,
+    textareaRef,
   };
 }

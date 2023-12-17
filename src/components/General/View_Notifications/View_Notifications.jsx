@@ -94,7 +94,6 @@ const View_Notifications = ({ onGoBackClick }) => {
                   <select name="NotificationOption" className="NotificationType">
                     <option value="randomFriend">Randomly</option>
                   </select>
-                  <img src={downButton} alt="Down Button" />
                 </div>
               </div>
             </div>

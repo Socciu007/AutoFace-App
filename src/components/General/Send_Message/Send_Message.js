@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 export function handleInputChange(event, setValues, prefix, values) {
   const inputValue = event.target.value;
   const isNumber = /^\d*$/.test(inputValue);
@@ -66,27 +66,23 @@ export function PostOption() {
     handleSelectChangeFriend,
   };
 }
-export function MessageTextarea() {
-  //cai dat cho phan message (khi go chu thi placeholder cua textarea se an di)
-  const [messagesContent, setMessageContent] = useState('');
 
-  const handleTextareaChangeMessages = (event) => {
-    setMessageContent(event.target.value);
-  };
-  return {
-    messagesContent,
-    handleTextareaChangeMessages,
-  };
-}
-export function UIDTextarea() {
-  //cai dat cho phan text comment(khi go chu thi placeholder cua textarea se an di)
-  const [textContent, setTextContent] = useState('');
+export function useTextarea(initialValue) {
+  const [value, setValue] = useState(initialValue);
+  const textareaRef = useRef(null);
 
-  const handleTextareaChange = (event) => {
-    setTextContent(event.target.value);
+  const handleChange = (event) => {
+    setValue(event.target.value);
   };
+
+  const handleDivClick = () => {
+    textareaRef.current.focus();
+  };
+
   return {
-    textContent,
-    handleTextareaChange,
+    value,
+    handleChange,
+    textareaRef,
+    handleDivClick,
   };
 }

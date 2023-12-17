@@ -21,7 +21,7 @@ const Post_Interaction = ({ onGoBackClick }) => {
   const delayTimeValues = useRangeValues(initialValues, 'DelayTime');
   const viewTimeValues = useRangeValues(initialValues, 'ViewTime');
 
-  const { textContent, handleTextareaChange, charCount } = PostUIDList();
+  const { textContent, handleTextareaChange, charCount, handleDivClick, textareaRef } = PostUIDList();
   return (
     <div className="Post_Interaction">
       <div className="component_container">
@@ -43,8 +43,9 @@ const Post_Interaction = ({ onGoBackClick }) => {
                   rows="10"
                   value={textContent}
                   onChange={handleTextareaChange}
+                  ref={textareaRef}
                 ></textarea>
-                <div className={`placeholder ${textContent ? 'hide' : ''}`}>
+                <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
                   <p>
                     <span>1</span>Enter the content here
                   </p>

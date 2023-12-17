@@ -40,7 +40,7 @@ const WatchVideo = ({ onGoBackClick }) => {
 
   const { selectedValue, handleSelectChange } = CommentOption();
 
-  const { textContent, handleTextareaChange } = CommentTextarea();
+  const { textContent, handleTextareaChange, handleDivClick, textareaRef } = CommentTextarea();
 
   const { files, getRootProps, getInputProps, handleDeleteButtonClick } = URLImg();
 
@@ -234,7 +234,6 @@ const WatchVideo = ({ onGoBackClick }) => {
                     <option value="photoOrVideo">Photo/video</option>
                     <option value="all">Text & Photo/video</option>
                   </select>
-                  <img src={downButton} alt="Down button" />
                 </div>
                 {(selectedValue === 'text' || selectedValue === 'all') && (
                   <div className="Text">
@@ -246,8 +245,9 @@ const WatchVideo = ({ onGoBackClick }) => {
                         rows="10"
                         value={textContent}
                         onChange={handleTextareaChange}
+                        ref={textareaRef}
                       ></textarea>
-                      <div className={`placeholder ${textContent ? 'hide' : ''}`}>
+                      <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
                         <p>
                           <span>1</span>Enter the content here
                         </p>

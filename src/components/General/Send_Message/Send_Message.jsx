@@ -4,9 +4,8 @@ import './style.scss';
 import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
-import downButton from '../../../assets/icon/icon-down.svg';
 
-import { MessageTextarea, PostOption, UIDTextarea, useRangeValues } from './Send_Message';
+import { PostOption, useRangeValues, useTextarea } from './Send_Message';
 const Send_Message = ({ onGoBackClick }) => {
   const initialValues = {
     PostStart: 5,
@@ -20,9 +19,20 @@ const Send_Message = ({ onGoBackClick }) => {
 
   const { selectedValueFriend, handleSelectChangeFriend } = PostOption();
 
-  const { textContent, handleTextareaChange } = UIDTextarea();
+  const {
+    value: textContent,
+    handleChange: handleTextareaChange,
+    textareaRef: UIDTextareaRef,
+    handleDivClick: handleUIDDivClick,
+  } = useTextarea('');
 
-  const { messagesContent, handleTextareaChangeMessages } = MessageTextarea();
+  const {
+    value: messagesContent,
+    handleChange: handleTextareaChangeMessages,
+    textareaRef: MessagesTextareaRef,
+    handleDivClick: handleMessagesDivClick,
+  } = useTextarea('');
+
   return (
     <div className="sendMessage">
       <div className="component_container">
@@ -105,7 +115,6 @@ const Send_Message = ({ onGoBackClick }) => {
                     <option value="randomFriend">Randomly choose friends</option>
                     <option value="specificFriend">Specific friends</option>
                   </select>
-                  <img src={downButton} alt="Down Button" />
                 </div>
 
                 {selectedValueFriend === 'specificFriend' && (
@@ -117,8 +126,9 @@ const Send_Message = ({ onGoBackClick }) => {
                         rows="10"
                         value={textContent}
                         onChange={handleTextareaChange}
+                        ref={UIDTextareaRef}
                       ></textarea>
-                      <div className={`placeholder ${textContent ? 'hide' : ''}`}>
+                      <div onClick={handleUIDDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
                         <p>
                           <span>1</span>Enter the UID here
                         </p>
@@ -137,8 +147,9 @@ const Send_Message = ({ onGoBackClick }) => {
                     rows="10"
                     value={messagesContent}
                     onChange={handleTextareaChangeMessages}
+                    ref={MessagesTextareaRef}
                   ></textarea>
-                  <div className={`placeholder ${messagesContent ? 'hide' : ''}`}>
+                  <div onClick={handleMessagesDivClick} className={`placeholder ${messagesContent ? 'hide' : ''}`}>
                     <p>
                       <span>1</span>Enter the content here
                     </p>

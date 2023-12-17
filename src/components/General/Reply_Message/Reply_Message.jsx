@@ -18,7 +18,7 @@ const Reply_Message = ({ onGoBackClick }) => {
   const numberFriendValues = useRangeValues(initialValues, 'NumberFriend');
   const delayTimeValues = useRangeValues(initialValues, 'DelayTime');
 
-  const { textContentMessage, handleTextareaChangeMessage } = MessageTextarea();
+  const { textContentMessage, handleTextareaChangeMessage, handleDivClick, textareaRef } = MessageTextarea();
   return (
     <div className="replyMessage">
       <div className="component_container">
@@ -97,9 +97,9 @@ const Reply_Message = ({ onGoBackClick }) => {
                   name="textContent"
                   rows="10"
                   value={textContentMessage}
-                  onChange={handleTextareaChangeMessage}
+                  onChange={handleTextareaChangeMessage} ref={textareaRef}
                 ></textarea>
-                <div className={`placeholder ${textContentMessage ? 'hide' : ''}`}>
+                <div  onClick={handleDivClick} className={`placeholder ${textContentMessage ? 'hide' : ''}`}>
                   <p>
                     <span>1</span>Enter the content here
                   </p>

@@ -20,7 +20,8 @@ const Invite = ({ onGoBackClick }) => {
 
   const { selectedValueInvite, handleSelectChangeInvite } = InviteOption();
 
-  const { UIDContent, handleTextareaChangeUIDContent, handleTextareaPaste, lineCount } = UIDTextarea();
+  const { UIDContent, handleTextareaChangeUIDContent, handleTextareaPaste, lineCount, handleDivClick, textareaRef } =
+    UIDTextarea();
 
   return (
     <div className="invite">
@@ -121,8 +122,9 @@ const Invite = ({ onGoBackClick }) => {
                           value={UIDContent}
                           onChange={handleTextareaChangeUIDContent}
                           onPaste={handleTextareaPaste}
+                          ref={textareaRef}
                         ></textarea>
-                        <div className={`placeholder ${UIDContent ? 'hide' : ''}`}>
+                        <div onClick={handleDivClick} className={`placeholder ${UIDContent ? 'hide' : ''}`}>
                           <p>
                             <span>1</span>Enter the UID here
                           </p>
