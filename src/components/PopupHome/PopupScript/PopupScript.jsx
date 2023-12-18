@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PopupComponent from '../PopupComponent/PopupComponent';
 import closePopup from '../../../assets/pictures/icon-x.svg';
 import settings from '../../../assets/pictures/icon-settings.png';
@@ -14,6 +14,8 @@ const PopupScript = ({
   handleOpenScripts,
   handleTypeScript,
 }) => {
+  const [yourScripts, setYourScripts] = useState(false);
+  const [systemScripts, setSystemScripts] = useState(false);
   const columnsScripts = [
     {
       title: 'Scripts',
@@ -29,6 +31,16 @@ const PopupScript = ({
     onChange: (selectedRowKeys, selectedRows) => {
       console.log(`selectedRowKeys: ${selectedRowKeys}`);
     },
+  };
+  const handleYourScript = () => {
+    setYourScripts(true);
+    setSystemScripts(false);
+    handleTypeScript(false);
+  };
+  const handleSystemScript = () => {
+    setSystemScripts(true);
+    setYourScripts(false);
+    handleTypeScript(true);
   };
   return (
     <PopupComponent open={openScripts} onClose={handleCloseScripts} style={{ margin: 'auto' }}>
@@ -58,12 +70,14 @@ const PopupScript = ({
               <div className="-container-scripts__left">
                 <div className="-container-scripts__left__options">
                   <div className="-container-scripts__left__options__type">
-                    <p>All</p>
+                    {!yourScripts && !systemScripts && <p>All</p>}
+                    {yourScripts && <p>Your script</p>}
+                    {systemScripts && <p>System’s script</p>}
                   </div>
                   <div className="-container-scripts__left__options__list">
                     <ul>
-                      <li onClick={() => handleTypeScript(true)}>System’s script</li>
-                      <li onClick={() => handleTypeScript(false)}>Your script</li>
+                      <li onClick={handleSystemScript}>System’s script</li>
+                      <li onClick={handleYourScript}>Your script</li>
                     </ul>
                   </div>
                 </div>
