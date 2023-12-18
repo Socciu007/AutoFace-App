@@ -361,7 +361,7 @@ const ProfilesPage = () => {
               rowClassName={() => 'editable-row'}
               columns={columns}
               dataSource={dataProfiles}
-              scroll={{ x: 1000 }}
+              scroll={{ x: 1280 }}
               pagination={false}
             />
           </div>
