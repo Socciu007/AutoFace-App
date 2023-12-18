@@ -18,7 +18,8 @@ const Delete_Post = ({ onGoBackClick }) => {
   const viewTimeValues = useRangeValues(initialValues, 'ViewTime');
   const delayTimeValues = useRangeValues(initialValues, 'DelayTime');
 
-  const { textContent, handleTextareaChange, handleDivClick, textareaRef } = UIDTextarea();
+  const { textContent, handleTextareaChange, handleDivClick, textareaRef, handleTextareaPaste, lineCount } =
+    UIDTextarea();
   return (
     <div className="Delete_Post">
       <div className="component_container">
@@ -31,7 +32,7 @@ const Delete_Post = ({ onGoBackClick }) => {
             <div className="PostUIDList">
               <p className="selectComment__header">
                 Post UID list
-                <span style={{ marginLeft: '2px' }}>(0)</span>
+                <span style={{ marginLeft: '2px' }}>({lineCount})</span>
               </p>
               <div className="component-item text">
                 <textarea
@@ -39,9 +40,11 @@ const Delete_Post = ({ onGoBackClick }) => {
                   name="textContent"
                   rows="10"
                   value={textContent}
-                  onChange={handleTextareaChange} ref={textareaRef} 
+                  onChange={handleTextareaChange}
+                  onPaste={handleTextareaPaste}
+                  ref={textareaRef}
                 ></textarea>
-                <div  onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
+                <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
                   <p>
                     <span>1</span>Enter the content here
                   </p>

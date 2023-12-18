@@ -1,61 +1,38 @@
-export function useTextarea(initialValue) {
-  const [value, setValue] = useState(initialValue);
-  const textareaRef = useRef(null);
+<textarea
+                              id="textContentComment"
+                              name="textContentComment"
+                              rows="10"
+                              value={textContentComment}
+                              onChange={handleTextareaChangeComment}
+                              ref={textareaCommentRef}
+                            ></textarea>
+                            <div
+                              onClick={handleCommentDivClick}
+                              className={`placeholder ${textContentComment ? 'hide' : ''}`}
+                            >
+                              <p>
+                                <span>1</span>Enter the content here
+                              </p>
+                              <p>
+                                <span>2</span>Each content/line
+                              </p>
+                            </div>
 
-  const handleChange = (event) => {
-    setValue(event.target.value);
-  };
-
-  const handleDivClick = () => {
-    textareaRef.current.focus();
-  };
-
-  return {
-    value,
-    handleChange,
-    textareaRef,
-    handleDivClick,
-  };
-} 
-ref={UIDTextareaRef}  onClick={handleUIDDivClick}
-const {
-  value: textContent,
-  handleChange: handleTextareaChange,
-  textareaRef: UIDTextareaRef,
-  handleDivClick: handleUIDDivClick,
-} = useTextarea('');
-
-export function CommentTextarea() {
-  //cai dat cho phan text comment
-  const [textContent, setTextContent] = useState('');
-  const textareaRef = useRef(null);
-  const handleTextareaChange = (event) => {
-    setTextContent(event.target.value);
-  };
-  const handleDivClick = () => {
-    textareaRef.current.focus();
-  };
-  return {
-    textContent,
-    handleTextareaChange,
-    handleDivClick,
-    textareaRef,
-  };
-}
-const { textContent, handleTextareaChange, handleDivClick, textareaRef } = CommentTextarea();
-CreatePost
-Join Group
-
-const {
-  value: textContent,
-  handleChange: handleTextareaChange,
-  textareaRef: TextareaRef,
-  handleDivClick: handleDivClick,
-} = useTextarea('');
-
-const {
-  value: UIDtextContent,
-  handleChange: handleTextareaUIDChange,
-  textareaRef: UIDTextareaRef,
-  handleDivClick: handleUIDDivClick,
-} = useTextarea('');
+export function TextComment() {
+    //cai dat cho phan text comment khi go text vao
+    const [textContentComment, setTextContentComment] = useState('');
+    const textareaCommentRef = useRef(null);
+  
+    const handleTextareaChangeComment = (event) => {
+      setTextContentComment(event.target.value);
+    };
+    const handleCommentDivClick = () => {
+      textareaCommentRef.current.focus();
+    };
+    return {
+      textContentComment,
+      handleTextareaChangeComment,
+      textareaCommentRef,
+      handleCommentDivClick,
+    };
+  }

@@ -7,15 +7,7 @@ import backButton from '../../../assets/icon/icon-back.svg';
 import DragButton from '../../../assets/icon/icon-drag.svg';
 import DeleteButton from '../../../assets/icon/icon-Delete.svg';
 import downButton from '../../../assets/icon/icon-down.svg';
-import {
-  FriendsOption,
-  PostOption,
-  ShowTag,
-  TextOfTextarea,
-  UIDListContent,
-  URLImg,
-  useRangeValues,
-} from './CreatePost';
+import { FriendsOption, ListUIDContent, PostOption, ShowTag, URLImg, useRangeValues, useTextarea } from './CreatePost';
 const CreatePostGroup = ({ onGoBackClick }) => {
   const initialValues = {
     PostStart: 5,
@@ -39,9 +31,28 @@ const CreatePostGroup = ({ onGoBackClick }) => {
 
   const { selectedValueFriend, handleSelectChangeFriend } = FriendsOption();
 
-  const { textContent, handleTextareaChange } = TextOfTextarea();
+  const {
+    value: textContent,
+    handleChange: handleTextareaChange,
+    textareaRef: textareaRef,
+    handleDivClick: handleDivClick,
+  } = useTextarea('');
 
-  const { UIDContent, handleTextareaChangeUID, charCount } = UIDListContent();
+  const {
+    value: textUIDContent,
+    handleChange: handleTextareaUIDChange,
+    textareaRef: textareaUIDRef,
+    handleDivClick: handleDivUIDClick,
+  } = useTextarea('');
+
+  const {
+    UIDListContent,
+    handleTextareaChangeUIDList,
+    handleTextareaUIDListPaste,
+    lineCount,
+    handleDivUIDListClick,
+    textareaUIDListRef,
+  } = ListUIDContent();
 
   const { files, getRootProps, getInputProps, handleDeleteButtonClick } = URLImg();
   return (
@@ -138,8 +149,9 @@ const CreatePostGroup = ({ onGoBackClick }) => {
                         rows="10"
                         value={textContent}
                         onChange={handleTextareaChange}
+                        ref={textareaRef}
                       ></textarea>
-                      <div className={`placeholder ${textContent ? 'hide' : ''}`}>
+                      <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
                         <p>
                           <span>1</span>Enter the content here
                         </p>
@@ -271,13 +283,14 @@ const CreatePostGroup = ({ onGoBackClick }) => {
                       {selectedValueFriend === 'UIDList' && (
                         <div className="component-item text">
                           <textarea
-                            id="textContent"
-                            name="textContent"
+                            id="textUIDContent"
+                            name="textUIDContent"
                             rows="10"
-                            value={textContent}
-                            onChange={handleTextareaChange}
+                            value={textUIDContent}
+                            onChange={handleTextareaUIDChange}
+                            ref={textareaUIDRef}
                           ></textarea>
-                          <div className={`placeholder ${textContent ? 'hide' : ''}`}>
+                          <div onClick={handleDivUIDClick} className={`placeholder ${textUIDContent ? 'hide' : ''}`}>
                             <p>
                               <span>1</span>Enter the content here
                             </p>
@@ -292,17 +305,19 @@ const CreatePostGroup = ({ onGoBackClick }) => {
                     <div className="UIDList">
                       <div className="UIDList__header">
                         <p>Group UID list</p>
-                        <span>({charCount})</span>
+                        <span>({lineCount})</span>
                       </div>
                       <div className="component-item UID">
                         <textarea
-                          id="UIDContent"
-                          name="UIDContent"
+                          id="UIDListContent"
+                          name="UIDListContent"
                           rows="10"
-                          value={UIDContent}
-                          onChange={handleTextareaChangeUID}
+                          value={UIDListContent}
+                          onChange={handleTextareaChangeUIDList}
+                          onPaste={handleTextareaUIDListPaste}
+                          ref={textareaUIDListRef}
                         ></textarea>
-                        <div className={`placeholder ${UIDContent ? 'hide' : ''}`}>
+                        <div onClick={handleDivUIDListClick} className={`placeholder ${UIDListContent ? 'hide' : ''}`}>
                           <p>
                             <span>1</span>Enter the UID here
                           </p>

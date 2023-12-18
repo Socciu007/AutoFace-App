@@ -23,7 +23,8 @@ export function useRangeValues(initialValues, prefix) {
     handleIncrement: () => {
       setValues((prevValues) => ({
         ...prevValues,
-        [`${prefix}Start`]: prevValues[`${prefix}Start`] + 1,
+        [`${prefix}Start`]:
+          prevValues[`${prefix}Start`] + 1 <= 999 ? prevValues[`${prefix}Start`] + 1 : prevValues[`${prefix}Start`],
       }));
     },
     handleDecrement: () => {
@@ -35,7 +36,8 @@ export function useRangeValues(initialValues, prefix) {
     handleIncrementEnd: () => {
       setValues((prevValues) => ({
         ...prevValues,
-        [`${prefix}End`]: prevValues[`${prefix}End`] + 1,
+        [`${prefix}End`]:
+          prevValues[`${prefix}End`] + 1 <= 999 ? prevValues[`${prefix}End`] + 1 : prevValues[`${prefix}End`],
       }));
     },
     handleDecrementEnd: () => {
@@ -50,6 +52,7 @@ export function useRangeValues(initialValues, prefix) {
 
   return { ...values, ...createHandlers() };
 }
+
 export function MessageTextarea() {
   //cai dat cho phan message
   const [textContentMessage, setTextContentMessage] = useState('');

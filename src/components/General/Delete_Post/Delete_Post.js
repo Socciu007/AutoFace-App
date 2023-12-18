@@ -23,7 +23,8 @@ export function useRangeValues(initialValues, prefix) {
     handleIncrement: () => {
       setValues((prevValues) => ({
         ...prevValues,
-        [`${prefix}Start`]: prevValues[`${prefix}Start`] + 1,
+        [`${prefix}Start`]:
+          prevValues[`${prefix}Start`] + 1 <= 999 ? prevValues[`${prefix}Start`] + 1 : prevValues[`${prefix}Start`],
       }));
     },
     handleDecrement: () => {
@@ -35,7 +36,8 @@ export function useRangeValues(initialValues, prefix) {
     handleIncrementEnd: () => {
       setValues((prevValues) => ({
         ...prevValues,
-        [`${prefix}End`]: prevValues[`${prefix}End`] + 1,
+        [`${prefix}End`]:
+          prevValues[`${prefix}End`] + 1 <= 999 ? prevValues[`${prefix}End`] + 1 : prevValues[`${prefix}End`],
       }));
     },
     handleDecrementEnd: () => {
@@ -55,9 +57,23 @@ export function UIDTextarea() {
   //cai dat cho phan UID List
   const [textContent, setTextContent] = useState('');
   const textareaRef = useRef(null);
+  const [lineCount, setLineCount] = useState(0);
 
   const handleTextareaChange = (event) => {
-    setTextContent(event.target.value);
+    const content = event.target.value;
+    setTextContent(content);
+    // Đếm số lượng dòng
+    const lines = content.split('\n');
+    setLineCount(lines.length);
+  };
+  const handleTextareaPaste = (event) => {
+    // Đợi một khoảng nhỏ để textarea cập nhật nội dung sau khi paste
+    setTimeout(() => {
+      const content = event.target.value;
+      // Đếm số lượng dòng sau khi paste
+      const lines = content.split('\n');
+      setLineCount(lines.length);
+    }, 0);
   };
   const handleDivClick = () => {
     textareaRef.current.focus();
@@ -65,6 +81,8 @@ export function UIDTextarea() {
   return {
     textContent,
     handleTextareaChange,
+    handleTextareaPaste,
+    lineCount,
     handleDivClick,
     textareaRef,
   };

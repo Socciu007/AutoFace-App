@@ -4,8 +4,7 @@ import './style.scss';
 import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
-import downButton from '../../../assets/icon/icon-down.svg';
-
+import Select from 'react-select';
 const AddFriend = ({ onGoBackClick }) => {
   const initialValues = {
     PostStart: 5,
@@ -37,6 +36,22 @@ const AddFriend = ({ onGoBackClick }) => {
 
   const { isComment, handleCheckboxChangeComment } = useShowCheckbox(false, 'Comment');
 
+  // const options = [
+  //   { value: 'suggestions', label: 'By suggestions' },
+  //   { value: 'acceptFriendRequests', label: 'Accept friend requests' },
+  //   { value: 'UIDList', label: 'UID list' },
+  //   { value: 'keywords', label: 'By keywords' },
+  //   { value: 'groupMembers', label: 'Group members' },
+  //   { value: 'friendOfFriends', label: 'Friend of friends' },
+  //   { value: 'friendOfUID', label: 'Friend of UID' },
+  // ];
+
+  // const customStyles = {
+  //   option: (provided, state) => ({
+  //     ...provided,
+  //     height: '50px', // Set your desired height here
+  //   }),
+  // };
   return (
     <div className="Add_Friend">
       <div className="component_container">
@@ -66,6 +81,13 @@ const AddFriend = ({ onGoBackClick }) => {
                     <option value="friendOfFriends">Friend of friends</option>
                     <option value="friendOfUID">Friend of UID</option>
                   </select>
+                  {/* <Select
+                    defaultValue="suggestions"
+                    options={options}
+                    styles={customStyles}
+                    onChange={handleSelectorChange}
+                    value={selectedValueTypeAddFriend}
+                  /> */}
                 </div>
                 {(selectedValueTypeAddFriend === 'suggestions' ||
                   selectedValueTypeAddFriend === 'acceptFriendRequests' ||
@@ -349,10 +371,12 @@ const AddFriend = ({ onGoBackClick }) => {
                               className={`placeholder ${textContentComment ? 'hide' : ''}`}
                             >
                               <p>
-                                <span>1</span>Enter the content here
+                                <span>1</span>
+                                <span>Enter the content here</span>
                               </p>
                               <p>
-                                <span>2</span>Each content/line
+                                <span>2</span>
+                                <span>Each content/line</span>
                               </p>
                             </div>
                           </div>

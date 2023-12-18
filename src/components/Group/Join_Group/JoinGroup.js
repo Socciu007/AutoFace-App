@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 export function handleInputChange(event, setValues, prefix, values) {
   const inputValue = event.target.value;
   const isNumber = /^\d*$/.test(inputValue);
@@ -23,7 +23,8 @@ export function useRangeValues(initialValues, prefix) {
     handleIncrement: () => {
       setValues((prevValues) => ({
         ...prevValues,
-        [`${prefix}Start`]: prevValues[`${prefix}Start`] + 1,
+        [`${prefix}Start`]:
+          prevValues[`${prefix}Start`] + 1 <= 999 ? prevValues[`${prefix}Start`] + 1 : prevValues[`${prefix}Start`],
       }));
     },
     handleDecrement: () => {
@@ -35,7 +36,8 @@ export function useRangeValues(initialValues, prefix) {
     handleIncrementEnd: () => {
       setValues((prevValues) => ({
         ...prevValues,
-        [`${prefix}End`]: prevValues[`${prefix}End`] + 1,
+        [`${prefix}End`]:
+          prevValues[`${prefix}End`] + 1 <= 999 ? prevValues[`${prefix}End`] + 1 : prevValues[`${prefix}End`],
       }));
     },
     handleDecrementEnd: () => {
@@ -70,6 +72,7 @@ export function KeywordTextarea() {
   //cai dat cho phan Keyword Text (khi go chu thi placeholder cua textarea se an di)
   const [KeywordContent, setKeywordContent] = useState('');
   const [lineCount, setLineCount] = useState(0);
+  const textareaKeywordRef = useRef(null);
 
   const handleTextareaChangeKeywordContent = (event) => {
     const content = event.target.value;
@@ -87,23 +90,34 @@ export function KeywordTextarea() {
       setLineCount(lines.length);
     }, 0);
   };
+  const handleDivKeywordClick = () => {
+    textareaKeywordRef.current.focus();
+  };
   return {
     KeywordContent,
     handleTextareaChangeKeywordContent,
     handleKeywordTextareaPaste,
     lineCount,
+    handleDivKeywordClick,
+    textareaKeywordRef,
   };
 }
 export function AnswerTextarea() {
   //cai dat cho phan Answer question (khi go chu thi placeholder cua textarea se an di)
   const [AnswerContent, setAnswerContent] = useState('');
+  const textareaAnswerRef = useRef(null);
 
   const handleTextareaChangeAnswerContent = (event) => {
     setAnswerContent(event.target.value);
   };
+  const handleDivAnswerClick = () => {
+    textareaAnswerRef.current.focus();
+  };
   return {
     AnswerContent,
     handleTextareaChangeAnswerContent,
+    handleDivAnswerClick,
+    textareaAnswerRef,
   };
 }
 export function ShowAutoAnswer() {

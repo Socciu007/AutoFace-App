@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 export function handleInputChange(event, setValues, prefix, values) {
   const inputValue = event.target.value;
@@ -24,7 +24,8 @@ export function useRangeValues(initialValues, prefix) {
     handleIncrement: () => {
       setValues((prevValues) => ({
         ...prevValues,
-        [`${prefix}Start`]: prevValues[`${prefix}Start`] + 1,
+        [`${prefix}Start`]:
+          prevValues[`${prefix}Start`] + 1 <= 999 ? prevValues[`${prefix}Start`] + 1 : prevValues[`${prefix}Start`],
       }));
     },
     handleDecrement: () => {
@@ -36,7 +37,8 @@ export function useRangeValues(initialValues, prefix) {
     handleIncrementEnd: () => {
       setValues((prevValues) => ({
         ...prevValues,
-        [`${prefix}End`]: prevValues[`${prefix}End`] + 1,
+        [`${prefix}End`]:
+          prevValues[`${prefix}End`] + 1 <= 999 ? prevValues[`${prefix}End`] + 1 : prevValues[`${prefix}End`],
       }));
     },
     handleDecrementEnd: () => {
@@ -94,31 +96,56 @@ export function FriendsOption() {
     handleSelectChangeFriend,
   };
 }
-export function TextOfTextarea() {
+export function useTextarea(initialValue) {
   //cai dat cho phan text (khi go chu thi placeholder cua textarea se an di)
-  const [textContent, setTextContent] = useState('');
+  const [value, setValue] = useState(initialValue);
+  const textareaRef = useRef(null);
 
-  const handleTextareaChange = (event) => {
-    setTextContent(event.target.value);
+  const handleChange = (event) => {
+    setValue(event.target.value);
+  };
+  const handleDivClick = () => {
+    textareaRef.current.focus();
   };
   return {
-    textContent,
-    handleTextareaChange,
+    value,
+    handleChange,
+    textareaRef,
+    handleDivClick,
   };
 }
 
-export function UIDListContent() {
+export function ListUIDContent() {
   //cai dat cho phan UID List(khi go chu thi placeholder cua textarea se an di)
-  const [UIDContent, setUIDContent] = useState('');
-
-  const handleTextareaChangeUID = (event) => {
-    setUIDContent(event.target.value);
+  const [UIDListContent, setUIDContent] = useState('');
+  const [lineCount, setLineCount] = useState(0);
+  const textareaUIDListRef = useRef(null);
+  const handleTextareaChangeUIDList = (event) => {
+    const content = event.target.value;
+    setUIDContent(content);
+    // Đếm số lượng dòng
+    const lines = content.split('\n');
+    setLineCount(lines.length);
   };
-  const charCount = UIDContent.length;
+  const handleTextareaUIDListPaste = (event) => {
+    // Đợi một khoảng nhỏ để textarea cập nhật nội dung sau khi paste
+    setTimeout(() => {
+      const content = event.target.value;
+      // Đếm số lượng dòng sau khi paste
+      const lines = content.split('\n');
+      setLineCount(lines.length);
+    }, 0);
+  };
+  const handleDivUIDListClick = () => {
+    textareaUIDListRef.current.focus();
+  };
   return {
-    UIDContent,
-    handleTextareaChangeUID,
-    charCount,
+    UIDListContent,
+    handleTextareaChangeUIDList,
+    handleTextareaUIDListPaste,
+    lineCount,
+    handleDivUIDListClick,
+    textareaUIDListRef,
   };
 }
 export function URLImg() {

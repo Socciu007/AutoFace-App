@@ -21,7 +21,8 @@ const Post_Interaction = ({ onGoBackClick }) => {
   const delayTimeValues = useRangeValues(initialValues, 'DelayTime');
   const viewTimeValues = useRangeValues(initialValues, 'ViewTime');
 
-  const { textContent, handleTextareaChange, charCount, handleDivClick, textareaRef } = PostUIDList();
+  const { textContent, handleTextareaChange, handleTextareaPaste, lineCount, handleDivClick, textareaRef } =
+    PostUIDList();
   return (
     <div className="Post_Interaction">
       <div className="component_container">
@@ -34,7 +35,7 @@ const Post_Interaction = ({ onGoBackClick }) => {
             <div className="PostUIDList">
               <p className="selectComment__header">
                 Post UID list
-                <span>({charCount})</span>
+                <span>({lineCount})</span>
               </p>
               <div className="component-item text">
                 <textarea
@@ -42,6 +43,7 @@ const Post_Interaction = ({ onGoBackClick }) => {
                   name="textContent"
                   rows="10"
                   value={textContent}
+                  onPaste={handleTextareaPaste}
                   onChange={handleTextareaChange}
                   ref={textareaRef}
                 ></textarea>

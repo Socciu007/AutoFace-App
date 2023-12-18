@@ -20,10 +20,17 @@ const JoinGroup = ({ onGoBackClick }) => {
 
   const { selectedValueJoinGroup, handleSelectChangeJoinGroup } = CancelFriendOption();
 
-  const { KeywordContent, handleTextareaChangeKeywordContent, handleKeywordTextareaPaste, lineCount } =
-    KeywordTextarea();
+  const {
+    KeywordContent,
+    handleTextareaChangeKeywordContent,
+    handleKeywordTextareaPaste,
+    lineCount,
+    handleDivKeywordClick,
+    textareaKeywordRef,
+  } = KeywordTextarea();
 
-  const { AnswerContent, handleTextareaChangeAnswerContent } = AnswerTextarea();
+  const { AnswerContent, handleTextareaChangeAnswerContent, handleDivAnswerClick, textareaAnswerRef } =
+    AnswerTextarea();
 
   const { isAutoAnswer, handleCheckboxChangeAutoAnswer } = ShowAutoAnswer();
   return (
@@ -130,8 +137,12 @@ const JoinGroup = ({ onGoBackClick }) => {
                             value={KeywordContent}
                             onChange={handleTextareaChangeKeywordContent}
                             onPaste={handleKeywordTextareaPaste}
+                            ref={textareaKeywordRef}
                           ></textarea>
-                          <div className={`placeholder ${KeywordContent ? 'hide' : ''}`}>
+                          <div
+                            onClick={handleDivKeywordClick}
+                            className={`placeholder ${KeywordContent ? 'hide' : ''}`}
+                          >
                             <p>
                               <span>1</span>Enter the keyword here
                             </p>
@@ -154,8 +165,9 @@ const JoinGroup = ({ onGoBackClick }) => {
                           rows="10"
                           value={AnswerContent}
                           onChange={handleTextareaChangeAnswerContent}
+                          ref={textareaAnswerRef}
                         ></textarea>
-                        <div className={`placeholder ${AnswerContent ? 'hide' : ''}`}>
+                        <div onClick={handleDivAnswerClick} className={`placeholder ${AnswerContent ? 'hide' : ''}`}>
                           <p>
                             <span>1</span>Enter the answer here
                           </p>

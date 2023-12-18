@@ -24,7 +24,8 @@ export function useRangeValues(initialValues, prefix) {
     handleIncrement: () => {
       setValues((prevValues) => ({
         ...prevValues,
-        [`${prefix}Start`]: prevValues[`${prefix}Start`] + 1,
+        [`${prefix}Start`]:
+          prevValues[`${prefix}Start`] + 1 <= 999 ? prevValues[`${prefix}Start`] + 1 : prevValues[`${prefix}Start`],
       }));
     },
     handleDecrement: () => {
@@ -36,7 +37,8 @@ export function useRangeValues(initialValues, prefix) {
     handleIncrementEnd: () => {
       setValues((prevValues) => ({
         ...prevValues,
-        [`${prefix}End`]: prevValues[`${prefix}End`] + 1,
+        [`${prefix}End`]:
+          prevValues[`${prefix}End`] + 1 <= 999 ? prevValues[`${prefix}End`] + 1 : prevValues[`${prefix}End`],
       }));
     },
     handleDecrementEnd: () => {
@@ -51,7 +53,6 @@ export function useRangeValues(initialValues, prefix) {
 
   return { ...values, ...createHandlers() };
 }
-
 export function AddFriendOption() {
   //Hien thi select addfriend option
   const [selectedValueTypeAddFriend, setSelectedValueType] = useState('suggestions');
@@ -111,16 +112,34 @@ export function AddFriendOption() {
 }
 
 export function TextComment() {
-  //cai dat cho phan text comment khi go text vao
   const [textContentComment, setTextContentComment] = useState('');
   const textareaCommentRef = useRef(null);
 
   const handleTextareaChangeComment = (event) => {
-    setTextContentComment(event.target.value);
+    const inputValue = event.target.value;
+
+    // Kiểm tra xem nội dung có rỗng không
+    if (inputValue.trim() === '') {
+      // Nếu rỗng, hiển thị lại placeholder và cập nhật state
+      setTextContentComment(''); // Hoặc bạn có thể gán giá trị placeholder khác nếu cần
+    } else {
+      // Nếu không rỗng, thực hiện thêm số đầu dòng như cũ
+      const lines = inputValue.split('\n');
+      const numberedLines = lines.map((line, index) => {
+        if (!/^\d+\./.test(line)) {
+          return `${index + 1}. ${line}`;
+        }
+        return line;
+      });
+      const newTextContent = numberedLines.join('\n');
+      setTextContentComment(newTextContent);
+    }
   };
+
   const handleCommentDivClick = () => {
     textareaCommentRef.current.focus();
   };
+
   return {
     textContentComment,
     handleTextareaChangeComment,
