@@ -127,7 +127,6 @@ const CancelFriend = ({ onGoBackClick }) => {
                           <option value="random">Randomly</option>
                           <option value="UID">UID</option>
                         </select>
-                        <img src={downButton} alt="Down Button" />
                       </div>
                       {selectedValueUnfriend === 'random' && (
                         <div className="component-item comment__numberFriend">
