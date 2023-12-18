@@ -36,3 +36,7 @@ export function TextComment() {
       handleCommentDivClick,
     };
   }
+-Nhập input các khoảng
+- Like, share ,comment 
+- textarea 
+- select option 

@@ -1,12 +1,29 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useRef, useState } from 'react';
 
+// export function handleInputChange(event, setValues, prefix, values) {
+//   const inputValue = event.target.value;
+//   const isNumber = /^\d*$/.test(inputValue);
+
+//   if (isNumber && inputValue.length <= 3) {
+//     const newValue = inputValue === '' ? '' : parseInt(inputValue, 10);
+
+//     const updatedValues = {
+//       ...values,
+//       [`${prefix}${event.target.name}`]: newValue,
+//     };
+
+//     setValues(updatedValues);
+//   }
+// }
+
 export function handleInputChange(event, setValues, prefix, values) {
   const inputValue = event.target.value;
   const isNumber = /^\d*$/.test(inputValue);
 
-  if (isNumber && inputValue.length <= 3) {
-    const newValue = inputValue === '' ? '' : parseInt(inputValue, 10);
+  if (isNumber) {
+    // Limit the input to a maximum of 3 digits followed by "..."
+    const newValue = inputValue.length <= 5 ? inputValue : `${inputValue.slice(0, 5)}...`;
 
     const updatedValues = {
       ...values,
@@ -24,8 +41,7 @@ export function useRangeValues(initialValues, prefix) {
     handleIncrement: () => {
       setValues((prevValues) => ({
         ...prevValues,
-        [`${prefix}Start`]:
-          prevValues[`${prefix}Start`] + 1 <= 999 ? prevValues[`${prefix}Start`] + 1 : prevValues[`${prefix}Start`],
+        [`${prefix}Start`]: prevValues[`${prefix}Start`] + 1,
       }));
     },
     handleDecrement: () => {
@@ -37,8 +53,7 @@ export function useRangeValues(initialValues, prefix) {
     handleIncrementEnd: () => {
       setValues((prevValues) => ({
         ...prevValues,
-        [`${prefix}End`]:
-          prevValues[`${prefix}End`] + 1 <= 999 ? prevValues[`${prefix}End`] + 1 : prevValues[`${prefix}End`],
+        [`${prefix}End`]: prevValues[`${prefix}End`] + 1,
       }));
     },
     handleDecrementEnd: () => {
@@ -53,6 +68,7 @@ export function useRangeValues(initialValues, prefix) {
 
   return { ...values, ...createHandlers() };
 }
+
 export function AddFriendOption() {
   //Hien thi select addfriend option
   const [selectedValueTypeAddFriend, setSelectedValueType] = useState('suggestions');
