@@ -101,7 +101,7 @@
           input[type='checkbox']:checked:after {
             display: block;
           }
-      
+
           span {
             font-weight: 400;
           }
@@ -169,11 +169,22 @@
           appearance: none;
           -webkit-appearance: none;
           -moz-appearance: none;
+          background-image: url('../../../assets/icon/icon-down.svg');
+          background-repeat: no-repeat;
+          background-position: right 10px center;
           border: 0;
           option {
             font-weight: 400;
             color: var(--font-color-para);
+            background-color: #fff;
           }
+        }
+        .commentType option {
+          height: 50px;
+        }
+        .commentType option:hover {
+          // background-color: #f2f8ff;
+          background-color: #ccc;
         }
         img {
           position: absolute;

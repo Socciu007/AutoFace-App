@@ -1,7 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState, useCallback } from 'react';
 import './style.scss';
-import { useDropzone } from 'react-dropzone';
 import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
@@ -9,96 +8,39 @@ import DragButton from '../../../assets/icon/icon-drag.svg';
 import DeleteButton from '../../../assets/icon/icon-Delete.svg';
 import downButton from '../../../assets/icon/icon-down.svg';
 
-import {
-  CommentOption,
-  CommentTextarea,
-  NumberCommentVideo,
-  NumberLike,
-  NumberPhotoVideo,
-  NumberShare,
-  NumberVideo,
-  ShowComment,
-  ShowLike,
-  ShowShare,
-  TimeWatchVideo,
-  URLImg,
-} from './WatchVideo';
+import { CommentOption, CommentTextarea, URLImg, useRangeValues, useShowCheckbox } from './WatchVideo';
 const WatchVideo = ({ onGoBackClick }) => {
-  const {
-    inputValueVideoStart,
-    handleIncrementVideoStart,
-    handleDecrementVideoStart,
-    inputValueVideoEnd,
-    handleIncrementVideoEnd,
-    handleDecrementVideoEnd,
-    handleInputChangeVideoStart,
-    handleInputChangeVideoEnd,
-  } = NumberVideo();
+  const initialValues = {
+    NumberVideoStart: 5,
+    NumberVideoEnd: 10,
+    DelayTimeStart: 5,
+    DelayTimeEnd: 10,
+    LikeStart: 5,
+    LikeEnd: 10,
+    ShareStart: 5,
+    ShareEnd: 10,
+    CommentStart: 5,
+    CommentEnd: 10,
+    PhotoVideoStart: 5,
+    PhotoVideoEnd: 10,
+  };
 
-  const {
-    inputValueWatchVideoStart,
-    handleIncrementWatchVideoStart,
-    handleDecrementWatchVideoStart,
-    inputValueWatchVideoEnd,
-    handleIncrementWatchVideoEnd,
-    handleDecrementWatchVideoEnd,
-    handleInputChangeWatchVideoStart,
-    handleInputChangeWatchVideoEnd,
-  } = TimeWatchVideo();
+  const numberVideoValues = useRangeValues(initialValues, 'NumberVideo');
+  const delayTimeValues = useRangeValues(initialValues, 'DelayTime');
+  const likeValues = useRangeValues(initialValues, 'Like');
+  const shareValues = useRangeValues(initialValues, 'Share');
+  const commentValues = useRangeValues(initialValues, 'Comment');
+  const photoVideoValues = useRangeValues(initialValues, 'PhotoVideo');
 
-  const {
-    inputValueLikeStart,
-    handleIncrementLikeStart,
-    handleDecrementLikeStart,
-    inputValueLikeEnd,
-    handleIncrementLikeEnd,
-    handleDecrementLikeEnd,
-    handleInputChangeLikeStart,
-    handleInputChangeLikeEnd,
-  } = NumberLike();
+  const { isLiked, handleCheckboxChangeLiked } = useShowCheckbox(false, 'Liked');
 
-  const {
-    inputValueShareStart,
-    handleIncrementShareStart,
-    handleDecrementShareStart,
-    inputValueShareEnd,
-    handleIncrementShareEnd,
-    handleDecrementShareEnd,
-    handleInputChangeShareStart,
-    handleInputChangeShareEnd,
-  } = NumberShare();
+  const { isShare, handleCheckboxChangeShare } = useShowCheckbox(false, 'Share');
 
-  const {
-    inputValueCommentVideoStart,
-    handleIncrementCommentVideoStart,
-    handleDecrementCommentVideoStart,
-    inputValueCommentVideoEnd,
-    handleIncrementCommentVideoEnd,
-    handleDecrementCommentVideoEnd,
-    handleInputChangeCommentVideoStart,
-    handleInputChangeCommentVideoEnd,
-  } = NumberCommentVideo();
-
-  const {
-    inputValuePhotoVideoStart,
-    handleIncrementPhotoVideoStart,
-    handleDecrementPhotoVideoStart,
-    inputValuePhotoVideoEnd,
-    handleIncrementPhotoVideoEnd,
-    handleDecrementPhotoVideoEnd,
-    handleInputChangePhotoVideoStart,
-    handleInputChangePhotoVideoEnd,
-  } = NumberPhotoVideo();
-
-  const { isLiked, handleCheckboxChange } = ShowLike();
-
-  const { isShare, handleCheckboxChangeShare } = ShowShare();
-
-  const { isComment, handleCheckboxChangeComment } = ShowComment();
+  const { isComment, handleCheckboxChangeComment } = useShowCheckbox(false, 'Comment');
 
   const { selectedValue, handleSelectChange } = CommentOption();
 
-  const { textContent, handleTextareaChange } = CommentTextarea();
+  const { textContent, handleTextareaChange, handleDivClick, textareaRef } = CommentTextarea();
 
   const { files, getRootProps, getInputProps, handleDeleteButtonClick } = URLImg();
 
@@ -115,43 +57,64 @@ const WatchVideo = ({ onGoBackClick }) => {
               <p className="component-item__header">Number of videos:</p>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementVideoStart} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementVideoStart} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={numberVideoValues.handleIncrement} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={numberVideoValues.handleDecrement} />
                 </div>
-                <input type="text" value={inputValueVideoStart} onChange={handleInputChangeVideoStart} />
+                <input
+                  type="text"
+                  name="Start"
+                  value={numberVideoValues.NumberVideoStart}
+                  onChange={(event) => numberVideoValues.handleInputChangeStart(event)}
+                />
               </div>
               <span>to</span>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementVideoEnd} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementVideoEnd} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={numberVideoValues.handleIncrementEnd} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={numberVideoValues.handleDecrementEnd} />
                 </div>
-                <input type="text" value={inputValueVideoEnd} onChange={handleInputChangeVideoEnd} />
+                <input
+                  type="text"
+                  name="End"
+                  value={numberVideoValues.NumberVideoEnd}
+                  onChange={(event) => numberVideoValues.handleInputChangeEnd(event)}
+                />
               </div>
             </div>
             <div className="component-item watchingTime">
               <p className="component-item__header">
-                Watching time/video <span  > (s):</span>
+                Watching time/video <span style={{ marginLeft: '2px' }}>(s):</span>
               </p>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementWatchVideoStart} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementWatchVideoStart} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrement} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrement} />
                 </div>
-                <input type="text" value={inputValueWatchVideoStart} onChange={handleInputChangeWatchVideoStart} />
+                <input
+                  name="Start"
+                  type="text"
+                  value={delayTimeValues.DelayTimeStart}
+                  onChange={(event) => delayTimeValues.handleInputChangeStart(event)}
+                />
               </div>
               <span>to</span>
+
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementWatchVideoEnd} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementWatchVideoEnd} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrementEnd} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrementEnd} />
                 </div>
-                <input type="text" value={inputValueWatchVideoEnd} onChange={handleInputChangeWatchVideoEnd} />
+                <input
+                  name="End"
+                  type="text"
+                  value={delayTimeValues.DelayTimeEnd}
+                  onChange={(event) => delayTimeValues.handleInputChangeEnd(event)}
+                />
               </div>
             </div>
             <div className="component-item Like">
               <div className="component-item__header">
-                <input type="checkbox" name="randomLike" onChange={handleCheckboxChange} />
+                <input type="checkbox" name="randomLike" onChange={handleCheckboxChangeLiked} />
                 <p>
                   Random Like <span className={`span__content ${isLiked ? 'show' : 'hide'}`}>(video)</span>:
                 </p>
@@ -159,18 +122,28 @@ const WatchVideo = ({ onGoBackClick }) => {
               <div className={`component-item__content ${isLiked ? 'show' : 'hide'}`}>
                 <div className="component-item__number">
                   <div className="component-item__number__icon">
-                    <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementLikeStart} />
-                    <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementLikeStart} />
+                    <img src={iconIncrease} alt="Increase icon" onClick={likeValues.handleIncrement} />
+                    <img src={iconDecrease} alt="Decrease icon" onClick={likeValues.handleDecrement} />
                   </div>
-                  <input type="text" value={inputValueLikeStart} onChange={handleInputChangeLikeStart} />
+                  <input
+                    type="text"
+                    name="Start"
+                    value={likeValues.LikeStart}
+                    onChange={(event) => likeValues.handleInputChangeStart(event)}
+                  />
                 </div>
                 <span>to</span>
                 <div className="component-item__number">
                   <div className="component-item__number__icon">
-                    <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementLikeEnd} />
-                    <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementLikeEnd} />
+                    <img src={iconIncrease} alt="Increase icon" onClick={likeValues.handleIncrementEnd} />
+                    <img src={iconDecrease} alt="Decrease icon" onClick={likeValues.handleDecrementEnd} />
                   </div>
-                  <input type="text" value={inputValueLikeEnd} onChange={handleInputChangeLikeEnd} />
+                  <input
+                    type="text"
+                    name="End"
+                    value={likeValues.LikeEnd}
+                    onChange={(event) => likeValues.handleInputChangeEnd(event)}
+                  />
                 </div>
               </div>
             </div>
@@ -178,24 +151,38 @@ const WatchVideo = ({ onGoBackClick }) => {
               <div className="component-item__header">
                 <input type="checkbox" name="randomShare" onChange={handleCheckboxChangeShare} />
                 <p>
-                  Share to Feed <span className={`span__content ${isShare ? 'show' : 'hide'}`}>(video)</span>:
+                  Share to Feed{' '}
+                  <span style={{ marginLeft: '2px' }} className={`span__content ${isShare ? 'show' : 'hide'}`}>
+                    (video)
+                  </span>
+                  :
                 </p>
               </div>
               <div className={`component-item__content ${isShare ? 'show' : 'hide'}`}>
                 <div className="component-item__number">
                   <div className="component-item__number__icon">
-                    <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementShareStart} />
-                    <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementShareStart} />
+                    <img src={iconIncrease} alt="Increase icon" onClick={shareValues.handleIncrement} />
+                    <img src={iconDecrease} alt="Decrease icon" onClick={shareValues.handleDecrement} />
                   </div>
-                  <input type="text" value={inputValueShareStart} onChange={handleInputChangeShareStart} />
+                  <input
+                    type="text"
+                    name="Start"
+                    value={shareValues.ShareStart}
+                    onChange={(event) => shareValues.handleInputChangeStart(event)}
+                  />
                 </div>
                 <span>to</span>
                 <div className="component-item__number">
                   <div className="component-item__number__icon">
-                    <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementShareEnd} />
-                    <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementShareEnd} />
+                    <img src={iconIncrease} alt="Increase icon" onClick={shareValues.handleIncrementEnd} />
+                    <img src={iconDecrease} alt="Decrease icon" onClick={shareValues.handleDecrementEnd} />
                   </div>
-                  <input type="text" value={inputValueShareEnd} onChange={handleInputChangeShareEnd} />
+                  <input
+                    type="text"
+                    name="End"
+                    value={shareValues.ShareEnd}
+                    onChange={(event) => shareValues.handleInputChangeEnd(event)}
+                  />
                 </div>
               </div>
             </div>
@@ -210,25 +197,27 @@ const WatchVideo = ({ onGoBackClick }) => {
                   <div className="component-item__content">
                     <div className="component-item__number">
                       <div className="component-item__number__icon">
-                        <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementCommentVideoStart} />
-                        <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementCommentVideoStart} />
+                        <img src={iconIncrease} alt="Increase icon" onClick={commentValues.handleIncrement} />
+                        <img src={iconDecrease} alt="Decrease icon" onClick={commentValues.handleDecrement} />
                       </div>
                       <input
                         type="text"
-                        value={inputValueCommentVideoStart}
-                        onChange={handleInputChangeCommentVideoStart}
+                        name="Start"
+                        value={commentValues.CommentStart}
+                        onChange={(event) => commentValues.handleInputChangeStart(event)}
                       />
                     </div>
                     <span>to</span>
                     <div className="component-item__number">
                       <div className="component-item__number__icon">
-                        <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementCommentVideoEnd} />
-                        <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementCommentVideoEnd} />
+                        <img src={iconIncrease} alt="Increase icon" onClick={commentValues.handleIncrementEnd} />
+                        <img src={iconDecrease} alt="Decrease icon" onClick={commentValues.handleDecrementEnd} />
                       </div>
                       <input
                         type="text"
-                        value={inputValueCommentVideoEnd}
-                        onChange={handleInputChangeCommentVideoEnd}
+                        name="End"
+                        value={commentValues.CommentEnd}
+                        onChange={(event) => commentValues.handleInputChangeEnd(event)}
                       />
                     </div>
                   </div>
@@ -245,7 +234,6 @@ const WatchVideo = ({ onGoBackClick }) => {
                     <option value="photoOrVideo">Photo/video</option>
                     <option value="all">Text & Photo/video</option>
                   </select>
-                  <img src={downButton} alt="Down button" />
                 </div>
                 {(selectedValue === 'text' || selectedValue === 'all') && (
                   <div className="Text">
@@ -257,8 +245,9 @@ const WatchVideo = ({ onGoBackClick }) => {
                         rows="10"
                         value={textContent}
                         onChange={handleTextareaChange}
+                        ref={textareaRef}
                       ></textarea>
-                      <div className={`placeholder ${textContent ? 'hide' : ''}`}>
+                      <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
                         <p>
                           <span>1</span>Enter the content here
                         </p>
@@ -276,22 +265,28 @@ const WatchVideo = ({ onGoBackClick }) => {
                       <p className="component-item__header numberOfVideoText">Number of photo/video:</p>
                       <div className="component-item__number">
                         <div className="component-item__number__icon">
-                          <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementPhotoVideoStart} />
-                          <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementPhotoVideoStart} />
+                          <img src={iconIncrease} alt="Increase icon" onClick={photoVideoValues.handleIncrement} />
+                          <img src={iconDecrease} alt="Decrease icon" onClick={photoVideoValues.handleDecrement} />
                         </div>
                         <input
                           type="text"
-                          value={inputValuePhotoVideoStart}
-                          onChange={handleInputChangePhotoVideoStart}
+                          name="Start"
+                          value={photoVideoValues.PhotoVideoStart}
+                          onChange={(event) => photoVideoValues.handleInputChangeStart(event)}
                         />
                       </div>
                       <span>to</span>
                       <div className="component-item__number">
                         <div className="component-item__number__icon">
-                          <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementPhotoVideoEnd} />
-                          <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementPhotoVideoEnd} />
+                          <img src={iconIncrease} alt="Increase icon" onClick={photoVideoValues.handleIncrementEnd} />
+                          <img src={iconDecrease} alt="Decrease icon" onClick={photoVideoValues.handleDecrementEnd} />
                         </div>
-                        <input type="text" value={inputValuePhotoVideoEnd} onChange={handleInputChangePhotoVideoEnd} />
+                        <input
+                          type="text"
+                          name="End"
+                          value={photoVideoValues.PhotoVideoEnd}
+                          onChange={(event) => photoVideoValues.handleInputChangeEnd(event)}
+                        />
                       </div>
                     </div>
 
@@ -305,7 +300,7 @@ const WatchVideo = ({ onGoBackClick }) => {
                       <div className={`folderPhoto`}>
                         <div className="URLImg">
                           <span style={{ opacity: '0.5' }}>Folder:</span>
-                          <div>
+                          <div style={{ width: '100%' }}>
                             {files.map((fileName, index) => (
                               <span key={index}>{fileName}</span>
                             ))}

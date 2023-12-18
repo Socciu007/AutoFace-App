@@ -1,23 +1,26 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from 'react';
 
-export function handleInputChange(event, setValues) {
+export function handleInputChange(event, setValues, prefix, values) {
   const inputValue = event.target.value;
-  const isNumber = /^\d*$/.test(inputValue); // Check if the input is a number
+  const isNumber = /^\d*$/.test(inputValue);
 
   if (isNumber && inputValue.length < 6) {
     const newValue = inputValue === '' ? '' : parseInt(inputValue, 10);
 
-    setValues((prevValues) => ({
-      ...prevValues,
-      [event.target.name]: newValue,
-    }));
+    const updatedValues = {
+      ...values,
+      [`${prefix}${event.target.name}`]: newValue,
+    };
+
+    setValues(updatedValues);
   }
 }
-export function useRangeValues(initialValues) {
+
+export function useRangeValues(initialValues, prefix) {
   const [values, setValues] = useState(initialValues);
 
-  const createHandlers = (prefix) => ({
+  const createHandlers = () => ({
     handleIncrement: () => {
       setValues((prevValues) => ({
         ...prevValues,
@@ -42,22 +45,11 @@ export function useRangeValues(initialValues) {
         [`${prefix}End`]: prevValues[`${prefix}End`] > 0 ? prevValues[`${prefix}End`] - 1 : 0,
       }));
     },
-    handleInputChangeStart: (event) => handleInputChange(event, setValues),
-    handleInputChangeEnd: (event) => handleInputChange(event, setValues),
+    handleInputChangeStart: (event) => handleInputChange(event, setValues, prefix, values),
+    handleInputChangeEnd: (event) => handleInputChange(event, setValues, prefix, values),
   });
 
-  const postValues = useRangeValues({ ...initialValues, prefix: 'Post' });
-  const delayTimeValues = useRangeValues({ ...initialValues, prefix: 'DelayTime' });
-  const requestsValues = useRangeValues({ ...initialValues, prefix: 'Requests' });
-  const stopTimeValues = useRangeValues({ ...initialValues, prefix: 'StopTime' });
-
-  return {
-    ...values,
-    ...requestsValues,
-    ...delayTimeValues,
-    ...postValues,
-    ...stopTimeValues,
-  };
+  return { ...values, ...createHandlers() };
 }
 
 export function AddFriendOption() {
@@ -127,30 +119,16 @@ export function TextComment() {
   };
 }
 
-export function Interact() {
-  // Hien thi Interact
-  const [isInteract, setIsInteract] = useState(false);
+// Show Interact,show comment
+export function useShowCheckbox(initialState, featureName) {
+  const [isFeatureVisible, setIsFeatureVisible] = useState(initialState);
 
-  const handleCheckboxInteract = () => {
-    setIsInteract((prevIsInteract) => !prevIsInteract);
+  const handleCheckboxChange = () => {
+    setIsFeatureVisible((prevState) => !prevState);
   };
 
   return {
-    isInteract,
-    handleCheckboxInteract,
-  };
-}
-
-export function Comment() {
-  // Hien thi Comment khi ấn vào check box
-  const [isComment, setIsComment] = useState(false);
-
-  const handleCheckboxComment = () => {
-    setIsComment((prevIsComment) => !prevIsComment);
-  };
-
-  return {
-    isComment,
-    handleCheckboxComment,
+    [`is${featureName}`]: isFeatureVisible,
+    [`handleCheckboxChange${featureName}`]: handleCheckboxChange,
   };
 }

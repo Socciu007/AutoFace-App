@@ -10,11 +10,11 @@ import { Table } from 'antd';
 import './style.scss';
 
 const PopupProfile = ({ dataProfiles, openProfiles, handleCloseProfiles, handleFilterFolder }) => {
-  const [typeFolder_0, setTypeFolder_0] = useState(false);
-  const [typeFolder_1, setTypeFolder_1] = useState(false);
-  const [typeFolder_2, setTypeFolder_2] = useState(false);
-  const [typeFolder_3, setTypeFolder_3] = useState(false);
-  const [typeFolder_4, setTypeFolder_4] = useState(false);
+  const [typeFolder0, setTypeFolder0] = useState(false);
+  const [typeFolder1, setTypeFolder1] = useState(false);
+  const [typeFolder2, setTypeFolder2] = useState(false);
+  const [typeFolder3, setTypeFolder3] = useState(false);
+  const [typeFolder4, setTypeFolder4] = useState(false);
   // rowSelection object indicates the need for row selection
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
@@ -90,44 +90,45 @@ const PopupProfile = ({ dataProfiles, openProfiles, handleCloseProfiles, handleF
       dataIndex: 'notes',
     },
   ];
-  const handleFolderFacebook = () => {
-    setTypeFolder_1(false);
-    setTypeFolder_2(false);
-    setTypeFolder_3(false);
-    setTypeFolder_4(false);
-    setTypeFolder_0(true);
+
+  const handleTypeFolder0 = () => {
+    setTypeFolder0(true);
+    setTypeFolder1(false);
+    setTypeFolder2(false);
+    setTypeFolder3(false);
+    setTypeFolder4(false);
     handleFilterFolder('Facebook Ads 1');
   };
-  const handleFolderSeeding = () => {
-    setTypeFolder_0(false);
-    setTypeFolder_2(false);
-    setTypeFolder_3(false);
-    setTypeFolder_4(false);
-    setTypeFolder_1(true);
+  const handleTypeFolder1 = () => {
+    setTypeFolder1(true);
+    setTypeFolder0(false);
+    setTypeFolder2(false);
+    setTypeFolder3(false);
+    setTypeFolder4(false);
     handleFilterFolder('Seeding 1');
   };
-  const handleFolderMail_1 = () => {
-    setTypeFolder_1(false);
-    setTypeFolder_0(false);
-    setTypeFolder_3(false);
-    setTypeFolder_4(false);
-    setTypeFolder_2(true);
+  const handleTypeFolder2 = () => {
+    setTypeFolder2(true);
+    setTypeFolder1(false);
+    setTypeFolder0(false);
+    setTypeFolder3(false);
+    setTypeFolder4(false);
     handleFilterFolder('Mail 1 - Alcie');
   };
-  const handleFolderMail_2 = () => {
-    setTypeFolder_1(false);
-    setTypeFolder_2(false);
-    setTypeFolder_0(false);
-    setTypeFolder_4(false);
-    setTypeFolder_3(true);
+  const handleTypeFolder3 = () => {
+    setTypeFolder3(true);
+    setTypeFolder1(false);
+    setTypeFolder2(false);
+    setTypeFolder0(false);
+    setTypeFolder4(false);
     handleFilterFolder('Mail 2 - Brono');
   };
-  const handleFolderMail_3 = () => {
-    setTypeFolder_1(false);
-    setTypeFolder_2(false);
-    setTypeFolder_3(false);
-    setTypeFolder_0(false);
-    setTypeFolder_4(true);
+  const handleTypeFolder4 = () => {
+    setTypeFolder4(true);
+    setTypeFolder1(false);
+    setTypeFolder2(false);
+    setTypeFolder3(false);
+    setTypeFolder0(false);
     handleFilterFolder('Mail 3 - Kazza');
   };
   return (
@@ -150,33 +151,34 @@ const PopupProfile = ({ dataProfiles, openProfiles, handleCloseProfiles, handleF
               <div className="-container-scripts__left">
                 <div className="-container-scripts__left__options">
                   <h1>FOLDER</h1>
-                  <div className="-container-scripts__left__options__type">
-                    {!typeFolder_0 && !typeFolder_1 && !typeFolder_2 && !typeFolder_3 && !typeFolder_4 && <p>All</p>}
-                    {typeFolder_0 && <p>Facebook Ads 1</p>}
-                    {typeFolder_1 && <p>Seeding 1</p>}
-                    {typeFolder_2 && <p>Mail 1 - Alcie</p>}
-                    {typeFolder_3 && <p>Mail 2 - Brono</p>}
-                    {typeFolder_4 && <p>Mail 3 - Kazza</p>}
+                  <div
+                    className="-container-scripts__left__options__type"
+                    style={{
+                      display: typeFolder0 && typeFolder1 && typeFolder2 && typeFolder3 && typeFolder4 && 'none',
+                    }}
+                  >
+                    <p>All</p>
                   </div>
+
                   <div className="-container-scripts__left__options__list -option-list">
                     <ul>
-                      <li className="-option-item" onClick={handleFolderFacebook}>
+                      <li className="-option-item -container-scripts__left__options__type" onClick={handleTypeFolder0}>
                         <div className="-option-item__icon" style={{ background: '#E84314' }}></div>
                         <p>Facebook Ads 1</p>
                       </li>
-                      <li className="-option-item" onClick={handleFolderSeeding}>
+                      <li className="-option-item -container-scripts__left__options__type" onClick={handleTypeFolder1}>
                         <div className="-option-item__icon" style={{ background: '#F6A01D' }}></div>
                         <p>Seeding 1</p>
                       </li>
-                      <li className="-option-item" onClick={handleFolderMail_1}>
+                      <li className="-option-item -container-scripts__left__options__type" onClick={handleTypeFolder2}>
                         <div className="-option-item__icon" style={{ background: '#FFDE50' }}></div>
                         <p>Mail 1 - Alcie</p>
                       </li>
-                      <li className="-option-item" onClick={handleFolderMail_2}>
+                      <li className="-option-item -container-scripts__left__options__type" onClick={handleTypeFolder3}>
                         <div className="-option-item__icon" style={{ background: '#81BC06' }}></div>
                         <p>Mail 2 - Brono</p>
                       </li>
-                      <li className="-option-item" onClick={handleFolderMail_3}>
+                      <li className="-option-item -container-scripts__left__options__type" onClick={handleTypeFolder4}>
                         <div className="-option-item__icon" style={{ background: '#00ADEF' }}></div>
                         <p>Mail 3 - Kazza</p>
                       </li>

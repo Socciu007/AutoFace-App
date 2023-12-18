@@ -14,8 +14,8 @@ const PopupScript = ({
   handleOpenScripts,
   handleTypeScript,
 }) => {
-  const [systemScript, setSystemScript] = useState(false);
-  const [yourScript, setYourScript] = useState(false);
+  const [yourScripts, setYourScripts] = useState(false);
+  const [systemScripts, setSystemScripts] = useState(false);
   const columnsScripts = [
     {
       title: 'Scripts',
@@ -32,15 +32,15 @@ const PopupScript = ({
       console.log(`selectedRowKeys: ${selectedRowKeys}`);
     },
   };
-  const handleSystemScript = () => {
-    setYourScript(false);
-    setSystemScript(true);
-    handleTypeScript(true);
-  };
   const handleYourScript = () => {
-    setYourScript(true);
-    setSystemScript(false);
+    setYourScripts(true);
+    setSystemScripts(false);
     handleTypeScript(false);
+  };
+  const handleSystemScript = () => {
+    setSystemScripts(true);
+    setYourScripts(false);
+    handleTypeScript(true);
   };
   return (
     <PopupComponent open={openScripts} onClose={handleCloseScripts} style={{ margin: 'auto' }}>
@@ -70,9 +70,9 @@ const PopupScript = ({
               <div className="-container-scripts__left">
                 <div className="-container-scripts__left__options">
                   <div className="-container-scripts__left__options__type">
-                    {!systemScript && !yourScript && <p>All</p>}
-                    {systemScript && <p>System’s script</p>}
-                    {yourScript && <p>Your script</p>}
+                    {!yourScripts && !systemScripts && <p>All</p>}
+                    {yourScripts && <p>Your script</p>}
+                    {systemScripts && <p>System’s script</p>}
                   </div>
                   <div className="-container-scripts__left__options__list">
                     <ul>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './style.scss';
-import { Input, Popover, Table } from 'antd';
+import { Input, Popover, Table, Tooltip } from 'antd';
 import display from '../../assets/pictures/icon-display-setting.png';
 import search from '../../assets/pictures/icon-search.svg';
 import refresh from '../../assets/pictures/icon-refresh.png';
@@ -72,6 +72,7 @@ const ProfilesPage = () => {
     {
       title: 'UID',
       dataIndex: 'uid',
+      ellipsis: true,
     },
     {
       title: 'Name',
@@ -117,12 +118,21 @@ const ProfilesPage = () => {
     {
       title: 'Proxy',
       dataIndex: 'proxy',
+      ellipsis: true,
       render: (proxy) => {
         return (
-          <div className="-proxy-profiles">
-            <img src={usaProxy} alt="icon-usa" width={22.89} height={15}></img>
-            <span>{proxy}</span>
+          <div style={{ display: 'inline' }}>
+            {/* <div className="-proxy-profiles"> */}
+            <span>
+              <img src={usaProxy} alt="icon-usa" width={22.89} height={15}></img>
+              {proxy}
+            </span>
+            {/* </div> */}
           </div>
+          // <Tooltip placement="topLeft" title={proxy}>
+          //   <img src={usaProxy} alt="icon-usa" width={22.89} height={15}></img>
+          //   {proxy}
+          // </Tooltip>
         );
       },
     },
@@ -266,7 +276,7 @@ const ProfilesPage = () => {
   return (
     <div
       className="layout-profiles"
-      style={{ opacity: openAddProxy || openDeleteProfile || openScripts || openProfiles || openProxyManage ? 0.2 : 1 }}
+      style={{ opacity: openAddProxy || openDeleteProfile || openScripts || openProfiles || openProxyManage ? 0.3 : 1 }}
     >
       <div className="-container-profiles">
         <h1 className="-title-profiles">FACEBOOK AUTOMATION</h1>
@@ -361,7 +371,7 @@ const ProfilesPage = () => {
               rowClassName={() => 'editable-row'}
               columns={columns}
               dataSource={dataProfiles}
-              scroll={{ x: 1000 }}
+              scroll={{ x: 1280 }}
               pagination={false}
             />
           </div>

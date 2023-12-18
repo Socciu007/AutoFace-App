@@ -6,29 +6,17 @@ import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
 import downButton from '../../../assets/icon/icon-down.svg';
 
-import { DelayTime, Notification } from './View_Notifications';
+import { useRangeValues } from './View_Notifications';
 const View_Notifications = ({ onGoBackClick }) => {
-  const {
-    inputValueNotificationStart,
-    handleIncrementNotificationStart,
-    handleDecrementNotificationStart,
-    inputValueNotificationEnd,
-    handleIncrementNotificationEnd,
-    handleDecrementNotificationEnd,
-    handleInputChangeNotificationStart,
-    handleInputChangeNotificationEnd,
-  } = Notification();
+  const initialValues = {
+    NotificationStart: 5,
+    NotificationEnd: 10,
+    DelayTimeStart: 5,
+    DelayTimeEnd: 10,
+  };
 
-  const {
-    inputValueDelayTimeStart,
-    handleIncrementDelayTimeStart,
-    handleDecrementDelayTimeStart,
-    inputValueDelayTimeEnd,
-    handleIncrementDelayTimeEnd,
-    handleDecrementDelayTimeEnd,
-    handleInputChangeDelayTimeStart,
-    handleInputChangeDelayTimeEnd,
-  } = DelayTime();
+  const notificationValues = useRangeValues(initialValues, 'Notification');
+  const delayTimeValues = useRangeValues(initialValues, 'DelayTime');
 
   return (
     <div className="View_Notifications">
@@ -43,38 +31,58 @@ const View_Notifications = ({ onGoBackClick }) => {
               <p className="component-item__header">Number of notifications</p>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementNotificationStart} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementNotificationStart} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={notificationValues.handleIncrement} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={notificationValues.handleDecrement} />
                 </div>
-                <input type="text" value={inputValueNotificationStart} onChange={handleInputChangeNotificationStart} />
+                <input
+                  type="text"
+                  name="Start"
+                  value={notificationValues.NotificationStart}
+                  onChange={(event) => notificationValues.handleInputChangeStart(event)}
+                />
               </div>
               <span>to</span>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementNotificationEnd} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementNotificationEnd} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={notificationValues.handleIncrementEnd} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={notificationValues.handleDecrementEnd} />
                 </div>
-                <input type="text" value={inputValueNotificationEnd} onChange={handleInputChangeNotificationEnd} />
+                <input
+                  type="text"
+                  name="End"
+                  value={notificationValues.NotificationEnd}
+                  onChange={(event) => notificationValues.handleInputChangeEnd(event)}
+                />
               </div>
             </div>
             <div className="component-item delayTime">
               <p className="component-item__header">
-                Waiting time <span>(s):</span>
+                Waiting time <span style={{ marginLeft: '2px' }}>(s):</span>
               </p>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeStart} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeStart} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrement} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrement} />
                 </div>
-                <input type="text" value={inputValueDelayTimeStart} onChange={handleInputChangeDelayTimeStart} />
+                <input
+                  type="text"
+                  name="Start"
+                  value={delayTimeValues.DelayTimeStart}
+                  onChange={(event) => delayTimeValues.handleInputChangeStart(event)}
+                />
               </div>
               <span>to</span>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeEnd} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeEnd} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrementEnd} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrementEnd} />
                 </div>
-                <input type="text" value={inputValueDelayTimeEnd} onChange={handleInputChangeDelayTimeEnd} />
+                <input
+                  type="text"
+                  name="End"
+                  value={delayTimeValues.DelayTimeEnd}
+                  onChange={(event) => delayTimeValues.handleInputChangeEnd(event)}
+                />
               </div>
             </div>
             <div className="component-item Notification">
@@ -86,7 +94,6 @@ const View_Notifications = ({ onGoBackClick }) => {
                   <select name="NotificationOption" className="NotificationType">
                     <option value="randomFriend">Randomly</option>
                   </select>
-                  <img src={downButton} alt="Down Button" />
                 </div>
               </div>
             </div>

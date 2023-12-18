@@ -5,32 +5,20 @@ import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
 
-import { UIDTextarea, delayTime, viewTime } from './Delete_Post';
+import { UIDTextarea, useRangeValues } from './Delete_Post';
 
 const Delete_Post = ({ onGoBackClick }) => {
-  const {
-    inputValueViewTimeStart,
-    handleIncrementViewTimeStart,
-    handleDecrementViewTimeStart,
-    inputValueViewTimeEnd,
-    handleIncrementViewTimeEnd,
-    handleDecrementViewTimeEnd,
-    handleInputChangeViewTimeStart,
-    handleInputChangeViewTimeEnd,
-  } = viewTime();
+  const initialValues = {
+    ViewTimeStart: 5,
+    ViewTimeEnd: 10,
+    DelayTimeStart: 5,
+    DelayTimeEnd: 10,
+  };
 
-  const {
-    inputValueDelayTimeStart,
-    handleIncrementDelayTimeStart,
-    handleDecrementDelayTimeStart,
-    inputValueDelayTimeEnd,
-    handleIncrementDelayTimeEnd,
-    handleDecrementDelayTimeEnd,
-    handleInputChangeDelayTimeStart,
-    handleInputChangeDelayTimeEnd,
-  } = delayTime();
+  const viewTimeValues = useRangeValues(initialValues, 'ViewTime');
+  const delayTimeValues = useRangeValues(initialValues, 'DelayTime');
 
-  const { textContent, handleTextareaChange } = UIDTextarea();
+  const { textContent, handleTextareaChange, handleDivClick, textareaRef } = UIDTextarea();
   return (
     <div className="Delete_Post">
       <div className="component_container">
@@ -43,7 +31,7 @@ const Delete_Post = ({ onGoBackClick }) => {
             <div className="PostUIDList">
               <p className="selectComment__header">
                 Post UID list
-                <span>(0)</span>
+                <span style={{ marginLeft: '2px' }}>(0)</span>
               </p>
               <div className="component-item text">
                 <textarea
@@ -51,9 +39,9 @@ const Delete_Post = ({ onGoBackClick }) => {
                   name="textContent"
                   rows="10"
                   value={textContent}
-                  onChange={handleTextareaChange}
+                  onChange={handleTextareaChange} ref={textareaRef} 
                 ></textarea>
-                <div className={`placeholder ${textContent ? 'hide' : ''}`}>
+                <div  onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
                   <p>
                     <span>1</span>Enter the content here
                   </p>
@@ -66,43 +54,63 @@ const Delete_Post = ({ onGoBackClick }) => {
 
             <div className="component-item viewTime">
               <p className="component-item__header">
-                View time<span> (s):</span>
+                View time<span style={{ marginLeft: '2px' }}> (s):</span>
               </p>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementViewTimeStart} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementViewTimeStart} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={viewTimeValues.handleIncrement} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={viewTimeValues.handleDecrement} />
                 </div>
-                <input type="text" value={inputValueViewTimeStart} onChange={handleInputChangeViewTimeStart} />
+                <input
+                  type="text"
+                  name="Start"
+                  value={viewTimeValues.ViewTimeStart}
+                  onChange={(event) => viewTimeValues.handleInputChangeStart(event)}
+                />
               </div>
               <span>to</span>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementViewTimeEnd} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementViewTimeEnd} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={viewTimeValues.handleIncrementEnd} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={viewTimeValues.handleDecrementEnd} />
                 </div>
-                <input type="text" value={inputValueViewTimeEnd} onChange={handleInputChangeViewTimeEnd} />
+                <input
+                  type="text"
+                  name="End"
+                  value={viewTimeValues.ViewTimeEnd}
+                  onChange={(event) => viewTimeValues.handleInputChangeEnd(event)}
+                />
               </div>
             </div>
 
             <div className="component-item delayTime">
               <p className="component-item__header">
-                Delay time<span> (s):</span>
+                Delay time<span style={{ marginLeft: '2px' }}> (s):</span>
               </p>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeStart} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeStart} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrement} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrement} />
                 </div>
-                <input type="text" value={inputValueDelayTimeStart} onChange={handleInputChangeDelayTimeStart} />
+                <input
+                  name="Start"
+                  type="text"
+                  value={delayTimeValues.DelayTimeStart}
+                  onChange={(event) => delayTimeValues.handleInputChangeStart(event)}
+                />
               </div>
               <span>to</span>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeEnd} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeEnd} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrementEnd} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrementEnd} />
                 </div>
-                <input type="text" value={inputValueDelayTimeEnd} onChange={handleInputChangeDelayTimeEnd} />
+                <input
+                  name="End"
+                  type="text"
+                  value={delayTimeValues.DelayTimeEnd}
+                  onChange={(event) => delayTimeValues.handleInputChangeEnd(event)}
+                />
               </div>
             </div>
           </div>

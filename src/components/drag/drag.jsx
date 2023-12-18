@@ -83,12 +83,17 @@ const getId = () => `dndnode_${id++}`;
 
 const DnDFlow = ({ onMessageChange }) => {
   const reactFlowWrapper = useRef(null);
-  const handleNodeButtonClick = (type) => {
-    onMessageChange(type);
-  };
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
+
+  // click edit button in node (listen event from child node)
+  const handleNodeButtonClick = (type) => {
+    onMessageChange(type);
+  };
+  const handleDeleteNodeClick = (idToDelete) => {
+    setNodes((prevNodes) => prevNodes.filter((node) => node.id !== idToDelete));
+  };
 
   const onConnect = useCallback((params) => {
     const newEdge = {
@@ -104,6 +109,7 @@ const DnDFlow = ({ onMessageChange }) => {
         stroke: '#333',
       },
     };
+
     setEdges((eds) => addEdge(newEdge, eds)), [];
   }, []);
 
@@ -137,7 +143,9 @@ const DnDFlow = ({ onMessageChange }) => {
         data: {
           label: `${type} node`,
           onButtonClick: () => handleNodeButtonClick(nodeMessage[type]),
+          onDeleteNode: handleDeleteNodeClick,
         },
+        dragging: false,
       };
       setNodes((nds) => nds.concat(newNode));
     },

@@ -4,37 +4,35 @@ import './style.scss';
 import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
-import downButton from '../../../assets/icon/icon-down.svg';
 
-import { DelayTime, MessageTextarea, NumberOfPost, PostOption, UIDTextarea } from './Send_Message';
+import { PostOption, useRangeValues, useTextarea } from './Send_Message';
 const Send_Message = ({ onGoBackClick }) => {
-  const {
-    inputValuePostStart,
-    handleIncrementPostStart,
-    handleDecrementPostStart,
-    inputValuePostEnd,
-    handleIncrementPostEnd,
-    handleDecrementPostEnd,
-    handleInputChangePostStart,
-    handleInputChangePostEnd,
-  } = NumberOfPost();
+  const initialValues = {
+    PostStart: 5,
+    PostEnd: 10,
+    DelayTimeStart: 5,
+    DelayTimeEnd: 10,
+  };
 
-  const {
-    inputValueDelayTimeStart,
-    handleIncrementDelayTimeStart,
-    handleDecrementDelayTimeStart,
-    inputValueDelayTimeEnd,
-    handleIncrementDelayTimeEnd,
-    handleDecrementDelayTimeEnd,
-    handleInputChangeDelayTimeStart,
-    handleInputChangeDelayTimeEnd,
-  } = DelayTime();
+  const postValues = useRangeValues(initialValues, 'Post');
+  const delayTimeValues = useRangeValues(initialValues, 'DelayTime');
 
   const { selectedValueFriend, handleSelectChangeFriend } = PostOption();
 
-  const { textContent, handleTextareaChange } = UIDTextarea();
+  const {
+    value: textContent,
+    handleChange: handleTextareaChange,
+    textareaRef: UIDTextareaRef,
+    handleDivClick: handleUIDDivClick,
+  } = useTextarea('');
 
-  const { messagesContent, handleTextareaChangeMessages } = MessageTextarea();
+  const {
+    value: messagesContent,
+    handleChange: handleTextareaChangeMessages,
+    textareaRef: MessagesTextareaRef,
+    handleDivClick: handleMessagesDivClick,
+  } = useTextarea('');
+
   return (
     <div className="sendMessage">
       <div className="component_container">
@@ -48,38 +46,58 @@ const Send_Message = ({ onGoBackClick }) => {
               <p className="component-item__header">Number of posts:</p>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementPostStart} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementPostStart} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={postValues.handleIncrement} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={postValues.handleDecrement} />
                 </div>
-                <input type="text" value={inputValuePostStart} onChange={handleInputChangePostStart} />
+                <input
+                  name="Start"
+                  type="text"
+                  value={postValues.PostStart}
+                  onChange={(event) => postValues.handleInputChangeStart(event)}
+                />
               </div>
               <span>to</span>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementPostEnd} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementPostEnd} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={postValues.handleIncrementEnd} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={postValues.handleDecrementEnd} />
                 </div>
-                <input type="text" value={inputValuePostEnd} onChange={handleInputChangePostEnd} />
+                <input
+                  name="End"
+                  type="text"
+                  value={postValues.PostEnd}
+                  onChange={(event) => postValues.handleInputChangeEnd(event)}
+                />
               </div>
             </div>
             <div className="component-item delayTime">
               <p className="component-item__header">
-                Delay time <span>(s):</span>
+                Delay time<span style={{ marginLeft: '2px' }}> (s):</span>
               </p>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeStart} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeStart} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrement} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrement} />
                 </div>
-                <input type="text" value={inputValueDelayTimeStart} onChange={handleInputChangeDelayTimeStart} />
+                <input
+                  type="text"
+                  name="Start"
+                  value={delayTimeValues.DelayTimeStart}
+                  onChange={(event) => delayTimeValues.handleInputChangeStart(event)}
+                />
               </div>
               <span>to</span>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeEnd} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeEnd} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrementEnd} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrementEnd} />
                 </div>
-                <input type="text" value={inputValueDelayTimeEnd} onChange={handleInputChangeDelayTimeEnd} />
+                <input
+                  type="text"
+                  name="End"
+                  value={delayTimeValues.DelayTimeEnd}
+                  onChange={(event) => delayTimeValues.handleInputChangeEnd(event)}
+                />
               </div>
             </div>
             <div className="component-item Post">
@@ -97,7 +115,6 @@ const Send_Message = ({ onGoBackClick }) => {
                     <option value="randomFriend">Randomly choose friends</option>
                     <option value="specificFriend">Specific friends</option>
                   </select>
-                  <img src={downButton} alt="Down Button" />
                 </div>
 
                 {selectedValueFriend === 'specificFriend' && (
@@ -109,8 +126,9 @@ const Send_Message = ({ onGoBackClick }) => {
                         rows="10"
                         value={textContent}
                         onChange={handleTextareaChange}
+                        ref={UIDTextareaRef}
                       ></textarea>
-                      <div className={`placeholder ${textContent ? 'hide' : ''}`}>
+                      <div onClick={handleUIDDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
                         <p>
                           <span>1</span>Enter the UID here
                         </p>
@@ -129,8 +147,9 @@ const Send_Message = ({ onGoBackClick }) => {
                     rows="10"
                     value={messagesContent}
                     onChange={handleTextareaChangeMessages}
+                    ref={MessagesTextareaRef}
                   ></textarea>
-                  <div className={`placeholder ${messagesContent ? 'hide' : ''}`}>
+                  <div onClick={handleMessagesDivClick} className={`placeholder ${messagesContent ? 'hide' : ''}`}>
                     <p>
                       <span>1</span>Enter the content here
                     </p>

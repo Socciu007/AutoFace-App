@@ -6,40 +6,23 @@ import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
 import downButton from '../../../assets/icon/icon-down.svg';
 
-import { DelayTime, KeywordTextarea, LeaveGroupOption, NumberGroup, NumberOfMember } from './LeaveGroup';
+import { KeywordTextarea, LeaveGroupOption, useRangeValues } from './LeaveGroup';
 const LeaveGroup = ({ onGoBackClick }) => {
-  const {
-    inputValueGroupsStart,
-    handleIncrementGroupsStart,
-    handleDecrementGroupsStart,
-    inputValueGroupsEnd,
-    handleIncrementGroupsEnd,
-    handleDecrementGroupsEnd,
-    handleInputChangeGroupsStart,
-    handleInputChangeGroupsEnd,
-  } = NumberGroup();
+  const initialValues = {
+    NumberGroupStart: 5,
+    NumberGroupEnd: 10,
+    DelayTimeStart: 5,
+    DelayTimeEnd: 10,
+    NumberOfMemberStart: 5,
+  };
 
-  const {
-    inputValueDelayTimeStart,
-    handleIncrementDelayTimeStart,
-    handleDecrementDelayTimeStart,
-    inputValueDelayTimeEnd,
-    handleIncrementDelayTimeEnd,
-    handleDecrementDelayTimeEnd,
-    handleInputChangeDelayTimeStart,
-    handleInputChangeDelayTimeEnd,
-  } = DelayTime();
-
-  const {
-    inputValueNumberOfMember,
-    handleIncrementNumberOfMember,
-    handleDecrementNumberOfMember,
-    handleInputChangeNumberOfMember,
-  } = NumberOfMember();
+  const numberGroupValues = useRangeValues(initialValues, 'NumberGroup');
+  const delayTimeValues = useRangeValues(initialValues, 'DelayTime');
+  const numberOfMemberValues = useRangeValues(initialValues, 'NumberOfMember');
 
   const { selectedValueLeaveGroup, handleSelectChangeLeaveGroup } = LeaveGroupOption();
 
-  const { KeywordContent, handleTextareaChangeKeywordContent } = KeywordTextarea();
+  const { KeywordContent, handleTextareaChangeKeywordContent, handleDivClick, textareaRef } = KeywordTextarea();
 
   return (
     <div className="leaveGroup">
@@ -55,38 +38,58 @@ const LeaveGroup = ({ onGoBackClick }) => {
                 <p className="component-item__header">Number of groups:</p>
                 <div className="component-item__number">
                   <div className="component-item__number__icon">
-                    <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementGroupsStart} />
-                    <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementGroupsStart} />
+                    <img src={iconIncrease} alt="Increase icon" onClick={numberGroupValues.handleIncrement} />
+                    <img src={iconDecrease} alt="Decrease icon" onClick={numberGroupValues.handleDecrement} />
                   </div>
-                  <input type="text" value={inputValueGroupsStart} onChange={handleInputChangeGroupsStart} />
+                  <input
+                    type="text"
+                    name="Start"
+                    value={numberGroupValues.NumberGroupStart}
+                    onChange={(event) => numberGroupValues.handleInputChangeStart(event)}
+                  />
                 </div>
                 <span>to</span>
                 <div className="component-item__number">
                   <div className="component-item__number__icon">
-                    <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementGroupsEnd} />
-                    <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementGroupsEnd} />
+                    <img src={iconIncrease} alt="Increase icon" onClick={numberGroupValues.handleIncrementEnd} />
+                    <img src={iconDecrease} alt="Decrease icon" onClick={numberGroupValues.handleDecrementEnd} />
                   </div>
-                  <input type="text" value={inputValueGroupsEnd} onChange={handleInputChangeGroupsEnd} />
+                  <input
+                    type="text"
+                    name="End"
+                    value={numberGroupValues.NumberGroupEnd}
+                    onChange={(event) => numberGroupValues.handleInputChangeEnd(event)}
+                  />
                 </div>
               </div>
               <div className="component-item delayTime">
                 <p className="component-item__header">
-                  Delay time<span>(s):</span>
+                  Delay time<span style={{ marginLeft: '2px' }}>(s):</span>
                 </p>
                 <div className="component-item__number">
                   <div className="component-item__number__icon">
-                    <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeStart} />
-                    <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeStart} />
+                    <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrement} />
+                    <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrement} />
                   </div>
-                  <input type="text" value={inputValueDelayTimeStart} onChange={handleInputChangeDelayTimeStart} />
+                  <input
+                    name="Start"
+                    type="text"
+                    value={delayTimeValues.DelayTimeStart}
+                    onChange={(event) => delayTimeValues.handleInputChangeStart(event)}
+                  />
                 </div>
                 <span>to</span>
                 <div className="component-item__number">
                   <div className="component-item__number__icon">
-                    <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeEnd} />
-                    <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeEnd} />
+                    <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrementEnd} />
+                    <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrementEnd} />
                   </div>
-                  <input type="text" value={inputValueDelayTimeEnd} onChange={handleInputChangeDelayTimeEnd} />
+                  <input
+                    name="End"
+                    type="text"
+                    value={delayTimeValues.DelayTimeEnd}
+                    onChange={(event) => delayTimeValues.handleInputChangeEnd(event)}
+                  />
                 </div>
               </div>
               <div className="LeaveGroup_Selection">
@@ -110,13 +113,14 @@ const LeaveGroup = ({ onGoBackClick }) => {
                       <p>Number of members less than:</p>
                       <div className="component-item__number">
                         <div className="component-item__number__icon">
-                          <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementNumberOfMember} />
-                          <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementNumberOfMember} />
+                          <img src={iconIncrease} alt="Increase icon" onClick={numberOfMemberValues.handleIncrement} />
+                          <img src={iconDecrease} alt="Decrease icon" onClick={numberOfMemberValues.handleDecrement} />
                         </div>
                         <input
                           type="text"
-                          value={inputValueNumberOfMember}
-                          onChange={handleInputChangeNumberOfMember}
+                          name="Start"
+                          value={numberOfMemberValues.NumberOfMemberStart}
+                          onChange={(event) => numberOfMemberValues.handleInputChangeStart(event)}
                           style={{ background: '#FFF' }}
                         />
                       </div>
@@ -130,8 +134,9 @@ const LeaveGroup = ({ onGoBackClick }) => {
                           rows="10"
                           value={KeywordContent}
                           onChange={handleTextareaChangeKeywordContent}
+                          ref={textareaRef}
                         ></textarea>
-                        <div className={`placeholder ${KeywordContent ? 'hide' : ''}`}>
+                        <div onClick={handleDivClick} className={`placeholder ${KeywordContent ? 'hide' : ''}`}>
                           <p>
                             <span>1 </span>
                             <p>Enter the keyword here</p>

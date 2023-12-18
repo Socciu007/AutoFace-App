@@ -108,41 +108,42 @@ const SettingProxy = ({
                 </div>
                 <div className="-info-add-proxys">
                   <textarea className="-info-proxys" onClick={handleOpenWriteText}></textarea>
-                  <div className="-list-info">
-                    <div className="-list-info__item">
-                      <div className="-stt-info">
-                        <p>
-                          <span>1</span>
-                          <div style={{ display: openWriteText ? 'none' : 'inline' }}>Enter the proxy here</div>
-                        </p>
+                  <div className="-list-info" onClick={handleOpenWriteText}>
+                    <p>
+                      <span>1</span>
+                      <div style={{ display: openWriteText ? 'none' : 'inline' }}>Enter the proxy here</div>
+                    </p>
+
+                    <p>
+                      <span>2</span>
+                      <div style={{ display: openWriteText ? 'none' : 'inline' }}>
+                        <b>Proxy format:</b> Host:Port:Username:Password
                       </div>
-                    </div>
-                    <div className="-list-info__item" style={{ marginTop: '10px' }}>
-                      <div className="-stt-info">
-                        <p>
-                          <span>2</span>
-                          <div style={{ display: openWriteText ? 'none' : 'inline' }}>
-                            <b>Proxy format:</b> Host:Port:Username:Password
-                          </div>
-                        </p>
-                      </div>
-                    </div>
+                    </p>
                   </div>
                   <button className="-add" onClick={handleAddProxy}>
                     ADD
                   </button>
                   <div className="-setting-proxys">
-                    <Switch defaultChecked onChange={onChange} width={32} height={20} />
-                    {/* <img src={onOption} alt="image-on-option"></img> */}
+                    <Switch defaultChecked onChange={onChange} />
                     <p>Assign proxy here to all selected profiles </p>
-                    <img src={question} alt="question"></img>
+                    <div className="-hover-question">
+                      <img src={question} alt="question"></img>
+                      <div className="-hover-question__hide">
+                        <p>Assign proxy here to all selected profiles</p>
+                      </div>
+                    </div>
                   </div>
                   <div className="-setting-proxys">
-                    <Switch defaultChecked onChange={onChange} width={32} height={20} />
-
+                    <Switch defaultChecked onChange={onChange} />
                     <p>
                       API change: Do not assign a proxy to the next profile if the IP address does not change
-                      <img src={question} alt="question"></img>
+                      <div className="-hover-question">
+                        <img src={question} alt="question"></img>
+                        <div className="-hover-question__hide">
+                          <p>Assign proxy here to all selected profiles</p>
+                        </div>
+                      </div>
                     </p>
                   </div>
                 </div>

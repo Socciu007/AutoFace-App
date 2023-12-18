@@ -80,7 +80,6 @@
           input[type='checkbox']:checked {
             background-color: #2a86ff !important;
           }
-          
         }
         span {
           font-weight: 400;
@@ -180,6 +179,9 @@
           appearance: none;
           -webkit-appearance: none;
           -moz-appearance: none;
+          background-image: url('../../../assets/icon/icon-down.svg');
+          background-repeat: no-repeat;
+          background-position: right 10px center;
           border: 0;
           option {
             font-weight: 400;

@@ -1,19 +1,45 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Handle, Position } from 'reactflow';
-
 import addFriendLeft from '../../assets/icon/icon-addFriendLeft.svg';
 import addFriendIcon from '../../assets/icon/icon-addFriend.svg';
 import optionNode from '../../assets/icon/icon-optionNode.svg';
 import time from '../../assets/icon/icon-time.svg';
-import 'reactjs-popup/dist/index.css';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 const handleStyle = { left: 10 };
 
-function addFriendNode({ data: { label, onButtonClick }, isConnectable, id }) {
+function addFriendNode({ data: { label, onButtonClick, onDeleteNode }, isConnectable, id }) {
   const onChange = useCallback((evt) => {
     console.log(evt.target.value);
   }, []);
-  const [optionClick, setOptionClick] = useState(false);
-
+  // for style menu materials UI
+  const menuStyle = {
+    boxShadow:
+      '0px 5px 5px -3px rgb(233 232 232 / 20%), 0px 8px 10px 1px rgb(255 255 255 / 14%), 0px 3px 14px 2px rgb(241 232 232 / 12%)',
+  };
+  const liStyle = {
+    fontFamily: 'GOOGLESANS',
+    fontSize: '12px',
+  };
+  const [anchorEl, setAnchorEl] = useState(null);
+  // Handle toggle menu
+  const open = Boolean(anchorEl);
+  const handleClick = (event, index) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  // Edit node
+  const editNode = () => {
+    onButtonClick();
+    handleClose();
+  };
+  // Delete node
+  const deleteNode = () => {
+    onDeleteNode(id);
+    handleClose();
+  };
   return (
     <div className="updater-node">
       <Handle type="target" position={Position.Left} isConnectable={isConnectable} />
@@ -24,11 +50,24 @@ function addFriendNode({ data: { label, onButtonClick }, isConnectable, id }) {
           <div className="content-right">
             <div className="right-top">
               <p>Add friend</p>
-              <div style={{ padding: '0 5px' }} onClick={onButtonClick}>
-                <img src={optionNode} alt="More" />
-              </div>
+              <img src={optionNode} alt="More" onClick={handleClick} />
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  'aria-labelledby': 'basic-button',
+                }}
+                sx={{
+                  '& .MuiPaper-root': menuStyle,
+                  '& .MuiButtonBase-root': liStyle,
+                }}
+              >
+                <MenuItem onClick={editNode}>Sửa</MenuItem>
+                <MenuItem onClick={deleteNode}>Xóa</MenuItem>
+              </Menu>
             </div>
-
             <div className="right-bottom">
               <img src={time} alt="Time" />
               <p>5 min</p>
