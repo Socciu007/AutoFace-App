@@ -201,7 +201,7 @@ const CreateScript = () => {
                     <img src={invite} alt="invite Group General" />
                     <p>Invite</p>
                   </div>
-                  <div className="card" onDragStart={(event) => onDragStart(event, 'createPost')} draggable>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'createPostGroup')} draggable>
                     <img src={createPost} alt="watch newsfeed General" />
                     <p>Create post</p>
                   </div>

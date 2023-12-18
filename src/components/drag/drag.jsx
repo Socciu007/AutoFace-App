@@ -73,6 +73,7 @@ const nodeMessage = {
   joinGroup: 'joinGroup',
   leftGroup: 'leftGroup',
   inviteGroup: 'inviteGroup',
+  createPostGroup: 'createPostGroup',
   likeComment: 'likeComment',
   follower: 'follower',
   viewVideo: 'viewVideo',

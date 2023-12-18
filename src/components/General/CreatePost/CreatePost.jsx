@@ -5,8 +5,7 @@ import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
 import DragButton from '../../../assets/icon/icon-drag.svg';
 import DeleteButton from '../../../assets/icon/icon-Delete.svg';
-import downButton from '../../../assets/icon/icon-down.svg';
-import { FriendsOption, PostOption, TextBackGround, URLImg, showTag, useRangeValues } from './CreatePost.js';
+import { FriendsOption, PostOption, URLImg, showTag, useRangeValues, useTextarea } from './CreatePost.js';
 const CreatePost = ({ onGoBackClick }) => {
   const initialValues = {
     PostStart: 5,
@@ -30,7 +29,19 @@ const CreatePost = ({ onGoBackClick }) => {
 
   const { selectedValueFriend, handleSelectChangeFriend } = FriendsOption();
 
-  const { textContent, handleTextareaChange } = TextBackGround();
+  const {
+    value: textContent,
+    handleChange: handleTextareaChange,
+    textareaRef: TextareaRef,
+    handleDivClick: handleDivClick,
+  } = useTextarea('');
+
+  const {
+    value: UIDtextContent,
+    handleChange: handleTextareaUIDChange,
+    textareaRef: UIDTextareaRef,
+    handleDivClick: handleUIDDivClick,
+  } = useTextarea('');
 
   const { files, getRootProps, getInputProps, handleDeleteButtonClick } = URLImg();
   return (
@@ -126,8 +137,9 @@ const CreatePost = ({ onGoBackClick }) => {
                         rows="10"
                         value={textContent}
                         onChange={handleTextareaChange}
+                        ref={TextareaRef}
                       ></textarea>
-                      <div className={`placeholder ${textContent ? 'hide' : ''}`}>
+                      <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
                         <p>
                           <span>1</span>Enter the content here
                         </p>
@@ -250,19 +262,18 @@ const CreatePost = ({ onGoBackClick }) => {
                           <option value="amongFriend">Randomly tag among friends</option>
                           <option value="UIDList">UID list</option>
                         </select>
-
-                        <img src={downButton} alt="Down button" />
                       </div>
                       {selectedValueFriend === 'UIDList' && (
                         <div className="component-item text">
                           <textarea
-                            id="textContent"
-                            name="textContent"
+                            id="UIDtextContent"
+                            name="UIDtextContent"
                             rows="10"
-                            value={textContent}
-                            onChange={handleTextareaChange}
+                            value={UIDtextContent}
+                            onChange={handleTextareaUIDChange}
+                            ref={UIDTextareaRef}
                           ></textarea>
-                          <div className={`placeholder ${textContent ? 'hide' : ''}`}>
+                          <div onClick={handleUIDDivClick} className={`placeholder ${UIDtextContent ? 'hide' : ''}`}>
                             <p>
                               <span>1</span>Enter the content here
                             </p>
