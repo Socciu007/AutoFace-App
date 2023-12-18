@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PopupComponent from '../PopupComponent/PopupComponent';
 import closePopup from '../../../assets/pictures/icon-x.svg';
 import settings from '../../../assets/pictures/icon-settings.png';
@@ -12,6 +12,11 @@ import { Table } from 'antd';
 import './style.scss';
 
 const PopupProfile = ({ dataProfiles, openProfiles, handleCloseProfiles, handleFilterFolder }) => {
+  const [typeFolder0, setTypeFolder0] = useState(false);
+  const [typeFolder1, setTypeFolder1] = useState(false);
+  const [typeFolder2, setTypeFolder2] = useState(false);
+  const [typeFolder3, setTypeFolder3] = useState(false);
+  const [typeFolder4, setTypeFolder4] = useState(false);
   // rowSelection object indicates the need for row selection
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
@@ -87,6 +92,47 @@ const PopupProfile = ({ dataProfiles, openProfiles, handleCloseProfiles, handleF
       dataIndex: 'notes',
     },
   ];
+
+  const handleTypeFolder0 = () => {
+    setTypeFolder0(true);
+    setTypeFolder1(false);
+    setTypeFolder2(false);
+    setTypeFolder3(false);
+    setTypeFolder4(false);
+    handleFilterFolder('Facebook Ads 1');
+  };
+  const handleTypeFolder1 = () => {
+    setTypeFolder1(true);
+    setTypeFolder0(false);
+    setTypeFolder2(false);
+    setTypeFolder3(false);
+    setTypeFolder4(false);
+    handleFilterFolder('Seeding 1');
+  };
+  const handleTypeFolder2 = () => {
+    setTypeFolder2(true);
+    setTypeFolder1(false);
+    setTypeFolder0(false);
+    setTypeFolder3(false);
+    setTypeFolder4(false);
+    handleFilterFolder('Mail 1 - Alcie');
+  };
+  const handleTypeFolder3 = () => {
+    setTypeFolder3(true);
+    setTypeFolder1(false);
+    setTypeFolder2(false);
+    setTypeFolder0(false);
+    setTypeFolder4(false);
+    handleFilterFolder('Mail 2 - Brono');
+  };
+  const handleTypeFolder4 = () => {
+    setTypeFolder4(true);
+    setTypeFolder1(false);
+    setTypeFolder2(false);
+    setTypeFolder3(false);
+    setTypeFolder0(false);
+    handleFilterFolder('Mail 3 - Kazza');
+  };
   return (
     <PopupComponent open={openProfiles} onClose={handleCloseProfiles}>
       {
@@ -108,37 +154,33 @@ const PopupProfile = ({ dataProfiles, openProfiles, handleCloseProfiles, handleF
                 <div className="-container-scripts__left__options">
                   <h1>FOLDER</h1>
                   <div className="-container-scripts__left__options__type">
-                    <p>All</p>
+                    {!typeFolder0 && !typeFolder1 && !typeFolder2 && !typeFolder3 && !typeFolder4 && <p>All</p>}
+
+                    {typeFolder0 && <p>Facebook Ads 1</p>}
+                    {typeFolder1 && <p>Seeding 1</p>}
+                    {typeFolder2 && <p>Mail 1 - Alcie</p>}
+                    {typeFolder3 && <p>Mail 2 - Brono</p>}
+                    {typeFolder4 && <p>Mail 3 - Kazza</p>}
                   </div>
                   <div className="-container-scripts__left__options__list -option-list">
                     <ul>
-                      <li
-                        className="-option-item"
-                        onClick={() => {
-                          handleFilterFolder('Facebook Ads 1');
-                        }}
-                      >
+                      <li className="-option-item" onClick={handleTypeFolder0}>
                         <div className="-option-item__icon" style={{ background: '#E84314' }}></div>
                         <p>Facebook Ads 1</p>
                       </li>
-                      <li
-                        className="-option-item"
-                        onClick={() => {
-                          handleFilterFolder('Seeding 1');
-                        }}
-                      >
+                      <li className="-option-item" onClick={handleTypeFolder1}>
                         <div className="-option-item__icon" style={{ background: '#F6A01D' }}></div>
                         <p>Seeding 1</p>
                       </li>
-                      <li className="-option-item" onClick={() => handleFilterFolder('Mail 1 - Alcie')}>
+                      <li className="-option-item" onClick={handleTypeFolder2}>
                         <div className="-option-item__icon" style={{ background: '#FFDE50' }}></div>
                         <p>Mail 1 - Alcie</p>
                       </li>
-                      <li className="-option-item" onClick={() => handleFilterFolder('Mail 1 - Brono')}>
+                      <li className="-option-item" onClick={handleTypeFolder3}>
                         <div className="-option-item__icon" style={{ background: '#81BC06' }}></div>
-                        <p>Mail 1 - Brono</p>
+                        <p>Mail 2 - Brono</p>
                       </li>
-                      <li className="-option-item" onClick={() => handleFilterFolder('Mail 3 - Kazza')}>
+                      <li className="-option-item" onClick={handleTypeFolder4}>
                         <div className="-option-item__icon" style={{ background: '#00ADEF' }}></div>
                         <p>Mail 3 - Kazza</p>
                       </li>
