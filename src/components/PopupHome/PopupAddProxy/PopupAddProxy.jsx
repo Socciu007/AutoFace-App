@@ -29,8 +29,10 @@ const PopupAddProxy = ({ typeProxy, openAddProxy, handleCloseAdd, handleOpenProx
                   <div className="-add-proxys__type__text__option">
                     <select name="typeProxy" onChange={onChangeTypeProxy} value={typeProxy}>
                       <option value="Without proxy">Without proxy</option>
-                      <option value="Your Proxy">Your Proxy</option>
-                      <option value="Free Proxy">Free Proxy</option>
+                      <option value="Your Proxy">HTTP Proxy</option>
+                      <option value="Free Proxy">Socks4 Proxy</option>
+                      <option value="Free Proxy">Socks5 Proxy</option>
+                      <option value="Free Proxy">SSH Proxy</option>
                     </select>
                   </div>
                 </div>
@@ -43,12 +45,12 @@ const PopupAddProxy = ({ typeProxy, openAddProxy, handleCloseAdd, handleOpenProx
               <p>Proxy list</p>
               <div className="-add-proxys-nav -list-proxys">
                 <textarea name="" type="text" onClick={handleWriteText}></textarea>
-                <div className="-form-instruct">
-                  <p style={{ marginRight: '19px' }}>
+                <div className="-form-instruct" onClick={handleWriteText}>
+                  <p>
                     <span>1</span>
                     <div style={{ display: openWriteText ? 'none' : 'inline' }}>Enter the content here</div>
                   </p>
-                  <p style={{ marginRight: '19px' }}>
+                  <p>
                     <span>2</span>
                     <div style={{ display: openWriteText ? 'none' : 'inline' }}>
                       <b>Proxy format: </b>IP:Port:Username:Password

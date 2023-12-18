@@ -98,15 +98,29 @@
     }
     .-sub1-settings {
       display: flex;
-      gap: 20px;
+      align-items: center;
+      gap: 14px;
       margin-top: 28px;
       margin-bottom: 0px;
       button {
-        height: 20px;
+        border-radius: 20px;
+        min-width: 30.933px;
+        height: 16px;
+
         .ant-switch-handle {
-          height: 16px;
-          width: 16px;
+          position: absolute;
+          top: 0px;
+          inset-inline-start: 0px;
+          width: 15.668px;
+          height: 15.668px;
+          transition: all 0.2s ease-in-out;
         }
+        // .ant-switch-inner {
+        //   min-width: 30.933px;
+        // }
+      }
+      .ant-switch.ant-switch-checked .ant-switch-handle {
+        inset-inline-start: calc(100% - 15.5px);
       }
       p {
         line-height: 22px;

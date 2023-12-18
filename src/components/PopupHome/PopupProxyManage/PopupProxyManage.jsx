@@ -41,9 +41,9 @@ const PopupProxyManage = ({ openProxyManage, handleCloseProxyManage }) => {
       dataIndex: 'tag',
     },
     {
-      title: 'Expiration Date',
-      dataIndex: 'expirationdate',
-      sorter: (a, b) => a.expirationdate - b.expirationdate,
+      title: 'Expires',
+      dataIndex: 'expires',
+      sorter: (a, b) => a.expires - b.expires,
     },
   ];
   return (
