@@ -50,10 +50,13 @@ const ProfilesPage = () => {
     {
       title: '#',
       dataIndex: 'key',
+      width: 50,
+      fixed: 'left',
     },
     {
       title: 'Profile',
       dataIndex: 'profile',
+      width: 200,
       render: (profile) => {
         return (
           <div className="-text-profile">
@@ -72,31 +75,54 @@ const ProfilesPage = () => {
     {
       title: 'UID',
       dataIndex: 'uid',
+      width: 150,
       ellipsis: true,
     },
     {
       title: 'Name',
       dataIndex: 'name',
+      width: 150,
     },
-    // {
-    //   title: 'Friends',
-    //   dataIndex: 'friends',
-    // },
-    // {
-    //   title: 'Sex',
-    //   dataIndex: 'sex',
-    // },
-    // {
-    //   title: 'Password',
-    //   dataIndex: 'password',
-    // },
-    // {
-    //   title: 'Group',
-    //   dataIndex: 'group',
-    // },
+    {
+      title: 'Date of birth',
+      dataIndex: 'birth',
+      width: 200,
+    },
+    {
+      title: 'Friends',
+      dataIndex: 'friends',
+      width: 150,
+    },
+    {
+      title: 'Group',
+      dataIndex: 'group',
+      width: 150,
+      ellipsis: true,
+    },
+    {
+      title: 'Sex',
+      dataIndex: 'sex',
+      width: 150,
+    },
+    {
+      title: 'Password',
+      dataIndex: 'password',
+      width: 150,
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      width: 150,
+    },
+    {
+      title: `Email's password`,
+      dataIndex: 'emailpass',
+      width: 200,
+    },
     {
       title: 'Status',
       dataIndex: 'status',
+      width: 150,
       render: (status) => {
         if (status[0] === 'Running') {
           return (
@@ -119,20 +145,21 @@ const ProfilesPage = () => {
       title: 'Proxy',
       dataIndex: 'proxy',
       ellipsis: true,
+      width: 150,
       render: (proxy) => {
         return (
-          <div style={{ display: 'inline' }}>
-            {/* <div className="-proxy-profiles"> */}
-            <span>
-              <img src={usaProxy} alt="icon-usa" width={22.89} height={15}></img>
-              {proxy}
-            </span>
-            {/* </div> */}
-          </div>
-          // <Tooltip placement="topLeft" title={proxy}>
-          //   <img src={usaProxy} alt="icon-usa" width={22.89} height={15}></img>
-          //   {proxy}
-          // </Tooltip>
+          // <div style={{ display: 'inline' }}>
+          //   {/* <div className="-proxy-profiles"> */}
+          //   <span>
+          //     <img src={usaProxy} alt="icon-usa" width={22.89} height={15}></img>
+          //     {proxy}
+          //   </span>
+          //   {/* </div> */}
+          // </div>
+          <Tooltip placement="topLeft" title={proxy}>
+            {/* <img src={usaProxy} alt="icon-usa" width={22.89} height={15}></img> */}
+            {proxy}
+          </Tooltip>
         );
       },
     },
@@ -150,12 +177,15 @@ const ProfilesPage = () => {
     {
       title: 'Folder',
       dataIndex: 'folder',
+      width: 150,
       sorter: (a, b) => a.folder.length - b.folder.length,
       sortDirections: ['descend'],
     },
     {
       title: '',
       dataIndex: 'key',
+      width: 50,
+      fixed: 'right',
       render: (key) => {
         return (
           <div className="-expand-icon" onClick={handleActionProfiles}>
@@ -360,26 +390,26 @@ const ProfilesPage = () => {
           </div>
         </div>
         <div className="-content-profiles">
-          <div className="scrollable-container">
-            <Table
-              rowSelection={{
-                ...rowSelection,
-              }}
-              onRow={(record, rowIndex) => {
-                return {
-                  onClick: () => {
-                    setRowKeys(record.key);
-                  },
-                };
-              }}
-              components={components}
-              rowClassName={() => 'editable-row'}
-              columns={columns}
-              dataSource={dataProfiles}
-              scroll={{ x: 1280 }}
-              pagination={false}
-            />
-          </div>
+          {/* <div className="scrollable-container"> */}
+          <Table
+            rowSelection={{
+              ...rowSelection,
+            }}
+            onRow={(record, rowIndex) => {
+              return {
+                onClick: () => {
+                  setRowKeys(record.key);
+                },
+              };
+            }}
+            components={components}
+            rowClassName={() => 'editable-row'}
+            columns={columns}
+            dataSource={dataProfiles}
+            scroll={{ x: 1280, y: 480 }}
+            pagination={false}
+          />
+          {/* </div> */}
         </div>
       </div>
     </div>
