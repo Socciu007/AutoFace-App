@@ -3,7 +3,8 @@ import './style.scss';
 import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
-import downButton from '../../../assets/icon/icon-down.svg';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import { UIDText, cancelFriendOption, unfriendOption, useRangeValues } from './CancelFriend';
 const CancelFriend = ({ onGoBackClick }) => {
   const initialValues = {
@@ -39,15 +40,15 @@ const CancelFriend = ({ onGoBackClick }) => {
               </div>
               <div className="cancelFriendContent">
                 <div className="component-item cancelFriendOption">
-                  <select
+                  <Select
                     name="cancelFriendOption"
                     className="cancelFriendType"
                     onChange={handleSelectChangeCancelFriend}
                     value={selectedValueCancelFriend}
                   >
-                    <option value="cancelRequest">Cancel friend requests</option>
-                    <option value="unfriend">Unfriend</option>
-                  </select>
+                    <MenuItem value="cancelRequest">By suggestions</MenuItem>
+                    <MenuItem value="unfriend">Accept friend requests</MenuItem>
+                  </Select>
                 </div>
                 {selectedValueCancelFriend === 'cancelRequest' && (
                   <div className="component-item numberOfRequests">
@@ -118,15 +119,15 @@ const CancelFriend = ({ onGoBackClick }) => {
                     </div>
                     <div className="unfriendContent">
                       <div className="component-item unfriendOption">
-                        <select
+                        <Select
                           name="unfriendOption"
                           className="unfriendSelector"
                           onChange={handleSelectChangeUnfriend}
                           value={selectedValueUnfriend}
                         >
-                          <option value="random">Randomly</option>
-                          <option value="UID">UID</option>
-                        </select>
+                          <MenuItem value="random">Randomly</MenuItem>
+                          <MenuItem value="UID">UID</MenuItem>
+                        </Select>
                       </div>
                       {selectedValueUnfriend === 'random' && (
                         <div className="component-item comment__numberFriend">

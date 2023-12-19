@@ -5,16 +5,14 @@ export function handleInputChange(event, setValues, prefix, values) {
   const inputValue = event.target.value;
   const isNumber = /^\d*$/.test(inputValue);
 
-  if (isNumber && inputValue.length <= 3) {
-    const newValue = inputValue === '' ? '' : parseInt(inputValue, 10);
+  const newValue = isNumber ? inputValue : '';
 
-    const updatedValues = {
-      ...values,
-      [`${prefix}${event.target.name}`]: newValue,
-    };
+  const updatedValues = {
+    ...values,
+    [`${prefix}${event.target.name}`]: newValue,
+  };
 
-    setValues(updatedValues);
-  }
+  setValues(updatedValues);
 }
 
 export function useRangeValues(initialValues, prefix) {
@@ -24,8 +22,7 @@ export function useRangeValues(initialValues, prefix) {
     handleIncrement: () => {
       setValues((prevValues) => ({
         ...prevValues,
-        [`${prefix}Start`]:
-          prevValues[`${prefix}Start`] + 1 <= 999 ? prevValues[`${prefix}Start`] + 1 : prevValues[`${prefix}Start`],
+        [`${prefix}Start`]: prevValues[`${prefix}Start`] + 1,
       }));
     },
     handleDecrement: () => {
@@ -37,8 +34,7 @@ export function useRangeValues(initialValues, prefix) {
     handleIncrementEnd: () => {
       setValues((prevValues) => ({
         ...prevValues,
-        [`${prefix}End`]:
-          prevValues[`${prefix}End`] + 1 <= 999 ? prevValues[`${prefix}End`] + 1 : prevValues[`${prefix}End`],
+        [`${prefix}End`]: prevValues[`${prefix}End`] + 1,
       }));
     },
     handleDecrementEnd: () => {

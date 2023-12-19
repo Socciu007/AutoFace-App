@@ -5,6 +5,8 @@ import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
 import DragButton from '../../../assets/icon/icon-drag.svg';
 import DeleteButton from '../../../assets/icon/icon-Delete.svg';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import { FriendsOption, PostOption, URLImg, showTag, useRangeValues, useTextarea } from './CreatePost.js';
 const CreatePost = ({ onGoBackClick }) => {
   const initialValues = {
@@ -117,15 +119,15 @@ const CreatePost = ({ onGoBackClick }) => {
               </div>
               <div className="PostContent">
                 <div className="component-item postOption">
-                  <select
+                  <Select
                     name="postOption"
                     className="PostType"
                     onChange={handleSelectChangePost}
                     value={selectedValuePost}
                   >
-                    <option value="background">Using background</option>
-                    <option value="photoOrVideo">Text, Photo/video</option>
-                  </select>
+                    <MenuItem value="background">Using background</MenuItem>
+                    <MenuItem value="photoOrVideo">Text, Photo/video</MenuItem>
+                  </Select>
                 </div>
                 {(selectedValuePost === 'background' || selectedValuePost === 'photoOrVideo') && (
                   <div className="Text">
@@ -253,15 +255,15 @@ const CreatePost = ({ onGoBackClick }) => {
                       </div>
                       <p>Friends</p>
                       <div className="component-item optionTag">
-                        <select
+                        <Select
                           name="optionTag"
                           className="TagType"
                           onChange={handleSelectChangeFriend}
                           value={selectedValueFriend}
                         >
-                          <option value="amongFriend">Randomly tag among friends</option>
-                          <option value="UIDList">UID list</option>
-                        </select>
+                          <MenuItem value="amongFriend">Randomly tag among friends</MenuItem>
+                          <MenuItem value="UIDList">UID list</MenuItem>
+                        </Select>
                       </div>
                       {selectedValueFriend === 'UIDList' && (
                         <div className="component-item text">

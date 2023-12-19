@@ -159,3 +159,10 @@ $tablet-width: 1024px;
   --font-color-btn: #fff;
   --bg-color-btnSave: #2a86ff;
 }
+
+// Css select option
+.css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root {
+  font-family: 'GoogleSans';
+  font-size: 15px;
+  color: var(--font-color-para);
+}

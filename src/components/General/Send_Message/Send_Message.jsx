@@ -4,7 +4,8 @@ import './style.scss';
 import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
-
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import { PostOption, useRangeValues, useTextarea } from './Send_Message';
 const Send_Message = ({ onGoBackClick }) => {
   const initialValues = {
@@ -106,15 +107,15 @@ const Send_Message = ({ onGoBackClick }) => {
               </div>
               <div className="PostContent">
                 <div className="component-item postOption">
-                  <select
+                  <Select
                     name="postOption"
                     className="PostType"
                     onChange={handleSelectChangeFriend}
                     value={selectedValueFriend}
                   >
-                    <option value="randomFriend">Randomly choose friends</option>
-                    <option value="specificFriend">Specific friends</option>
-                  </select>
+                    <MenuItem value="randomFriend">Randomly choose friends</MenuItem>
+                    <MenuItem value="specificFriend">Specific friends</MenuItem>
+                  </Select>
                 </div>
 
                 {selectedValueFriend === 'specificFriend' && (

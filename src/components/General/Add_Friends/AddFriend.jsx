@@ -4,7 +4,9 @@ import './style.scss';
 import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
-import Select from 'react-select';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+
 const AddFriend = ({ onGoBackClick }) => {
   const initialValues = {
     PostStart: 5,
@@ -20,6 +22,7 @@ const AddFriend = ({ onGoBackClick }) => {
   const delayTimeValues = useRangeValues(initialValues, 'DelayTime');
   const requestsValues = useRangeValues(initialValues, 'Requests');
   const stopTimeValues = useRangeValues(initialValues, 'StopTime');
+
   const {
     setTextContentAddFriendRequest,
     placeholderText,
@@ -36,22 +39,6 @@ const AddFriend = ({ onGoBackClick }) => {
 
   const { isComment, handleCheckboxChangeComment } = useShowCheckbox(false, 'Comment');
 
-  // const options = [
-  //   { value: 'suggestions', label: 'By suggestions' },
-  //   { value: 'acceptFriendRequests', label: 'Accept friend requests' },
-  //   { value: 'UIDList', label: 'UID list' },
-  //   { value: 'keywords', label: 'By keywords' },
-  //   { value: 'groupMembers', label: 'Group members' },
-  //   { value: 'friendOfFriends', label: 'Friend of friends' },
-  //   { value: 'friendOfUID', label: 'Friend of UID' },
-  // ];
-
-  // const customStyles = {
-  //   option: (provided, state) => ({
-  //     ...provided,
-  //     height: '50px', // Set your desired height here
-  //   }),
-  // };
   return (
     <div className="Add_Friend">
       <div className="component_container">
@@ -67,27 +54,20 @@ const AddFriend = ({ onGoBackClick }) => {
               </div>
               <div className="addFriendContent">
                 <div className="component-item addFriendOption">
-                  <select
+                  <Select
+                    value={selectedValueTypeAddFriend}
+                    onChange={handleSelectorChange}
                     name="addFriendOption"
                     className="addFriendType"
-                    onChange={handleSelectorChange}
-                    value={selectedValueTypeAddFriend}
                   >
-                    <option value="suggestions">By suggestions</option>
-                    <option value="acceptFriendRequests">Accept friend requests</option>
-                    <option value="UIDList">UID list</option>
-                    <option value="keywords">By keywords</option>
-                    <option value="groupMembers">Group members</option>
-                    <option value="friendOfFriends">Friend of friends</option>
-                    <option value="friendOfUID">Friend of UID</option>
-                  </select>
-                  {/* <Select
-                    defaultValue="suggestions"
-                    options={options}
-                    styles={customStyles}
-                    onChange={handleSelectorChange}
-                    value={selectedValueTypeAddFriend}
-                  /> */}
+                    <MenuItem value="suggestions">By suggestions</MenuItem>
+                    <MenuItem value="acceptFriendRequests">Accept friend requests</MenuItem>
+                    <MenuItem value="UIDList">UID list</MenuItem>
+                    <MenuItem value="keywords">By keywords</MenuItem>
+                    <MenuItem value="groupMembers">Group members</MenuItem>
+                    <MenuItem value="friendOfFriends">Friend of friends</MenuItem>
+                    <MenuItem value="friendOfUID">Friend of UID</MenuItem>
+                  </Select>
                 </div>
                 {(selectedValueTypeAddFriend === 'suggestions' ||
                   selectedValueTypeAddFriend === 'acceptFriendRequests' ||

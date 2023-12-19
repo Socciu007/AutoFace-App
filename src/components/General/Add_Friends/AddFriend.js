@@ -1,37 +1,18 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useRef, useState } from 'react';
 
-// export function handleInputChange(event, setValues, prefix, values) {
-//   const inputValue = event.target.value;
-//   const isNumber = /^\d*$/.test(inputValue);
-
-//   if (isNumber && inputValue.length <= 3) {
-//     const newValue = inputValue === '' ? '' : parseInt(inputValue, 10);
-
-//     const updatedValues = {
-//       ...values,
-//       [`${prefix}${event.target.name}`]: newValue,
-//     };
-
-//     setValues(updatedValues);
-//   }
-// }
-
 export function handleInputChange(event, setValues, prefix, values) {
   const inputValue = event.target.value;
   const isNumber = /^\d*$/.test(inputValue);
 
-  if (isNumber) {
-    // Limit the input to a maximum of 3 digits followed by "..."
-    const newValue = inputValue.length <= 5 ? inputValue : `${inputValue.slice(0, 5)}...`;
+  const newValue = isNumber ? inputValue : '';
 
-    const updatedValues = {
-      ...values,
-      [`${prefix}${event.target.name}`]: newValue,
-    };
+  const updatedValues = {
+    ...values,
+    [`${prefix}${event.target.name}`]: newValue,
+  };
 
-    setValues(updatedValues);
-  }
+  setValues(updatedValues);
 }
 
 export function useRangeValues(initialValues, prefix) {
@@ -127,19 +108,33 @@ export function AddFriendOption() {
   };
 }
 
+// Show Interact,show comment
+export function useShowCheckbox(initialState, featureName) {
+  const [isFeatureVisible, setIsFeatureVisible] = useState(initialState);
+
+  const handleCheckboxChange = () => {
+    setIsFeatureVisible((prevState) => !prevState);
+  };
+
+  return {
+    [`is${featureName}`]: isFeatureVisible,
+    [`handleCheckboxChange${featureName}`]: handleCheckboxChange,
+  };
+}
+
 export function TextComment() {
   const [textContentComment, setTextContentComment] = useState('');
   const textareaCommentRef = useRef(null);
-
+  const prevContentRef = useRef('');
   const handleTextareaChangeComment = (event) => {
     const inputValue = event.target.value;
 
     // Kiểm tra xem nội dung có rỗng không
     if (inputValue.trim() === '') {
       // Nếu rỗng, hiển thị lại placeholder và cập nhật state
-      setTextContentComment(''); // Hoặc bạn có thể gán giá trị placeholder khác nếu cần
+      setTextContentComment('');
     } else {
-      // Nếu không rỗng, thực hiện thêm số đầu dòng như cũ
+      // Nếu không rỗng, thực hiện thêm số đầu dòng
       const lines = inputValue.split('\n');
       const numberedLines = lines.map((line, index) => {
         if (!/^\d+\./.test(line)) {
@@ -164,16 +159,42 @@ export function TextComment() {
   };
 }
 
-// Show Interact,show comment
-export function useShowCheckbox(initialState, featureName) {
-  const [isFeatureVisible, setIsFeatureVisible] = useState(initialState);
+// export function TextComment() {
+//   const [textContentComment, setTextContentComment] = useState('');
+//   const textareaCommentRef = useRef(null);
 
-  const handleCheckboxChange = () => {
-    setIsFeatureVisible((prevState) => !prevState);
-  };
+//   useEffect(() => {
+//     // Sự kiện mỗi khi giá trị textContentComment thay đổi
+//     const handleInput = () => {
+//       const lines = textContentComment.split('\n');
 
-  return {
-    [`is${featureName}`]: isFeatureVisible,
-    [`handleCheckboxChange${featureName}`]: handleCheckboxChange,
-  };
-}
+//       // Tạo mảng mới chứa từng dòng với số dòng và opacity
+//       const numberedLines = lines.map((line, index) => {
+//         const lineWithNumber = `${index + 1}. ${line}`;
+//         return lineWithNumber;
+//       });
+
+//       // Cập nhật giá trị của textarea
+//       textareaCommentRef.current.value = numberedLines.join('\n');
+//     };
+
+//     // Gán sự kiện input cho textarea
+//     textareaCommentRef.current.addEventListener('input', handleInput);
+
+//     // Xóa sự kiện khi component bị unmount
+//     return () => {
+//       textareaCommentRef.current.removeEventListener('input', handleInput);
+//     };
+//   }, [textContentComment]);
+
+//   const handleCommentDivClick = () => {
+//     textareaCommentRef.current.focus();
+//   };
+
+//   return {
+//     textContentComment,
+//     setTextContentComment,
+//     textareaCommentRef,
+//     handleCommentDivClick,
+//   };
+// }
