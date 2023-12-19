@@ -9,7 +9,8 @@ import usaProxy from '../../../assets/pictures/icon-usa.png';
 import { Table } from 'antd';
 import './style.scss';
 
-const PopupProfile = ({ dataProfiles, openProfiles, handleCloseProfiles, handleFilterFolder }) => {
+const PopupProfile = ({ dataProfiles, openProfiles, handleCloseProfiles, handleAllFolder, handleFilterFolder }) => {
+  const [allFolder, setAllFolder] = useState(true);
   const [typeFolder0, setTypeFolder0] = useState(false);
   const [typeFolder1, setTypeFolder1] = useState(false);
   const [typeFolder2, setTypeFolder2] = useState(false);
@@ -91,8 +92,19 @@ const PopupProfile = ({ dataProfiles, openProfiles, handleCloseProfiles, handleF
     },
   ];
 
+  const handleAllFolders = () => {
+    setAllFolder(true);
+    setTypeFolder0(false);
+    setTypeFolder1(false);
+    setTypeFolder2(false);
+    setTypeFolder3(false);
+    setTypeFolder4(false);
+    handleAllFolder;
+  };
+
   const handleTypeFolder0 = () => {
     setTypeFolder0(true);
+    setAllFolder(false);
     setTypeFolder1(false);
     setTypeFolder2(false);
     setTypeFolder3(false);
@@ -101,6 +113,7 @@ const PopupProfile = ({ dataProfiles, openProfiles, handleCloseProfiles, handleF
   };
   const handleTypeFolder1 = () => {
     setTypeFolder1(true);
+    setAllFolder(false);
     setTypeFolder0(false);
     setTypeFolder2(false);
     setTypeFolder3(false);
@@ -109,6 +122,7 @@ const PopupProfile = ({ dataProfiles, openProfiles, handleCloseProfiles, handleF
   };
   const handleTypeFolder2 = () => {
     setTypeFolder2(true);
+    setAllFolder(false);
     setTypeFolder1(false);
     setTypeFolder0(false);
     setTypeFolder3(false);
@@ -117,6 +131,7 @@ const PopupProfile = ({ dataProfiles, openProfiles, handleCloseProfiles, handleF
   };
   const handleTypeFolder3 = () => {
     setTypeFolder3(true);
+    setAllFolder(false);
     setTypeFolder1(false);
     setTypeFolder2(false);
     setTypeFolder0(false);
@@ -125,6 +140,7 @@ const PopupProfile = ({ dataProfiles, openProfiles, handleCloseProfiles, handleF
   };
   const handleTypeFolder4 = () => {
     setTypeFolder4(true);
+    setAllFolder(false);
     setTypeFolder1(false);
     setTypeFolder2(false);
     setTypeFolder3(false);
@@ -152,15 +168,47 @@ const PopupProfile = ({ dataProfiles, openProfiles, handleCloseProfiles, handleF
                 <div className="-container-scripts__left__options">
                   <h1>FOLDER</h1>
                   <div
-                    className="-container-scripts__left__options__type"
-                    style={{
-                      display: typeFolder0 && typeFolder1 && typeFolder2 && typeFolder3 && typeFolder4 && 'none',
-                    }}
+                    className={`-option-item ${allFolder && '-container-scripts__left__options__type'}`}
+                    onClick={handleAllFolders}
                   >
                     <p>All</p>
                   </div>
-
-                  <div className="-container-scripts__left__options__list -option-list">
+                  <div
+                    className={`-option-item ${typeFolder0 && '-container-scripts__left__options__type'}`}
+                    onClick={handleTypeFolder0}
+                  >
+                    <div className="-option-item__icon" style={{ background: '#E84314' }}></div>
+                    <p>Facebook Ads 1</p>
+                  </div>
+                  <div
+                    className={`-option-item ${typeFolder1 && '-container-scripts__left__options__type'}`}
+                    onClick={handleTypeFolder1}
+                  >
+                    <div className="-option-item__icon" style={{ background: '#F6A01D' }}></div>
+                    <p>Seeding 1</p>
+                  </div>
+                  <div
+                    className={`-option-item ${typeFolder2 && '-container-scripts__left__options__type'}`}
+                    onClick={handleTypeFolder2}
+                  >
+                    <div className="-option-item__icon" style={{ background: '#FFDE50' }}></div>
+                    <p>Mail 1 - Alcie</p>
+                  </div>
+                  <div
+                    className={`-option-item ${typeFolder3 && '-container-scripts__left__options__type'}`}
+                    onClick={handleTypeFolder3}
+                  >
+                    <div className="-option-item__icon" style={{ background: '#81BC06' }}></div>
+                    <p>Mail 2 - Brono</p>
+                  </div>
+                  <div
+                    className={`-option-item ${typeFolder4 && '-container-scripts__left__options__type'}`}
+                    onClick={handleTypeFolder4}
+                  >
+                    <div className="-option-item__icon" style={{ background: '#00ADEF' }}></div>
+                    <p>Mail 3 - Kazza</p>
+                  </div>
+                  {/* <div className="-container-scripts__left__options__list -option-list">
                     <ul>
                       <li className="-option-item -container-scripts__left__options__type" onClick={handleTypeFolder0}>
                         <div className="-option-item__icon" style={{ background: '#E84314' }}></div>
@@ -183,7 +231,7 @@ const PopupProfile = ({ dataProfiles, openProfiles, handleCloseProfiles, handleF
                         <p>Mail 3 - Kazza</p>
                       </li>
                     </ul>
-                  </div>
+                  </div> */}
                 </div>
               </div>
               <div className="-container-scripts__right">

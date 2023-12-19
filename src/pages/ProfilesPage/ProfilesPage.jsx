@@ -221,6 +221,10 @@ const ProfilesPage = () => {
       console.log(`selectedRowKeys: ${selectedRowKeys}`);
     },
   };
+
+  const handleAllFolder = () => {
+    setDataProfiles(profiles);
+  };
   //handle filter folder profile
   const handleFilterFolder = (type) => {
     const facebookFolder = profiles.filter((profile) => profile.folder === type);
@@ -309,6 +313,7 @@ const ProfilesPage = () => {
                 openProfiles={openProfiles}
                 handleCloseProfiles={handleCloseProfiles}
                 handleFilterFolder={handleFilterFolder}
+                handleAllFolder={handleAllFolder}
               ></PopupProfile>
             </div>
           </div>
