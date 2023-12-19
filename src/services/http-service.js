@@ -1,30 +1,29 @@
-import axios from "axios";
-import storageService from "./storage.service";
-import { generateURL } from "../signature";
-import { accessToken } from "../common/const.config";
-import { URL_API } from "../common/const.api";
+import axios from 'axios';
+import storageService from './storage.service';
+import { accessToken } from '../common/const.config';
+import { URL_API } from '../common/const.api';
 
 const loadings = [];
 
 class HttpService {
   async get(path, options = { headers: {}, params: {}, body: {} }) {
-    return await this.request("GET", path, options);
+    return await this.request('GET', path, options);
   }
 
   async post(path, options = { headers: {}, params: {}, body: {}, auth: {} }) {
-    return await this.request("POST", path, options);
+    return await this.request('POST', path, options);
   }
 
   async patch(path, options = { headers: {}, params: {}, body: {} }) {
-    return await this.request("PATCH", path, options);
+    return await this.request('PATCH', path, options);
   }
 
   async put(path, options = { headers: {}, params: {}, body: {} }) {
-    return await this.request("PUT", path, options);
+    return await this.request('PUT', path, options);
   }
 
   async delete(path, options = { headers: {}, params: {}, body: {} }) {
-    return await this.request("DELETE", path, options);
+    return await this.request('DELETE', path, options);
   }
 
   removeItem(path) {
@@ -39,7 +38,7 @@ class HttpService {
   }
 
   async request(method, path, options = { headers: {}, params: {}, body: {} }) {
-    if (method == "GET" && loadings.includes(path))
+    if (method == 'GET' && loadings.includes(path))
       return {
         success: false,
         data: undefined,
@@ -87,7 +86,7 @@ class HttpService {
 
   generateHttpHeaders(headerInfo) {
     const headers = {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${storageService.get(accessToken)}`,
     };
 
