@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 export function handleInputChange(event, setValues, prefix, values) {
   const inputValue = event.target.value;
   const isNumber = /^\d*$/.test(inputValue);
 
-  if (isNumber && inputValue.length < 6) {
+  if (isNumber && inputValue.length <= 3) {
     const newValue = inputValue === '' ? '' : parseInt(inputValue, 10);
 
     const updatedValues = {
@@ -96,16 +96,24 @@ export function FriendsOption() {
   };
 }
 
-export function TextBackGround() {
-  //cai dat cho phan text (khi go chu thi placeholder cua textarea se an di)
-  const [textContent, setTextContent] = useState('');
+//cai dat cho phan text (khi go chu thi placeholder cua textarea se an di)
+export function useTextarea(initialValue) {
+  const [value, setValue] = useState(initialValue);
+  const textareaRef = useRef(null);
 
-  const handleTextareaChange = (event) => {
-    setTextContent(event.target.value);
+  const handleChange = (event) => {
+    setValue(event.target.value);
   };
+
+  const handleDivClick = () => {
+    textareaRef.current.focus();
+  };
+
   return {
-    textContent,
-    handleTextareaChange,
+    value,
+    handleChange,
+    textareaRef,
+    handleDivClick,
   };
 }
 

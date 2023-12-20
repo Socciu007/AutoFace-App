@@ -43,6 +43,19 @@ export function CommentTextarea() {
   };
 }
 const { textContent, handleTextareaChange, handleDivClick, textareaRef } = CommentTextarea();
-Addfriend
 CreatePost
 Join Group
+
+const {
+  value: textContent,
+  handleChange: handleTextareaChange,
+  textareaRef: TextareaRef,
+  handleDivClick: handleDivClick,
+} = useTextarea('');
+
+const {
+  value: UIDtextContent,
+  handleChange: handleTextareaUIDChange,
+  textareaRef: UIDTextareaRef,
+  handleDivClick: handleUIDDivClick,
+} = useTextarea('');

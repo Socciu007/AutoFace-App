@@ -4,7 +4,11 @@ export function handleInputChange(event, setValues, prefix, values) {
   const inputValue = event.target.value;
   const isNumber = /^\d*$/.test(inputValue);
 
+<<<<<<< HEAD
   if (isNumber && inputValue.length < 6) {
+=======
+  if (isNumber && inputValue.length <= 3) {
+>>>>>>> main
     const newValue = inputValue === '' ? '' : parseInt(inputValue, 10);
 
     const updatedValues = {

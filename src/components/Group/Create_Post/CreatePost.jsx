@@ -28,40 +28,10 @@ const CreatePostGroup = ({ onGoBackClick }) => {
     NumberFriendEnd: 10,
   };
 
-  const {
-    PostStart,
-    PostEnd,
-    handleIncrementPostStart,
-    handleDecrementPostStart,
-    handleIncrementPostEnd,
-    handleDecrementPostEnd,
-    handleInputChangeStart: handleInputChangePostStart,
-    handleInputChangeEnd: handleInputChangePostEnd,
-    DelayTimeStart,
-    DelayTimeEnd,
-    handleIncrementDelayTimeStart,
-    handleDecrementDelayTimeStart,
-    handleIncrementDelayTimeEnd,
-    handleDecrementDelayTimeEnd,
-    handleInputChangeStart: handleInputChangeDelayTimeStart,
-    handleInputChangeEnd: handleInputChangeDelayTimeEnd,
-    PhotoVideoStart,
-    PhotoVideoEnd,
-    handleIncrementPhotoVideoStart,
-    handleDecrementPhotoVideoStart,
-    handleIncrementPhotoVideoEnd,
-    handleDecrementPhotoVideoEnd,
-    handleInputChangeStart: handleInputChangePhotoVideoStart,
-    handleInputChangeEnd: handleInputChangePhotoVideoEnd,
-    NumberFriendStart,
-    NumberFriendEnd,
-    handleIncrementNumberFriendStart,
-    handleDecrementNumberFriendStart,
-    handleIncrementNumberFriendEnd,
-    handleDecrementNumberFriendEnd,
-    handleInputChangeStart: handleInputChangeNumberFriendStart,
-    handleInputChangeEnd: handleInputChangeNumberFriendEnd,
-  } = useRangeValues(initialValues);
+  const postValues = useRangeValues(initialValues, 'Post');
+  const delayTimeValues = useRangeValues(initialValues, 'DelayTime');
+  const photoVideoValues = useRangeValues(initialValues, 'PhotoVideo');
+  const numberFriendValues = useRangeValues(initialValues, 'NumberFriend');
 
   const { isTag, handleCheckboxTag } = ShowTag();
 
@@ -87,38 +57,58 @@ const CreatePostGroup = ({ onGoBackClick }) => {
               <p className="component-item__header">Number of posts:</p>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementPostStart} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementPostStart} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={postValues.handleIncrement} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={postValues.handleDecrement} />
                 </div>
-                <input type="text" value={PostStart} onChange={handleInputChangePostStart} />
+                <input
+                  name="Start"
+                  type="text"
+                  value={postValues.PostStart}
+                  onChange={(event) => postValues.handleInputChangeStart(event)}
+                />
               </div>
               <span>to</span>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementPostEnd} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementPostEnd} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={postValues.handleIncrementEnd} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={postValues.handleDecrementEnd} />
                 </div>
-                <input type="text" value={PostEnd} onChange={handleInputChangePostEnd} />
+                <input
+                  name="End"
+                  type="text"
+                  value={postValues.PostEnd}
+                  onChange={(event) => postValues.handleInputChangeEnd(event)}
+                />
               </div>
             </div>
             <div className="component-item delayTime">
               <p className="component-item__header">
-                Delay time <span>(s):</span>
+                Delay time<span style={{ marginLeft: '2px' }}>(s):</span>
               </p>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeStart} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeStart} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrement} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrement} />
                 </div>
-                <input type="text" value={DelayTimeStart} onChange={handleInputChangeDelayTimeStart} />
+                <input
+                  name="Start"
+                  type="text"
+                  value={delayTimeValues.DelayTimeStart}
+                  onChange={(event) => delayTimeValues.handleInputChangeStart(event)}
+                />
               </div>
               <span>to</span>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementDelayTimeEnd} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementDelayTimeEnd} />
+                  <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrementEnd} />
+                  <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrementEnd} />
                 </div>
-                <input type="text" value={DelayTimeEnd} onChange={handleInputChangeDelayTimeEnd} />
+                <input
+                  name="End"
+                  type="text"
+                  value={delayTimeValues.DelayTimeEnd}
+                  onChange={(event) => delayTimeValues.handleInputChangeEnd(event)}
+                />
               </div>
             </div>
             <div className="component-item Post">
@@ -169,18 +159,28 @@ const CreatePostGroup = ({ onGoBackClick }) => {
                       <p className="component-item__header numberOfPostText">Number of photo/video:</p>
                       <div className="component-item__number">
                         <div className="component-item__number__icon">
-                          <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementPhotoVideoStart} />
-                          <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementPhotoVideoStart} />
+                          <img src={iconIncrease} alt="Increase icon" onClick={photoVideoValues.handleIncrement} />
+                          <img src={iconDecrease} alt="Decrease icon" onClick={photoVideoValues.handleDecrement} />
                         </div>
-                        <input type="text" value={PhotoVideoStart} onChange={handleInputChangePhotoVideoStart} />
+                        <input
+                          name="Start"
+                          type="text"
+                          value={photoVideoValues.PhotoVideoStart}
+                          onChange={(event) => photoVideoValues.handleInputChangeStart(event)}
+                        />
                       </div>
                       <span>to</span>
                       <div className="component-item__number">
                         <div className="component-item__number__icon">
-                          <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementPhotoVideoEnd} />
-                          <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementPhotoVideoEnd} />
+                          <img src={iconIncrease} alt="Increase icon" onClick={photoVideoValues.handleIncrementEnd} />
+                          <img src={iconDecrease} alt="Decrease icon" onClick={photoVideoValues.handleDecrementEnd} />
                         </div>
-                        <input type="text" value={PhotoVideoEnd} onChange={handleInputChangePhotoVideoEnd} />
+                        <input
+                          name="End"
+                          type="text"
+                          value={photoVideoValues.PhotoVideoEnd}
+                          onChange={(event) => photoVideoValues.handleInputChangeEnd(event)}
+                        />
                       </div>
                     </div>
 
@@ -213,22 +213,44 @@ const CreatePostGroup = ({ onGoBackClick }) => {
                         <div className="component-item__content">
                           <div className="component-item__number">
                             <div className="component-item__number__icon">
-                              <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementNumberFriendStart} />
-                              <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementNumberFriendStart} />
+                              <img
+                                src={iconIncrease}
+                                alt="Increase icon"
+                                onClick={numberFriendValues.handleIncrement}
+                              />
+                              <img
+                                src={iconDecrease}
+                                alt="Decrease icon"
+                                onClick={numberFriendValues.handleDecrement}
+                              />
                             </div>
                             <input
+                              name="Start"
                               type="text"
-                              value={NumberFriendStart}
-                              onChange={handleInputChangeNumberFriendStart}
+                              value={numberFriendValues.NumberFriendStart}
+                              onChange={(event) => numberFriendValues.handleInputChangeStart(event)}
                             />
                           </div>
                           <span>to</span>
                           <div className="component-item__number">
                             <div className="component-item__number__icon">
-                              <img src={iconIncrease} alt="Increase icon" onClick={handleIncrementNumberFriendEnd} />
-                              <img src={iconDecrease} alt="Decrease icon" onClick={handleDecrementNumberFriendEnd} />
+                              <img
+                                src={iconIncrease}
+                                alt="Increase icon"
+                                onClick={numberFriendValues.handleIncrementEnd}
+                              />
+                              <img
+                                src={iconDecrease}
+                                alt="Decrease icon"
+                                onClick={numberFriendValues.handleDecrementEnd}
+                              />
                             </div>
-                            <input type="text" value={NumberFriendEnd} onChange={handleInputChangeNumberFriendEnd} />
+                            <input
+                              name="End"
+                              type="text"
+                              value={numberFriendValues.NumberFriendEnd}
+                              onChange={(event) => numberFriendValues.handleInputChangeEnd(event)}
+                            />
                           </div>
                         </div>
                       </div>
@@ -266,31 +288,32 @@ const CreatePostGroup = ({ onGoBackClick }) => {
                         </div>
                       )}
                     </div>
-                  </div>
-                )}
-                <div className="UIDList">
-                  <div className="UIDList__header">
-                    <p>Group UID list</p>
-                    <span>({charCount})</span>
-                  </div>
-                  <div className="component-item UID">
-                    <textarea
-                      id="UIDContent"
-                      name="UIDContent"
-                      rows="10"
-                      value={UIDContent}
-                      onChange={handleTextareaChangeUID}
-                    ></textarea>
-                    <div className={`placeholder ${UIDContent ? 'hide' : ''}`}>
-                      <p>
-                        <span>1</span>Enter the UID here
-                      </p>
-                      <p>
-                        <span>2</span>Each UID/line
-                      </p>
+
+                    <div className="UIDList">
+                      <div className="UIDList__header">
+                        <p>Group UID list</p>
+                        <span>({charCount})</span>
+                      </div>
+                      <div className="component-item UID">
+                        <textarea
+                          id="UIDContent"
+                          name="UIDContent"
+                          rows="10"
+                          value={UIDContent}
+                          onChange={handleTextareaChangeUID}
+                        ></textarea>
+                        <div className={`placeholder ${UIDContent ? 'hide' : ''}`}>
+                          <p>
+                            <span>1</span>Enter the UID here
+                          </p>
+                          <p>
+                            <span>2</span>Each UID/line
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>

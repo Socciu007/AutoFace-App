@@ -1,11 +1,11 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 export function handleInputChange(event, setValues, prefix, values) {
   const inputValue = event.target.value;
   const isNumber = /^\d*$/.test(inputValue);
 
-  if (isNumber && inputValue.length < 6) {
+  if (isNumber && inputValue.length <= 3) {
     const newValue = inputValue === '' ? '' : parseInt(inputValue, 10);
 
     const updatedValues = {
@@ -57,6 +57,7 @@ export function AddFriendOption() {
   const [selectedValueTypeAddFriend, setSelectedValueType] = useState('suggestions');
   const [textContentAddFriendRequest, setTextContentAddFriendRequest] = useState('');
   const [placeholderText, setPlaceholderText] = useState('');
+  const textareaRef = useRef(null);
 
   const handleSelectorChange = (event) => {
     const value = event.target.value;
@@ -82,7 +83,9 @@ export function AddFriendOption() {
         setPlaceholderText('');
     }
   };
-
+  const handleDivClick = () => {
+    textareaRef.current.focus();
+  };
   useEffect(() => {
     // Update giá trị của placeholderText khi component được tạo ra
     handleSelectorChange({ target: { value: selectedValueTypeAddFriend } });
@@ -102,20 +105,27 @@ export function AddFriendOption() {
     handleSelectorChange,
     selectedValueTypeAddFriend,
     textContentAddFriendRequest,
+    handleDivClick,
+    textareaRef,
   };
 }
 
 export function TextComment() {
   //cai dat cho phan text comment khi go text vao
   const [textContentComment, setTextContentComment] = useState('');
+  const textareaCommentRef = useRef(null);
 
   const handleTextareaChangeComment = (event) => {
     setTextContentComment(event.target.value);
   };
-
+  const handleCommentDivClick = () => {
+    textareaCommentRef.current.focus();
+  };
   return {
     textContentComment,
     handleTextareaChangeComment,
+    textareaCommentRef,
+    handleCommentDivClick,
   };
 }
 

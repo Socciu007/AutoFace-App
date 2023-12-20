@@ -73,6 +73,7 @@ const nodeMessage = {
   joinGroup: 'joinGroup',
   leftGroup: 'leftGroup',
   inviteGroup: 'inviteGroup',
+  createPostGroup: 'createPostGroup',
   likeComment: 'likeComment',
   follower: 'follower',
   viewVideo: 'viewVideo',
@@ -93,6 +94,7 @@ const DnDFlow = ({ onMessageChange }) => {
   };
   const handleDeleteNodeClick = (idToDelete) => {
     setNodes((prevNodes) => prevNodes.filter((node) => node.id !== idToDelete));
+    onMessageChange();
   };
 
   const onConnect = useCallback((params) => {

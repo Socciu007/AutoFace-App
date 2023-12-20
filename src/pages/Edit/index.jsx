@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './style.scss';
-import DnDFlow from '../../components/drag/drag.jsx';
+import DnDFlow from '../../components/drag/drag';
 import WatchStory from '../../components/General/WatchStory/WatchStory.jsx';
 import WatchVideo from '../../components/General/WatchVideo/WatchVideo.jsx';
 import CancelFriend from '../../components/General/Cancel_Friend/CancelFriend.jsx';
@@ -63,7 +63,6 @@ const Edit = () => {
   const onDragStart = (event, nodeType) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
     event.dataTransfer.effectAllowed = 'move';
-    
   };
   const handleReturnClick = () => {
     // Navigate to the desired route when the button is clicked
@@ -202,7 +201,7 @@ const Edit = () => {
                     <img src={invite} alt="invite Group General" />
                     <p>Invite</p>
                   </div>
-                  <div className="card" onDragStart={(event) => onDragStart(event, 'createPost')} draggable>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'createPostGroup')} draggable>
                     <img src={createPost} alt="watch newsfeed General" />
                     <p>Create post</p>
                   </div>
@@ -231,7 +230,7 @@ const Edit = () => {
   return (
     <>
       <div className="wrapper">
-        <div className="create-script">
+        <div className="edit">
           <div className="script-manager__header">
             <h1>FACEBOOK AUTOMATION</h1>
             <div className="title">

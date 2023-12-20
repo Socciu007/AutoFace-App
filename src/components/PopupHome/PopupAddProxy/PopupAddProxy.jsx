@@ -3,18 +3,88 @@ import closePopup from '../../../assets/pictures/icon-x.svg';
 import PopupComponent from '../PopupComponent/PopupComponent';
 import proxy from '../../../assets/pictures/icon-proxy.svg';
 import './style.scss';
-import { Select } from 'antd';
+import SnackbarApp from '../../Alert';
+import { apiUpdateProfiles } from '../../../services/api_helper';
+import storageService from '../../../services/storage.service';
+import { storageProfiles } from '../../../common/const.config';
+import Select from 'rc-select';
 // import { display } from '@mui/system';
 
-const PopupAddProxy = ({ openAddProxy, handleCloseAdd, handleOpenProxyManage }) => {
+const PopupAddProxy = ({
+  profilesSelected,
+  openAddProxy,
+  handleCloseAdd,
+  handleOpenProxyManage,
+  dataProfiles,
+  getProfiles,
+  postAlert,
+}) => {
   const [openWriteText, setOpenWriteText] = useState(false);
-  const [typeProxy, setTypeProxy] = useState('');
+  const [proxyType, setProxyTpye] = useState('http');
+  const [proxyString, setProxyString] = useState('');
+  const [message, setMessage] = useState('');
+  const [statusMessage, setStatusMessage] = useState('warning');
   const handleWriteText = () => {
     setOpenWriteText(true);
   };
-  const onChangeTypeProxy = (value) => {
-    setTypeProxy(value);
+
+  const onChangeProxyType = (type) => {
+    setProxyTpye(type);
   };
+
+  const onchangeProxyString = (value) => {
+    setProxyString(value);
+  };
+
+  const changeProxy = async () => {
+    if (proxyString !== '') {
+      const listProxy = [];
+      const listProxyString = proxyString.split('\n');
+      listProxyString.forEach((proxy) => {
+        if (proxy.includes(':')) {
+          const host = proxy.split(':')[0];
+          const port = proxy.split(':')[1];
+          const username = proxy.split(':')[2] ? proxy.split(':')[2] : '';
+          const password = proxy.split(':')[3] ? proxy.split(':')[3] : '';
+          listProxy.push({
+            host,
+            port,
+            username,
+            password,
+            mode: proxyType,
+          });
+        }
+      });
+      if (listProxy.length < profilesSelected.length) {
+        setMessage(`Enter all ${profilesSelected.length} proxies!`);
+        setTimeout(() => {
+          setMessage('');
+        }, 2000);
+      } else {
+        for (let i = 0; i < profilesSelected.length; i++) {
+          const res = await apiUpdateProfiles(profilesSelected[i].id, listProxy[i], profilesSelected[i].browserSource);
+          if (res && res.success && res.data.code == 1) {
+            const index = dataProfiles.findIndex((e) => e.id === profilesSelected[i].id);
+            const newData = [...dataProfiles];
+            newData[index].proxy = res.data.data.proxy;
+            console.log(newData[index]);
+            storageService.set(storageProfiles, JSON.stringify(newData));
+          }
+        }
+        getProfiles();
+        handleCloseAdd();
+        setTimeout(() => {
+          postAlert(`Add proxy to profiles success!`, 'success', 4000);
+        }, 500);
+      }
+    } else {
+      setMessage('Please type proxies!');
+      setTimeout(() => {
+        setMessage('');
+      }, 2000);
+    }
+  };
+
   return (
     <PopupComponent open={openAddProxy} onClose={handleCloseAdd}>
       {
@@ -25,44 +95,36 @@ const PopupAddProxy = ({ openAddProxy, handleCloseAdd, handleOpenProxyManage }) 
             </div>
             <h1>ADD PROXY</h1>
             <p>
-              Add new proxies to <b>2 profiles</b>
+              Add new proxies to <b>{profilesSelected.length} profiles</b>
             </p>
             <div className="-add-proxys__type">
               <p>Connection type</p>
               <div className="-add-proxys-nav">
-                <div className="-add-proxys__type__text">
-                  <Select
-                    id="typeProxy"
-                    className="-add-proxys__type__text__option"
-                    name="typeProxy"
-                    value={typeProxy}
-                    onChange={onChangeTypeProxy}
-                    bordered={false}
-                    zIndexPopup={100000}
-                    options={[
-                      {
-                        value: 'withoutProxy',
-                        label: 'Without proxy',
-                      },
-                      {
-                        value: 'httpProxy',
-                        label: 'HTTP Proxy',
-                      },
-                      {
-                        value: 'socks4Proxy',
-                        label: 'Socks4 Proxy',
-                      },
-                      {
-                        value: 'socks5Proxy',
-                        label: 'Socks5 Proxy',
-                      },
-                      {
-                        value: 'sshProxy',
-                        label: 'SSH Proxy',
-                      },
-                    ]}
-                  />
-                </div>
+                <Select
+                  className="-add-proxys-nav__select -add-proxys-nav__details"
+                  value={proxyType}
+                  onChange={onChangeProxyType}
+                  bordered={false}
+                  options={[
+                    {
+                      value: 'http',
+                      label: 'HTTP',
+                    },
+                    {
+                      value: 'socks4',
+                      label: 'Socks 4',
+                    },
+                    {
+                      value: 'socks5',
+                      label: 'Socks 5',
+                    },
+                    {
+                      value: 'ssh',
+                      label: 'SSH',
+                    },
+                  ]}
+                />
+
                 <div className="-add-proxys__type__icon" onClick={handleOpenProxyManage}>
                   <img src={proxy} alt="icon-proxy"></img>
                 </div>
@@ -71,13 +133,21 @@ const PopupAddProxy = ({ openAddProxy, handleCloseAdd, handleOpenProxyManage }) 
             <div className="-add-proxys__type">
               <p>Proxy list</p>
               <div className="-add-proxys-nav -list-proxys">
-                <textarea name="" type="text" onClick={handleWriteText}></textarea>
-                <div className="-form-instruct" onClick={handleWriteText}>
-                  <p>
+                <textarea
+                  onChange={(event) => {
+                    onchangeProxyString(event.target.value);
+                  }}
+                  value={proxyString}
+                  name=""
+                  type="text"
+                  onClick={handleWriteText}
+                ></textarea>
+                {/* <div className="-form-instruct">
+                  <p style={{ marginRight: '19px' }}>
                     <span>1</span>
                     <div style={{ display: openWriteText ? 'none' : 'inline' }}>Enter the content here</div>
                   </p>
-                  <p>
+                  <p style={{ marginRight: '19px' }}>
                     <span>2</span>
                     <div style={{ display: openWriteText ? 'none' : 'inline' }}>
                       <b>Proxy format: </b>IP:Port:Username:Password
@@ -93,11 +163,14 @@ const PopupAddProxy = ({ openAddProxy, handleCloseAdd, handleOpenProxyManage }) 
                       The number of proxies should not be less or more than the number of profiles
                     </div>
                   </p>
+                </div> */}
+                <div onClick={changeProxy} className="-list-proxys__save">
+                  Save
                 </div>
-                <div className="-list-proxys__save">Save</div>
               </div>
             </div>
           </div>
+          <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
         </div>
       }
     </PopupComponent>

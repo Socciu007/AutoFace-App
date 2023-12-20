@@ -1,24 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './style.scss';
-import { Input, Popover, Table, Tooltip } from 'antd';
+import { Input, Popover, Table, message } from 'antd';
+import SnackbarApp from '../../components/Alert';
 import display from '../../assets/pictures/icon-display-setting.png';
 import search from '../../assets/pictures/icon-search.svg';
 import refresh from '../../assets/pictures/icon-refresh.png';
 import settings from '../../assets/pictures/icon-settings.png';
 import plus from '../../assets/pictures/icon-plus.png';
-// import usaProxy from '../../assets/pictures/icon-usa.png';
 import options from '../../assets/pictures/icon-options.png';
 import addProxy from '../../assets/pictures/icon-addProxy.png';
 import deleted from '../../assets/pictures/icon-delete.svg';
 import yourScript from '../../assets/pictures/icon-yourScripts.svg';
 import pin from '../../assets/pictures/icon-pin.svg';
-import shareIcon from '../../assets/pictures/icon-share.svg';
 import iosIcon from '../../assets/pictures/icon-ios.png';
+import defaultSettings from '../../resources/defaultSettings.json';
+import macosIcon from '../../assets/pictures/icon-macos.png';
 import linuxIcon from '../../assets/pictures/icon-linux.png';
 import windowIcon from '../../assets/pictures/icon-window.svg';
 import androidIcon from '../../assets/pictures/icon-android.png';
-import profiles from '../../resources/profiles.json';
 import scripts from '../../resources/scripts.json';
 import { EditableCell, EditableRow } from '../../components/EditableTable/EditableTable';
 import PopupProfile from '../../components/PopupHome/PopupProfile/PopupProfile';
@@ -26,9 +26,17 @@ import PopupAddProxy from '../../components/PopupHome/PopupAddProxy/PopupAddProx
 import PopupProxyManage from '../../components/PopupHome/PopupProxyManage/PopupProxyManage';
 import PopupDeleteProfile from '../../components/PopupHome/PopupDeleteProfile/PopupDeleteProfile';
 import PopupScript from '../../components/PopupHome/PopupScript/PopupScript';
+import storageService from '../../services/storage.service';
+import { storageProfiles, storageSettings } from '../../common/const.config';
+import { apiGetFolder } from '../../services/api_helper';
 
 const ProfilesPage = () => {
-  const [dataProfiles, setDataProfiles] = useState(profiles);
+  const [message, setMessage] = useState('');
+  const [statusMessage, setStatusMessage] = useState('warning');
+  const [listFolder, setListFolder] = useState([]);
+  const [profilesSelected, setProfilesSelected] = useState([]);
+  const [dataProfiles, setDataProfiles] = useState([]);
+  const [dataSearch, setDataSearch] = useState([]);
   const [dataScripts, setDataScripts] = useState(scripts);
   const [rowKeys, setRowKeys] = useState([]);
   const [openScripts, setOpenScripts] = useState(false);
@@ -38,6 +46,94 @@ const ProfilesPage = () => {
   const [openProxyManage, setOpenProxyManage] = useState(false);
   const [openOptions, setOpenOptions] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    getProfiles();
+    checkSettings();
+  }, []);
+
+  const checkSettings = () => {
+    const settings = storageService.get(storageSettings);
+    if (!settings) {
+      storageService.set(storageSettings, JSON.stringify(defaultSettings));
+    }
+  };
+
+  useEffect(() => {
+    if (dataProfiles && dataSearch) {
+      let newData = [];
+      dataSearch.forEach((e) => {
+        const profile = dataProfiles.find((o) => o.id == e.id);
+        if (profile) {
+          const check = newData.find((o) => o.id == profile.id);
+          if (!check) {
+            newData.push(profile);
+          }
+        }
+      });
+      newData = newData.sort((x, y) => Number(y.isPin) - Number(x.isPin));
+      setDataSearch(
+        newData.map((e, index) => {
+          return { ...e, index: index + 1 };
+        }),
+      );
+    }
+  }, [dataProfiles]);
+
+  const getProfiles = async () => {
+    const profiles = storageService.get(storageProfiles);
+    const folders = await apiGetFolder();
+
+    if (folders && folders.success) {
+      const arrFolder = [];
+      folders.data.data.forEach((e) => {
+        const check = listFolder.find((o) => o.id === e.id);
+        if (!check) arrFolder.push({ ...e, isSelected: false });
+      });
+      setListFolder([...listFolder, ...arrFolder]);
+    }
+    if (profiles) {
+      let objProfile = JSON.parse(profiles);
+      if (folders.data && folders.data.data) {
+        objProfile = objProfile.map((e) => {
+          const folderName = folders.data.data.find((o) => o.id == e.folder);
+          return { ...e, folderName: folderName ? folderName.name : '' };
+        });
+      }
+      objProfile = objProfile.sort((x, y) => Number(y.isPin) - Number(x.isPin));
+      setDataProfiles(objProfile);
+      setDataSearch(
+        objProfile.map((e, index) => {
+          return { ...e, index: index + 1 };
+        }),
+      );
+    }
+  };
+
+  const generateProxyStr = (proxy) => {
+    let proxyStr = `${proxy.host}:${proxy.port}${proxy.username && proxy.username != '' ? ':' + proxy.username : ''}${
+      proxy.password ? ':' + proxy.password : ''
+    }`;
+
+    if (proxyStr.length > 30) {
+      proxyStr = `${proxy.host}:${proxy.port}...`;
+    }
+    return proxyStr;
+  };
+
+  const pinProfile = (id) => {
+    const index = dataProfiles.findIndex((e) => e.id == id);
+    let newDataProfile = [...dataProfiles];
+    newDataProfile[index].isPin = !newDataProfile[index].isPin;
+    setDataProfiles(newDataProfile);
+    storageService.set(storageProfiles, JSON.stringify(newDataProfile));
+  };
+  const removeProfile = (id) => {
+    const newData = dataProfiles.filter((e) => e.id !== id);
+    setDataProfiles(newData);
+    storageService.set(storageProfiles, JSON.stringify(newData));
+  };
+
   //Pin and remove
   const handleActionProfiles = () => {
     setOpenOptions(true);
@@ -45,37 +141,44 @@ const ProfilesPage = () => {
   const handleCloseAction = () => {
     setOpenOptions(false);
   };
+
+  const postAlert = (message, status = 'warning', duration = 3000) => {
+    setStatusMessage(status);
+    setMessage(message);
+    setTimeout(() => {
+      setMessage('');
+      setStatusMessage('warning');
+    }, duration);
+  };
+
   const defaultColumns = [
     {
       title: '#',
-      dataIndex: 'key',
-      width: 50,
-      fixed: 'left',
+      dataIndex: 'index',
+      width: 40,
     },
     {
       title: 'Profile',
-      dataIndex: 'profile',
       width: 200,
       render: (profile) => {
         return (
           <div className="-text-profile">
-            <span>{profile}</span>
-            {profile === 'tienvm1' && <img src={pin} alt="icon-pin"></img>}
-            {profile && <img src={shareIcon} alt="icon-share"></img>}
-            {profile === 'test' && <img src={windowIcon} alt="icon-window"></img>}
-            {profile === 'test1' && <img src={iosIcon} alt="icon-ios" width={15} height={14}></img>}
-            {profile === 'test2' && <img src={linuxIcon} alt="icon-linux" width={11.04} height={13}></img>}
-            {profile === 'tienvm2' && <img src={androidIcon} alt="icon-android" width={13} height={13}></img>}
+            <span>{profile.profile}</span>
+            {profile.isPin && <img src={pin} alt="icon-pin"></img>}
+            {profile.os === 'mac' && <img style={{ width: 13 }} src={macosIcon} alt="icon-mac"></img>}
+            {profile.os === 'win' && <img src={windowIcon} style={{ width: 13 }} alt="icon-window"></img>}
+            {profile.os === 'ios' && <img src={iosIcon} style={{ width: 13 }} alt="icon-ios"></img>}
+            {profile.os === 'android' && <img src={androidIcon} style={{ width: 13 }} alt="icon-android"></img>}
+            {profile.os === 'lin' && <img src={linuxIcon} style={{ width: 13 }} alt="icon-linux"></img>}
           </div>
         );
       },
-      sorter: (a, b) => a.profile.length - b.profile.length,
+      // sorter: (a, b) => a.profile.length - b.profile.length,
     },
     {
       title: 'UID',
       dataIndex: 'uid',
       width: 150,
-      ellipsis: true,
     },
     {
       title: 'Name',
@@ -87,6 +190,7 @@ const ProfilesPage = () => {
       dataIndex: 'birth',
       width: 200,
     },
+
     {
       title: 'Friends',
       dataIndex: 'friends',
@@ -118,47 +222,33 @@ const ProfilesPage = () => {
       dataIndex: 'emailpass',
       width: 200,
     },
+
     {
       title: 'Status',
       dataIndex: 'status',
       width: 150,
       render: (status) => {
-        if (status[0] === 'Running') {
-          return (
-            <>
-              <div className="-status-profiles">{status}</div>
-            </>
-          );
+        if (status === 'running') {
+          return <div className="-status-profiles">{status}</div>;
+        } else if (status === 'ready') {
+          return <div className="-status-profiles -status-profiles-ready">{status}</div>;
         } else {
-          return (
-            <>
-              <div className="-status-profiles -status-profiles-ready">{status}</div>
-            </>
-          );
+          return <div className="-status-profiles -status-profiles-used">{status}</div>;
         }
       },
-      sorter: (a, b) => a.status - b.status,
-      sortDirections: ['descend'],
     },
     {
       title: 'Proxy',
       dataIndex: 'proxy',
-      ellipsis: true,
       width: 150,
       render: (proxy) => {
         return (
-          // <div style={{ display: 'inline' }}>
-          //   {/* <div className="-proxy-profiles"> */}
-          //   <span>
-          //     <img src={usaProxy} alt="icon-usa" width={22.89} height={15}></img>
-          //     {proxy}
-          //   </span>
-          //   {/* </div> */}
-          // </div>
-          <Tooltip placement="topLeft" title={proxy}>
-            {/* <img src={usaProxy} alt="icon-usa" width={22.89} height={15}></img> */}
-            {proxy}
-          </Tooltip>
+          <>
+            <div className="-proxy-profiles">
+              {/* <img src={usaProxy}></img> */}
+              {proxy.host && proxy.host !== '' ? <span>{generateProxyStr(proxy)}</span> : <span>none</span>}
+            </div>
+          </>
         );
       },
     },
@@ -170,37 +260,36 @@ const ProfilesPage = () => {
       render: (tag) => {
         return <Input name="tag" value={tag} className="-tag-profiles" onChange={(e) => e.target.value}></Input>;
       },
-      sorter: (a, b) => a.tag.length - b.tag.length,
-      sortDirections: ['descend'],
+      // sorter: (a, b) => a.tag.length - b.tag.length,
+      // sortDirections: ['descend'],
     },
     {
       title: 'Folder',
-      dataIndex: 'folder',
+      dataIndex: 'folderName',
       width: 150,
-      sorter: (a, b) => a.folder.length - b.folder.length,
-      sortDirections: ['descend'],
+      // sorter: (a, b) => a.folder.length - b.folder.length,
+      // sortDirections: ['descend'],
     },
     {
       title: '',
-      dataIndex: 'key',
       width: 50,
       fixed: 'right',
-      render: (key) => {
+      render: (profile) => {
         return (
           <div className="-expand-icon" onClick={handleActionProfiles}>
             <img src={options} alt="image-option"></img>
-            {rowKeys === key && (
+            {rowKeys === profile.id && (
               <Popover
                 open={openOptions}
                 onClose={handleCloseAction}
                 placement="leftTop"
                 content={
                   <div className="-popover-options" onMouseLeave={handleCloseAction}>
-                    <div className="-popover-options__attribute border-bottom">
+                    <div onClick={() => pinProfile(profile.id)} className="-popover-options__attribute border-bottom">
                       <img src={pin} alt="icon-pin"></img>
-                      <p>Pin</p>
+                      {!profile.isPin ? <p>Pin</p> : <p>UnpSin</p>}
                     </div>
-                    <div className="-popover-options__attribute">
+                    <div onClick={() => removeProfile(profile.id)} className="-popover-options__attribute">
                       <img src={deleted} alt="icon-deleted"></img>
                       <p>Remove</p>
                     </div>
@@ -213,9 +302,9 @@ const ProfilesPage = () => {
       },
     },
   ];
-  const handleSave = (row) => {
+  const handleSaveTag = (row) => {
     const newData = [...dataProfiles];
-    const index = newData.findIndex((profile) => row.key === profile.key);
+    const index = newData.findIndex((profile) => row.id === profile.id);
     const profile = newData[index];
     newData.splice(index, 1, {
       ...profile,
@@ -240,25 +329,18 @@ const ProfilesPage = () => {
         editable: col.editable,
         dataIndex: col.dataIndex,
         title: col.title,
-        handleSave,
+        handleSaveTag,
       }),
     };
   });
   // rowSelection object indicates the need for row selection
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
-      console.log(`selectedRowKeys: ${selectedRowKeys}`);
+      if (selectedRows && selectedRows.length) setProfilesSelected(selectedRows);
+      else setProfilesSelected([]);
     },
   };
 
-  const handleAllFolder = () => {
-    setDataProfiles(profiles);
-  };
-  //handle filter folder profile
-  const handleFilterFolder = (type) => {
-    const facebookFolder = profiles.filter((profile) => profile.folder === type);
-    setDataProfiles(facebookFolder);
-  };
   //handle type scrip
   const handleTypeScript = (type) => {
     const scrip = scripts.filter((scrip) => scrip.isSystem === type);
@@ -272,7 +354,7 @@ const ProfilesPage = () => {
     navigate('/scripManager');
   };
   const handleReloadPage = () => {
-    window.location.reload();
+    getProfiles();
   };
   //scripts
   const handleOpenScripts = () => {
@@ -303,6 +385,47 @@ const ProfilesPage = () => {
     setOpenDeleteProfile(false);
   };
 
+  const searchProfiles = (text) => {
+    if (text == '') {
+      setDataSearch(
+        dataProfiles.map((e, index) => {
+          return { ...e, index: index + 1 };
+        }),
+      );
+    } else {
+      const newProfiles = dataProfiles.filter((e) => {
+        const profile = e.profile.toLowerCase();
+        const name = e.name.toLowerCase();
+        return profile.includes(text.toLowerCase()) || name.includes(text.toLowerCase());
+      });
+      setDataSearch(
+        newProfiles.map((e, index) => {
+          return { ...e, index: index + 1 };
+        }),
+      );
+    }
+  };
+
+  const handleRemoveProfiles = () => {
+    const newData = dataProfiles.filter((e) => {
+      const check = profilesSelected.find((o) => o.id === e.id);
+      return !check;
+    });
+    setDataProfiles(newData);
+    const newDataSearch = dataSearch.filter((e) => {
+      const check = profilesSelected.find((o) => o.id == e.id);
+      return !check;
+    });
+    setDataSearch(
+      newDataSearch.map((e, index) => {
+        return { ...e, index: index + 1 };
+      }),
+    );
+    storageService.set(storageProfiles, JSON.stringify(newData));
+    handleCloseDelete();
+    getProfiles();
+  };
+
   return (
     <div
       className="layout-profiles"
@@ -316,7 +439,12 @@ const ProfilesPage = () => {
               <span>
                 <img src={search} alt="search" style={{ marginLeft: '11px' }}></img>
               </span>
-              <input placeholder="Search..."></input>
+              <input
+                onChange={(event) => {
+                  searchProfiles(event.target.value);
+                }}
+                placeholder="Search..."
+              ></input>
             </div>
             <div className="-wrapper-option-profiles">
               <span className="-option-profiles" onClick={handleReloadPage}>
@@ -335,31 +463,59 @@ const ProfilesPage = () => {
                 <img src={plus} alt="image-plus"></img>
               </span>
               <PopupProfile
-                dataProfiles={dataProfiles}
+                listFolderProfiles={listFolder}
                 openProfiles={openProfiles}
                 handleCloseProfiles={handleCloseProfiles}
-                handleFilterFolder={handleFilterFolder}
-                handleAllFolder={handleAllFolder}
+                onAddProfile={() => {
+                  getProfiles();
+                }}
               ></PopupProfile>
             </div>
           </div>
           <div className="-btn-profiles">
-            <div className="-select-profile" onClick={() => setOpenAddProxy((o) => !o)}>
+            <div
+              className="-select-profile"
+              onClick={() => {
+                if (profilesSelected.length > 0) {
+                  setOpenAddProxy((o) => !o);
+                } else {
+                  postAlert('Please select profile!');
+                }
+              }}
+            >
               <div style={{ position: 'relative' }}>
                 <img src={addProxy} alt="icon-add-proxy" width={15} height={15}></img>
               </div>
               <p>Add Proxy</p>
             </div>
             <PopupAddProxy
+              profilesSelected={profilesSelected}
+              getProfiles={getProfiles}
+              postAlert={postAlert}
+              dataProfiles={dataProfiles}
               openAddProxy={openAddProxy}
               handleCloseAdd={handleCloseAdd}
               handleOpenProxyManage={handleOpenProxyManage}
             ></PopupAddProxy>
             <PopupProxyManage
+              startScreen={'Home'}
+              profilesSelected={profilesSelected}
+              getProfiles={getProfiles}
+              postAlert={postAlert}
+              dataProfiles={dataProfiles}
               openProxyManage={openProxyManage}
               handleCloseProxyManage={handleCloseProxyManage}
             ></PopupProxyManage>
-            <div className="-select-profile" onClick={() => setOpenDeleteProfile((o) => !o)}>
+            <div
+              className="-select-profile"
+              onClick={() => {
+                if (profilesSelected.length > 0) {
+                  setOpenDeleteProfile((o) => !o);
+                } else {
+                  postAlert('Please select profile!');
+                }
+              }}
+            >
               <div>
                 <img src={deleted} alt="icon-delete"></img>
               </div>
@@ -368,9 +524,17 @@ const ProfilesPage = () => {
             <PopupDeleteProfile
               openDeleteProfile={openDeleteProfile}
               handleCloseDelete={handleCloseDelete}
-              handleRemove={handleCloseDelete}
+              handleRemove={handleRemoveProfiles}
             ></PopupDeleteProfile>
-            <div onClick={handleOpenScripts}>
+            <div
+              onClick={() => {
+                if (profilesSelected.length > 0) {
+                  handleOpenScripts();
+                } else {
+                  postAlert('Please select profile!');
+                }
+              }}
+            >
               <button>Run</button>
             </div>
             <PopupScript
@@ -384,28 +548,31 @@ const ProfilesPage = () => {
           </div>
         </div>
         <div className="-content-profiles">
-          {/* <div className="scrollable-container"> */}
-          <Table
-            rowSelection={{
-              ...rowSelection,
-            }}
-            onRow={(record, rowIndex) => {
-              return {
-                onClick: () => {
-                  setRowKeys(record.key);
-                },
-              };
-            }}
-            components={components}
-            rowClassName={() => 'editable-row'}
-            columns={columns}
-            dataSource={dataProfiles}
-            scroll={{ x: 1280, y: 480 }}
-            pagination={false}
-          />
-          {/* </div> */}
+          <div className="scrollable-container">
+            <Table
+              rowSelection={{
+                ...rowSelection,
+              }}
+              onRow={(record, rowIndex) => {
+                return {
+                  onClick: () => {
+                    setRowKeys(record.id);
+                  },
+                };
+              }}
+              components={components}
+              rowClassName={'editable-row'}
+              columns={columns}
+              dataSource={dataSearch.sort((x, y) => {
+                return x.isPin === y.isPin ? 0 : x ? -1 : 1;
+              })}
+              scroll={{ x: 1000 }}
+              pagination={false}
+            />
+          </div>
         </div>
       </div>
+      <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
     </div>
   );
 };

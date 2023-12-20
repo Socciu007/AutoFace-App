@@ -41,6 +41,45 @@ function createPostGroupNode({ data: { label, onButtonClick, onDeleteNode }, isC
     handleClose();
   };
   return (
+    // <div className="updater-node">
+    //   <Handle type="target" position={Position.Left} isConnectable={isConnectable} />
+    //   <div className="node">
+    //     <img src={createPostLeft} alt="createPostLeft" />
+    //     <div className="content">
+    //       <img src={createPostIcon} alt="createPost" />
+    //       <div className="content-right">
+    //         <div className="right-top">
+    //           <p>Create post</p>
+    //           <div style={{ padding: '0 5px' }} onClick={onButtonClick}>
+    //             <img src={optionNode} alt="More" onClick={handleClick} />
+    //             <Menu
+    //               id="basic-menu"
+    //               anchorEl={anchorEl}
+    //               open={open}
+    //               onClose={handleClose}
+    //               MenuListProps={{
+    //                 'aria-labelledby': 'basic-button',
+    //               }}
+    //               sx={{
+    //                 '& .MuiPaper-root': menuStyle,
+    //                 '& .MuiButtonBase-root': liStyle,
+    //               }}
+    //             >
+    //               <MenuItem onClick={editNode}>Sửa</MenuItem>
+    //               <MenuItem onClick={deleteNode}>Xóa</MenuItem>
+    //             </Menu>
+    //           </div>
+    //         </div>
+    //         <div className="right-bottom">
+    //           <img src={time} alt="Time" />
+    //           <p>5 min</p>
+    //         </div>
+    //       </div>
+    //     </div>
+    //   </div>
+
+    //   <Handle type="source" position={Position.Right} id="b" isConnectable={isConnectable} />
+    // </div>
     <div className="updater-node">
       <Handle type="target" position={Position.Left} isConnectable={isConnectable} />
       <div className="node">
@@ -50,25 +89,23 @@ function createPostGroupNode({ data: { label, onButtonClick, onDeleteNode }, isC
           <div className="content-right">
             <div className="right-top">
               <p>Create post</p>
-              <div style={{ padding: '0 5px' }} onClick={onButtonClick}>
-                <img src={optionNode} alt="More" onClick={handleClick} />
-                <Menu
-                  id="basic-menu"
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleClose}
-                  MenuListProps={{
-                    'aria-labelledby': 'basic-button',
-                  }}
-                  sx={{
-                    '& .MuiPaper-root': menuStyle,
-                    '& .MuiButtonBase-root': liStyle,
-                  }}
-                >
-                  <MenuItem onClick={editNode}>Sửa</MenuItem>
-                  <MenuItem onClick={deleteNode}>Xóa</MenuItem>
-                </Menu>
-              </div>
+              <img src={optionNode} alt="More" onClick={handleClick} />
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  'aria-labelledby': 'basic-button',
+                }}
+                sx={{
+                  '& .MuiPaper-root': menuStyle,
+                  '& .MuiButtonBase-root': liStyle,
+                }}
+              >
+                <MenuItem onClick={editNode}>Sửa</MenuItem>
+                <MenuItem onClick={deleteNode}>Xóa</MenuItem>
+              </Menu>
             </div>
             <div className="right-bottom">
               <img src={time} alt="Time" />

@@ -1,24 +1,26 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-export function handleInputChange(event, setValues) {
+export function handleInputChange(event, setValues, prefix, values) {
   const inputValue = event.target.value;
-  const isNumber = /^\d*$/.test(inputValue); // Check if the input is a number
+  const isNumber = /^\d*$/.test(inputValue);
 
-  if (isNumber && inputValue.length < 6) {
+  if (isNumber && inputValue.length <= 3) {
     const newValue = inputValue === '' ? '' : parseInt(inputValue, 10);
 
-    setValues((prevValues) => ({
-      ...prevValues,
-      [event.target.name]: newValue,
-    }));
+    const updatedValues = {
+      ...values,
+      [`${prefix}${event.target.name}`]: newValue,
+    };
+
+    setValues(updatedValues);
   }
 }
 
-export function useRangeValues(initialValues) {
+export function useRangeValues(initialValues, prefix) {
   const [values, setValues] = useState(initialValues);
 
-  const createHandlers = (prefix) => ({
+  const createHandlers = () => ({
     handleIncrement: () => {
       setValues((prevValues) => ({
         ...prevValues,
@@ -43,22 +45,11 @@ export function useRangeValues(initialValues) {
         [`${prefix}End`]: prevValues[`${prefix}End`] > 0 ? prevValues[`${prefix}End`] - 1 : 0,
       }));
     },
-    handleInputChangeStart: (event) => handleInputChange(event, setValues),
-    handleInputChangeEnd: (event) => handleInputChange(event, setValues),
+    handleInputChangeStart: (event) => handleInputChange(event, setValues, prefix, values),
+    handleInputChangeEnd: (event) => handleInputChange(event, setValues, prefix, values),
   });
 
-  const postValues = useRangeValues({ ...initialValues, prefix: 'Post' });
-  const delayTimeValues = useRangeValues({ ...initialValues, prefix: 'DelayTime' });
-  const photoVideoValues = useRangeValues({ ...initialValues, prefix: 'PhotoVideo' });
-  const friendValues = useRangeValues({ ...initialValues, prefix: 'NumberFriend' });
-
-  return {
-    ...values,
-    ...postValues,
-    ...delayTimeValues,
-    ...photoVideoValues,
-    ...friendValues,
-  };
+  return { ...values, ...createHandlers() };
 }
 
 export function ShowTag() {

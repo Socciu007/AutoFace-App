@@ -143,7 +143,11 @@ const Newsfeed = ({ onGoBackClick }) => {
               <div className="component-item__header">
                 <input type="checkbox" name="randomShare" onChange={handleCheckboxChangeShare} />
                 <p>
-                  Share to Feed <span className={`span__content ${isShare ? 'show' : 'hide'}`}>(post)</span>:
+                  Share to Feed{' '}
+                  <span style={{ marginLeft: '2px' }} className={`span__content ${isShare ? 'show' : 'hide'}`}>
+                    (post)
+                  </span>
+                  :
                 </p>
               </div>
               <div className={`component-item__content ${isShare ? 'show' : 'hide'}`}>

@@ -141,25 +141,34 @@
             border-radius: 8px;
             background: #fff;
             margin-right: 10px;
-            &__select {
-              margin: 0 auto;
-              width: 91%;
-              height: 100%;
-              &__details {
-                cursor: pointer;
-                width: 100%;
-                height: 100%;
+
+            &__details {
+              cursor: pointer;
+              font-size: 15px;
+              font-weight: 400;
+              width: 100%;
+              height: 40px;
+              appearance: none;
+              -webkit-appearance: none;
+              -moz-appearance: none;
+              background-image: url(/src/assets/icon/icon-down.svg);
+              background-repeat: no-repeat;
+              background-position: right 24px center;
+              .ant-select-selector {
+                padding: 0 24px;
                 border: none;
                 font-size: 15px;
+              }
+              .ant-select-arrow {
+                color: #01162b;
+              }
+
+              option {
                 font-weight: 400;
-                .ant-select-selector {
-                  padding: 0;
-                  border: none;
-                  font-size: 15px;
-                }
-                .ant-select-arrow {
-                  color: #01162b;
-                }
+                color: var(--font-color-para);
+              }
+              svg {
+                display: none;
               }
             }
           }
@@ -259,15 +268,15 @@
           align-items: center;
           button {
             border-radius: 20px;
-            min-width: 30.933px;
+            min-width: 32.933px;
             height: 16px;
             margin-right: 20px;
             .ant-switch-handle {
               position: absolute;
-              top: 0px;
+              top: 0.5px;
               inset-inline-start: 0px;
-              width: 15.668px;
-              height: 15.668px;
+              width: 14.668px;
+              height: 14.668px;
               transition: all 0.2s ease-in-out;
             }
           }
@@ -317,6 +326,10 @@
             cursor: pointer;
           }
         }
+        .baseline {
+          display: flex;
+          align-items: baseline;
+        }
         @media (min-width: 1470px) {
           .-setting-proxys {
             p {
@@ -329,6 +342,10 @@
                 }
               }
             }
+          }
+          .baseline {
+            display: flex;
+            align-items: center;
           }
         }
       }

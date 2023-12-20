@@ -27,9 +27,11 @@ const AddFriend = ({ onGoBackClick }) => {
     handleSelectorChange,
     selectedValueTypeAddFriend,
     textContentAddFriendRequest,
+    handleDivClick,
+    textareaRef,
   } = AddFriendOption();
 
-  const { textContentComment, handleTextareaChangeComment } = TextComment();
+  const { textContentComment, handleTextareaChangeComment, textareaCommentRef, handleCommentDivClick } = TextComment();
 
   const { isInteract, handleCheckboxChangeInteract } = useShowCheckbox(false, 'Interact');
 
@@ -165,9 +167,11 @@ const AddFriend = ({ onGoBackClick }) => {
                         id="textAddFriendContent"
                         name="textAddFriendContent"
                         rows="10"
+                        ref={textareaRef}
                         onChange={(e) => setTextContentAddFriendRequest(e.target.value)}
                       ></textarea>
                       <div
+                        onClick={handleDivClick}
                         id="placeholderTypeAddFriend"
                         className={`placeholder ${textContentAddFriendRequest ? 'hide' : ''}`}
                       >
@@ -338,8 +342,12 @@ const AddFriend = ({ onGoBackClick }) => {
                               rows="10"
                               value={textContentComment}
                               onChange={handleTextareaChangeComment}
+                              ref={textareaCommentRef}
                             ></textarea>
-                            <div className={`placeholder ${textContentComment ? 'hide' : ''}`}>
+                            <div
+                              onClick={handleCommentDivClick}
+                              className={`placeholder ${textContentComment ? 'hide' : ''}`}
+                            >
                               <p>
                                 <span>1</span>Enter the content here
                               </p>
