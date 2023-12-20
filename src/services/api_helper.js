@@ -9,6 +9,13 @@ export const apiGetProfiles = async () => {
 export const apiGetFolder = async () => {
   return await http.get(FOLDERS);
 };
+
+export const apiUpdateProfiles = async (id, proxy, browserSource) => {
+  console.log(browserSource);
+  const body = { proxy: JSON.stringify(proxy), browserSource };
+  return await http.put(`${PROFILES}/${id}`, { body });
+};
+
 export const apiGetProxies = async () => {
   return await http.get(PROXIES);
 };

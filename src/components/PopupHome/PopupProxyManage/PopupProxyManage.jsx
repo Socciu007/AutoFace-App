@@ -4,12 +4,24 @@ import closePopup from '../../../assets/pictures/icon-x.svg';
 import search from '../../../assets/pictures/icon-search.svg';
 import refresh from '../../../assets/pictures/icon-refresh.png';
 import { Table } from 'antd';
-import { apiGetProxies } from '../../../services/api_helper';
+import { apiGetProxies, apiUpdateProfiles } from '../../../services/api_helper';
 import { formatTimeDay } from '../../../services/utils';
 import { aesDecrypt } from '../../../services/crypto-js';
 import SnackbarApp from '../../Alert';
+import { storageProfiles } from '../../../common/const.config';
+import storageService from '../../../services/storage.service';
 
-const PopupProxyManage = ({ openProxyManage, handleCloseProxyManage, defaultProxies, handleAddProxyFromManager }) => {
+const PopupProxyManage = ({
+  openProxyManage,
+  handleCloseProxyManage,
+  defaultProxies,
+  handleAddProxyFromManager,
+  startScreen,
+  profilesSelected,
+  getProfiles,
+  dataProfiles,
+  postAlert,
+}) => {
   const [proxies, setProxies] = useState([]);
   const [dataSearch, setDataSearch] = useState([]);
   const [textSearch, setTextSearch] = useState('');
@@ -80,6 +92,32 @@ const PopupProxyManage = ({ openProxyManage, handleCloseProxyManage, defaultProx
         );
       });
       setDataSearch(newData);
+    }
+  };
+
+  const changeProxy = async () => {
+    const listProxy = selectedProxy;
+    if (listProxy.length < profilesSelected.length) {
+      setMessage(`Please select ${profilesSelected.length} proxy!`);
+      setTimeout(() => {
+        setMessage('');
+      }, 2000);
+    } else {
+      for (let i = 0; i < profilesSelected.length; i++) {
+        const res = await apiUpdateProfiles(profilesSelected[i].id, listProxy[i], profilesSelected[i].browserSource);
+        if (res && res.success && res.data.code == 1) {
+          const index = dataProfiles.findIndex((e) => e.id === profilesSelected[i].id);
+          const newData = [...dataProfiles];
+          newData[index].proxy = res.data.data.proxy;
+          console.log(newData[index]);
+          storageService.set(storageProfiles, JSON.stringify(newData));
+        }
+      }
+      getProfiles();
+      handleCloseProxyManage();
+      setTimeout(() => {
+        postAlert(`Add proxy to profiles success!`, 'success', 4000);
+      }, 500);
     }
   };
 
@@ -171,12 +209,14 @@ const PopupProxyManage = ({ openProxyManage, handleCloseProxyManage, defaultProx
                       setTimeout(() => {
                         setMessage('');
                       }, 2000);
-                    } else {
+                    } else if (!startScreen) {
                       handleAddProxyFromManager(selectedProxy);
                       handleCloseProxyManage();
                       setTimeout(() => {
                         getProxies();
                       }, 1000);
+                    } else {
+                      changeProxy();
                     }
                   }}
                 >

@@ -49,14 +49,15 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
           profile: e.name,
           uid: '',
           proxy: e.proxy,
-          status: 'Ready',
+          status: e.status,
           tag: '',
           os: e.os,
           folder: e.folder ? e.folder : '',
-          source: e.browserSource,
+          browserSource: e.browserSource,
           browser: e.browserType,
           notes: e.notes,
           script: [],
+          updatedAt: e.updatedAt,
         };
       });
       setDataProfiles(addProfile);
@@ -186,7 +187,7 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
           // <Tooltip placement="topLeft" className="-proxy-profiles" title={proxy}>
           <div className="-proxy-profiles">
             {/* <img src={usaProxy}></img> */}
-            {proxy.proxyEnabled ? <span>{generateProxyStr(proxy)}</span> : <span>none</span>}
+            {proxy.host && proxy.host ? <span>{generateProxyStr(proxy)}</span> : <span>none</span>}
           </div>
           // </Tooltip>
         );

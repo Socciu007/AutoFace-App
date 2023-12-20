@@ -45,7 +45,6 @@ const ProfilesPage = () => {
   const [openDeleteProfile, setOpenDeleteProfile] = useState(false);
   const [openProxyManage, setOpenProxyManage] = useState(false);
   const [openOptions, setOpenOptions] = useState(false);
-  const [typeProxy, setTypeProxy] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -143,6 +142,15 @@ const ProfilesPage = () => {
     setOpenOptions(false);
   };
 
+  const postAlert = (message, status = 'warning', duration = 3000) => {
+    setStatusMessage(status);
+    setMessage(message);
+    setTimeout(() => {
+      setMessage('');
+      setStatusMessage('warning');
+    }, duration);
+  };
+
   const defaultColumns = [
     {
       title: '#',
@@ -176,18 +184,12 @@ const ProfilesPage = () => {
       title: 'Status',
       dataIndex: 'status',
       render: (status) => {
-        if (status[0] === 'Running') {
-          return (
-            <>
-              <div className="-status-profiles">{status}</div>
-            </>
-          );
+        if (status === 'running') {
+          return <div className="-status-profiles">{status}</div>;
+        } else if (status === 'ready') {
+          return <div className="-status-profiles -status-profiles-ready">{status}</div>;
         } else {
-          return (
-            <>
-              <div className="-status-profiles -status-profiles-ready">{status}</div>
-            </>
-          );
+          return <div className="-status-profiles -status-profiles-used">{status}</div>;
         }
       },
     },
@@ -199,7 +201,7 @@ const ProfilesPage = () => {
           <>
             <div className="-proxy-profiles">
               {/* <img src={usaProxy}></img> */}
-              {proxy.proxyEnabled ? <span>{generateProxyStr(proxy)}</span> : <span>none</span>}
+              {proxy.host && proxy.host !== '' ? <span>{generateProxyStr(proxy)}</span> : <span>none</span>}
             </div>
           </>
         );
@@ -333,9 +335,6 @@ const ProfilesPage = () => {
   const handleCloseDelete = () => {
     setOpenDeleteProfile(false);
   };
-  const onChangeTypeProxy = (e) => {
-    setTypeProxy(e.target.value);
-  };
 
   const searchProfiles = (text) => {
     if (text == '') {
@@ -425,20 +424,36 @@ const ProfilesPage = () => {
             </div>
           </div>
           <div className="-btn-profiles">
-            <div className="-select-profile" onClick={() => setOpenAddProxy((o) => !o)}>
+            <div
+              className="-select-profile"
+              onClick={() => {
+                if (profilesSelected.length > 0) {
+                  setOpenAddProxy((o) => !o);
+                } else {
+                  postAlert('Please select profile!');
+                }
+              }}
+            >
               <div style={{ position: 'relative' }}>
                 <img src={addProxy} alt="icon-add-proxy" width={15} height={15}></img>
               </div>
               <p>Add Proxy</p>
             </div>
             <PopupAddProxy
-              typeProxy={typeProxy}
+              profilesSelected={profilesSelected}
+              getProfiles={getProfiles}
+              postAlert={postAlert}
+              dataProfiles={dataProfiles}
               openAddProxy={openAddProxy}
               handleCloseAdd={handleCloseAdd}
               handleOpenProxyManage={handleOpenProxyManage}
-              onChangeTypeProxy={onChangeTypeProxy}
             ></PopupAddProxy>
             <PopupProxyManage
+              startScreen={'Home'}
+              profilesSelected={profilesSelected}
+              getProfiles={getProfiles}
+              postAlert={postAlert}
+              dataProfiles={dataProfiles}
               openProxyManage={openProxyManage}
               handleCloseProxyManage={handleCloseProxyManage}
             ></PopupProxyManage>
@@ -448,10 +463,7 @@ const ProfilesPage = () => {
                 if (profilesSelected.length > 0) {
                   setOpenDeleteProfile((o) => !o);
                 } else {
-                  setMessage('Please select profile!');
-                  setTimeout(() => {
-                    setMessage('');
-                  }, 2000);
+                  postAlert('Please select profile!');
                 }
               }}
             >
@@ -465,7 +477,15 @@ const ProfilesPage = () => {
               handleCloseDelete={handleCloseDelete}
               handleRemove={handleRemoveProfiles}
             ></PopupDeleteProfile>
-            <div onClick={handleOpenScripts}>
+            <div
+              onClick={() => {
+                if (profilesSelected.length > 0) {
+                  handleOpenScripts();
+                } else {
+                  postAlert('Please select profile!');
+                }
+              }}
+            >
               <button>Run</button>
             </div>
             <PopupScript

@@ -1,6 +1,6 @@
 import axios from 'axios';
-import storageService from './storage.service';
-import { accessToken } from '../common/const.config';
+// import storageService from './storage.service';
+// import { accessToken } from '../common/const.config';
 import { URL_API } from '../common/const.api';
 
 const loadings = [];
@@ -87,7 +87,7 @@ class HttpService {
   generateHttpHeaders(headerInfo) {
     const headers = {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${storageService.get(accessToken)}`,
+      // Authorization: `Bearer ${storageService.get(accessToken)}`,
     };
 
     if (headerInfo) {
