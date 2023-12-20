@@ -7,6 +7,7 @@ import SnackbarApp from '../../Alert';
 import { apiUpdateProfiles } from '../../../services/api_helper';
 import storageService from '../../../services/storage.service';
 import { storageProfiles } from '../../../common/const.config';
+import Select from 'rc-select';
 // import { display } from '@mui/system';
 
 const PopupAddProxy = ({
@@ -99,22 +100,31 @@ const PopupAddProxy = ({
             <div className="-add-proxys__type">
               <p>Connection type</p>
               <div className="-add-proxys-nav">
-                <div className="-add-proxys__type__text">
-                  <div className="-add-proxys__type__text__option">
-                    <select
-                      name="typeProxy"
-                      defaultValue={proxyType}
-                      onChange={(event) => {
-                        onChangeProxyType(event.target.value);
-                      }}
-                    >
-                      <option value="http">HTTP</option>
-                      <option value="socks4">Socks 4</option>
-                      <option value="socks5">Socks 5</option>
-                      <option value="ssh">SSH</option>
-                    </select>
-                  </div>
-                </div>
+                <Select
+                  className="-add-proxys-nav__select -add-proxys-nav__details"
+                  value={proxyType}
+                  onChange={onChangeProxyType}
+                  bordered={false}
+                  options={[
+                    {
+                      value: 'http',
+                      label: 'HTTP',
+                    },
+                    {
+                      value: 'socks4',
+                      label: 'Socks 4',
+                    },
+                    {
+                      value: 'socks5',
+                      label: 'Socks 5',
+                    },
+                    {
+                      value: 'ssh',
+                      label: 'SSH',
+                    },
+                  ]}
+                />
+
                 <div className="-add-proxys__type__icon" onClick={handleOpenProxyManage}>
                   <img src={proxy} alt="icon-proxy"></img>
                 </div>

@@ -82,7 +82,6 @@ const ProfilesPage = () => {
 
   const getProfiles = async () => {
     const profiles = storageService.get(storageProfiles);
-    console.log('profiles', profiles);
     const folders = await apiGetFolder();
 
     if (folders && folders.success) {
@@ -110,7 +109,6 @@ const ProfilesPage = () => {
       );
     }
   };
-  console.log('dataSearch', dataSearch);
 
   const generateProxyStr = (proxy) => {
     let proxyStr = `${proxy.host}:${proxy.port}${proxy.username && proxy.username != '' ? ':' + proxy.username : ''}${
@@ -157,9 +155,11 @@ const ProfilesPage = () => {
     {
       title: '#',
       dataIndex: 'index',
+      width: 40,
     },
     {
       title: 'Profile',
+      width: 200,
       render: (profile) => {
         return (
           <div className="-text-profile">
@@ -173,18 +173,60 @@ const ProfilesPage = () => {
           </div>
         );
       },
+      sorter: (a, b) => a.profile.length - b.profile.length,
     },
     {
       title: 'UID',
       dataIndex: 'uid',
+      width: 150,
     },
     {
       title: 'Name',
       dataIndex: 'name',
+      width: 150,
     },
+    {
+      title: 'Date of birth',
+      dataIndex: 'birth',
+      width: 200,
+    },
+
+    {
+      title: 'Friends',
+      dataIndex: 'friends',
+      width: 150,
+    },
+    {
+      title: 'Group',
+      dataIndex: 'group',
+      width: 150,
+      ellipsis: true,
+    },
+    {
+      title: 'Sex',
+      dataIndex: 'sex',
+      width: 150,
+    },
+    {
+      title: 'Password',
+      dataIndex: 'password',
+      width: 150,
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      width: 150,
+    },
+    {
+      title: `Email's password`,
+      dataIndex: 'emailpass',
+      width: 200,
+    },
+
     {
       title: 'Status',
       dataIndex: 'status',
+      width: 150,
       render: (status) => {
         if (status === 'running') {
           return <div className="-status-profiles">{status}</div>;
@@ -198,6 +240,7 @@ const ProfilesPage = () => {
     {
       title: 'Proxy',
       dataIndex: 'proxy',
+      width: 150,
       render: (proxy) => {
         return (
           <>
@@ -217,16 +260,20 @@ const ProfilesPage = () => {
       render: (tag) => {
         return <Input name="tag" value={tag} className="-tag-profiles" onChange={(e) => e.target.value}></Input>;
       },
-
-      // sortDirections: ['descend'],
+      sorter: (a, b) => a.tag.length - b.tag.length,
+      sortDirections: ['descend'],
     },
     {
       title: 'Folder',
       dataIndex: 'folderName',
+      width: 150,
+      // sorter: (a, b) => a.folder.length - b.folder.length,
       // sortDirections: ['descend'],
     },
     {
       title: '',
+      width: 50,
+      fixed: 'right',
       render: (profile) => {
         return (
           <div className="-expand-icon" onClick={handleActionProfiles}>

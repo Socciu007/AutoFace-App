@@ -227,6 +227,7 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
     }
     setListFolder(newFolder);
   };
+  console.log('listFolder', listFolder);
 
   return (
     <PopupComponent
@@ -254,29 +255,27 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
               <div className="-container-scripts__left">
                 <div className="-container-scripts__left__options">
                   <h1>FOLDER</h1>
-                  {listFolder.map((folder) => {
-                    return (
-                      <div key={folder.name} className="-container-scripts__left__options__list -option-list">
-                        {folder.isSelected ? (
-                          <div
-                            className={`-option-item ${folder.isSelected && '-container-scripts__left__options__type'}`}
-                          >
-                            <p>{folder.name}</p>
+                  <ul className="-container-scripts__left__options__list">
+                    {listFolder.map((folder) => {
+                      return (
+                        <li
+                          key={folder.name}
+                          className={`-option-item ${folder.isSelected && 'active'}`}
+                          onClick={() => {
+                            handleTypeFolder(folder.name);
+                          }}
+                        >
+                          <div className="-option-item__row">
+                            <div
+                              className="li-dot"
+                              style={{ background: folder.name !== 'All' && folder.isSelected && '#E84314' }}
+                            ></div>
+                            <p className="li-name">{folder.name}</p>
                           </div>
-                        ) : (
-                          <div
-                            className={`-option-item ${folder.isSelected && '-container-scripts__left__options__type'}`}
-                            onClick={() => {
-                              handleTypeFolder(folder.name);
-                            }}
-                          >
-                            <div className={'-option-item__icon'} style={{ background: '#E84314' }}></div>
-                            <p style={{ marginLeft: '0px' }}>{folder.name}</p>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
+                        </li>
+                      );
+                    })}
+                  </ul>
                 </div>
               </div>
               <div className="-container-scripts__right">

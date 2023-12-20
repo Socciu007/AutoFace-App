@@ -202,10 +202,10 @@ const SettingsPage = () => {
     }
   };
 
-  const handleOnChangeTypeProfile = (e) => {
+  const handleOnChangeTypeProfile = (value) => {
     setSettings({
       ...settings,
-      runningType: e.target.value,
+      runningType: value,
     });
   };
   const handleOnChangeMuteaudio = (value) => {
@@ -221,10 +221,10 @@ const SettingsPage = () => {
     });
   };
   //
-  const handleOnchangeUrl = (e) => {
+  const handleOnchangeUrl = (value) => {
     setSettings({
       ...settings,
-      URL: e.target.value,
+      URL: value,
     });
   };
   //proxy

@@ -1,8 +1,9 @@
-import { Switch } from 'antd';
+import { Switch, Select } from 'antd';
 import './style.scss';
 import up from '../../../assets/pictures/icon-Increase.svg';
 import down from '../../../assets/pictures/icon-Descrease.svg';
 import React from 'react';
+// import { MenuItem, Select } from '@mui/material';
 
 const SettingNormal = ({
   settings,
@@ -61,34 +62,41 @@ const SettingNormal = ({
         <div className="-sub-settings">
           <p>Profile running type</p>
           <div className="-options-sub-settings">
-            <div className="-options-sub-settings__select">
-              <select
-                name="typeProfile"
-                className="-options-sub-settings__select__details"
-                onChange={handleOnChangeTypeProfile}
-                value={settings.runningType}
-                defaultValue={settings.runningType}
-              >
-                <option value="Random">Random</option>
-                <option value="TopDown">TopDown</option>
-              </select>
-            </div>
+            <Select
+              id="typeProfile"
+              className="-options-sub-settings__select -options-sub-settings__details"
+              value={settings.runningType}
+              onChange={handleOnChangeTypeProfile}
+              bordered={false}
+              options={[
+                {
+                  value: 'random',
+                  label: 'Random',
+                },
+                {
+                  value: 'topdown',
+                  label: 'Topdown',
+                },
+              ]}
+            />
           </div>
         </div>
         <div className="-sub-settings">
           <p>URL</p>
           <div className="-options-sub-settings">
-            <div className="-options-sub-settings__select">
-              <select
-                name="url"
-                className="-options-sub-settings__select__details"
-                onChange={handleOnchangeUrl}
-                defaultValue={settings.URL}
-                value={settings.URL}
-              >
-                <option value="https://mbasic.facebook.com">https://mbasic.facebook.com</option>
-              </select>
-            </div>
+            <Select
+              className="-options-sub-settings__select -options-sub-settings__details"
+              onChange={handleOnchangeUrl}
+              bordered={false}
+              defaultValue={settings.URL}
+              value={settings.URL}
+              options={[
+                {
+                  value: 'https://mbasic.facebook.com',
+                  label: 'https://mbasic.facebook.com',
+                },
+              ]}
+            />
           </div>
         </div>
         <div className="-sub-settings -sub1-settings">

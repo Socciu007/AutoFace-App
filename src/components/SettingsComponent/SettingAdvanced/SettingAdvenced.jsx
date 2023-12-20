@@ -1,4 +1,5 @@
 import React from 'react';
+import './style.scss';
 import up from '../../../assets/pictures/icon-Increase.svg';
 import down from '../../../assets/pictures/icon-Descrease.svg';
 

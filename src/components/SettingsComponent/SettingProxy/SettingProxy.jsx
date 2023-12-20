@@ -1,4 +1,4 @@
-import { Switch } from 'antd';
+import { Select, Switch } from 'antd';
 import './style.scss';
 import React, { useEffect, useState } from 'react';
 import edit from '../../../assets/pictures/icon-edit.png';
@@ -107,7 +107,35 @@ const SettingProxy = ({
             <div className="-add-proxys">
               <div className="-type-proxys">
                 <div className="-type-proxys__nav">
-                  <div className="-type-proxys__nav__select">
+                  <Select
+                    name="url"
+                    className="-type-proxys__nav__details"
+                    onChange={(value) => {
+                      onChangeProxyType(value);
+                    }}
+                    bordered={false}
+                    defaultValue={proxyType}
+                    value={proxyType}
+                    options={[
+                      {
+                        value: 'http',
+                        label: 'HTTP',
+                      },
+                      {
+                        value: 'socks4',
+                        label: 'Socks 4',
+                      },
+                      {
+                        value: 'socks5',
+                        label: 'Socks 5',
+                      },
+                      {
+                        value: 'ssh',
+                        label: 'SSH',
+                      },
+                    ]}
+                  />
+                  {/* <div className="-type-proxys__nav__select">
                     <select
                       defaultValue={proxyType}
                       onChange={(event) => {
@@ -121,7 +149,7 @@ const SettingProxy = ({
                       <option value="socks5">Socks 5</option>
                       <option value="ssh">SSH</option>
                     </select>
-                  </div>
+                  </div> */}
                 </div>
                 <div className="-icon-proxys" onClick={handleOpenProxyManage}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none">
@@ -155,7 +183,7 @@ const SettingProxy = ({
                   className="-info-proxys"
                   onClick={handleOpenWriteText}
                 ></textarea>
-                <div className="-list-info">
+                <div className="-list-info" onClick={handleOpenWriteText}>
                   <div className="-list-info__item">
                     <div className="-stt-info">
                       <p>
@@ -164,7 +192,7 @@ const SettingProxy = ({
                       </p>
                     </div>
                   </div>
-                  <div className="-list-info__item" style={{ marginTop: '10px' }}>
+                  <div className="-list-info__item">
                     <div className="-stt-info">
                       <p>
                         <span>2</span>
@@ -182,14 +210,24 @@ const SettingProxy = ({
                   <Switch checked={settings.assignProxy} onChange={onChangeAssignProxy} width={32} height={20} />
 
                   <p>Assign proxy here to all selected profiles </p>
-                  <img src={question} alt="question"></img>
+                  <div className="-hover-question">
+                    <img src={question} alt="question"></img>
+                    <div className="-hover-question__hide">
+                      <p>Assign proxy here to all selected profiles</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="-setting-proxys">
+                <div className="-setting-proxys baseline">
                   <Switch checked={settings.apiChange} onChange={onChangeAPIProxy} width={32} height={20} />
 
                   <p>
                     API change: Do not assign a proxy to the next profile if the IP address does not change
-                    <img src={question} alt="question"></img>
+                    <div className="-hover-question">
+                      <img src={question} alt="question"></img>
+                      <div className="-hover-question__hide">
+                        <p>Assign proxy here to all selected profiles</p>
+                      </div>
+                    </div>
                   </p>
                 </div>
               </div>
