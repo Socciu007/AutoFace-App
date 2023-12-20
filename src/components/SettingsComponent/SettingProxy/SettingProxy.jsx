@@ -1,6 +1,6 @@
-import { Switch } from 'antd';
+import { Select, Switch } from 'antd';
 import './style.scss';
-import React from 'react';
+import React, { useState } from 'react';
 import edit from '../../../assets/pictures/icon-edit.png';
 import deleted from '../../../assets/pictures/icon-delete.svg';
 import question from '../../../assets/pictures/icon-question.svg';
@@ -21,6 +21,10 @@ const SettingProxy = ({
   handleAddProxy,
   onChange,
 }) => {
+  const [typeProxy, setTypeProxy] = useState('');
+  const handleOnchangeTypeProxy = (value) => {
+    setTypeProxy(value);
+  };
   return (
     <div className="-settings-proxys">
       <div className="-container-proxys">
@@ -75,14 +79,39 @@ const SettingProxy = ({
                 <div className="-type-proxys">
                   <div className="-type-proxys__nav">
                     <div className="-type-proxys__nav__select">
-                      <select name="url" className="-type-proxys__nav__select__details">
-                        <option value="http">HTTP</option>
-                        <option value="socks4">Socks 4</option>
-                        <option value="socks5">Socks 5</option>
-                        <option value="ssh">SSH</option>
-                        <option value="tm">TM</option>
-                        <option value="tinsoft">Tinsoft</option>
-                      </select>
+                      <Select
+                        id="typeProfile"
+                        className="-type-proxys__nav__select__details"
+                        value={typeProxy}
+                        onChange={handleOnchangeTypeProxy}
+                        bordered={false}
+                        options={[
+                          {
+                            value: 'HTTP',
+                            label: 'HTTP',
+                          },
+                          {
+                            value: 'socks_4',
+                            label: 'Socks 4',
+                          },
+                          {
+                            value: 'socks_5',
+                            label: 'Socks 5',
+                          },
+                          {
+                            value: 'ssh',
+                            label: 'SSH',
+                          },
+                          // {
+                          //   value: 'TM',
+                          //   label: 'TM',
+                          // },
+                          // {
+                          //   value: 'Tinsoft',
+                          //   label: 'Tinsoft',
+                          // },
+                        ]}
+                      />
                     </div>
                   </div>
                   <div className="-icon-proxys" onClick={handleOpenProxyManage}>
@@ -107,7 +136,26 @@ const SettingProxy = ({
                   ></PopupProxyManage>
                 </div>
                 <div className="-info-add-proxys">
-                  <textarea className="-info-proxys" onClick={handleOpenWriteText}></textarea>
+                  <textarea
+                    id="textAddProxy"
+                    className="-info-proxys"
+                    name="textAddProxy"
+                    onChange={(e) => {
+                      // const textarea = document.getElementById('textAddProxy');
+                      // const lines = textarea.value.split('\n');
+
+                      // const numberedLines = lines.map((line, index) => {
+                      //   if (!/^\d+\./.test(line)) {
+                      //     return `${index + 1}. ${line}`;
+                      //   }
+                      //   return line;
+                      // });
+
+                      // textarea.value = numberedLines.join('\n');
+                      console.log(e.target.value);
+                    }}
+                    onClick={handleOpenWriteText}
+                  ></textarea>
                   <div className="-list-info" onClick={handleOpenWriteText}>
                     <p>
                       <span>1</span>
@@ -156,14 +204,39 @@ const SettingProxy = ({
                 <div className="-type-proxys -edit-proxys">
                   <div className="-type-proxys__nav">
                     <div className="-type-proxys__nav__select">
-                      <select name="url" className="-type-proxys__nav__select__details">
-                        <option value="http">HTTP</option>
-                        <option value="socks4">Socks 4</option>
-                        <option value="socks5">Socks 5</option>
-                        <option value="ssh">SSH</option>
-                        <option value="tm">TM</option>
-                        <option value="tinsoft">Tinsoft</option>
-                      </select>
+                      <Select
+                        id="typeProfile"
+                        className="-type-proxys__nav__select__details"
+                        value={typeProxy}
+                        onChange={handleOnchangeTypeProxy}
+                        bordered={false}
+                        options={[
+                          {
+                            value: 'HTTP',
+                            label: 'HTTP',
+                          },
+                          {
+                            value: 'socks_4',
+                            label: 'Socks 4',
+                          },
+                          {
+                            value: 'socks_5',
+                            label: 'Socks 5',
+                          },
+                          {
+                            value: 'ssh',
+                            label: 'SSH',
+                          },
+                          // {
+                          //   value: 'TM',
+                          //   label: 'TM',
+                          // },
+                          // {
+                          //   value: 'Tinsoft',
+                          //   label: 'Tinsoft',
+                          // },
+                        ]}
+                      />
                     </div>
                   </div>
                   <div className="-icon-proxys" onClick={handleOpenProxyManage}>
@@ -199,14 +272,18 @@ const SettingProxy = ({
                   <p>Location</p>
                   <div className="-type-proxys__apikey -type-proxys__nav location">
                     <div className="-type-proxys__nav__select">
-                      <select name="url" className="-type-proxys__nav__select__details">
-                        <option value="http">HTTP</option>
-                        <option value="socks4">Socks 4</option>
-                        <option value="socks5">Socks 5</option>
-                        <option value="ssh">SSH</option>
-                        <option value="tm">TM</option>
-                        <option value="tinsoft">Tinsoft</option>
-                      </select>
+                      <Select
+                        className="-type-proxys__nav__select__details"
+                        value={'Location'}
+                        // onChange={handleOnchangeTypeProxy}
+                        bordered={false}
+                        options={[
+                          {
+                            value: 'location',
+                            label: 'location',
+                          },
+                        ]}
+                      />
                     </div>
                   </div>
                 </div>
@@ -220,13 +297,23 @@ const SettingProxy = ({
                 <div className="-setting-proxys">
                   <Switch defaultChecked onChange={onChange} />
                   <p>Assign proxy here to all selected profiles </p>
-                  <img src={question} alt="question"></img>
+                  <div className="-hover-question">
+                    <img src={question} alt="question"></img>
+                    <div className="-hover-question__hide">
+                      <p>Assign proxy here to all selected profiles</p>
+                    </div>
+                  </div>
                 </div>
                 <div className="-setting-proxys">
                   <Switch defaultChecked onChange={onChange} />
                   <p>
                     API change: Do not assign a proxy to the next profile if the IP address does not change
-                    <img src={question} alt="question"></img>
+                    <div className="-hover-question">
+                      <img src={question} alt="question"></img>
+                      <div className="-hover-question__hide">
+                        <p>Assign proxy here to all selected profiles</p>
+                      </div>
+                    </div>
                   </p>
                 </div>
               </div>

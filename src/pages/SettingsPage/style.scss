@@ -1,3 +1,15 @@
+@font-face {
+  font-family: 'GoogleSans';
+  font-style: normal;
+  font-weight: normal;
+  src: local('GoogleSans'), url('./assets/fonts/GoogleSansTTF/GoogleSans-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'GoogleSansBold';
+  font-style: normal;
+  font-weight: 700;
+  src: local('GoogleSans'), url('../../assets/fonts/GoogleSansTTF/GoogleSans-Bold.ttf') format('truetype');
+}
 .layout-settings {
   min-width: 1280px;
   background-color: #fff;
@@ -40,7 +52,7 @@
 }
 
 .scroll-settings {
-  height: 558px;
+  height: 80%;
   width: 101%;
   margin-top: 18px;
   overflow-y: auto;

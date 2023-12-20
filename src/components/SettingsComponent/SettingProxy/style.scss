@@ -152,6 +152,14 @@
                 border: none;
                 font-size: 15px;
                 font-weight: 400;
+                .ant-select-selector {
+                  padding: 0;
+                  border: none;
+                  font-size: 15px;
+                }
+                .ant-select-arrow {
+                  color: #01162b;
+                }
               }
             }
           }
@@ -196,6 +204,7 @@
           height: 50%;
           .-info-proxys {
             width: 100%;
+            max-width: 100%;
             min-height: 379px;
             height: 379px;
             margin-bottom: 10px;
@@ -261,9 +270,6 @@
               height: 15.668px;
               transition: all 0.2s ease-in-out;
             }
-            // .ant-switch-inner {
-            //   min-width: 30.933px;
-            // }
           }
           .ant-switch.ant-switch-checked .ant-switch-handle {
             inset-inline-start: calc(100% - 15.5px);

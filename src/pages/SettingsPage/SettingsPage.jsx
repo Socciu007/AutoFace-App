@@ -33,7 +33,7 @@ const SettingsPage = () => {
     numberProfile: 5,
     numberLoop: 1,
     typeProfile: 'Random',
-    url: 'www.fb.com',
+    url: '',
     maxTimePerThread: 500,
     delayInEachNewThread: 5,
     stopIfRamReaches: 90,
@@ -184,17 +184,17 @@ const SettingsPage = () => {
     }
   };
 
-  const handleOnChangeTypeProfile = (e) => {
+  const handleOnChangeTypeProfile = (value) => {
     setSettings({
       ...settings,
-      [e.target.name]: e.target.value,
+      typeProfile: value,
     });
   };
   //
-  const handleOnchangeUrl = (e) => {
+  const handleOnchangeUrl = (value) => {
     setSettings({
       ...settings,
-      [e.target.name]: e.target.value,
+      url: value,
     });
   };
   //proxy

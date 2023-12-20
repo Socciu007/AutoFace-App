@@ -86,12 +86,22 @@
           height: 100%;
           &__details {
             cursor: pointer;
+            color: rgba(1, 22, 43, 1);
             width: 100%;
             height: 100%;
             border: none;
+            font-family: 'GoogleSans';
             border-radius: 8px;
             font-size: 15px;
             font-weight: 400;
+            .ant-select-selector {
+              padding: 0;
+              border: none;
+              font-size: 15px;
+            }
+            .ant-select-arrow {
+              color: #01162b;
+            }
           }
         }
       }

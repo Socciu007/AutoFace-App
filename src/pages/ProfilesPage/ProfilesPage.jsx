@@ -7,7 +7,7 @@ import search from '../../assets/pictures/icon-search.svg';
 import refresh from '../../assets/pictures/icon-refresh.png';
 import settings from '../../assets/pictures/icon-settings.png';
 import plus from '../../assets/pictures/icon-plus.png';
-import usaProxy from '../../assets/pictures/icon-usa.png';
+// import usaProxy from '../../assets/pictures/icon-usa.png';
 import options from '../../assets/pictures/icon-options.png';
 import addProxy from '../../assets/pictures/icon-addProxy.png';
 import deleted from '../../assets/pictures/icon-delete.svg';
@@ -37,7 +37,6 @@ const ProfilesPage = () => {
   const [openDeleteProfile, setOpenDeleteProfile] = useState(false);
   const [openProxyManage, setOpenProxyManage] = useState(false);
   const [openOptions, setOpenOptions] = useState(false);
-  const [typeProxy, setTypeProxy] = useState('');
   const navigate = useNavigate();
   //Pin and remove
   const handleActionProfiles = () => {
@@ -303,9 +302,6 @@ const ProfilesPage = () => {
   const handleCloseDelete = () => {
     setOpenDeleteProfile(false);
   };
-  const onChangeTypeProxy = (e) => {
-    setTypeProxy(e.target.value);
-  };
 
   return (
     <div
@@ -355,11 +351,9 @@ const ProfilesPage = () => {
               <p>Add Proxy</p>
             </div>
             <PopupAddProxy
-              typeProxy={typeProxy}
               openAddProxy={openAddProxy}
               handleCloseAdd={handleCloseAdd}
               handleOpenProxyManage={handleOpenProxyManage}
-              onChangeTypeProxy={onChangeTypeProxy}
             ></PopupAddProxy>
             <PopupProxyManage
               openProxyManage={openProxyManage}

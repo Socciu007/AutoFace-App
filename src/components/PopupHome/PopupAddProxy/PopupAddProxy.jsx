@@ -3,12 +3,17 @@ import closePopup from '../../../assets/pictures/icon-x.svg';
 import PopupComponent from '../PopupComponent/PopupComponent';
 import proxy from '../../../assets/pictures/icon-proxy.svg';
 import './style.scss';
+import { Select } from 'antd';
 // import { display } from '@mui/system';
 
-const PopupAddProxy = ({ typeProxy, openAddProxy, handleCloseAdd, handleOpenProxyManage, onChangeTypeProxy }) => {
+const PopupAddProxy = ({ openAddProxy, handleCloseAdd, handleOpenProxyManage }) => {
   const [openWriteText, setOpenWriteText] = useState(false);
+  const [typeProxy, setTypeProxy] = useState('');
   const handleWriteText = () => {
     setOpenWriteText(true);
+  };
+  const onChangeTypeProxy = (value) => {
+    setTypeProxy(value);
   };
   return (
     <PopupComponent open={openAddProxy} onClose={handleCloseAdd}>
@@ -26,15 +31,37 @@ const PopupAddProxy = ({ typeProxy, openAddProxy, handleCloseAdd, handleOpenProx
               <p>Connection type</p>
               <div className="-add-proxys-nav">
                 <div className="-add-proxys__type__text">
-                  <div className="-add-proxys__type__text__option">
-                    <select name="typeProxy" onChange={onChangeTypeProxy} value={typeProxy}>
-                      <option value="Without proxy">Without proxy</option>
-                      <option value="Your Proxy">HTTP Proxy</option>
-                      <option value="Free Proxy">Socks4 Proxy</option>
-                      <option value="Free Proxy">Socks5 Proxy</option>
-                      <option value="Free Proxy">SSH Proxy</option>
-                    </select>
-                  </div>
+                  <Select
+                    id="typeProxy"
+                    className="-add-proxys__type__text__option"
+                    name="typeProxy"
+                    value={typeProxy}
+                    onChange={onChangeTypeProxy}
+                    bordered={false}
+                    zIndexPopup={100000}
+                    options={[
+                      {
+                        value: 'withoutProxy',
+                        label: 'Without proxy',
+                      },
+                      {
+                        value: 'httpProxy',
+                        label: 'HTTP Proxy',
+                      },
+                      {
+                        value: 'socks4Proxy',
+                        label: 'Socks4 Proxy',
+                      },
+                      {
+                        value: 'socks5Proxy',
+                        label: 'Socks5 Proxy',
+                      },
+                      {
+                        value: 'sshProxy',
+                        label: 'SSH Proxy',
+                      },
+                    ]}
+                  />
                 </div>
                 <div className="-add-proxys__type__icon" onClick={handleOpenProxyManage}>
                   <img src={proxy} alt="icon-proxy"></img>

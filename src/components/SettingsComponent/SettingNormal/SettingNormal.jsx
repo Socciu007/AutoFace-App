@@ -1,4 +1,4 @@
-import { Switch, TreeSelect } from 'antd';
+import { Select, Switch, TreeSelect } from 'antd';
 import './style.scss';
 import up from '../../../assets/pictures/icon-Increase.svg';
 import down from '../../../assets/pictures/icon-Descrease.svg';
@@ -59,68 +59,44 @@ const SettingNormal = ({
         <div className="-sub-settings">
           <p>Profile running type</p>
           <div className="-options-sub-settings">
-            {/* <div className="-options-sub-settings__select"> */}
-            {/* <select
-                name="typeProfile"
+            <div className="-options-sub-settings__select">
+              <Select
+                id="typeProfile"
                 className="-options-sub-settings__select__details"
-                onChange={handleOnChangeTypeProfile}
                 value={settings.typeProfile}
-              >
-                <option value="random">Random</option>
-                <option value="friend">TopDown</option>
-              </select> */}
-            <TreeSelect
-              treeDataSimpleMode
-              style={{
-                width: '100%',
-              }}
-              value={settings.typeProfile}
-              dropdownStyle={{
-                maxHeight: 400,
-                overflow: 'auto',
-              }}
-              placeholder="Please select"
-              onChange={handleOnChangeTypeProfile}
-              // loadData={onLoadData}
-              treeData={[
-                {
-                  id: 1,
-                  pId: 0,
-                  value: '1',
-                  title: 'Expand to load',
-                },
-                {
-                  id: 2,
-                  pId: 0,
-                  value: '2',
-                  title: 'Expand to load',
-                },
-                {
-                  id: 3,
-                  pId: 0,
-                  value: '3',
-                  title: 'Tree Node',
-                  isLeaf: true,
-                },
-              ]}
-            />
-            {/* </div> */}
+                onChange={handleOnChangeTypeProfile}
+                bordered={false}
+                options={[
+                  {
+                    value: 'random',
+                    label: 'Random',
+                  },
+                  {
+                    value: 'topdown',
+                    label: 'Topdown',
+                  },
+                ]}
+              />
+            </div>
           </div>
         </div>
         <div className="-sub-settings">
           <p>URL</p>
           <div className="-options-sub-settings">
             <div className="-options-sub-settings__select">
-              <select
-                name="url"
+              <Select
+                id="typeProfile"
                 className="-options-sub-settings__select__details"
+                value={settings.Url}
                 onChange={handleOnchangeUrl}
-                value={settings.url}
-              >
-                <option value="random">www.fb.com</option>
-                <option value="friend">Friend</option>
-                <option value="group">Group</option>
-              </select>
+                bordered={false}
+                options={[
+                  {
+                    value: 'www.facebook.com',
+                    label: 'www.facebook.com',
+                  },
+                ]}
+              />
             </div>
           </div>
         </div>
