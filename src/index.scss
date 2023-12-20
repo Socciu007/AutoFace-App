@@ -162,7 +162,7 @@ $tablet-width: 1024px;
 
 // Css select option
 .css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root {
-  font-family: 'GoogleSans';
-  font-size: 15px;
-  color: var(--font-color-para);
+  font-family: 'GoogleSans' !important;
+  font-size: 15px !important;
+  color: var(--font-color-para) !important;
 }

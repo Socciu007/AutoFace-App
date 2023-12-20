@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AddFriendOption, TextComment, useRangeValues, useShowCheckbox } from './AddFriend';
 import './style.scss';
 import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
@@ -6,7 +6,10 @@ import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-
+import Editor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
 const AddFriend = ({ onGoBackClick }) => {
   const initialValues = {
     PostStart: 5,
@@ -30,10 +33,11 @@ const AddFriend = ({ onGoBackClick }) => {
     selectedValueTypeAddFriend,
     textContentAddFriendRequest,
     handleDivClick,
-    textareaRef,
+    hightlightWithLineNumbers,
   } = AddFriendOption();
 
-  const { textContentComment, handleTextareaChangeComment, textareaCommentRef, handleCommentDivClick } = TextComment();
+  const { textContentComment, setTextContentComment, handleDivCommentClick, hightlightWithLineNumbersComment } =
+    TextComment();
 
   const { isInteract, handleCheckboxChangeInteract } = useShowCheckbox(false, 'Interact');
 
@@ -165,13 +169,22 @@ const AddFriend = ({ onGoBackClick }) => {
                   selectedValueTypeAddFriend === 'friendOfUID') && (
                   <div>
                     <div className="component-item textAddFriend">
-                      <textarea
-                        id="textAddFriendContent"
-                        name="textAddFriendContent"
-                        rows="10"
-                        ref={textareaRef}
-                        onChange={(e) => setTextContentAddFriendRequest(e.target.value)}
-                      ></textarea>
+                      <Editor
+                        value={textContentAddFriendRequest}
+                        onValueChange={(textContentAddFriendRequest) =>
+                          setTextContentAddFriendRequest(textContentAddFriendRequest)
+                        }
+                        highlight={(textContentAddFriendRequest) =>
+                          hightlightWithLineNumbers(textContentAddFriendRequest, languages.js)
+                        }
+                        padding={15}
+                        className="editor"
+                        textareaId="textareaContent"
+                        style={{
+                          background: '#F5F5F5',
+                          fontSize: 15,
+                        }}
+                      />
                       <div
                         onClick={handleDivClick}
                         id="placeholderTypeAddFriend"
@@ -338,17 +351,23 @@ const AddFriend = ({ onGoBackClick }) => {
                             <p>Comment</p>
                           </div>
                           <div className={`component-item textComment ${isComment ? 'show' : 'hide'}`}>
-                            <textarea
-                              id="textContentComment"
-                              name="textContentComment"
-                              rows="10"
+                            <Editor
                               value={textContentComment}
-                              onChange={handleTextareaChangeComment}
-                              ref={textareaCommentRef}
-                            ></textarea>
+                              onValueChange={(textContentComment) => setTextContentComment(textContentComment)}
+                              highlight={(textContentComment) =>
+                                hightlightWithLineNumbersComment(textContentComment, languages.js)
+                              }
+                              padding={15}
+                              className="editor"
+                              textareaId="codeArea"
+                              style={{
+                                background: '#fff',
+                                fontSize: 15,
+                              }}
+                            />
                             <div
-                              onClick={handleCommentDivClick}
                               className={`placeholder ${textContentComment ? 'hide' : ''}`}
+                              onClick={handleDivCommentClick}
                             >
                               <p>
                                 <span>1</span>
@@ -375,3 +394,4 @@ const AddFriend = ({ onGoBackClick }) => {
 };
 
 export default AddFriend;
+// TypeError: Cannot read properties of null (reading '_textarea')

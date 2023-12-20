@@ -5,7 +5,10 @@ import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
 import downButton from '../../../assets/icon/icon-down.svg';
-
+import Editor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
 import { InviteOption, UIDTextarea, useRangeValues } from './Invite';
 const Invite = ({ onGoBackClick }) => {
   const initialValues = {
@@ -20,8 +23,15 @@ const Invite = ({ onGoBackClick }) => {
 
   const { selectedValueInvite, handleSelectChangeInvite } = InviteOption();
 
-  const { UIDContent, handleTextareaChangeUIDContent, handleTextareaPaste, lineCount, handleDivClick, textareaRef } =
-    UIDTextarea();
+  const {
+    UIDContent,
+    handleTextareaChangeUIDContent,
+    handleTextareaPaste,
+    lineCount,
+    handleDivClick,
+    hightlightWithLineNumbers,
+    setUIDContent,
+  } = UIDTextarea();
 
   return (
     <div className="invite">
@@ -115,15 +125,20 @@ const Invite = ({ onGoBackClick }) => {
                         <span>({lineCount})</span>
                       </div>
                       <div className="component-item UIDText">
-                        <textarea
-                          id="UIDContent"
-                          name="UIDContent"
-                          rows="10"
-                          value={UIDContent}
+                        <Editor
                           onChange={handleTextareaChangeUIDContent}
                           onPaste={handleTextareaPaste}
-                          ref={textareaRef}
-                        ></textarea>
+                          value={UIDContent}
+                          onValueChange={(UIDContent) => setUIDContent(UIDContent)}
+                          highlight={(UIDContent) => hightlightWithLineNumbers(UIDContent, languages.js)}
+                          padding={15}
+                          className="editor"
+                          textareaId="codeArea"
+                          style={{
+                            background: '#f5f5f5',
+                            fontSize: 15,
+                          }}
+                        />
                         <div onClick={handleDivClick} className={`placeholder ${UIDContent ? 'hide' : ''}`}>
                           <p>
                             <span>1</span>Enter the UID here

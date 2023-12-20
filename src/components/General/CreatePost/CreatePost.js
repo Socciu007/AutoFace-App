@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { highlight, languages } from 'prismjs/components/prism-core';
 export function handleInputChange(event, setValues, prefix, values) {
   const inputValue = event.target.value;
   const isNumber = /^\d*$/.test(inputValue);
@@ -95,22 +96,25 @@ export function FriendsOption() {
 }
 
 //cai dat cho phan text (khi go chu thi placeholder cua textarea se an di)
-export function useTextarea(initialValue) {
+export function useTextarea(initialValue, id) {
   const [value, setValue] = useState(initialValue);
-  const textareaRef = useRef(null);
 
-  const handleChange = (event) => {
-    setValue(event.target.value);
+  const handleChange = (value) => {
+    setValue(value);
   };
-
+  const hightlightWithLineNumbers = (input, language) =>
+    highlight(input, language)
+      .split('\n')
+      .map((line, i) => `<span class='editorLineNumber ${value ? '' : 'hide'}'>${i + 1}</span>${line}`)
+      .join('\n');
   const handleDivClick = () => {
-    textareaRef.current.focus();
+    document.getElementById(id).focus();
   };
 
   return {
     value,
     handleChange,
-    textareaRef,
+    hightlightWithLineNumbers,
     handleDivClick,
   };
 }

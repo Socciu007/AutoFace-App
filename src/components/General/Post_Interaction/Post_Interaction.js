@@ -1,5 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState, useRef } from 'react';
+import { highlight, languages } from 'prismjs/components/prism-core';
 export function handleInputChange(event, setValues, prefix, values) {
   const inputValue = event.target.value;
   const isNumber = /^\d*$/.test(inputValue);
@@ -49,17 +50,14 @@ export function useRangeValues(initialValues, prefix) {
   return { ...values, ...createHandlers() };
 }
 
-export function PostUIDList() {
+export function useTextarea(initialValue, id) {
   //cai dat cho phan text comment
-  const [textContent, setTextContent] = useState('');
+  const [value, setValue] = useState(initialValue);
   const [lineCount, setLineCount] = useState(0);
-  const textareaRef = useRef(null);
 
-  const handleTextareaChange = (event) => {
-    const content = event.target.value;
-    setTextContent(content);
+  const handleChange = (event) => {
     // Đếm số lượng dòng
-    const lines = content.split('\n');
+    const lines = event.target.value.split('\n');
     setLineCount(lines.length);
   };
   const handleTextareaPaste = (event) => {
@@ -71,16 +69,22 @@ export function PostUIDList() {
       setLineCount(lines.length);
     }, 0);
   };
+  const hightlightWithLineNumbers = (input, language) =>
+    highlight(input, language)
+      .split('\n')
+      .map((line, i) => `<span class='editorLineNumber ${value ? '' : 'hide'}'>${i + 1}</span>${line}`)
+      .join('\n');
   const handleDivClick = () => {
-    textareaRef.current.focus();
+    document.getElementById(id).focus();
   };
   return {
-    textContent,
-    handleTextareaChange,
+    value,
+    handleChange,
     handleTextareaPaste,
     lineCount,
     handleDivClick,
-    textareaRef,
+    hightlightWithLineNumbers,
+    setValue,
   };
 }
 

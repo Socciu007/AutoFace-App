@@ -1,5 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useRef, useState } from 'react';
+import { highlight, languages } from 'prismjs/components/prism-core';
 export function handleInputChange(event, setValues, prefix, values) {
   const inputValue = event.target.value;
   const isNumber = /^\d*$/.test(inputValue);
@@ -52,18 +53,22 @@ export function useRangeValues(initialValues, prefix) {
 export function MessageTextarea() {
   //cai dat cho phan message
   const [textContentMessage, setTextContentMessage] = useState('');
-  const textareaRef = useRef(null);
-
-  const handleTextareaChangeMessage = (event) => {
-    setTextContentMessage(event.target.value);
+  const handleChange = (value) => {
+    setTextContentMessage(value);
   };
+
+  const hightlightWithLineNumbers = (input, language) =>
+    highlight(input, language)
+      .split('\n')
+      .map((line, i) => `<span class='editorLineNumber ${textContentMessage ? '' : 'hide'}'>${i + 1}</span>${line}`)
+      .join('\n');
   const handleDivClick = () => {
-    textareaRef.current.focus();
+    document.getElementById('codeArea').focus();
   };
   return {
     textContentMessage,
-    handleTextareaChangeMessage,
+    handleChange,
     handleDivClick,
-    textareaRef,
+    hightlightWithLineNumbers,
   };
 }

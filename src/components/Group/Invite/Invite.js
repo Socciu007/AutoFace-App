@@ -1,4 +1,5 @@
 // eslint-disable-next-line no-unused-vars
+import { highlight, languages } from 'prismjs/components/prism-core';
 import React, { useEffect, useState, useRef } from 'react';
 export function handleInputChange(event, setValues, prefix, values) {
   const inputValue = event.target.value;
@@ -68,12 +69,9 @@ export function UIDTextarea() {
   //cai dat cho phan UID Text (khi go chu thi placeholder cua textarea se an di)
   const [UIDContent, setUIDContent] = useState('');
   const [lineCount, setLineCount] = useState(0);
-  const textareaRef = useRef(null);
   const handleTextareaChangeUIDContent = (event) => {
-    const content = event.target.value;
-    setUIDContent(content);
     // Đếm số lượng dòng
-    const lines = content.split('\n');
+    const lines = event.target.value.split('\n');
     setLineCount(lines.length);
   };
   const handleTextareaPaste = (event) => {
@@ -86,14 +84,20 @@ export function UIDTextarea() {
     }, 0);
   };
   const handleDivClick = () => {
-    textareaRef.current.focus();
+    document.getElementById('codeArea').focus();
   };
+  const hightlightWithLineNumbers = (input, language) =>
+    highlight(input, language)
+      .split('\n')
+      .map((line, i) => `<span class='editorLineNumber ${UIDContent ? '' : 'hide'}'>${i + 1}</span>${line}`)
+      .join('\n');
   return {
     UIDContent,
     handleTextareaChangeUIDContent,
     handleTextareaPaste,
     lineCount,
     handleDivClick,
-    textareaRef,
+    hightlightWithLineNumbers,
+    setUIDContent,
   };
 }

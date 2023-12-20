@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
+import { highlight, languages } from 'prismjs/components/prism-core';
 export function handleInputChange(event, setValues, prefix, values) {
   const inputValue = event.target.value;
   const isNumber = /^\d*$/.test(inputValue);
@@ -83,18 +84,19 @@ export function unfriendOption() {
 export function UIDText() {
   //cai dat cho phan UID Text (khi go chu thi placeholder cua textarea se an di)
   const [UIDContent, setUIDContent] = useState('');
-  const textareaRef = useRef(null);
 
-  const handleTextareaChangeUIDContent = (event) => {
-    setUIDContent(event.target.value);
-  };
   const handleDivClick = () => {
-    textareaRef.current.focus();
+    document.getElementById('codeArea').focus();
   };
+  const hightlightWithLineNumbers = (input, language) =>
+    highlight(input, language)
+      .split('\n')
+      .map((line, i) => `<span class='editorLineNumber ${UIDContent ? '' : 'hide'}'>${i + 1}</span>${line}`)
+      .join('\n');
   return {
     UIDContent,
-    handleTextareaChangeUIDContent,
+    setUIDContent,
     handleDivClick,
-    textareaRef,
+    hightlightWithLineNumbers,
   };
 }

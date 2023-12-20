@@ -8,6 +8,10 @@ import DragButton from '../../../assets/icon/icon-drag.svg';
 import DeleteButton from '../../../assets/icon/icon-Delete.svg';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import Editor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
 import { CommentOption, CommentTextarea, URLImg, useRangeValues, useShowCheckbox } from './WatchVideo';
 const WatchVideo = ({ onGoBackClick }) => {
   const initialValues = {
@@ -40,7 +44,7 @@ const WatchVideo = ({ onGoBackClick }) => {
 
   const { selectedValue, handleSelectChange } = CommentOption();
 
-  const { textContent, handleTextareaChange, handleDivClick, textareaRef } = CommentTextarea();
+  const { textContent, handleTextareaChange, handleDivClick, hightlightWithLineNumbers } = CommentTextarea();
 
   const { files, getRootProps, getInputProps, handleDeleteButtonClick } = URLImg();
 
@@ -243,14 +247,18 @@ const WatchVideo = ({ onGoBackClick }) => {
                   <div className="Text">
                     <p className="selectComment__header">Text</p>
                     <div className="component-item text">
-                      <textarea
-                        id="textContent"
-                        name="textContent"
-                        rows="10"
+                      <Editor
                         value={textContent}
-                        onChange={handleTextareaChange}
-                        ref={textareaRef}
-                      ></textarea>
+                        onValueChange={handleTextareaChange}
+                        highlight={(textContent) => hightlightWithLineNumbers(textContent, languages.js)}
+                        padding={15}
+                        className="editor"
+                        textareaId="codeArea"
+                        style={{
+                          background: '#f5f5f5',
+                          fontSize: 15,
+                        }}
+                      />
                       <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
                         <p>
                           <span>1</span>Enter the content here

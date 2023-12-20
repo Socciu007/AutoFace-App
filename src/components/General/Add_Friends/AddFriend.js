@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useRef, useState } from 'react';
-
+import { highlight, languages } from 'prismjs/components/prism-core';
 export function handleInputChange(event, setValues, prefix, values) {
   const inputValue = event.target.value;
   const isNumber = /^\d*$/.test(inputValue);
@@ -55,7 +55,6 @@ export function AddFriendOption() {
   const [selectedValueTypeAddFriend, setSelectedValueType] = useState('suggestions');
   const [textContentAddFriendRequest, setTextContentAddFriendRequest] = useState('');
   const [placeholderText, setPlaceholderText] = useState('');
-  const textareaRef = useRef(null);
 
   const handleSelectorChange = (event) => {
     const value = event.target.value;
@@ -82,8 +81,17 @@ export function AddFriendOption() {
     }
   };
   const handleDivClick = () => {
-    textareaRef.current.focus();
+    document.getElementById('textareaContent').focus();
   };
+  const hightlightWithLineNumbers = (input, language) =>
+    highlight(input, language)
+      .split('\n')
+      .map(
+        (line, i) =>
+          `<span class='editorLineNumber ${textContentAddFriendRequest ? '' : 'hide'}'>${i + 1}</span>${line}`,
+      )
+      .join('\n');
+
   useEffect(() => {
     // Update giá trị của placeholderText khi component được tạo ra
     handleSelectorChange({ target: { value: selectedValueTypeAddFriend } });
@@ -104,7 +112,7 @@ export function AddFriendOption() {
     selectedValueTypeAddFriend,
     textContentAddFriendRequest,
     handleDivClick,
-    textareaRef,
+    hightlightWithLineNumbers,
   };
 }
 
@@ -124,77 +132,19 @@ export function useShowCheckbox(initialState, featureName) {
 
 export function TextComment() {
   const [textContentComment, setTextContentComment] = useState('');
-  const textareaCommentRef = useRef(null);
-  const prevContentRef = useRef('');
-  const handleTextareaChangeComment = (event) => {
-    const inputValue = event.target.value;
-
-    // Kiểm tra xem nội dung có rỗng không
-    if (inputValue.trim() === '') {
-      // Nếu rỗng, hiển thị lại placeholder và cập nhật state
-      setTextContentComment('');
-    } else {
-      // Nếu không rỗng, thực hiện thêm số đầu dòng
-      const lines = inputValue.split('\n');
-      const numberedLines = lines.map((line, index) => {
-        if (!/^\d+\./.test(line)) {
-          return `${index + 1}. ${line}`;
-        }
-        return line;
-      });
-      const newTextContent = numberedLines.join('\n');
-      setTextContentComment(newTextContent);
-    }
+  const handleDivCommentClick = () => {
+    document.getElementById('codeArea').focus();
   };
-
-  const handleCommentDivClick = () => {
-    textareaCommentRef.current.focus();
-  };
+  const hightlightWithLineNumbersComment = (input, language) =>
+    highlight(input, language)
+      .split('\n')
+      .map((line, i) => `<span class='editorLineNumber ${textContentComment ? '' : 'hide'}'>${i + 1}</span>${line}`)
+      .join('\n');
 
   return {
     textContentComment,
-    handleTextareaChangeComment,
-    textareaCommentRef,
-    handleCommentDivClick,
+    setTextContentComment,
+    handleDivCommentClick,
+    hightlightWithLineNumbersComment,
   };
 }
-
-// export function TextComment() {
-//   const [textContentComment, setTextContentComment] = useState('');
-//   const textareaCommentRef = useRef(null);
-
-//   useEffect(() => {
-//     // Sự kiện mỗi khi giá trị textContentComment thay đổi
-//     const handleInput = () => {
-//       const lines = textContentComment.split('\n');
-
-//       // Tạo mảng mới chứa từng dòng với số dòng và opacity
-//       const numberedLines = lines.map((line, index) => {
-//         const lineWithNumber = `${index + 1}. ${line}`;
-//         return lineWithNumber;
-//       });
-
-//       // Cập nhật giá trị của textarea
-//       textareaCommentRef.current.value = numberedLines.join('\n');
-//     };
-
-//     // Gán sự kiện input cho textarea
-//     textareaCommentRef.current.addEventListener('input', handleInput);
-
-//     // Xóa sự kiện khi component bị unmount
-//     return () => {
-//       textareaCommentRef.current.removeEventListener('input', handleInput);
-//     };
-//   }, [textContentComment]);
-
-//   const handleCommentDivClick = () => {
-//     textareaCommentRef.current.focus();
-//   };
-
-//   return {
-//     textContentComment,
-//     setTextContentComment,
-//     textareaCommentRef,
-//     handleCommentDivClick,
-//   };
-// }
