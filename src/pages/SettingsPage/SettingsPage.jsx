@@ -1,40 +1,355 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from 'react';
 import './style.scss';
-import up from '../../assets/pictures/icon-up.svg';
-import down from '../../assets/pictures/icon-down.svg';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
+import SettingNormal from '../../components/SettingsComponent/SettingNormal/SettingNormal';
+import SettingAdvenced from '../../components/SettingsComponent/SettingAdvanced/SettingAdvenced';
+import SettingProxy from '../../components/SettingsComponent/SettingProxy/SettingProxy';
+import { storageSettings } from '../../common/const.config';
+import storageService from '../../services/storage.service';
+import SnackbarApp from '../../components/Alert';
+import { v4 as uuidv4 } from 'uuid';
 
 const SettingsPage = () => {
-  const navigate = useNavigate()
-  const [counter, setCounter] = useState(0);
-  const [counter_0, setCounter_0] = useState(0);
+  const navigate = useNavigate();
+  const [editProxy, setEditProxy] = useState(false);
+  const [keyList, setKeyList] = useState('');
+  const [openProxyManage, setOpenProxyManage] = useState(false);
+  const [openWriteText, setOpenWriteText] = useState(false);
+  const [settings, setSettings] = useState({});
+  const [message, setMessage] = useState('');
+  const [statusMessage, setStatusMessage] = useState('warning');
 
-  const incrementCounter = () => {
-    setCounter((prevCounter) => prevCounter + 1);
-  };
-  const incrementCounter_0 = () => {
-    setCounter_0((prevCounter) => prevCounter + 1);
+  useEffect(() => {
+    const settingStr = storageService.get(storageSettings);
+    console.log(settingStr);
+    if (settingStr) {
+      setSettings(JSON.parse(settingStr));
+      console.log(settings);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (settings.countProfile && settings.countProfile >= 0) {
+      storageService.set(storageSettings, JSON.stringify(settings));
+    }
+  }, [settings]);
+
+  const onChangeAssignProxy = (checked) => {
+    setSettings({
+      ...settings,
+      assignProxy: checked,
+    });
   };
 
-  const decrementCounter = () => {
-    setCounter((prevCounter) => (prevCounter > 0 ? prevCounter - 1 : 0));
+  const onChangeAPIProxy = (checked) => {
+    setSettings({
+      ...settings,
+      apiChange: checked,
+    });
   };
-  const decrementCounter_0 = () => {
-    setCounter_0((prevCounter) => (prevCounter > 0 ? prevCounter - 1 : 0));
+
+  const handleNumberProfile = (type) => {
+    if (type === 'increase') {
+      setSettings({
+        ...settings,
+        countProfile: settings.countProfile + 1,
+      });
+    } else {
+      setSettings({
+        ...settings,
+        countProfile: settings.countProfile > 0 ? settings.countProfile - 1 : 0,
+      });
+    }
   };
+  const onChangeNumberProfile = (e) => {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      setSettings({ ...settings, countProfile: parseInt(value) });
+    }
+  };
+  //
+  const handleNumberLoop = (type) => {
+    if (type === 'increase') {
+      setSettings({
+        ...settings,
+        countLoop: settings.countLoop + 1,
+      });
+    } else {
+      setSettings({
+        ...settings,
+        countLoop: settings.countLoop > 0 ? settings.countLoop - 1 : 0,
+      });
+    }
+  };
+  const onChangeNumberLoop = (e) => {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      setSettings({ ...settings, countLoop: parseInt(value) });
+    }
+  };
+
+  const handleMaxTimePerThread = (type) => {
+    if (type === 'increase') {
+      setSettings({
+        ...settings,
+        maxTime: settings.maxTime + 1,
+      });
+    } else {
+      setSettings({
+        ...settings,
+        maxTime: settings.maxTime > 0 ? settings.maxTime - 1 : 0,
+      });
+    }
+  };
+  const onChangeMaxTimePerThread = (e) => {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      setSettings({ ...settings, maxTime: parseInt(value) });
+    }
+  };
+  //
+  const handleDelayInEachNewThread = (type) => {
+    if (type === 'increase') {
+      setSettings({
+        ...settings,
+        delayThread: settings.delayThread + 1,
+      });
+    } else {
+      setSettings({
+        ...settings,
+        delayThread: settings.delayThread > 0 ? settings.delayThread - 1 : 0,
+      });
+    }
+  };
+  const onChangeDelayInEachNewThread = (e) => {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      setSettings({ ...settings, delayThread: parseInt(value) });
+    }
+  };
+  //
+  const handlestopIfRamReaches = (type) => {
+    if (type === 'increase') {
+      setSettings({
+        ...settings,
+        maxRam: settings.maxRam < 100 ? settings.maxRam + 1 : 100,
+      });
+    } else {
+      setSettings({
+        ...settings,
+        maxRam: settings.maxRam > 0 ? settings.maxRam - 1 : 0,
+      });
+    }
+  };
+  const onChangeStopIfRamReaches = (e) => {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    let value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      if (value < 0) value = 0;
+      if (value > 100) value = 100;
+      setSettings({ ...settings, maxRam: parseInt(value) });
+    }
+  };
+  //
+  const handleStopIfCPUReaches = (type) => {
+    if (type === 'increase') {
+      setSettings({
+        ...settings,
+        maxCpu: settings.maxCpu < 100 ? settings.maxCpu + 1 : 100,
+      });
+    } else {
+      setSettings({
+        ...settings,
+        maxCpu: settings.maxCpu > 0 ? settings.maxCpu - 1 : 0,
+      });
+    }
+  };
+  const onChangeStopIfCPUReaches = (e) => {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    let value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      if (value < 0) value = 0;
+      if (value > 100) value = 100;
+      setSettings({ ...settings, maxCpu: parseInt(value) });
+    }
+  };
+  //
+  const handleStopIfDiskReaches = (type) => {
+    if (type === 'increase') {
+      setSettings({
+        ...settings,
+        maxDisk: settings.maxDisk < 100 ? settings.maxDisk + 1 : 100,
+      });
+    } else {
+      setSettings({
+        ...settings,
+        maxDisk: settings.maxDisk > 0 ? settings.maxDisk - 1 : 0,
+      });
+    }
+  };
+  const onChangeStopIfDiskReaches = (e) => {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    let value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      if (value < 0) value = 0;
+      if (value > 100) value = 100;
+      setSettings({ ...settings, maxDisk: parseInt(value) });
+    }
+  };
+
+  const handleOnChangeTypeProfile = (e) => {
+    setSettings({
+      ...settings,
+      runningType: e.target.value,
+    });
+  };
+  const handleOnChangeMuteaudio = (value) => {
+    setSettings({
+      ...settings,
+      muteAudio: value,
+    });
+  };
+  const handleOnChangeShowImage = (value) => {
+    setSettings({
+      ...settings,
+      showImage: value,
+    });
+  };
+  //
+  const handleOnchangeUrl = (e) => {
+    setSettings({
+      ...settings,
+      URL: e.target.value,
+    });
+  };
+  //proxy
+  const handleOpenProxyManage = () => {
+    setOpenProxyManage(true);
+  };
+  const handleCloseProxyManage = () => {
+    setOpenProxyManage(false);
+  };
+  const handleOpenEdit = (key) => {
+    setKeyList(key);
+    setEditProxy(true);
+  };
+  const handleCloseEdit = (key) => {
+    setKeyList(key);
+    setEditProxy(false);
+  };
+  const handleOpenWriteText = () => {
+    setOpenWriteText(true);
+  };
+
+  const handleAddProxyFromManager = (listProxy) => {
+    if (listProxy.length) {
+      const proxies = settings.proxies;
+      listProxy.forEach((proxy) => {
+        proxies.push(proxy);
+      });
+      setSettings({ ...settings, proxies });
+      setStatusMessage('success');
+      setMessage('Import proxies success!');
+      setTimeout(() => {
+        setMessage('');
+        setStatusMessage('warning');
+      }, 2000);
+    }
+  };
+
+  const handleAddProxy = (proxyString, type) => {
+    if (proxyString !== '') {
+      const listProxy = [];
+      const listProxyString = proxyString.split('\n');
+      listProxyString.forEach((proxy) => {
+        if (proxy.includes(':')) {
+          const host = proxy.split(':')[0];
+          const port = proxy.split(':')[1];
+          const username = proxy.split(':')[2] ? proxy.split(':')[2] : '';
+          const password = proxy.split(':')[3] ? proxy.split(':')[3] : '';
+          listProxy.push({
+            host,
+            port,
+            username,
+            password,
+            mode: type,
+            id: uuidv4(),
+          });
+        }
+      });
+      if (listProxy.length == 0) {
+        setMessage('Malformed proxies!');
+        setTimeout(() => {
+          setMessage('');
+        }, 2000);
+      } else {
+        const proxies = settings.proxies;
+        listProxy.forEach((proxy) => {
+          proxies.push(proxy);
+        });
+        setSettings({ ...settings, proxies });
+        setStatusMessage('success');
+        setMessage('Import proxies success!');
+        setTimeout(() => {
+          setMessage('');
+          setStatusMessage('warning');
+        }, 2000);
+      }
+    } else {
+      setMessage('Please type proxies!');
+      setTimeout(() => {
+        setMessage('');
+      }, 2000);
+    }
+  };
+
+  const handleDeleteProxy = (id) => {
+    const newProxies = settings.proxies.filter((e) => e.id !== id);
+    setSettings({ ...settings, proxies: newProxies });
+    setStatusMessage('success');
+    setMessage('Delete proxies success!');
+    setTimeout(() => {
+      setMessage('');
+      setStatusMessage('warning');
+    }, 2000);
+  };
+
+  const onChangeProxy = (proxy, id) => {
+    const index = settings.proxies.findIndex((e) => e.id == id);
+    if (index >= 0) {
+      if (proxy.includes(':')) {
+        const host = proxy.split(':')[0];
+        const port = proxy.split(':')[1];
+        const username = proxy.split(':')[2] ? proxy.split(':')[2] : '';
+        const password = proxy.split(':')[3] ? proxy.split(':')[3] : '';
+        const newProxy = {
+          host,
+          port,
+          username,
+          password,
+          mode: settings.proxies[index].mode ? settings.proxies[index].mode : 'http',
+          id,
+        };
+
+        const newListProxy = [...settings.proxies];
+        newListProxy[index] = newProxy;
+        setSettings({ ...settings, proxies: newListProxy });
+      }
+    }
+  };
+
   return (
-    <div className="layout-profiles">
+    <div className="layout-settings" style={{ opacity: openProxyManage ? 0.3 : 1 }}>
       <div className="-layout-page">
         <h1 className="-title-profiles">FACEBOOK AUTOMATION</h1>
         <div className="-return-profiles">
           <span onClick={() => navigate('/')}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="30"
-              height="30"
-              viewBox="0 0 30 30"
-              fill="none"
-            >
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
               <circle cx="15" cy="15" r="15" fill="#F5F5F5" />
               <path
                 d="M14.25 20.25L9 15.75M9 15.75L14.25 11.25M9 15.75L20.625 15.75"
@@ -47,189 +362,57 @@ const SettingsPage = () => {
           </span>
           <p className="-btn-profiles">Automation settings</p>
         </div>
-        <div className="-settings-profiles">
-          <div className="-normal-settings">
-            <div className="-content-settings">
-              <h2>RUNNING SETTINGS</h2>
-              <div className="-sub-settings">
-                <p>Numbers of profiles running simultaneously</p>
-                <div className="-options-sub-settings">
-                    <div className="" onClick={incrementCounter}>
-                      <img src={down} alt="down" />
-                    </div>
-                    <div onClick={decrementCounter}>
-                      <img src={up} alt="up" />
-                    </div>
-                  {/* <svg xmlns="http://www.w3.org/2000/svg" width="10" height="15" viewBox="0 0 10 15" fill="none">
-                    <path onClick={incrementCounter} d="M5.38573 14.5323C5.18574 14.7748 4.81426 14.7748 4.61427 14.5323L1.34466 10.5681C1.07569 10.242 1.30766 9.75 1.73039 9.75L8.26961 9.75C8.69234 9.75 8.92431 10.242 8.65534 10.5681L5.38573 14.5323Z" fill="#01162B"/>
-                    <path onClick={decrementCounter} d="M4.61427 0.467669C4.81426 0.225192 5.18574 0.225192 5.38573 0.467669L8.65534 4.43186C8.92431 4.75798 8.69234 5.25 8.26961 5.25L1.73039 5.25C1.30766 5.25 1.07569 4.75798 1.34467 4.43186L4.61427 0.467669Z" fill="#01162B"/>
-                  </svg> */}
-                  <div className="-input-sub-settings">
-                    <input name="numbersProfiles" value={counter} onChange={() => {}}>
-                    </input>
-                    <span>profile(s)</span>
-                  </div>
-                </div>
-              </div>
-              <div className="-sub-settings">
-                <p>Numbers of loops</p>
-                <div className="-options-sub-settings">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="10" height="15" viewBox="0 0 10 15" fill="none">
-                    <path onClick={incrementCounter_0} d="M5.38573 14.5323C5.18574 14.7748 4.81426 14.7748 4.61427 14.5323L1.34466 10.5681C1.07569 10.242 1.30766 9.75 1.73039 9.75L8.26961 9.75C8.69234 9.75 8.92431 10.242 8.65534 10.5681L5.38573 14.5323Z" fill="#01162B"/>
-                    <path onClick={decrementCounter_0} d="M4.61427 0.467669C4.81426 0.225192 5.18574 0.225192 5.38573 0.467669L8.65534 4.43186C8.92431 4.75798 8.69234 5.25 8.26961 5.25L1.73039 5.25C1.30766 5.25 1.07569 4.75798 1.34467 4.43186L4.61427 0.467669Z" fill="#01162B"/>
-                  </svg>
-                  <div className="-input-sub-settings">
-                    <input name="numbersProfiles" value={counter_0} onChange={() => {}}>
-                    </input>
-                    <span>loops(s)</span>
-                  </div>
-                </div>
-              </div>
-              <div className="-sub-settings">
-                <p>Profile running type</p>
-                <div className="-options-sub-settings">
-                  <div className="-input-sub-settings -input-text-sub-settings">
-                    <input name="numbersProfiles" value="Random" onChange={() => {}}>
-                    </input>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="7" viewBox="0 0 12 7" fill="none">
-                      <path d="M1 1L6 6L11 1" stroke="#01162B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              <div className="-sub-settings">
-                <p>URL</p>
-                <div className="-options-sub-settings">
-                  <div className="-input-sub-settings -input-text-sub-settings">
-                    <input name="numbersProfiles" value="www.fb.com" onChange={() => {}}>
-                    </input>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="7" viewBox="0 0 12 7" fill="none">
-                      <path d="M1 1L6 6L11 1" stroke="#01162B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </div>
-                </div>
-              </div>
-              <div className="-sub-settings -sub1-settings">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="20" viewBox="0 0 32 20" fill="none">
-                  <rect opacity="0.2" y="2" width="30.9333" height="16" rx="8" fill="#2A86FF"/>
-                  <g filter="url(#filter0_d_174_1435)">
-                    <rect x="14.9336" y="2" width="16" height="16" rx="8" fill="#2A86FF"/>
-                  </g>
-                  <defs>
-                    <filter id="filter0_d_174_1435" x="11.9336" y="0" width="20" height="20" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-                      <feFlood floodOpacity="0" result="BackgroundImageFix"/>
-                      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-                      <feOffset dx="-1"/>
-                      <feGaussianBlur stdDeviation="1"/>
-                      <feComposite in2="hardAlpha" operator="out"/>
-                      <feColorMatrix type="matrix" values="0 0 0 0 0.0313726 0 0 0 0 0.137255 0 0 0 0 0.415686 0 0 0 0.25 0"/>
-                      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_174_1435"/>
-                      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_174_1435" result="shape"/>
-                    </filter>
-                  </defs>
-                </svg>
-                <p>Mute Audio</p>
-              </div>
-              <div className="-sub-settings -sub1-settings" style={{marginTop: '10px'}}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="20" viewBox="0 0 32 20" fill="none">
-                  <rect opacity="0.2" y="2" width="30.9333" height="16" rx="8" fill="#2A86FF"/>
-                  <g filter="url(#filter0_d_174_1435)">
-                    <rect x="14.9336" y="2" width="16" height="16" rx="8" fill="#2A86FF"/>
-                  </g>
-                  <defs>
-                    <filter id="filter0_d_174_1435" x="11.9336" y="0" width="20" height="20" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
-                      <feFlood floodOpacity="0" result="BackgroundImageFix"/>
-                      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-                      <feOffset dx="-1"/>
-                      <feGaussianBlur stdDeviation="1"/>
-                      <feComposite in2="hardAlpha" operator="out"/>
-                      <feColorMatrix type="matrix" values="0 0 0 0 0.0313726 0 0 0 0 0.137255 0 0 0 0 0.415686 0 0 0 0.25 0"/>
-                      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_174_1435"/>
-                      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_174_1435" result="shape"/>
-                    </filter>
-                  </defs>
-                </svg>
-                <p>Don’t show images</p>
-              </div>
+        <div className="scroll-settings">
+          <div className="-container-content">
+            <div className="-settings-profiles">
+              <SettingNormal
+                settings={settings}
+                handleNumberProfile={handleNumberProfile}
+                onChangeNumberProfile={onChangeNumberProfile}
+                onChangeNumberLoop={onChangeNumberLoop}
+                handleOnChangeMuteaudio={handleOnChangeMuteaudio}
+                handleOnChangeShowImage={handleOnChangeShowImage}
+                handleNumberLoop={handleNumberLoop}
+                handleOnChangeTypeProfile={handleOnChangeTypeProfile}
+                handleOnchangeUrl={handleOnchangeUrl}
+              ></SettingNormal>
+              <SettingAdvenced
+                settings={settings}
+                handleDelayInEachNewThread={handleDelayInEachNewThread}
+                handleMaxTimePerThread={handleMaxTimePerThread}
+                handleStopIfCPUReaches={handleStopIfCPUReaches}
+                handleStopIfDiskReaches={handleStopIfDiskReaches}
+                handlestopIfRamReaches={handlestopIfRamReaches}
+                onChangeDelayInEachNewThread={onChangeDelayInEachNewThread}
+                onChangeMaxTimePerThread={onChangeMaxTimePerThread}
+                onChangeStopIfCPUReaches={onChangeStopIfCPUReaches}
+                onChangeStopIfDiskReaches={onChangeStopIfDiskReaches}
+                onChangeStopIfRamReaches={onChangeStopIfRamReaches}
+              ></SettingAdvenced>
             </div>
-          </div>
-          <div className="-normal-settings -advanced-settings">
-            <div className="-content-settings">
-              <h2>ADVANCED SETTINGS</h2>
-              <div className="-sub-settings">
-                <p>Maximum time per thread</p>
-                <div className="-options-sub-settings">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="10" height="15" viewBox="0 0 10 15" fill="none">
-                    <path d="M5.38573 14.5323C5.18574 14.7748 4.81426 14.7748 4.61427 14.5323L1.34466 10.5681C1.07569 10.242 1.30766 9.75 1.73039 9.75L8.26961 9.75C8.69234 9.75 8.92431 10.242 8.65534 10.5681L5.38573 14.5323Z" fill="#01162B"/>
-                    <path d="M4.61427 0.467669C4.81426 0.225192 5.18574 0.225192 5.38573 0.467669L8.65534 4.43186C8.92431 4.75798 8.69234 5.25 8.26961 5.25L1.73039 5.25C1.30766 5.25 1.07569 4.75798 1.34467 4.43186L4.61427 0.467669Z" fill="#01162B"/>
-                  </svg>
-                  <div className="-input-sub-settings">
-                    <input name="numbersProfiles" value="500" onChange={() => {}}>
-                    </input>
-                    <span>seconds(s)</span>
-                  </div>
-                </div>
-              </div>
-              <div className="-sub-settings">
-                <p>Delay in each new thread open</p>
-                <div className="-options-sub-settings">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="10" height="15" viewBox="0 0 10 15" fill="none">
-                    <path d="M5.38573 14.5323C5.18574 14.7748 4.81426 14.7748 4.61427 14.5323L1.34466 10.5681C1.07569 10.242 1.30766 9.75 1.73039 9.75L8.26961 9.75C8.69234 9.75 8.92431 10.242 8.65534 10.5681L5.38573 14.5323Z" fill="#01162B"/>
-                    <path d="M4.61427 0.467669C4.81426 0.225192 5.18574 0.225192 5.38573 0.467669L8.65534 4.43186C8.92431 4.75798 8.69234 5.25 8.26961 5.25L1.73039 5.25C1.30766 5.25 1.07569 4.75798 1.34467 4.43186L4.61427 0.467669Z" fill="#01162B"/>
-                  </svg>
-                  <div className="-input-sub-settings">
-                    <input name="numbersProfiles" value="05" onChange={() => {}}>
-                    </input>
-                    <span>seconds(s)</span>
-                  </div>
-                </div>
-              </div>
-              <div className="-sub-settings">
-                <p>Stop if RAM reaches</p>
-                <div className="-options-sub-settings">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="10" height="15" viewBox="0 0 10 15" fill="none">
-                    <path d="M5.38573 14.5323C5.18574 14.7748 4.81426 14.7748 4.61427 14.5323L1.34466 10.5681C1.07569 10.242 1.30766 9.75 1.73039 9.75L8.26961 9.75C8.69234 9.75 8.92431 10.242 8.65534 10.5681L5.38573 14.5323Z" fill="#01162B"/>
-                    <path d="M4.61427 0.467669C4.81426 0.225192 5.18574 0.225192 5.38573 0.467669L8.65534 4.43186C8.92431 4.75798 8.69234 5.25 8.26961 5.25L1.73039 5.25C1.30766 5.25 1.07569 4.75798 1.34467 4.43186L4.61427 0.467669Z" fill="#01162B"/>
-                  </svg>
-                  <div className="-input-sub-settings">
-                    <input name="numbersProfiles" value="90" onChange={() => {}}>
-                    </input>
-                    <span>%</span>
-                  </div>
-                </div>
-              </div>
-              <div className="-sub-settings">
-                <p>Stop if CPU reaches</p>
-                <div className="-options-sub-settings">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="10" height="15" viewBox="0 0 10 15" fill="none">
-                    <path d="M5.38573 14.5323C5.18574 14.7748 4.81426 14.7748 4.61427 14.5323L1.34466 10.5681C1.07569 10.242 1.30766 9.75 1.73039 9.75L8.26961 9.75C8.69234 9.75 8.92431 10.242 8.65534 10.5681L5.38573 14.5323Z" fill="#01162B"/>
-                    <path d="M4.61427 0.467669C4.81426 0.225192 5.18574 0.225192 5.38573 0.467669L8.65534 4.43186C8.92431 4.75798 8.69234 5.25 8.26961 5.25L1.73039 5.25C1.30766 5.25 1.07569 4.75798 1.34467 4.43186L4.61427 0.467669Z" fill="#01162B"/>
-                  </svg>
-                  <div className="-input-sub-settings">
-                    <input name="numbersProfiles" value="90" onChange={() => {}}>
-                    </input>
-                    <span>%</span>
-                  </div>
-                </div>
-              </div>
-              <div className="-sub-settings">
-                <p>Stop if CPU reaches</p>
-                <div className="-options-sub-settings">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="10" height="15" viewBox="0 0 10 15" fill="none">
-                    <path d="M5.38573 14.5323C5.18574 14.7748 4.81426 14.7748 4.61427 14.5323L1.34466 10.5681C1.07569 10.242 1.30766 9.75 1.73039 9.75L8.26961 9.75C8.69234 9.75 8.92431 10.242 8.65534 10.5681L5.38573 14.5323Z" fill="#01162B"/>
-                    <path d="M4.61427 0.467669C4.81426 0.225192 5.18574 0.225192 5.38573 0.467669L8.65534 4.43186C8.92431 4.75798 8.69234 5.25 8.26961 5.25L1.73039 5.25C1.30766 5.25 1.07569 4.75798 1.34467 4.43186L4.61427 0.467669Z" fill="#01162B"/>
-                  </svg>
-                  <div className="-input-sub-settings">
-                    <input name="numbersProfiles" value="90" onChange={() => {}}>
-                    </input>
-                    <span>%</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <SettingProxy
+              data={settings.proxies ? settings.proxies : []}
+              settings={settings}
+              keyList={keyList}
+              editProxy={editProxy}
+              openProxyManage={openProxyManage}
+              openWriteText={openWriteText}
+              handleOpenEdit={handleOpenEdit}
+              handleCloseEdit={handleCloseEdit}
+              handleOpenProxyManage={handleOpenProxyManage}
+              handleCloseProxyManage={handleCloseProxyManage}
+              handleOpenWriteText={handleOpenWriteText}
+              handleAddProxy={handleAddProxy}
+              onChangeAssignProxy={onChangeAssignProxy}
+              onChangeAPIProxy={onChangeAPIProxy}
+              handleDeleteProxy={handleDeleteProxy}
+              onChangeProxy={onChangeProxy}
+              handleAddProxyFromManager={handleAddProxyFromManager}
+            ></SettingProxy>
           </div>
         </div>
       </div>
+      <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
     </div>
   );
 };
