@@ -116,15 +116,11 @@ const WatchVideo = ({ onGoBackClick }) => {
               <div className="component-item__header">
                 <input type="checkbox" name="randomLike" onChange={handleCheckboxChangeLiked} />
                 <p>
-<<<<<<< HEAD
-                  Random Like <span className={`span__content ${isLiked ? 'show' : 'hide'}`}>(video)</span>:
-=======
                   Random Like{' '}
                   <span style={{ marginLeft: '2px' }} className={`span__content ${isLiked ? 'show' : 'hide'}`}>
                     (video)
                   </span>
                   :
->>>>>>> main
                 </p>
               </div>
               <div className={`component-item__content ${isLiked ? 'show' : 'hide'}`}>
