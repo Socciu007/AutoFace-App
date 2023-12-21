@@ -122,8 +122,6 @@
             transform: translate(-50%, -50%);
             overflow-x: hidden;
             padding: 15px 10px 15px 20px;
-            border: 1px dashed rgba(1, 22, 43, 0.2);
-            border-radius: 5px;
           }
         }
         &__leaveGroup {
@@ -165,22 +163,26 @@
       }
       .keywordText {
         position: relative;
+        border-radius: 5px;
+        border: 1px dashed rgba(1, 22, 43, 0.2);
         .editor {
           min-width: 100%;
           min-height: 100%;
           float: left;
-          border-radius: 5px;
-          border: 1px dashed rgba(1, 22, 43, 0.2);
           font-family: 'GoogleSans';
+        }
+        scrollbar-width: none;
+        &::-webkit-scrollbar {
+          display: none;
         }
 
         .editor #codeArea {
           outline: none;
-          padding-left: 9% !important;
+          padding-left: 13% !important;
         }
 
         .editor pre {
-          padding-left: 9% !important;
+          padding-left: 13% !important;
           width: 100%;
         }
 
@@ -189,7 +191,7 @@
           left: 0px;
           color: #cccccc;
           text-align: right;
-          width: 6%;
+          width: 10%;
           font-weight: 100;
         }
       }

@@ -118,8 +118,6 @@
             transform: translate(-50%, -50%);
             overflow-x: hidden;
             padding: 15px 10px 15px 20px;
-            border: 1px dashed rgba(1, 22, 43, 0.2);
-            border-radius: 5px;
           }
         }
         .numberOfStory Text {
@@ -131,12 +129,17 @@
       }
       .text {
         position: relative;
+        border-radius: 5px;
+        border: 1px dashed rgba(1, 22, 43, 0.2);
+        scrollbar-width: none;
+        &::-webkit-scrollbar {
+          display: none;
+        }
         .editor {
           min-width: 100%;
           min-height: 100%;
           float: left;
-          border-radius: 5px;
-          border: 1px dashed rgba(1, 22, 43, 0.2);
+
           font-family: 'GoogleSans';
         }
 
