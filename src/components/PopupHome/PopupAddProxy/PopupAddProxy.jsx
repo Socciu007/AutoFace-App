@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import closePopup from '../../../assets/pictures/icon-x.svg';
 import PopupComponent from '../PopupComponent/PopupComponent';
 import proxy from '../../../assets/pictures/icon-proxy.svg';
@@ -7,8 +7,8 @@ import SnackbarApp from '../../Alert';
 import { apiUpdateProfiles } from '../../../services/api_helper';
 import storageService from '../../../services/storage.service';
 import { storageProfiles } from '../../../common/const.config';
-import { Select } from 'antd';
-// import { MenuItem, Select } from '@mui/material';
+// import { Select } from 'antd';
+import { MenuItem, Select } from '@mui/material';
 
 const PopupAddProxy = ({
   profilesSelected,
@@ -20,7 +20,7 @@ const PopupAddProxy = ({
   postAlert,
 }) => {
   const [openWriteText, setOpenWriteText] = useState(false);
-  const [proxyType, setProxyTpye] = useState('http');
+  const [proxyType, setProxyType] = useState('http');
   const [proxyString, setProxyString] = useState('');
   const [message, setMessage] = useState('');
   const [statusMessage, setStatusMessage] = useState('warning');
@@ -28,8 +28,9 @@ const PopupAddProxy = ({
     setOpenWriteText(true);
   };
 
-  const onChangeProxyType = (type) => {
-    setProxyTpye(type);
+  const onChangeProxyType = (e) => {
+    console.log(e.target.value);
+    setProxyType(e.target.value);
   };
 
   const onchangeProxyString = (value) => {
@@ -100,7 +101,7 @@ const PopupAddProxy = ({
             <div className="-add-proxys__type">
               <p>Connection type</p>
               <div className="-add-proxys-nav">
-                {/* <Select
+                <Select
                   name="proxyType"
                   className="-add-proxys-nav__select -add-proxys-nav__details"
                   onChange={onChangeProxyType}
@@ -110,7 +111,7 @@ const PopupAddProxy = ({
                   <MenuItem value="socks4">Socks 4</MenuItem>
                   <MenuItem value="socks5">Socks 5</MenuItem>
                   <MenuItem value="ssh">SSH</MenuItem>
-                </Select> */}
+                </Select>
                 {/* <Select
                   name="proxyType"
                   className="-add-proxys-nav__select -add-proxys-nav__details"
