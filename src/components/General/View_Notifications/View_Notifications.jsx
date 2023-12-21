@@ -4,8 +4,8 @@ import './style.scss';
 import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
-import downButton from '../../../assets/icon/icon-down.svg';
-
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import { useRangeValues } from './View_Notifications';
 const View_Notifications = ({ onGoBackClick }) => {
   const initialValues = {
@@ -18,6 +18,11 @@ const View_Notifications = ({ onGoBackClick }) => {
   const notificationValues = useRangeValues(initialValues, 'Notification');
   const delayTimeValues = useRangeValues(initialValues, 'DelayTime');
 
+  const [selectValue, setSelectValue] = React.useState('randomFriend');
+
+  const handleChange = (event) => {
+    setSelectValue(event.target.value);
+  };
   return (
     <div className="View_Notifications">
       <div className="component_container">
@@ -91,9 +96,14 @@ const View_Notifications = ({ onGoBackClick }) => {
               </div>
               <div className="NotificationContent">
                 <div className="component-item notificationOption">
-                  <select name="NotificationOption" className="NotificationType">
-                    <option value="randomFriend">Randomly</option>
-                  </select>
+                  <Select
+                    value={selectValue}
+                    onChange={handleChange}
+                    name="NotificationOption"
+                    className="NotificationType"
+                  >
+                    <MenuItem value="randomFriend">Randomly</MenuItem>
+                  </Select>
                 </div>
               </div>
             </div>

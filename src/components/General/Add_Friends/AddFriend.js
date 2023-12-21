@@ -1,20 +1,18 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useRef, useState } from 'react';
-
+import { highlight, languages } from 'prismjs/components/prism-core';
 export function handleInputChange(event, setValues, prefix, values) {
   const inputValue = event.target.value;
   const isNumber = /^\d*$/.test(inputValue);
 
-  if (isNumber && inputValue.length <= 3) {
-    const newValue = inputValue === '' ? '' : parseInt(inputValue, 10);
+  const newValue = isNumber ? inputValue : '';
 
-    const updatedValues = {
-      ...values,
-      [`${prefix}${event.target.name}`]: newValue,
-    };
+  const updatedValues = {
+    ...values,
+    [`${prefix}${event.target.name}`]: newValue,
+  };
 
-    setValues(updatedValues);
-  }
+  setValues(updatedValues);
 }
 
 export function useRangeValues(initialValues, prefix) {
@@ -57,7 +55,6 @@ export function AddFriendOption() {
   const [selectedValueTypeAddFriend, setSelectedValueType] = useState('suggestions');
   const [textContentAddFriendRequest, setTextContentAddFriendRequest] = useState('');
   const [placeholderText, setPlaceholderText] = useState('');
-  const textareaRef = useRef(null);
 
   const handleSelectorChange = (event) => {
     const value = event.target.value;
@@ -84,8 +81,17 @@ export function AddFriendOption() {
     }
   };
   const handleDivClick = () => {
-    textareaRef.current.focus();
+    document.getElementById('textareaContent').focus();
   };
+  const hightlightWithLineNumbers = (input, language) =>
+    highlight(input, language)
+      .split('\n')
+      .map(
+        (line, i) =>
+          `<span class='editorLineNumber ${textContentAddFriendRequest ? '' : 'hide'}'>${i + 1}</span>${line}`,
+      )
+      .join('\n');
+
   useEffect(() => {
     // Update giá trị của placeholderText khi component được tạo ra
     handleSelectorChange({ target: { value: selectedValueTypeAddFriend } });
@@ -106,26 +112,7 @@ export function AddFriendOption() {
     selectedValueTypeAddFriend,
     textContentAddFriendRequest,
     handleDivClick,
-    textareaRef,
-  };
-}
-
-export function TextComment() {
-  //cai dat cho phan text comment khi go text vao
-  const [textContentComment, setTextContentComment] = useState('');
-  const textareaCommentRef = useRef(null);
-
-  const handleTextareaChangeComment = (event) => {
-    setTextContentComment(event.target.value);
-  };
-  const handleCommentDivClick = () => {
-    textareaCommentRef.current.focus();
-  };
-  return {
-    textContentComment,
-    handleTextareaChangeComment,
-    textareaCommentRef,
-    handleCommentDivClick,
+    hightlightWithLineNumbers,
   };
 }
 
@@ -140,5 +127,24 @@ export function useShowCheckbox(initialState, featureName) {
   return {
     [`is${featureName}`]: isFeatureVisible,
     [`handleCheckboxChange${featureName}`]: handleCheckboxChange,
+  };
+}
+
+export function TextComment() {
+  const [textContentComment, setTextContentComment] = useState('');
+  const handleDivCommentClick = () => {
+    document.getElementById('codeArea').focus();
+  };
+  const hightlightWithLineNumbersComment = (input, language) =>
+    highlight(input, language)
+      .split('\n')
+      .map((line, i) => `<span class='editorLineNumber ${textContentComment ? '' : 'hide'}'>${i + 1}</span>${line}`)
+      .join('\n');
+
+  return {
+    textContentComment,
+    setTextContentComment,
+    handleDivCommentClick,
+    hightlightWithLineNumbersComment,
   };
 }

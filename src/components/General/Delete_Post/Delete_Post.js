@@ -1,19 +1,18 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState, useRef } from 'react';
+import { highlight, languages } from 'prismjs/components/prism-core';
 export function handleInputChange(event, setValues, prefix, values) {
   const inputValue = event.target.value;
   const isNumber = /^\d*$/.test(inputValue);
 
-  if (isNumber && inputValue.length <= 3) {
-    const newValue = inputValue === '' ? '' : parseInt(inputValue, 10);
+  const newValue = isNumber ? inputValue : '';
 
-    const updatedValues = {
-      ...values,
-      [`${prefix}${event.target.name}`]: newValue,
-    };
+  const updatedValues = {
+    ...values,
+    [`${prefix}${event.target.name}`]: newValue,
+  };
 
-    setValues(updatedValues);
-  }
+  setValues(updatedValues);
 }
 
 export function useRangeValues(initialValues, prefix) {
@@ -54,18 +53,37 @@ export function useRangeValues(initialValues, prefix) {
 export function UIDTextarea() {
   //cai dat cho phan UID List
   const [textContent, setTextContent] = useState('');
-  const textareaRef = useRef(null);
+  const [lineCount, setLineCount] = useState(0);
 
   const handleTextareaChange = (event) => {
-    setTextContent(event.target.value);
+    // Đếm số lượng dòng
+    const lines = event.target.value.split('\n');
+    setLineCount(lines.length);
+  };
+  const handleTextareaPaste = (event) => {
+    // Đợi một khoảng nhỏ để textarea cập nhật nội dung sau khi paste
+    setTimeout(() => {
+      const content = event.target.value;
+      // Đếm số lượng dòng sau khi paste
+      const lines = content.split('\n');
+      setLineCount(lines.length);
+    }, 0);
   };
   const handleDivClick = () => {
-    textareaRef.current.focus();
+    document.getElementById('codeArea').focus();
   };
+  const hightlightWithLineNumbers = (input, language) =>
+    highlight(input, language)
+      .split('\n')
+      .map((line, i) => `<span class='editorLineNumber ${textContent ? '' : 'hide'}'>${i + 1}</span>${line}`)
+      .join('\n');
   return {
     textContent,
     handleTextareaChange,
+    handleTextareaPaste,
+    lineCount,
     handleDivClick,
-    textareaRef,
+    hightlightWithLineNumbers,
+    setTextContent,
   };
 }

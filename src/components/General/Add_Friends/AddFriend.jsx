@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AddFriendOption, TextComment, useRangeValues, useShowCheckbox } from './AddFriend';
 import './style.scss';
 import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
-import downButton from '../../../assets/icon/icon-down.svg';
-
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import Editor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
 const AddFriend = ({ onGoBackClick }) => {
   const initialValues = {
     PostStart: 5,
@@ -21,6 +25,7 @@ const AddFriend = ({ onGoBackClick }) => {
   const delayTimeValues = useRangeValues(initialValues, 'DelayTime');
   const requestsValues = useRangeValues(initialValues, 'Requests');
   const stopTimeValues = useRangeValues(initialValues, 'StopTime');
+
   const {
     setTextContentAddFriendRequest,
     placeholderText,
@@ -28,10 +33,11 @@ const AddFriend = ({ onGoBackClick }) => {
     selectedValueTypeAddFriend,
     textContentAddFriendRequest,
     handleDivClick,
-    textareaRef,
+    hightlightWithLineNumbers,
   } = AddFriendOption();
 
-  const { textContentComment, handleTextareaChangeComment, textareaCommentRef, handleCommentDivClick } = TextComment();
+  const { textContentComment, setTextContentComment, handleDivCommentClick, hightlightWithLineNumbersComment } =
+    TextComment();
 
   const { isInteract, handleCheckboxChangeInteract } = useShowCheckbox(false, 'Interact');
 
@@ -52,20 +58,20 @@ const AddFriend = ({ onGoBackClick }) => {
               </div>
               <div className="addFriendContent">
                 <div className="component-item addFriendOption">
-                  <select
+                  <Select
+                    value={selectedValueTypeAddFriend}
+                    onChange={handleSelectorChange}
                     name="addFriendOption"
                     className="addFriendType"
-                    onChange={handleSelectorChange}
-                    value={selectedValueTypeAddFriend}
                   >
-                    <option value="suggestions">By suggestions</option>
-                    <option value="acceptFriendRequests">Accept friend requests</option>
-                    <option value="UIDList">UID list</option>
-                    <option value="keywords">By keywords</option>
-                    <option value="groupMembers">Group members</option>
-                    <option value="friendOfFriends">Friend of friends</option>
-                    <option value="friendOfUID">Friend of UID</option>
-                  </select>
+                    <MenuItem value="suggestions">By suggestions</MenuItem>
+                    <MenuItem value="acceptFriendRequests">Accept friend requests</MenuItem>
+                    <MenuItem value="UIDList">UID list</MenuItem>
+                    <MenuItem value="keywords">By keywords</MenuItem>
+                    <MenuItem value="groupMembers">Group members</MenuItem>
+                    <MenuItem value="friendOfFriends">Friend of friends</MenuItem>
+                    <MenuItem value="friendOfUID">Friend of UID</MenuItem>
+                  </Select>
                 </div>
                 {(selectedValueTypeAddFriend === 'suggestions' ||
                   selectedValueTypeAddFriend === 'acceptFriendRequests' ||
@@ -162,14 +168,25 @@ const AddFriend = ({ onGoBackClick }) => {
                   selectedValueTypeAddFriend === 'groupMembers' ||
                   selectedValueTypeAddFriend === 'friendOfUID') && (
                   <div>
-                    <div className="component-item textAddFriend">
-                      <textarea
-                        id="textAddFriendContent"
-                        name="textAddFriendContent"
-                        rows="10"
-                        ref={textareaRef}
-                        onChange={(e) => setTextContentAddFriendRequest(e.target.value)}
-                      ></textarea>
+                    <div style={{ position: 'relative' }} className="component-item">
+                      <div className="textAddFriend" style={{ width: '100%', height: 204, overflow: 'auto' }}>
+                        <Editor
+                          value={textContentAddFriendRequest}
+                          onValueChange={(textContentAddFriendRequest) =>
+                            setTextContentAddFriendRequest(textContentAddFriendRequest)
+                          }
+                          highlight={(textContentAddFriendRequest) =>
+                            hightlightWithLineNumbers(textContentAddFriendRequest, languages.js)
+                          }
+                          padding={15}
+                          className="editor"
+                          textareaId="textareaContent"
+                          style={{
+                            background: '#F5F5F5',
+                            fontSize: 15,
+                          }}
+                        />
+                      </div>
                       <div
                         onClick={handleDivClick}
                         id="placeholderTypeAddFriend"
@@ -335,24 +352,37 @@ const AddFriend = ({ onGoBackClick }) => {
                             />
                             <p>Comment</p>
                           </div>
-                          <div className={`component-item textComment ${isComment ? 'show' : 'hide'}`}>
-                            <textarea
-                              id="textContentComment"
-                              name="textContentComment"
-                              rows="10"
-                              value={textContentComment}
-                              onChange={handleTextareaChangeComment}
-                              ref={textareaCommentRef}
-                            ></textarea>
+                          <div
+                            style={{ position: 'relative' }}
+                            className={`component-item  ${isComment ? 'show' : 'hide'}`}
+                          >
+                            <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="textComment">
+                              <Editor
+                                value={textContentComment}
+                                onValueChange={(textContentComment) => setTextContentComment(textContentComment)}
+                                highlight={(textContentComment) =>
+                                  hightlightWithLineNumbersComment(textContentComment, languages.js)
+                                }
+                                padding={15}
+                                className="editor"
+                                textareaId="codeArea"
+                                style={{
+                                  background: '#fff',
+                                  fontSize: 15,
+                                }}
+                              />
+                            </div>
                             <div
-                              onClick={handleCommentDivClick}
                               className={`placeholder ${textContentComment ? 'hide' : ''}`}
+                              onClick={handleDivCommentClick}
                             >
                               <p>
-                                <span>1</span>Enter the content here
+                                <span>1</span>
+                                <span>Enter the content here</span>
                               </p>
                               <p>
-                                <span>2</span>Each content/line
+                                <span>2</span>
+                                <span>Each content/line</span>
                               </p>
                             </div>
                           </div>

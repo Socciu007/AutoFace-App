@@ -6,8 +6,12 @@ import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
 import DragButton from '../../../assets/icon/icon-drag.svg';
 import DeleteButton from '../../../assets/icon/icon-Delete.svg';
-import downButton from '../../../assets/icon/icon-down.svg';
-
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import Editor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
 import { CommentOption, CommentTextarea, URLImg, useRangeValues, useShowCheckbox } from './WatchVideo';
 const WatchVideo = ({ onGoBackClick }) => {
   const initialValues = {
@@ -40,7 +44,7 @@ const WatchVideo = ({ onGoBackClick }) => {
 
   const { selectedValue, handleSelectChange } = CommentOption();
 
-  const { textContent, handleTextareaChange, handleDivClick, textareaRef } = CommentTextarea();
+  const { textContent, handleTextareaChange, handleDivClick, hightlightWithLineNumbers } = CommentTextarea();
 
   const { files, getRootProps, getInputProps, handleDeleteButtonClick } = URLImg();
 
@@ -228,29 +232,35 @@ const WatchVideo = ({ onGoBackClick }) => {
                 </div>
                 <p className="selectComment__header">Select Comment type</p>
                 <div className="component-item optionComment">
-                  <select
+                  <Select
                     name="optionComment"
                     className="commentType"
                     onChange={handleSelectChange}
                     value={selectedValue}
                   >
-                    <option value="text">Text</option>
-                    <option value="photoOrVideo">Photo/video</option>
-                    <option value="all">Text & Photo/video</option>
-                  </select>
+                    <MenuItem value="text">Text</MenuItem>
+                    <MenuItem value="photoOrVideo">Photo/video</MenuItem>
+                    <MenuItem value="all">Text & Photo/video</MenuItem>
+                  </Select>
                 </div>
                 {(selectedValue === 'text' || selectedValue === 'all') && (
                   <div className="Text">
                     <p className="selectComment__header">Text</p>
-                    <div className="component-item text">
-                      <textarea
-                        id="textContent"
-                        name="textContent"
-                        rows="10"
-                        value={textContent}
-                        onChange={handleTextareaChange}
-                        ref={textareaRef}
-                      ></textarea>
+                    <div className="component-item" style={{ position: 'relative' }}>
+                      <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
+                        <Editor
+                          value={textContent}
+                          onValueChange={handleTextareaChange}
+                          highlight={(textContent) => hightlightWithLineNumbers(textContent, languages.js)}
+                          padding={15}
+                          className="editor"
+                          textareaId="codeArea"
+                          style={{
+                            background: '#f5f5f5',
+                            fontSize: 15,
+                          }}
+                        />
+                      </div>
                       <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
                         <p>
                           <span>1</span>Enter the content here

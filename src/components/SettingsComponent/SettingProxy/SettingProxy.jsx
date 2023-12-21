@@ -16,12 +16,10 @@ const SettingProxy = ({
   keyList,
   editProxy,
   openProxyManage,
-  openWriteText,
   handleOpenEdit,
   handleCloseEdit,
   handleOpenProxyManage,
   handleCloseProxyManage,
-  handleOpenWriteText,
   handleAddProxy,
   onChangeAssignProxy,
   onChangeAPIProxy,
@@ -30,6 +28,7 @@ const SettingProxy = ({
   handleDeleteProxy,
   handleAddProxyFromManager,
 }) => {
+  const [openWriteText, setOpenWriteText] = useState(false);
   const [proxyType, setProxyTpye] = useState('http');
   const [proxyString, setProxyString] = useState('');
   const [listProxy, setListProxy] = useState([]);
@@ -41,8 +40,12 @@ const SettingProxy = ({
     setProxyTpye(type);
   };
 
-  const onchangeProxyString = (e) => {
-    setProxyString(e.target.value);
+  const handleOpenWriteText = () => {
+    setOpenWriteText(true);
+  };
+
+  const onchangeProxyString = (value) => {
+    setProxyString(value);
   };
 
   const generateProxyStr = (proxy) => {
@@ -143,21 +146,6 @@ const SettingProxy = ({
                       },
                     ]}
                   />
-                  {/* <div className="-type-proxys__nav__select">
-                    <select
-                      defaultValue={proxyType}
-                      onChange={(event) => {
-                        onChangeProxyType(event.target.value);
-                      }}
-                      name="url"
-                      className="-type-proxys__nav__select__details"
-                    >
-                      <option value="http">HTTP</option>
-                      <option value="socks4">Socks 4</option>
-                      <option value="socks5">Socks 5</option>
-                      <option value="ssh">SSH</option>
-                    </select>
-                  </div> */}
                 </div>
                 <div className="-icon-proxys" onClick={handleOpenProxyManage}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none">
@@ -187,10 +175,10 @@ const SettingProxy = ({
                   <div className="proxy-editor" style={{ width: '100%', height: 379, overflow: 'auto' }}>
                     <Editor
                       value={proxyString}
-                      onValueChange={onchangeProxyString}
+                      onValueChange={(proxyString) => setProxyString(proxyString)}
                       highlight={(proxyString) => hightlightWithLineNumbers(proxyString, languages.js)}
-                      padding={15}
                       onClick={handleOpenWriteText}
+                      padding={15}
                       className="editor"
                       textareaId="textareaContent"
                       style={{
@@ -201,8 +189,7 @@ const SettingProxy = ({
                   </div>
                   <div
                     onClick={handleOpenWriteText}
-                    id="placeholderTypeAddFriend"
-                    style={{ display: openWriteText ? 'none' : 'inline' }}
+                    style={{ display: proxyString ? 'none' : 'inline' }}
                     className="-list-info"
                   >
                     <p>
@@ -215,34 +202,7 @@ const SettingProxy = ({
                     </p>
                   </div>
                 </div>
-                {/* <textarea
-                  onChange={(event) => {
-                    onchangeProxyString(event.target.value);
-                  }}
-                  value={proxyString}
-                  className="-info-proxys"
-                  onClick={handleOpenWriteText}
-                ></textarea> */}
-                {/* <div className="-list-info" onClick={handleOpenWriteText}>
-                  <div className="-list-info__item">
-                    <div className="-stt-info">
-                      <p>
-                        <span>1</span>
-                        <div style={{ display: openWriteText ? 'none' : 'inline' }}>Enter the proxy here</div>
-                      </p>
-                    </div>
-                  </div>
-                  <div className="-list-info__item">
-                    <div className="-stt-info">
-                      <p>
-                        <span>2</span>
-                        <div style={{ display: openWriteText ? 'none' : 'inline' }}>
-                          <b>Proxy format:</b> Host:Port:Username:Password
-                        </div>
-                      </p>
-                    </div>
-                  </div>
-                </div> */}
+
                 <button className="-add" onClick={() => handleAddProxy(proxyString, proxyType)}>
                   ADD
                 </button>

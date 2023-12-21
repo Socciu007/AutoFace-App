@@ -14,7 +14,7 @@ const SettingsPage = () => {
   const [editProxy, setEditProxy] = useState(false);
   const [keyList, setKeyList] = useState('');
   const [openProxyManage, setOpenProxyManage] = useState(false);
-  const [openWriteText, setOpenWriteText] = useState(false);
+
   const [settings, setSettings] = useState({});
   const [message, setMessage] = useState('');
   const [statusMessage, setStatusMessage] = useState('warning');
@@ -396,12 +396,10 @@ const SettingsPage = () => {
               keyList={keyList}
               editProxy={editProxy}
               openProxyManage={openProxyManage}
-              openWriteText={openWriteText}
               handleOpenEdit={handleOpenEdit}
               handleCloseEdit={handleCloseEdit}
               handleOpenProxyManage={handleOpenProxyManage}
               handleCloseProxyManage={handleCloseProxyManage}
-              handleOpenWriteText={handleOpenWriteText}
               handleAddProxy={handleAddProxy}
               onChangeAssignProxy={onChangeAssignProxy}
               onChangeAPIProxy={onChangeAPIProxy}

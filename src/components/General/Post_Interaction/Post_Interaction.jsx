@@ -4,8 +4,11 @@ import './style.scss';
 import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
-
-import { PostUIDList, useRangeValues } from './Post_Interaction';
+import Editor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
+import { useRangeValues, useShowCheckbox, useTextarea } from './Post_Interaction';
 
 const Post_Interaction = ({ onGoBackClick }) => {
   const initialValues = {
@@ -15,13 +18,45 @@ const Post_Interaction = ({ onGoBackClick }) => {
     DelayTimeEnd: 10,
     ViewTimeStart: 5,
     ViewTimeEnd: 10,
+    LikeStart: 5,
+    LikeEnd: 10,
+    ShareStart: 5,
+    ShareEnd: 10,
+    CommentStart: 5,
+    CommentEnd: 10,
   };
 
   const postValues = useRangeValues(initialValues, 'Post');
   const delayTimeValues = useRangeValues(initialValues, 'DelayTime');
   const viewTimeValues = useRangeValues(initialValues, 'ViewTime');
+  const likeValues = useRangeValues(initialValues, 'Like');
+  const shareValues = useRangeValues(initialValues, 'Share');
+  const commentValues = useRangeValues(initialValues, 'Comment');
 
-  const { textContent, handleTextareaChange, charCount, handleDivClick, textareaRef } = PostUIDList();
+  const { isLiked, handleCheckboxChangeLiked } = useShowCheckbox(false, 'Liked');
+
+  const { isShare, handleCheckboxChangeShare } = useShowCheckbox(false, 'Share');
+
+  const { isComment, handleCheckboxChangeComment } = useShowCheckbox(false, 'Comment');
+
+  const { isText, handleCheckboxChangeText } = useShowCheckbox(false, 'Text');
+
+  const {
+    value: TextUIDContent,
+    handleChange: handleChangeUID,
+    handleTextareaPaste: handleUIDContentPaste,
+    lineCount: lineCount,
+    handleDivClick: handleDivUIDClick,
+    hightlightWithLineNumbers: hightlightWithLineNumbersUID,
+    setValue: setValueUID,
+  } = useTextarea('', 'UID');
+  const {
+    value: TextCommentContent,
+    handleChange: handleChangeComment,
+    handleDivClick: handleDivCommentClick,
+    hightlightWithLineNumbers: hightlightWithLineNumbersComment,
+    setValue: setValueComment,
+  } = useTextarea('', 'Comment');
   return (
     <div className="Post_Interaction">
       <div className="component_container">
@@ -34,18 +69,26 @@ const Post_Interaction = ({ onGoBackClick }) => {
             <div className="PostUIDList">
               <p className="selectComment__header">
                 Post UID list
-                <span>({charCount})</span>
+                <span>({lineCount})</span>
               </p>
-              <div className="component-item text">
-                <textarea
-                  id="textContent"
-                  name="textContent"
-                  rows="10"
-                  value={textContent}
-                  onChange={handleTextareaChange}
-                  ref={textareaRef}
-                ></textarea>
-                <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
+              <div className="component-item" style={{ position: 'relative' }}>
+                <div className=" text" style={{ width: '100%', height: 204, overflow: 'auto' }}>
+                  <Editor
+                    value={TextUIDContent}
+                    onPaste={handleUIDContentPaste}
+                    onChange={handleChangeUID}
+                    onValueChange={(TextUIDContent) => setValueUID(TextUIDContent)}
+                    highlight={(TextUIDContent) => hightlightWithLineNumbersUID(TextUIDContent, languages.js)}
+                    padding={15}
+                    className="editor"
+                    textareaId="UID"
+                    style={{
+                      background: '#f5f5f5',
+                      fontSize: 15,
+                    }}
+                  />
+                </div>
+                <div onClick={handleDivUIDClick} className={`placeholder ${TextUIDContent ? 'hide' : ''}`}>
                   <p>
                     <span>1</span>Enter the content here
                   </p>
@@ -149,20 +192,151 @@ const Post_Interaction = ({ onGoBackClick }) => {
 
             <div className="component-item Like">
               <div className="component-item__header">
-                <input type="checkbox" name="randomLike" />
-                <p>Random Like</p>
+                <input type="checkbox" name="randomLike" onChange={handleCheckboxChangeLiked} />
+                <p>
+                  Random Like{' '}
+                  <span style={{ marginLeft: '2px' }} className={`span__content ${isLiked ? 'show' : 'hide'}`}>
+                    (post)
+                  </span>
+                  :
+                </p>
+              </div>
+              <div className={`component-item__content ${isLiked ? 'show' : 'hide'}`}>
+                <div className="component-item__number">
+                  <div className="component-item__number__icon">
+                    <img src={iconIncrease} alt="Increase icon" onClick={likeValues.handleIncrement} />
+                    <img src={iconDecrease} alt="Decrease icon" onClick={likeValues.handleDecrement} />
+                  </div>
+                  <input
+                    type="text"
+                    name="Start"
+                    value={likeValues.LikeStart}
+                    onChange={(event) => likeValues.handleInputChangeStart(event)}
+                  />
+                </div>
+                <span>to</span>
+                <div className="component-item__number">
+                  <div className="component-item__number__icon">
+                    <img src={iconIncrease} alt="Increase icon" onClick={likeValues.handleIncrementEnd} />
+                    <img src={iconDecrease} alt="Decrease icon" onClick={likeValues.handleDecrementEnd} />
+                  </div>
+                  <input
+                    type="text"
+                    name="End"
+                    value={likeValues.LikeEnd}
+                    onChange={(event) => likeValues.handleInputChangeEnd(event)}
+                  />
+                </div>
               </div>
             </div>
             <div className="component-item share">
               <div className="component-item__header">
-                <input type="checkbox" name="randomShare" />
-                <p>Share to Feed</p>
+                <input type="checkbox" name="randomShare" onChange={handleCheckboxChangeShare} />
+                <p>
+                  Share to Feed{' '}
+                  <span style={{ marginLeft: '2px' }} className={`span__content ${isShare ? 'show' : 'hide'}`}>
+                    (post)
+                  </span>
+                  :
+                </p>
+              </div>
+              <div className={`component-item__content ${isShare ? 'show' : 'hide'}`}>
+                <div className="component-item__number">
+                  <div className="component-item__number__icon">
+                    <img src={iconIncrease} alt="Increase icon" onClick={shareValues.handleIncrement} />
+                    <img src={iconDecrease} alt="Decrease icon" onClick={shareValues.handleDecrement} />
+                  </div>
+                  <input
+                    type="text"
+                    name="Start"
+                    value={shareValues.ShareStart}
+                    onChange={(event) => shareValues.handleInputChangeStart(event)}
+                  />
+                </div>
+                <span>to</span>
+                <div className="component-item__number">
+                  <div className="component-item__number__icon">
+                    <img src={iconIncrease} alt="Increase icon" onClick={shareValues.handleIncrementEnd} />
+                    <img src={iconDecrease} alt="Decrease icon" onClick={shareValues.handleDecrementEnd} />
+                  </div>
+                  <input
+                    type="text"
+                    name="End"
+                    value={shareValues.ShareEnd}
+                    onChange={(event) => shareValues.handleInputChangeEnd(event)}
+                  />
+                </div>
               </div>
             </div>
             <div className="component-item comment">
               <div className="component-item__header">
-                <input type="checkbox" name="randomComment" />
+                <input type="checkbox" name="randomComment" onChange={handleCheckboxChangeComment} />
                 <p>Randomly Comment</p>
+              </div>
+              <div className={`commentContent ${isComment ? 'show' : 'hide'}`}>
+                <div className="component-item comment__numberPost">
+                  <p className="component-item__header">Number of posts:</p>
+                  <div className="component-item__content">
+                    <div className="component-item__number">
+                      <div className="component-item__number__icon">
+                        <img src={iconIncrease} alt="Increase icon" onClick={commentValues.handleIncrement} />
+                        <img src={iconDecrease} alt="Decrease icon" onClick={commentValues.handleDecrement} />
+                      </div>
+                      <input
+                        type="text"
+                        name="Start"
+                        value={commentValues.CommentStart}
+                        onChange={(event) => commentValues.handleInputChangeStart(event)}
+                      />
+                    </div>
+                    <span>to</span>
+                    <div className="component-item__number">
+                      <div className="component-item__number__icon">
+                        <img src={iconIncrease} alt="Increase icon" onClick={commentValues.handleIncrementEnd} />
+                        <img src={iconDecrease} alt="Decrease icon" onClick={commentValues.handleDecrementEnd} />
+                      </div>
+                      <input
+                        type="text"
+                        name="End"
+                        value={commentValues.CommentEnd}
+                        onChange={(event) => commentValues.handleInputChangeEnd(event)}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="Text">
+                  <div className="component-item__header">
+                    <input type="checkbox" name="randomLike" onChange={handleCheckboxChangeText} />
+                    <p>Text</p>
+                  </div>
+
+                  <div style={{ position: 'relative' }} className={`component-item  ${isText ? 'show' : 'hide'}`}>
+                    <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
+                      <Editor
+                        value={TextCommentContent}
+                        onChange={handleChangeComment}
+                        onValueChange={(TextCommentContent) => setValueComment(TextCommentContent)}
+                        highlight={(code) => hightlightWithLineNumbersComment(code, languages.js)}
+                        padding={15}
+                        className="editor"
+                        textareaId="Comment"
+                        style={{
+                          background: '#f5f5f5',
+                          fontSize: 15,
+                        }}
+                      />
+                    </div>
+                    <div onClick={handleDivCommentClick} className={`placeholder ${TextCommentContent ? 'hide' : ''}`}>
+                      <p>
+                        <span>1</span>Enter the content here
+                      </p>
+                      <p>
+                        <span>2</span>Each content/line
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
