@@ -24,6 +24,7 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
   });
   const [openWriteText, setOpenWriteText] = useState(false);
   const [openWritePostID, setOpenWritePostID] = useState(false);
+  const [openTagFriend, setOpenTagFriend] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [isFileSelected, setIsFileSelected] = useState(false);
   const handleFileChange = (event) => {
@@ -65,169 +66,216 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
     });
   };
   //Post view time
-  const handleUpViewTimeStart = () => {
-    setLikeComment((prevValue) => {
-      return {
-        ...prevValue,
-        viewTimeStart: prevValue.viewTimeStart + 1,
-      };
-    });
+  const handleViewTimeStart = (type) => {
+    if (type === 'increase') {
+      setLikeComment({
+        ...likeComment,
+        viewTimeStart: likeComment.viewTimeStart + 1,
+      });
+    } else {
+      setLikeComment({
+        ...likeComment,
+        viewTimeStart: likeComment.viewTimeStart > 0 ? likeComment.viewTimeStart - 1 : 0,
+      });
+    }
   };
-  const handleDownViewTimeStart = () => {
-    setLikeComment((prevValue) => {
-      return {
-        ...prevValue,
-        viewTimeStart: prevValue.viewTimeStart > 0 ? prevValue.viewTimeStart - 1 : 0,
-      };
-    });
+  const onChangeViewTimeStart = (e) => {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
+    }
   };
-  const handleUpViewTimeEnd = () => {
-    setLikeComment((prevValue) => {
-      return {
-        ...prevValue,
-        viewTimeEnd: prevValue.viewTimeEnd + 1,
-      };
-    });
+
+  const handleViewTimeEnd = (type) => {
+    if (type === 'increase') {
+      setLikeComment({
+        ...likeComment,
+        viewTimeEnd: likeComment.viewTimeEnd + 1,
+      });
+    } else {
+      setLikeComment({
+        ...likeComment,
+        viewTimeEnd: likeComment.viewTimeEnd > 0 ? likeComment.viewTimeEnd - 1 : 0,
+      });
+    }
   };
-  const handleDownViewTimeEnd = () => {
-    setLikeComment((prevValue) => {
-      return {
-        ...prevValue,
-        viewTimeEnd: prevValue.viewTimeEnd > 0 ? prevValue.viewTimeEnd - 1 : 0,
-      };
-    });
+  const onChangeViewTimeEnd = (e) => {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
+    }
   };
   //delay time
-  const handleUpDelayTimeStart = () => {
-    setLikeComment((prevValue) => {
-      return {
-        ...prevValue,
-        delayTimeStart: prevValue.delayTimeStart + 1,
-      };
-    });
+  const handleDelayTimeStart = (type) => {
+    if (type === 'increase') {
+      setLikeComment({
+        ...likeComment,
+        delayTimeStart: likeComment.delayTimeStart + 1,
+      });
+    } else {
+      setLikeComment({
+        ...likeComment,
+        delayTimeStart: likeComment.delayTimeStart > 0 ? likeComment.delayTimeStart - 1 : 0,
+      });
+    }
   };
-  const handleDownDelayTimeStart = () => {
-    setLikeComment((prevValue) => {
-      return {
-        ...prevValue,
-        delayTimeStart: prevValue.delayTimeStart > 0 ? prevValue.delayTimeStart - 1 : 0,
-      };
-    });
+  const onChangeDelayTimeStart = (e) => {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
+    }
   };
-  const handleUpDelayTimeEnd = () => {
-    setLikeComment((prevValue) => {
-      return {
-        ...prevValue,
-        delayTimeEnd: prevValue.delayTimeEnd + 1,
-      };
-    });
+
+  const handleDelayTimeEnd = (type) => {
+    if (type === 'increase') {
+      setLikeComment({
+        ...likeComment,
+        delayTimeEnd: likeComment.delayTimeEnd + 1,
+      });
+    } else {
+      setLikeComment({
+        ...likeComment,
+        delayTimeEnd: likeComment.delayTimeEnd > 0 ? likeComment.delayTimeEnd - 1 : 0,
+      });
+    }
   };
-  const handleDownDelayTimeEnd = () => {
-    setLikeComment((prevValue) => {
-      return {
-        ...prevValue,
-        delayTimeEnd: prevValue.delayTimeEnd > 0 ? prevValue.delayTimeEnd - 1 : 0,
-      };
-    });
-  };
-  //post quantity
-  const handleUpPostQuantityStart = () => {
-    setLikeComment((prevValue) => {
-      return {
-        ...prevValue,
-        postQuantityStart: prevValue.postQuantityStart + 1,
-      };
-    });
-  };
-  const handleDownPostQuantityStart = () => {
-    setLikeComment((prevValue) => {
-      return {
-        ...prevValue,
-        postQuantityStart: prevValue.postQuantityStart > 0 ? prevValue.postQuantityStart - 1 : 0,
-      };
-    });
-  };
-  const handleUpPostQuantityEnd = () => {
-    setLikeComment((prevValue) => {
-      return {
-        ...prevValue,
-        postQuantityEnd: prevValue.postQuantityEnd + 1,
-      };
-    });
-  };
-  const handleDownPostQuantityEnd = () => {
-    setLikeComment((prevValue) => {
-      return {
-        ...prevValue,
-        postQuantityEnd: prevValue.postQuantityEnd > 0 ? prevValue.postQuantityEnd - 1 : 0,
-      };
-    });
+  const onChangeDelayTimeEnd = (e) => {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
+    }
   };
   //post quantity
-  const handleUpPhotoVideoStart = () => {
-    setLikeComment((prevValue) => {
-      return {
-        ...prevValue,
-        photoVideoQuantityStart: prevValue.photoVideoQuantityStart + 1,
-      };
-    });
+  const handlePostQuantityStart = (type) => {
+    if (type === 'increase') {
+      setLikeComment({
+        ...likeComment,
+        postQuantityStart: likeComment.postQuantityStart + 1,
+      });
+    } else {
+      setLikeComment({
+        ...likeComment,
+        postQuantityStart: likeComment.postQuantityStart > 0 ? likeComment.postQuantityStart - 1 : 0,
+      });
+    }
   };
-  const handleDownPhotoVideoStart = () => {
-    setLikeComment((prevValue) => {
-      return {
-        ...prevValue,
-        photoVideoQuantityStart: prevValue.photoVideoQuantityStart > 0 ? prevValue.photoVideoQuantityStart - 1 : 0,
-      };
-    });
+  const onChangePostQuantityStart = (e) => {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
+    }
   };
-  const handleUpPhotoVideoEnd = () => {
-    setLikeComment((prevValue) => {
-      return {
-        ...prevValue,
-        photoVideoQuantityEnd: prevValue.photoVideoQuantityEnd + 1,
-      };
-    });
+
+  const handlePostQuantityEnd = (type) => {
+    if (type === 'increase') {
+      setLikeComment({
+        ...likeComment,
+        postQuantityEnd: likeComment.postQuantityEnd + 1,
+      });
+    } else {
+      setLikeComment({
+        ...likeComment,
+        postQuantityEnd: likeComment.postQuantityEnd > 0 ? likeComment.postQuantityEnd - 1 : 0,
+      });
+    }
   };
-  const handleDownPhotoVideoEnd = () => {
-    setLikeComment((prevValue) => {
-      return {
-        ...prevValue,
-        photoVideoQuantityEnd: prevValue.photoVideoQuantityEnd > 0 ? prevValue.photoVideoQuantityEnd - 1 : 0,
-      };
-    });
+  const onChangePostQuantityEnd = (e) => {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
+    }
   };
+
+  //post quantity
+  const handlePhotoVideoStart = (type) => {
+    if (type === 'increase') {
+      setLikeComment({
+        ...likeComment,
+        photoVideoQuantityStart: likeComment.photoVideoQuantityStart + 1,
+      });
+    } else {
+      setLikeComment({
+        ...likeComment,
+        photoVideoQuantityStart: likeComment.photoVideoQuantityStart > 0 ? likeComment.photoVideoQuantityStart - 1 : 0,
+      });
+    }
+  };
+  const onChangePhotoVideoStart = (e) => {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
+    }
+  };
+
+  const handlePhotoVideoEnd = (type) => {
+    if (type === 'increase') {
+      setLikeComment({
+        ...likeComment,
+        photoVideoQuantityEnd: likeComment.photoVideoQuantityEnd + 1,
+      });
+    } else {
+      setLikeComment({
+        ...likeComment,
+        photoVideoQuantityEnd: likeComment.photoVideoQuantityEnd > 0 ? likeComment.photoVideoQuantityEnd - 1 : 0,
+      });
+    }
+  };
+  const onChangePhotoVideoEnd = (e) => {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
+    }
+  };
+
   //tag friend
-  const handleUpTagFriendStart = () => {
-    setLikeComment((prevValue) => {
-      return {
-        ...prevValue,
-        tagFriendStart: prevValue.tagFriendStart + 1,
-      };
-    });
+  const handleTagFriendStart = (type) => {
+    if (type === 'increase') {
+      setLikeComment({
+        ...likeComment,
+        tagFriendStart: likeComment.tagFriendStart + 1,
+      });
+    } else {
+      setLikeComment({
+        ...likeComment,
+        tagFriendStart: likeComment.tagFriendStart > 0 ? likeComment.tagFriendStart - 1 : 0,
+      });
+    }
   };
-  const handleDownTagFriendStart = () => {
-    setLikeComment((prevValue) => {
-      return {
-        ...prevValue,
-        tagFriendStart: prevValue.tagFriendStart > 0 ? prevValue.tagFriendStart - 1 : 0,
-      };
-    });
+  const onChangeTagFriendStart = (e) => {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
+    }
   };
-  const handleUpTagFriendEnd = () => {
-    setLikeComment((prevValue) => {
-      return {
-        ...prevValue,
-        tagFriendEnd: prevValue.tagFriendEnd + 1,
-      };
-    });
+
+  const handleTagFriendEnd = (type) => {
+    if (type === 'increase') {
+      setLikeComment({
+        ...likeComment,
+        tagFriendEnd: likeComment.tagFriendEnd + 1,
+      });
+    } else {
+      setLikeComment({
+        ...likeComment,
+        tagFriendEnd: likeComment.tagFriendEnd > 0 ? likeComment.tagFriendEnd - 1 : 0,
+      });
+    }
   };
-  const handleDownTagFriendEnd = () => {
-    setLikeComment((prevValue) => {
-      return {
-        ...prevValue,
-        tagFriendEnd: prevValue.tagFriendEnd > 0 ? prevValue.tagFriendEnd - 1 : 0,
-      };
-    });
+  const onChangeTagFriendEnd = (e) => {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
+    }
   };
   return (
     <div className="-layout-component">
@@ -244,26 +292,31 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
               </p>
               <div className="-option-boost-like__number">
                 <div className="-option-boost-like__number__icon">
-                  <div style={{ marginBottom: '2px' }} onClick={handleUpViewTimeStart}>
+                  <div style={{ marginBottom: '2px' }} onClick={() => handleViewTimeStart('increase')}>
                     <img src={up} alt="up" width={10} height={7} />
                   </div>
-                  <div style={{ marginTop: '2px' }} onClick={handleDownViewTimeStart}>
+                  <div style={{ marginTop: '2px' }} onClick={() => handleViewTimeStart('des')}>
                     <img src={down} alt="down" width={10} height={7} />
                   </div>
                 </div>
-                <input type="text" value={likeComment.viewTimeStart} onChange />
+                <input
+                  type="text"
+                  name="viewTimeStart"
+                  value={likeComment.viewTimeStart}
+                  onChange={onChangeViewTimeStart}
+                />
               </div>
               <span>to</span>
               <div className="-option-boost-like__number">
                 <div className="-option-boost-like__number__icon">
-                  <div style={{ marginBottom: '2px' }} onClick={handleUpViewTimeEnd}>
+                  <div style={{ marginBottom: '2px' }} onClick={() => handleViewTimeEnd('increase')}>
                     <img src={up} alt="up" width={10} height={7} />
                   </div>
-                  <div style={{ marginTop: '2px' }} onClick={handleDownViewTimeEnd}>
+                  <div style={{ marginTop: '2px' }} onClick={() => handleViewTimeEnd('des')}>
                     <img src={down} alt="down" width={10} height={7} />
                   </div>
                 </div>
-                <input type="text" value={likeComment.viewTimeEnd} onChange />
+                <input type="text" name="viewTimeEnd" value={likeComment.viewTimeEnd} onChange={onChangeViewTimeEnd} />
               </div>
             </div>
             <div className="-option-boost-like">
@@ -272,26 +325,36 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
               </p>
               <div className="-option-boost-like__number">
                 <div className="-option-boost-like__number__icon">
-                  <div style={{ marginBottom: '2px' }} onClick={handleUpDelayTimeStart}>
+                  <div style={{ marginBottom: '2px' }} onClick={() => handleDelayTimeStart('increase')}>
                     <img src={up} alt="up" width={10} height={7} />
                   </div>
-                  <div style={{ marginTop: '2px' }} onClick={handleDownDelayTimeStart}>
+                  <div style={{ marginTop: '2px' }} onClick={() => handleDelayTimeStart('des')}>
                     <img src={down} alt="down" width={10} height={7} />
                   </div>
                 </div>
-                <input type="text" value={likeComment.delayTimeStart} onChange />
+                <input
+                  type="text"
+                  name="delayTimeStart"
+                  value={likeComment.delayTimeStart}
+                  onChange={onChangeDelayTimeStart}
+                />
               </div>
               <span>to</span>
               <div className="-option-boost-like__number">
                 <div className="-option-boost-like__number__icon">
-                  <div style={{ marginBottom: '2px' }} onClick={handleUpDelayTimeEnd}>
+                  <div style={{ marginBottom: '2px' }} onClick={() => handleDelayTimeEnd('increase')}>
                     <img src={up} alt="up" width={10} height={7} />
                   </div>
-                  <div style={{ marginTop: '2px' }} onClick={handleDownDelayTimeEnd}>
+                  <div style={{ marginTop: '2px' }} onClick={() => handleDelayTimeEnd('des')}>
                     <img src={down} alt="down" width={10} height={7} />
                   </div>
                 </div>
-                <input type="text" value={likeComment.delayTimeEnd} onChange />
+                <input
+                  type="text"
+                  name="delayTimeEnd"
+                  value={likeComment.delayTimeEnd}
+                  onChange={onChangeDelayTimeEnd}
+                />
               </div>
             </div>
             <div className="-option-boost-like">
@@ -300,26 +363,36 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
               </p>
               <div className="-option-boost-like__number">
                 <div className="-option-boost-like__number__icon">
-                  <div style={{ marginBottom: '2px' }} onClick={handleUpPostQuantityStart}>
+                  <div style={{ marginBottom: '2px' }} onClick={() => handlePostQuantityStart('increase')}>
                     <img src={up} alt="up" width={10} height={7} />
                   </div>
-                  <div style={{ marginTop: '2px' }} onClick={handleDownPostQuantityStart}>
+                  <div style={{ marginTop: '2px' }} onClick={() => handlePostQuantityStart('des')}>
                     <img src={down} alt="down" width={10} height={7} />
                   </div>
                 </div>
-                <input type="text" value={likeComment.postQuantityStart} onChange />
+                <input
+                  type="text"
+                  name="postQuantityStart"
+                  value={likeComment.postQuantityStart}
+                  onChange={onChangePostQuantityStart}
+                />
               </div>
               <span>to</span>
               <div className="-option-boost-like__number">
                 <div className="-option-boost-like__number__icon">
-                  <div style={{ marginBottom: '2px' }} onClick={handleUpPostQuantityEnd}>
+                  <div style={{ marginBottom: '2px' }} onClick={() => handlePostQuantityEnd('increase')}>
                     <img src={up} alt="up" width={10} height={7} />
                   </div>
-                  <div style={{ marginTop: '2px' }} onClick={handleDownPostQuantityEnd}>
+                  <div style={{ marginTop: '2px' }} onClick={() => handlePostQuantityEnd('des')}>
                     <img src={down} alt="down" width={10} height={7} />
                   </div>
                 </div>
-                <input type="text" value={likeComment.postQuantityEnd} onChange />
+                <input
+                  type="text"
+                  name="postQuantityEnd"
+                  value={likeComment.postQuantityEnd}
+                  onChange={onChangePostQuantityEnd}
+                />
               </div>
             </div>
             <div className="-option-boost-like -option-boost-comment">
@@ -374,7 +447,7 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
                   onClick={handleWriteText}
                   onChange={handleOnchangeText}
                 ></textarea>
-                <div className="-option-boost-comment__wrapper__content">
+                <div className="-option-boost-comment__wrapper__content" onClick={handleWriteText}>
                   <p>
                     <span style={{ paddingRight: '7%' }}>1</span>
                     <div style={{ display: openWriteText ? 'none' : 'inline' }}>Enter the content here</div>
@@ -392,26 +465,36 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
                 <p>Quantity:</p>
                 <div className="-option-boost-like__number">
                   <div className="-option-boost-like__number__icon">
-                    <div style={{ marginBottom: '2px' }} onClick={handleUpPhotoVideoStart}>
+                    <div style={{ marginBottom: '2px' }} onClick={() => handlePhotoVideoStart('increase')}>
                       <img src={up} alt="up" width={10} height={7} />
                     </div>
-                    <div style={{ marginTop: '2px' }} onClick={handleDownPhotoVideoStart}>
+                    <div style={{ marginTop: '2px' }} onClick={() => handlePhotoVideoStart('des')}>
                       <img src={down} alt="down" width={10} height={7} />
                     </div>
                   </div>
-                  <input type="text" value={likeComment.photoVideoQuantityStart} onChange />
+                  <input
+                    type="text"
+                    name="photoVideoQuantityStart"
+                    value={likeComment.photoVideoQuantityStart}
+                    onChange={onChangePhotoVideoStart}
+                  />
                 </div>
                 <span>to</span>
                 <div className="-option-boost-like__number">
                   <div className="-option-boost-like__number__icon">
-                    <div style={{ marginBottom: '2px' }} onClick={handleUpPhotoVideoEnd}>
+                    <div style={{ marginBottom: '2px' }} onClick={() => handlePhotoVideoEnd('increase')}>
                       <img src={up} alt="up" width={10} height={7} />
                     </div>
-                    <div style={{ marginTop: '2px' }} onClick={handleDownPhotoVideoEnd}>
+                    <div style={{ marginTop: '2px' }} onClick={() => handlePhotoVideoEnd('des')}>
                       <img src={down} alt="down" width={10} height={7} />
                     </div>
                   </div>
-                  <input type="text" value={likeComment.photoVideoQuantityEnd} onChange />
+                  <input
+                    type="text"
+                    name="photoVideoQuantityEnd"
+                    value={likeComment.photoVideoQuantityEnd}
+                    onChange={onChangePhotoVideoEnd}
+                  />
                 </div>
               </div>
             </div>
@@ -439,33 +522,43 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
 
             <div className="-option-boost-like -option-photo-video">
               <div className="-option-photo-video__checkbox">
-                <input type="checkbox" name="tagFriend" />
+                <input type="checkbox" name="tagFriend" onChange={() => setOpenTagFriend((o) => !o)} />
                 <h1>Tag friends</h1>
               </div>
-              <div className="-option-boost-like">
+              <div className="-option-boost-like" style={{ display: openTagFriend ? 'flex' : 'none' }}>
                 <p>Number of friends:</p>
                 <div className="-option-boost-like__number">
                   <div className="-option-boost-like__number__icon">
-                    <div style={{ marginBottom: '2px' }} onClick={handleUpTagFriendStart}>
+                    <div style={{ marginBottom: '2px' }} onClick={() => handleTagFriendStart('increase')}>
                       <img src={up} alt="up" width={10} height={7} />
                     </div>
-                    <div style={{ marginTop: '2px' }} onClick={handleDownTagFriendStart}>
+                    <div style={{ marginTop: '2px' }} onClick={() => handleTagFriendStart('des')}>
                       <img src={down} alt="down" width={10} height={7} />
                     </div>
                   </div>
-                  <input type="text" value={likeComment.tagFriendStart} onChange />
+                  <input
+                    type="text"
+                    name="tagFriendStart"
+                    value={likeComment.tagFriendStart}
+                    onChange={onChangeTagFriendStart}
+                  />
                 </div>
                 <span>to</span>
                 <div className="-option-boost-like__number">
                   <div className="-option-boost-like__number__icon">
-                    <div style={{ marginBottom: '2px' }} onClick={handleUpTagFriendEnd}>
+                    <div style={{ marginBottom: '2px' }} onClick={() => handleTagFriendEnd('increase')}>
                       <img src={up} alt="up" width={10} height={7} />
                     </div>
-                    <div style={{ marginTop: '2px' }} onClick={handleDownTagFriendEnd}>
+                    <div style={{ marginTop: '2px' }} onClick={() => handleTagFriendEnd('des')}>
                       <img src={down} alt="down" width={10} height={7} />
                     </div>
                   </div>
-                  <input type="text" value={likeComment.tagFriendEnd} onChange />
+                  <input
+                    type="text"
+                    name="tagFriendEnd"
+                    value={likeComment.tagFriendEnd}
+                    onChange={onChangeTagFriendEnd}
+                  />
                 </div>
               </div>
             </div>
