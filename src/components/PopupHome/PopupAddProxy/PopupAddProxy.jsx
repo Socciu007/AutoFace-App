@@ -7,8 +7,8 @@ import SnackbarApp from '../../Alert';
 import { apiUpdateProfiles } from '../../../services/api_helper';
 import storageService from '../../../services/storage.service';
 import { storageProfiles } from '../../../common/const.config';
-import Select from 'rc-select';
-// import { display } from '@mui/system';
+import { Select } from 'antd';
+// import { MenuItem, Select } from '@mui/material';
 
 const PopupAddProxy = ({
   profilesSelected,
@@ -100,30 +100,30 @@ const PopupAddProxy = ({
             <div className="-add-proxys__type">
               <p>Connection type</p>
               <div className="-add-proxys-nav">
-                <Select
+                {/* <Select
+                  name="proxyType"
                   className="-add-proxys-nav__select -add-proxys-nav__details"
-                  value={proxyType}
                   onChange={onChangeProxyType}
+                  value={proxyType}
+                >
+                  <MenuItem value="http">HTTP</MenuItem>
+                  <MenuItem value="socks4">Socks 4</MenuItem>
+                  <MenuItem value="socks5">Socks 5</MenuItem>
+                  <MenuItem value="ssh">SSH</MenuItem>
+                </Select> */}
+                {/* <Select
+                  name="proxyType"
+                  className="-add-proxys-nav__select -add-proxys-nav__details"
+                  onChange={onChangeProxyType}
+                  value={proxyType}
                   bordered={false}
                   options={[
                     {
-                      value: 'http',
-                      label: 'HTTP',
-                    },
-                    {
-                      value: 'socks4',
-                      label: 'Socks 4',
-                    },
-                    {
-                      value: 'socks5',
-                      label: 'Socks 5',
-                    },
-                    {
-                      value: 'ssh',
-                      label: 'SSH',
+                      value: 'https://mbasic.facebook.com',
+                      label: 'https://mbasic.facebook.com',
                     },
                   ]}
-                />
+                /> */}
 
                 <div className="-add-proxys__type__icon" onClick={handleOpenProxyManage}>
                   <img src={proxy} alt="icon-proxy"></img>
@@ -142,7 +142,7 @@ const PopupAddProxy = ({
                   type="text"
                   onClick={handleWriteText}
                 ></textarea>
-                {/* <div className="-form-instruct">
+                <div className="-form-instruct" onClick={handleWriteText}>
                   <p style={{ marginRight: '19px' }}>
                     <span>1</span>
                     <div style={{ display: openWriteText ? 'none' : 'inline' }}>Enter the content here</div>
@@ -163,7 +163,7 @@ const PopupAddProxy = ({
                       The number of proxies should not be less or more than the number of profiles
                     </div>
                   </p>
-                </div> */}
+                </div>
                 <div onClick={changeProxy} className="-list-proxys__save">
                   Save
                 </div>
