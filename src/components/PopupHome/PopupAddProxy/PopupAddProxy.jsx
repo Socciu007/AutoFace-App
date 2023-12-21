@@ -7,8 +7,8 @@ import SnackbarApp from '../../Alert';
 import { apiUpdateProfiles } from '../../../services/api_helper';
 import storageService from '../../../services/storage.service';
 import { storageProfiles } from '../../../common/const.config';
-import { Select } from 'antd';
-// import { MenuItem, Select } from '@mui/material';
+// import { Select } from 'antd';
+import { MenuItem, Select } from '@mui/material';
 
 const PopupAddProxy = ({
   profilesSelected,
@@ -100,6 +100,23 @@ const PopupAddProxy = ({
             <div className="-add-proxys__type">
               <p>Connection type</p>
               <div className="-add-proxys-nav">
+                <div className="-add-proxys__type__text">
+                  <div className="-add-proxys__type__text__option">
+                    <select
+                      name="typeProxy"
+                      defaultValue={proxyType}
+                      onChange={(event) => {
+                        onChangeProxyType(event.target.value);
+                      }}
+                    >
+                      <option value="http">HTTP</option>
+                      <option value="socks4">Socks 4</option>
+                      <option value="socks5">Socks 5</option>
+                      <option value="ssh">SSH</option>
+                    </select>
+                  </div>
+                </div>
+
                 {/* <Select
                   name="proxyType"
                   className="-add-proxys-nav__select -add-proxys-nav__details"

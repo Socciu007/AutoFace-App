@@ -74,7 +74,7 @@ const ProfilesPage = () => {
       newData = newData.sort((x, y) => Number(y.isPin) - Number(x.isPin));
       setDataSearch(
         newData.map((e, index) => {
-          return { ...e, index: index + 1 };
+          return { ...e, key: index + 1 };
         }),
       );
     }
@@ -104,7 +104,7 @@ const ProfilesPage = () => {
       setDataProfiles(objProfile);
       setDataSearch(
         objProfile.map((e, index) => {
-          return { ...e, index: index + 1 };
+          return { ...e, key: index + 1 };
         }),
       );
     }
@@ -154,12 +154,12 @@ const ProfilesPage = () => {
   const defaultColumns = [
     {
       title: '#',
-      dataIndex: 'index',
+      dataIndex: 'key',
       width: 40,
     },
     {
       title: 'Profile',
-      width: 200,
+      width: 250,
       render: (profile) => {
         return (
           <div className="-text-profile">
@@ -389,7 +389,7 @@ const ProfilesPage = () => {
     if (text == '') {
       setDataSearch(
         dataProfiles.map((e, index) => {
-          return { ...e, index: index + 1 };
+          return { ...e, key: index + 1 };
         }),
       );
     } else {
@@ -400,7 +400,7 @@ const ProfilesPage = () => {
       });
       setDataSearch(
         newProfiles.map((e, index) => {
-          return { ...e, index: index + 1 };
+          return { ...e, key: index + 1 };
         }),
       );
     }
@@ -418,7 +418,7 @@ const ProfilesPage = () => {
     });
     setDataSearch(
       newDataSearch.map((e, index) => {
-        return { ...e, index: index + 1 };
+        return { ...e, key: index + 1 };
       }),
     );
     storageService.set(storageProfiles, JSON.stringify(newData));
