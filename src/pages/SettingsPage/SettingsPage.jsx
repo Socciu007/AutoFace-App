@@ -1,66 +1,71 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './style.scss';
 import { useNavigate } from 'react-router-dom';
 import SettingNormal from '../../components/SettingsComponent/SettingNormal/SettingNormal';
 import SettingAdvenced from '../../components/SettingsComponent/SettingAdvanced/SettingAdvenced';
 import SettingProxy from '../../components/SettingsComponent/SettingProxy/SettingProxy';
+import { storageSettings } from '../../common/const.config';
+import storageService from '../../services/storage.service';
+import SnackbarApp from '../../components/Alert';
+import { v4 as uuidv4 } from 'uuid';
 
 const SettingsPage = () => {
-  const data = [
-    {
-      key: 1,
-      proxy: '123.120.9.22:1232:username:123jbsdf',
-    },
-    {
-      key: 2,
-      proxy: '123.120.9.22:1232:username:123jbsdf',
-    },
-    {
-      key: 3,
-      proxy: '123.120.9.22:1232:username:123jbsdf',
-    },
-    {
-      key: 4,
-      proxy: '123.120.9.22:1232:username:123jbsdf',
-    },
-  ];
   const navigate = useNavigate();
   const [editProxy, setEditProxy] = useState(false);
   const [keyList, setKeyList] = useState('');
   const [openProxyManage, setOpenProxyManage] = useState(false);
-  const [openWriteText, setOpenWriteText] = useState(false);
-  const [settings, setSettings] = useState({
-    numberProfile: 5,
-    numberLoop: 1,
-    typeProfile: 'Random',
-    url: 'www.fb.com',
-    maxTimePerThread: 500,
-    delayInEachNewThread: 5,
-    stopIfRamReaches: 90,
-    stopIfCPUReaches: 90,
-    stopIfDiskReaches: 90,
-  });
-  //
+
+  const [settings, setSettings] = useState({});
+  const [message, setMessage] = useState('');
+  const [statusMessage, setStatusMessage] = useState('warning');
+
+  useEffect(() => {
+    const settingStr = storageService.get(storageSettings);
+    console.log(settingStr);
+    if (settingStr) {
+      setSettings(JSON.parse(settingStr));
+      console.log(settings);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (settings.countProfile && settings.countProfile >= 0) {
+      storageService.set(storageSettings, JSON.stringify(settings));
+    }
+  }, [settings]);
+
+  const onChangeAssignProxy = (checked) => {
+    setSettings({
+      ...settings,
+      assignProxy: checked,
+    });
+  };
+
+  const onChangeAPIProxy = (checked) => {
+    setSettings({
+      ...settings,
+      apiChange: checked,
+    });
+  };
+
   const handleNumberProfile = (type) => {
     if (type === 'increase') {
       setSettings({
         ...settings,
-        numberProfile: settings.numberProfile + 1,
+        countProfile: settings.countProfile + 1,
       });
     } else {
       setSettings({
         ...settings,
-        numberProfile: settings.numberProfile > 0 ? settings.numberProfile - 1 : 0,
+        countProfile: settings.countProfile > 0 ? settings.countProfile - 1 : 0,
       });
     }
   };
   const onChangeNumberProfile = (e) => {
     const decimalRegex = /^[+-]?\d*\.?\d+$/;
-    // if (decimalRegex.test(e.target.value)) {
-    //   console.log('so thap phan');
-    // }
-    if (!isNaN(e.target.value) && decimalRegex.test(e.target.value)) {
-      setSettings({ ...settings, [e.target.name]: e.target.value });
+    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      setSettings({ ...settings, countProfile: parseInt(value) });
     }
   };
   //
@@ -68,19 +73,20 @@ const SettingsPage = () => {
     if (type === 'increase') {
       setSettings({
         ...settings,
-        numberLoop: settings.numberLoop + 1,
+        countLoop: settings.countLoop + 1,
       });
     } else {
       setSettings({
         ...settings,
-        numberLoop: settings.numberLoop > 0 ? settings.numberLoop - 1 : 0,
+        countLoop: settings.countLoop > 0 ? settings.countLoop - 1 : 0,
       });
     }
   };
   const onChangeNumberLoop = (e) => {
     const decimalRegex = /^[+-]?\d*\.?\d+$/;
-    if (!isNaN(e.target.value) && decimalRegex.test(e.target.value)) {
-      setSettings({ ...settings, [e.target.name]: e.target.value });
+    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      setSettings({ ...settings, countLoop: parseInt(value) });
     }
   };
 
@@ -88,19 +94,20 @@ const SettingsPage = () => {
     if (type === 'increase') {
       setSettings({
         ...settings,
-        maxTimePerThread: settings.maxTimePerThread + 1,
+        maxTime: settings.maxTime + 1,
       });
     } else {
       setSettings({
         ...settings,
-        maxTimePerThread: settings.maxTimePerThread > 0 ? settings.maxTimePerThread - 1 : 0,
+        maxTime: settings.maxTime > 0 ? settings.maxTime - 1 : 0,
       });
     }
   };
   const onChangeMaxTimePerThread = (e) => {
     const decimalRegex = /^[+-]?\d*\.?\d+$/;
-    if (!isNaN(e.target.value) && decimalRegex.test(e.target.value)) {
-      setSettings({ ...settings, [e.target.name]: e.target.value });
+    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      setSettings({ ...settings, maxTime: parseInt(value) });
     }
   };
   //
@@ -108,19 +115,20 @@ const SettingsPage = () => {
     if (type === 'increase') {
       setSettings({
         ...settings,
-        delayInEachNewThread: settings.delayInEachNewThread + 1,
+        delayThread: settings.delayThread + 1,
       });
     } else {
       setSettings({
         ...settings,
-        delayInEachNewThread: settings.delayInEachNewThread > 0 ? settings.delayInEachNewThread - 1 : 0,
+        delayThread: settings.delayThread > 0 ? settings.delayThread - 1 : 0,
       });
     }
   };
   const onChangeDelayInEachNewThread = (e) => {
     const decimalRegex = /^[+-]?\d*\.?\d+$/;
-    if (!isNaN(e.target.value) && decimalRegex.test(e.target.value)) {
-      setSettings({ ...settings, [e.target.name]: e.target.value });
+    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      setSettings({ ...settings, delayThread: parseInt(value) });
     }
   };
   //
@@ -128,19 +136,23 @@ const SettingsPage = () => {
     if (type === 'increase') {
       setSettings({
         ...settings,
-        stopIfRamReaches: settings.stopIfRamReaches < 100 ? settings.stopIfRamReaches + 1 : 100,
+        maxRam: settings.maxRam < 100 ? settings.maxRam + 1 : 100,
       });
     } else {
       setSettings({
         ...settings,
-        stopIfRamReaches: settings.stopIfRamReaches > 0 ? settings.stopIfRamReaches - 1 : 0,
+        maxRam: settings.maxRam > 0 ? settings.maxRam - 1 : 0,
       });
     }
   };
   const onChangeStopIfRamReaches = (e) => {
     const decimalRegex = /^[+-]?\d*\.?\d+$/;
-    if (!isNaN(e.target.value) && decimalRegex.test(e.target.value)) {
-      setSettings({ ...settings, [e.target.name]: e.target.value });
+    let value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      if (value < 0) value = 0;
+      if (value > 100) value = 100;
+      setSettings({ ...settings, maxRam: parseInt(value) });
     }
   };
   //
@@ -148,19 +160,22 @@ const SettingsPage = () => {
     if (type === 'increase') {
       setSettings({
         ...settings,
-        stopIfCPUReaches: settings.stopIfCPUReaches < 100 ? settings.stopIfCPUReaches + 1 : 100,
+        maxCpu: settings.maxCpu < 100 ? settings.maxCpu + 1 : 100,
       });
     } else {
       setSettings({
         ...settings,
-        stopIfCPUReaches: settings.stopIfCPUReaches > 0 ? settings.stopIfCPUReaches - 1 : 0,
+        maxCpu: settings.maxCpu > 0 ? settings.maxCpu - 1 : 0,
       });
     }
   };
   const onChangeStopIfCPUReaches = (e) => {
     const decimalRegex = /^[+-]?\d*\.?\d+$/;
-    if (!isNaN(e.target.value) && decimalRegex.test(e.target.value)) {
-      setSettings({ ...settings, [e.target.name]: e.target.value });
+    let value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      if (value < 0) value = 0;
+      if (value > 100) value = 100;
+      setSettings({ ...settings, maxCpu: parseInt(value) });
     }
   };
   //
@@ -168,33 +183,48 @@ const SettingsPage = () => {
     if (type === 'increase') {
       setSettings({
         ...settings,
-        stopIfDiskReaches: settings.stopIfDiskReaches < 100 ? settings.stopIfDiskReaches + 1 : 100,
+        maxDisk: settings.maxDisk < 100 ? settings.maxDisk + 1 : 100,
       });
     } else {
       setSettings({
         ...settings,
-        stopIfDiskReaches: settings.stopIfDiskReaches > 0 ? settings.stopIfDiskReaches - 1 : 0,
+        maxDisk: settings.maxDisk > 0 ? settings.maxDisk - 1 : 0,
       });
     }
   };
   const onChangeStopIfDiskReaches = (e) => {
     const decimalRegex = /^[+-]?\d*\.?\d+$/;
-    if (!isNaN(e.target.value) && decimalRegex.test(e.target.value)) {
-      setSettings({ ...settings, [e.target.name]: e.target.value });
+    let value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      if (value < 0) value = 0;
+      if (value > 100) value = 100;
+      setSettings({ ...settings, maxDisk: parseInt(value) });
     }
   };
 
-  const handleOnChangeTypeProfile = (e) => {
+  const handleOnChangeTypeProfile = (value) => {
     setSettings({
       ...settings,
-      [e.target.name]: e.target.value,
+      runningType: value,
+    });
+  };
+  const handleOnChangeMuteaudio = (value) => {
+    setSettings({
+      ...settings,
+      muteAudio: value,
+    });
+  };
+  const handleOnChangeShowImage = (value) => {
+    setSettings({
+      ...settings,
+      showImage: value,
     });
   };
   //
-  const handleOnchangeUrl = (e) => {
+  const handleOnchangeUrl = (value) => {
     setSettings({
       ...settings,
-      [e.target.name]: e.target.value,
+      URL: value,
     });
   };
   //proxy
@@ -212,16 +242,107 @@ const SettingsPage = () => {
     setKeyList(key);
     setEditProxy(false);
   };
-  const handleOpenWriteText = () => {
-    setOpenWriteText(true);
+  const handleOpenWriteText = (o) => {
+    setOpenWriteText(!o);
   };
-  const handleAddProxy = () => {
-    // setOpenWriteText(false)
+
+  const handleAddProxyFromManager = (listProxy) => {
+    if (listProxy.length) {
+      const proxies = settings.proxies;
+      listProxy.forEach((proxy) => {
+        proxies.push(proxy);
+      });
+      setSettings({ ...settings, proxies });
+      setStatusMessage('success');
+      setMessage('Import proxies success!');
+      setTimeout(() => {
+        setMessage('');
+        setStatusMessage('warning');
+      }, 2000);
+    }
   };
-  //
-  const onChange = (checked) => {
-    console.log(`switch to ${checked}`);
+
+  const handleAddProxy = (proxyString, type) => {
+    if (proxyString !== '') {
+      const listProxy = [];
+      const listProxyString = proxyString.split('\n');
+      listProxyString.forEach((proxy) => {
+        if (proxy.includes(':')) {
+          const host = proxy.split(':')[0];
+          const port = proxy.split(':')[1];
+          const username = proxy.split(':')[2] ? proxy.split(':')[2] : '';
+          const password = proxy.split(':')[3] ? proxy.split(':')[3] : '';
+          listProxy.push({
+            host,
+            port,
+            username,
+            password,
+            mode: type,
+            id: uuidv4(),
+          });
+        }
+      });
+      if (listProxy.length == 0) {
+        setMessage('Malformed proxies!');
+        setTimeout(() => {
+          setMessage('');
+        }, 2000);
+      } else {
+        const proxies = settings.proxies;
+        listProxy.forEach((proxy) => {
+          proxies.push(proxy);
+        });
+        setSettings({ ...settings, proxies });
+        setStatusMessage('success');
+        setMessage('Import proxies success!');
+        setTimeout(() => {
+          setMessage('');
+          setStatusMessage('warning');
+        }, 2000);
+      }
+    } else {
+      setMessage('Please type proxies!');
+      setTimeout(() => {
+        setMessage('');
+      }, 2000);
+    }
   };
+
+  const handleDeleteProxy = (id) => {
+    const newProxies = settings.proxies.filter((e) => e.id !== id);
+    setSettings({ ...settings, proxies: newProxies });
+    setStatusMessage('success');
+    setMessage('Delete proxies success!');
+    setTimeout(() => {
+      setMessage('');
+      setStatusMessage('warning');
+    }, 2000);
+  };
+
+  const onChangeProxy = (proxy, id) => {
+    const index = settings.proxies.findIndex((e) => e.id == id);
+    if (index >= 0) {
+      if (proxy.includes(':')) {
+        const host = proxy.split(':')[0];
+        const port = proxy.split(':')[1];
+        const username = proxy.split(':')[2] ? proxy.split(':')[2] : '';
+        const password = proxy.split(':')[3] ? proxy.split(':')[3] : '';
+        const newProxy = {
+          host,
+          port,
+          username,
+          password,
+          mode: settings.proxies[index].mode ? settings.proxies[index].mode : 'http',
+          id,
+        };
+
+        const newListProxy = [...settings.proxies];
+        newListProxy[index] = newProxy;
+        setSettings({ ...settings, proxies: newListProxy });
+      }
+    }
+  };
+
   return (
     <div className="layout-settings" style={{ opacity: openProxyManage ? 0.3 : 1 }}>
       <div className="-layout-page">
@@ -249,6 +370,8 @@ const SettingsPage = () => {
                 handleNumberProfile={handleNumberProfile}
                 onChangeNumberProfile={onChangeNumberProfile}
                 onChangeNumberLoop={onChangeNumberLoop}
+                handleOnChangeMuteaudio={handleOnChangeMuteaudio}
+                handleOnChangeShowImage={handleOnChangeShowImage}
                 handleNumberLoop={handleNumberLoop}
                 handleOnChangeTypeProfile={handleOnChangeTypeProfile}
                 handleOnchangeUrl={handleOnchangeUrl}
@@ -268,22 +391,26 @@ const SettingsPage = () => {
               ></SettingAdvenced>
             </div>
             <SettingProxy
-              data={data}
+              data={settings.proxies ? settings.proxies : []}
+              settings={settings}
               keyList={keyList}
               editProxy={editProxy}
               openProxyManage={openProxyManage}
-              openWriteText={openWriteText}
               handleOpenEdit={handleOpenEdit}
               handleCloseEdit={handleCloseEdit}
               handleOpenProxyManage={handleOpenProxyManage}
               handleCloseProxyManage={handleCloseProxyManage}
-              handleOpenWriteText={handleOpenWriteText}
               handleAddProxy={handleAddProxy}
-              onChange={onChange}
+              onChangeAssignProxy={onChangeAssignProxy}
+              onChangeAPIProxy={onChangeAPIProxy}
+              handleDeleteProxy={handleDeleteProxy}
+              onChangeProxy={onChangeProxy}
+              handleAddProxyFromManager={handleAddProxyFromManager}
             ></SettingProxy>
           </div>
         </div>
       </div>
+      <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
     </div>
   );
 };

@@ -1,26 +1,129 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PopupComponent from '../PopupComponent/PopupComponent';
 import closePopup from '../../../assets/pictures/icon-x.svg';
-import settings from '../../../assets/pictures/icon-settings.png';
-import yourScript from '../../../assets/pictures/icon-yourScripts.svg';
 import search from '../../../assets/pictures/icon-search.svg';
-import foxy from '../../../assets/pictures/icon-foxy.png';
-import ghosty from '../../../assets/pictures/icon-ghosty.png';
-import ghosty01 from '../../../assets/pictures/icon-ghosty01.png';
-import usaProxy from '../../../assets/pictures/icon-usa.png';
-import { Table } from 'antd';
+import iosIcon from '../../../assets/pictures/icon-ios.png';
+import macosIcon from '../../../assets/pictures/icon-macos.png';
+import linuxIcon from '../../../assets/pictures/icon-linux.png';
+import windowIcon from '../../../assets/pictures/icon-window.svg';
+import androidIcon from '../../../assets/pictures/icon-android.png';
+import { Table, Tooltip } from 'antd';
 import './style.scss';
+import { apiGetProfiles } from '../../../services/api_helper';
+import storageService from '../../../services/storage.service';
+import { storageProfiles } from '../../../common/const.config';
+import SnackbarApp from '../../Alert';
 
-const PopupProfile = ({ dataProfiles, openProfiles, handleCloseProfiles, handleFilterFolder }) => {
-  const [typeFolder0, setTypeFolder0] = useState(false);
-  const [typeFolder1, setTypeFolder1] = useState(false);
-  const [typeFolder2, setTypeFolder2] = useState(false);
-  const [typeFolder3, setTypeFolder3] = useState(false);
-  const [typeFolder4, setTypeFolder4] = useState(false);
-  // rowSelection object indicates the need for row selection
+const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFolderProfiles }) => {
+  let profilesSelected = [];
+
+  const [message, setMessage] = useState('');
+  const [statusMessage, setStatusMessage] = useState('warning');
+  const [dataProfiles, setDataProfiles] = useState([]);
+  const [dataSearch, setDataSearch] = useState([]);
+  const [listFolder, setListFolder] = useState([]);
+  useEffect(() => {
+    setListFolder([{ name: 'All', isSelected: true, id: '' }, ...listFolderProfiles]);
+    getProfiles();
+  }, [listFolderProfiles]);
+
+  const getProfiles = async () => {
+    const newProfiles = await apiGetProfiles();
+    if (newProfiles && newProfiles.success) {
+      let addProfile = [];
+      const profiles = storageService.get(storageProfiles);
+      if (profiles) {
+        const objProfiles = JSON.parse(profiles);
+        addProfile = newProfiles.data.data.filter((e) => {
+          const check = objProfiles.find((o) => o.id == e.id);
+          return !check;
+        });
+      } else {
+        addProfile = newProfiles.data.data;
+      }
+      addProfile = addProfile.map((e, index) => {
+        return {
+          name: '',
+          id: e.id,
+          isPin: false,
+          profile: e.name,
+          uid: '',
+          proxy: e.proxy,
+          status: e.status,
+          tag: '',
+          os: e.os,
+          folder: e.folder ? e.folder : '',
+          browserSource: e.browserSource,
+          browser: e.browserType,
+          notes: e.notes,
+          script: [],
+          updatedAt: e.updatedAt,
+        };
+      });
+      setDataProfiles(addProfile);
+      setDataSearch(
+        addProfile.map((e, index) => {
+          return { ...e, key: index + 1 };
+        }),
+      );
+    }
+  };
+
+  const addProfiles = () => {
+    if (profilesSelected.length > 0) {
+      const profiles = storageService.get(storageProfiles);
+      if (profiles) {
+        const objProfiles = JSON.parse(profiles);
+        profilesSelected.forEach((e) => {
+          objProfiles.push(e);
+        });
+        storageService.set(storageProfiles, JSON.stringify(objProfiles));
+      } else {
+        storageService.set(storageProfiles, JSON.stringify(profilesSelected));
+      }
+      getProfiles();
+      onAddProfile();
+      handleCloseProfiles();
+    } else {
+      setMessage('Please select profile!');
+      setTimeout(() => {
+        setMessage('');
+      }, 2000);
+    }
+  };
+
+  const searchProfiles = (text) => {
+    if (text == '') {
+      setDataSearch(
+        dataProfiles.map((e, index) => {
+          return { ...e, key: index + 1 };
+        }),
+      );
+    } else {
+      const newProfiles = dataProfiles.filter((e) => e.profile.toLowerCase().includes(text.toLowerCase()));
+      setDataSearch(
+        newProfiles.map((e, index) => {
+          return { ...e, key: index + 1 };
+        }),
+      );
+    }
+  };
+
+  const generateProxyStr = (proxy) => {
+    let proxyStr = `${proxy.host}:${proxy.port}${proxy.username && proxy.username != '' ? ':' + proxy.username : ''}${
+      proxy.password ? ':' + proxy.password : ''
+    }`;
+
+    if (proxyStr.length > 30) {
+      proxyStr = `${proxy.host}:${proxy.port}...`;
+    }
+    return proxyStr;
+  };
+
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
-      console.log(`selectedRowKeys: ${selectedRowKeys}`);
+      if (selectedRows && selectedRows.length) profilesSelected = selectedRows;
+      else profilesSelected = [];
     },
   };
   const columnsProfiles = [
@@ -35,14 +138,16 @@ const PopupProfile = ({ dataProfiles, openProfiles, handleCloseProfiles, handleF
     },
     {
       title: 'Source',
-      dataIndex: 'source',
-      render: (source) => {
+      render: (profile) => {
         return (
           <>
             <div className="-style-source-profile">
-              {source === 'Foxy' && <img src={foxy} alt="icon-foxy"></img>}
-              {source === 'Ghosty' && <img src={ghosty} alt="icon-ghosty"></img>}
-              {source === 'Ghosty-Fake' && <img src={ghosty01} alt="icon-ghosty"></img>}
+              {profile.isPin && <img src={pin} alt="icon-pin"></img>}
+              {profile.os === 'win' && <img style={{ width: 13 }} src={windowIcon} alt="icon-window"></img>}
+              {profile.os === 'mac' && <img style={{ width: 13 }} src={macosIcon} alt="icon-mac"></img>}
+              {profile.os === 'ios' && <img src={iosIcon} alt="icon-ios" style={{ width: 13 }}></img>}
+              {profile.os === 'android' && <img src={androidIcon} style={{ width: 13 }} alt="icon-android"></img>}
+              {profile.os === 'lin' && <img src={linuxIcon} style={{ width: 13 }} alt="icon-linux"></img>}
             </div>
           </>
         );
@@ -76,14 +181,15 @@ const PopupProfile = ({ dataProfiles, openProfiles, handleCloseProfiles, handleF
     {
       title: 'Proxy',
       dataIndex: 'proxy',
-      render: (profile) => {
+      // ellipsis: true,
+      render: (proxy) => {
         return (
-          <>
-            <div className="-proxy-profiles">
-              <img src={usaProxy}></img>
-              <span>{profile}</span>
-            </div>
-          </>
+          // <Tooltip placement="topLeft" className="-proxy-profiles" title={proxy}>
+          <div className="-proxy-profiles">
+            {/* <img src={usaProxy}></img> */}
+            {proxy.host && proxy.host ? <span>{generateProxyStr(proxy)}</span> : <span>none</span>}
+          </div>
+          // </Tooltip>
         );
       },
     },
@@ -93,48 +199,44 @@ const PopupProfile = ({ dataProfiles, openProfiles, handleCloseProfiles, handleF
     },
   ];
 
-  const handleTypeFolder0 = () => {
-    setTypeFolder0(true);
-    setTypeFolder1(false);
-    setTypeFolder2(false);
-    setTypeFolder3(false);
-    setTypeFolder4(false);
-    handleFilterFolder('Facebook Ads 1');
+  const handleTypeFolder = (name) => {
+    const newFolder = listFolder.map((e) => {
+      if (e.name == name) {
+        return { ...e, isSelected: true };
+      }
+      return {
+        ...e,
+        isSelected: false,
+      };
+    });
+
+    const folder = listFolder.find((e) => e.name == name);
+    if (folder.id == '') {
+      setDataSearch(
+        dataProfiles.map((e, index) => {
+          return { ...e, key: index + 1 };
+        }),
+      );
+    } else {
+      const newData = dataProfiles.filter((e) => e.folder == folder.id);
+      setDataSearch(
+        newData.map((e, index) => {
+          return { ...e, key: index + 1 };
+        }),
+      );
+    }
+    setListFolder(newFolder);
   };
-  const handleTypeFolder1 = () => {
-    setTypeFolder1(true);
-    setTypeFolder0(false);
-    setTypeFolder2(false);
-    setTypeFolder3(false);
-    setTypeFolder4(false);
-    handleFilterFolder('Seeding 1');
-  };
-  const handleTypeFolder2 = () => {
-    setTypeFolder2(true);
-    setTypeFolder1(false);
-    setTypeFolder0(false);
-    setTypeFolder3(false);
-    setTypeFolder4(false);
-    handleFilterFolder('Mail 1 - Alcie');
-  };
-  const handleTypeFolder3 = () => {
-    setTypeFolder3(true);
-    setTypeFolder1(false);
-    setTypeFolder2(false);
-    setTypeFolder0(false);
-    setTypeFolder4(false);
-    handleFilterFolder('Mail 2 - Brono');
-  };
-  const handleTypeFolder4 = () => {
-    setTypeFolder4(true);
-    setTypeFolder1(false);
-    setTypeFolder2(false);
-    setTypeFolder3(false);
-    setTypeFolder0(false);
-    handleFilterFolder('Mail 3 - Kazza');
-  };
+  console.log('listFolder', listFolder);
+
   return (
-    <PopupComponent open={openProfiles} onClose={handleCloseProfiles}>
+    <PopupComponent
+      open={openProfiles}
+      onOpen={() => {
+        getProfiles();
+      }}
+      onClose={handleCloseProfiles}
+    >
       {
         <div className="-layout-choose-scripts">
           <div className="-layout-choose-scripts__container">
@@ -146,46 +248,34 @@ const PopupProfile = ({ dataProfiles, openProfiles, handleCloseProfiles, handleF
                 <h1>CHOOSE PROFILES</h1>
               </div>
               <div className="-wrapper-option-profiles -nav-scripts__btn">
-                <button>ADD</button>
+                <button onClick={addProfiles}>ADD</button>
               </div>
             </div>
             <div className="-container-scripts">
               <div className="-container-scripts__left">
                 <div className="-container-scripts__left__options">
                   <h1>FOLDER</h1>
-                  <div className="-container-scripts__left__options__type">
-                    {!typeFolder0 && !typeFolder1 && !typeFolder2 && !typeFolder3 && !typeFolder4 && <p>All</p>}
-
-                    {typeFolder0 && <p>Facebook Ads 1</p>}
-                    {typeFolder1 && <p>Seeding 1</p>}
-                    {typeFolder2 && <p>Mail 1 - Alcie</p>}
-                    {typeFolder3 && <p>Mail 2 - Brono</p>}
-                    {typeFolder4 && <p>Mail 3 - Kazza</p>}
-                  </div>
-                  <div className="-container-scripts__left__options__list -option-list">
-                    <ul>
-                      <li className="-option-item" onClick={handleTypeFolder0}>
-                        <div className="-option-item__icon" style={{ background: '#E84314' }}></div>
-                        <p>Facebook Ads 1</p>
-                      </li>
-                      <li className="-option-item" onClick={handleTypeFolder1}>
-                        <div className="-option-item__icon" style={{ background: '#F6A01D' }}></div>
-                        <p>Seeding 1</p>
-                      </li>
-                      <li className="-option-item" onClick={handleTypeFolder2}>
-                        <div className="-option-item__icon" style={{ background: '#FFDE50' }}></div>
-                        <p>Mail 1 - Alcie</p>
-                      </li>
-                      <li className="-option-item" onClick={handleTypeFolder3}>
-                        <div className="-option-item__icon" style={{ background: '#81BC06' }}></div>
-                        <p>Mail 2 - Brono</p>
-                      </li>
-                      <li className="-option-item" onClick={handleTypeFolder4}>
-                        <div className="-option-item__icon" style={{ background: '#00ADEF' }}></div>
-                        <p>Mail 3 - Kazza</p>
-                      </li>
-                    </ul>
-                  </div>
+                  <ul className="-container-scripts__left__options__list">
+                    {listFolder.map((folder) => {
+                      return (
+                        <li
+                          key={folder.name}
+                          className={`-option-item ${folder.isSelected && 'active'}`}
+                          onClick={() => {
+                            handleTypeFolder(folder.name);
+                          }}
+                        >
+                          <div className="-option-item__row">
+                            <div
+                              className="li-dot"
+                              style={{ background: folder.name !== 'All' && folder.isSelected && '#E84314' }}
+                            ></div>
+                            <p className="li-name">{folder.name}</p>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
                 </div>
               </div>
               <div className="-container-scripts__right">
@@ -196,7 +286,12 @@ const PopupProfile = ({ dataProfiles, openProfiles, handleCloseProfiles, handleF
                       <span>
                         <img src={search} alt="icon-search" style={{ marginLeft: '11px' }}></img>
                       </span>
-                      <input placeholder="Search..."></input>
+                      <input
+                        onChange={(event) => {
+                          searchProfiles(event.target.value);
+                        }}
+                        placeholder="Search..."
+                      ></input>
                     </div>
                   </div>
                   <div className="-container-scripts__right__main__content">
@@ -206,7 +301,7 @@ const PopupProfile = ({ dataProfiles, openProfiles, handleCloseProfiles, handleF
                           ...rowSelection,
                         }}
                         columns={columnsProfiles}
-                        dataSource={dataProfiles}
+                        dataSource={dataSearch}
                         pagination={false}
                       ></Table>
                     </div>
@@ -215,6 +310,7 @@ const PopupProfile = ({ dataProfiles, openProfiles, handleCloseProfiles, handleF
               </div>
             </div>
           </div>
+          <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
         </div>
       }
     </PopupComponent>

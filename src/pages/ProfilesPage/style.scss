@@ -88,7 +88,7 @@
         font-size: 15px;
         font-weight: 700;
         line-height: normal;
-        color: rgba(1, 22, 43, 0.5);
+        color: rgba(1, 22, 43);
         background-color: transparent;
         .ant-table-column-sorters {
           display: inline;
@@ -151,22 +151,25 @@
   cursor: pointer;
 }
 .-status-profiles {
-  width: 64px;
-  height: 20px;
-  padding: 5px 10px;
+  width: 65px;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border: none;
   border-radius: 14px;
   background: rgba(241, 180, 76, 0.2);
   color: rgb(241, 180, 76);
   font-size: 12px;
   font-weight: 700;
-  margin: 0;
-  line-height: 12px;
 }
 .-status-profiles-ready {
   color: #34c38f;
   background-color: rgba(52, 195, 143, 0.2);
-  padding: 5px 15px;
+}
+.-status-profiles-used {
+  background: #f9d9d9;
+  color: #e44141;
 }
 .-wrapper-option-profiles {
   display: flex;

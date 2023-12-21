@@ -1,8 +1,9 @@
-import { Switch } from 'antd';
+import { Switch, Select } from 'antd';
 import './style.scss';
 import up from '../../../assets/pictures/icon-Increase.svg';
 import down from '../../../assets/pictures/icon-Descrease.svg';
 import React from 'react';
+// import { MenuItem, Select } from '@mui/material';
 
 const SettingNormal = ({
   settings,
@@ -12,6 +13,8 @@ const SettingNormal = ({
   onChangeNumberLoop,
   handleOnChangeTypeProfile,
   handleOnchangeUrl,
+  handleOnChangeMuteaudio,
+  handleOnChangeShowImage,
   ...rest
 }) => {
   return (
@@ -30,7 +33,7 @@ const SettingNormal = ({
                   <img src={down} alt="down" width={10} height={7} />
                 </div>
               </div>
-              <input name="numberProfile" value={settings.numberProfile} onChange={onChangeNumberProfile}></input>
+              <input name="numberProfile" value={settings.countProfile} onChange={onChangeNumberProfile}></input>
             </div>
             <div className="-input-sub-settings">
               <span>profile(s)</span>
@@ -49,7 +52,7 @@ const SettingNormal = ({
                   <img src={down} alt="down" width={10} height={7} />
                 </div>
               </div>
-              <input name="numberLoop" value={settings.numberLoop} onChange={onChangeNumberLoop}></input>
+              <input name="numberLoop" value={settings.countLoop} onChange={onChangeNumberLoop}></input>
             </div>
             <div className="-input-sub-settings">
               <span>loops(s)</span>
@@ -59,42 +62,49 @@ const SettingNormal = ({
         <div className="-sub-settings">
           <p>Profile running type</p>
           <div className="-options-sub-settings">
-            <div className="-options-sub-settings__select">
-              <select
-                name="typeProfile"
-                className="-options-sub-settings__select__details"
-                onChange={handleOnChangeTypeProfile}
-                value={settings.typeProfile}
-              >
-                <option value="random">Random</option>
-                <option value="friend">TopDown</option>
-              </select>
-            </div>
+            <Select
+              id="typeProfile"
+              className="-options-sub-settings__select -options-sub-settings__details"
+              value={settings.runningType}
+              onChange={handleOnChangeTypeProfile}
+              bordered={false}
+              options={[
+                {
+                  value: 'random',
+                  label: 'Random',
+                },
+                {
+                  value: 'topdown',
+                  label: 'Topdown',
+                },
+              ]}
+            />
           </div>
         </div>
         <div className="-sub-settings">
           <p>URL</p>
           <div className="-options-sub-settings">
-            <div className="-options-sub-settings__select">
-              <select
-                name="url"
-                className="-options-sub-settings__select__details"
-                onChange={handleOnchangeUrl}
-                value={settings.url}
-              >
-                <option value="random">www.fb.com</option>
-                <option value="friend">Friend</option>
-                <option value="group">Group</option>
-              </select>
-            </div>
+            <Select
+              className="-options-sub-settings__select -options-sub-settings__details"
+              onChange={handleOnchangeUrl}
+              bordered={false}
+              defaultValue={settings.URL}
+              value={settings.URL}
+              options={[
+                {
+                  value: 'https://mbasic.facebook.com',
+                  label: 'https://mbasic.facebook.com',
+                },
+              ]}
+            />
           </div>
         </div>
         <div className="-sub-settings -sub1-settings">
-          <Switch defaultChecked onChange={() => {}} />
+          <Switch checked={settings.muteAudio} onChange={handleOnChangeMuteaudio} />
           <p>Mute Audio</p>
         </div>
         <div className="-sub-settings -sub1-settings" style={{ marginTop: '10px' }}>
-          <Switch defaultChecked onChange={() => {}} />
+          <Switch checked={settings.showImage} onChange={handleOnChangeShowImage} />
           <p>Don’t show images</p>
         </div>
       </div>

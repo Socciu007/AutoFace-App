@@ -1,4 +1,5 @@
 import React from 'react';
+import './style.scss';
 import up from '../../../assets/pictures/icon-Increase.svg';
 import down from '../../../assets/pictures/icon-Descrease.svg';
 
@@ -32,11 +33,7 @@ const SettingAdvenced = ({
                   <img src={down} alt="down" width={10} height={7} />
                 </div>
               </div>
-              <input
-                name="maxTimePerThread"
-                value={settings.maxTimePerThread}
-                onChange={onChangeMaxTimePerThread}
-              ></input>
+              <input name="maxTimePerThread" value={settings.maxTime} onChange={onChangeMaxTimePerThread}></input>
             </div>
             <div className="-input-sub-settings">
               <span>seconds(s)</span>
@@ -57,7 +54,7 @@ const SettingAdvenced = ({
               </div>
               <input
                 name="delayInEachNewThread"
-                value={settings.delayInEachNewThread}
+                value={settings.delayThread}
                 onChange={onChangeDelayInEachNewThread}
               ></input>
             </div>
@@ -78,11 +75,7 @@ const SettingAdvenced = ({
                   <img src={down} alt="down" width={10} height={7} />
                 </div>
               </div>
-              <input
-                name="stopIfRamReaches"
-                value={settings.stopIfRamReaches}
-                onChange={onChangeStopIfRamReaches}
-              ></input>
+              <input name="stopIfRamReaches" value={settings.maxRam} onChange={onChangeStopIfRamReaches}></input>
             </div>
             <div className="-input-sub-settings">
               <span>%</span>
@@ -101,11 +94,7 @@ const SettingAdvenced = ({
                   <img src={down} alt="down" width={10} height={7} />
                 </div>
               </div>
-              <input
-                name="stopIfCPUReaches"
-                value={settings.stopIfCPUReaches}
-                onChange={onChangeStopIfCPUReaches}
-              ></input>
+              <input name="stopIfCPUReaches" value={settings.maxCpu} onChange={onChangeStopIfCPUReaches}></input>
             </div>
             <div className="-input-sub-settings">
               <span>%</span>
@@ -113,7 +102,7 @@ const SettingAdvenced = ({
           </div>
         </div>
         <div className="-sub-settings">
-          <p>Stop if CPU reaches</p>
+          <p>Stop if DISK reaches</p>
           <div className="-options-sub-settings">
             <div className="-count-settings">
               <div className="Icon-Upn_Down">
@@ -124,11 +113,7 @@ const SettingAdvenced = ({
                   <img src={down} alt="down" width={10} height={7} />
                 </div>
               </div>
-              <input
-                name="stopIfDiskReaches"
-                value={settings.stopIfDiskReaches}
-                onChange={onChangeStopIfDiskReaches}
-              ></input>
+              <input name="stopIfDiskReaches" value={settings.maxDisk} onChange={onChangeStopIfDiskReaches}></input>
             </div>
             <div className="-input-sub-settings">
               <span>%</span>

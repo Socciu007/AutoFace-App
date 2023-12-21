@@ -84,29 +84,63 @@
           margin: 0 auto;
           width: 93%;
           height: 100%;
-          &__details {
-            cursor: pointer;
-            width: 100%;
-            height: 100%;
+        }
+        &__details {
+          cursor: pointer;
+          font-size: 15px;
+          font-weight: 400;
+          width: 100%;
+          height: 40px;
+          appearance: none;
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          background-image: url(/src/assets/icon/icon-down.svg);
+          background-repeat: no-repeat;
+          background-position: right 30px center;
+          .ant-select-selector {
+            padding: 0 18px;
             border: none;
-            border-radius: 8px;
             font-size: 15px;
+          }
+          .ant-select-arrow {
+            color: #01162b;
+          }
+
+          option {
             font-weight: 400;
+            color: var(--font-color-para);
+          }
+          svg {
+            display: none;
           }
         }
       }
     }
     .-sub1-settings {
       display: flex;
-      gap: 20px;
+      align-items: center;
+      gap: 14px;
       margin-top: 28px;
       margin-bottom: 0px;
       button {
-        height: 20px;
+        border-radius: 20px;
+        min-width: 30.933px;
+        height: 16px;
+
         .ant-switch-handle {
-          height: 16px;
-          width: 16px;
+          position: absolute;
+          top: 0px;
+          inset-inline-start: 0px;
+          width: 14.668px;
+          height: 14.668px;
+          transition: all 0.2s ease-in-out;
         }
+        // .ant-switch-inner {
+        //   min-width: 30.933px;
+        // }
+      }
+      .ant-switch.ant-switch-checked .ant-switch-handle {
+        inset-inline-start: calc(100% - 15.5px);
       }
       p {
         line-height: 22px;
