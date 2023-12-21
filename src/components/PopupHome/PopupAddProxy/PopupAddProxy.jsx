@@ -7,6 +7,11 @@ import SnackbarApp from '../../Alert';
 import { apiUpdateProfiles } from '../../../services/api_helper';
 import storageService from '../../../services/storage.service';
 import { storageProfiles } from '../../../common/const.config';
+import Editor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
+
 // import { Select } from 'antd';
 import { MenuItem, Select } from '@mui/material';
 
@@ -29,14 +34,23 @@ const PopupAddProxy = ({
   };
 
   const onChangeProxyType = (e) => {
-    console.log(e.target.value);
     setProxyType(e.target.value);
   };
 
   const onchangeProxyString = (value) => {
-    setProxyString(value);
+    if (value.length !== 0) {
+      setOpenWriteText(true);
+      setProxyString(value);
+    } else {
+      setOpenWriteText(false);
+    }
   };
 
+  const hightlightWithLineNumbers = (input, language) =>
+    highlight(input, language)
+      .split('\n')
+      .map((line, i) => `<span class='editorLineNumber ${proxyString ? '' : 'hide'}'>${i + 1}</span>${line}`)
+      .join('\n');
   const changeProxy = async () => {
     if (proxyString !== '') {
       const listProxy = [];
@@ -134,35 +148,40 @@ const PopupAddProxy = ({
             <div className="-add-proxys__type">
               <p>Proxy list</p>
               <div className="-add-proxys-nav -list-proxys">
-                <textarea
-                  onChange={(event) => {
-                    onchangeProxyString(event.target.value);
-                  }}
-                  value={proxyString}
-                  name=""
-                  type="text"
+                <div className="keywordText">
+                  <Editor
+                    value={proxyString}
+                    onValueChange={onchangeProxyString}
+                    highlight={(proxyString) => hightlightWithLineNumbers(proxyString, languages.js)}
+                    padding={15}
+                    onClick={handleWriteText}
+                    className="editor"
+                    textareaId="codeArea"
+                  />
+                </div>
+
+                <div
+                  className="placeholder"
                   onClick={handleWriteText}
-                ></textarea>
-                <div className="-form-instruct" onClick={handleWriteText}>
-                  <p style={{ marginRight: '19px' }}>
+                  style={{ display: openWriteText ? 'none' : 'inline' }}
+                >
+                  <p>
                     <span>1</span>
-                    <div style={{ display: openWriteText ? 'none' : 'inline' }}>Enter the content here</div>
+                    <div>Enter the content here</div>
                   </p>
-                  <p style={{ marginRight: '19px' }}>
+                  <p>
                     <span>2</span>
-                    <div style={{ display: openWriteText ? 'none' : 'inline' }}>
-                      <b>Proxy format: </b>IP:Port:Username:Password
+                    <div>
+                      <span style={{ opacity: 1, fontWeight: 700 }}>Proxy format: </span>IP:Port:Username:Password
                     </div>
                   </p>
                   <p>
                     <span>3</span>
-                    <div style={{ display: openWriteText ? 'none' : 'inline' }}>1 proxy/line</div>
+                    <div>1 proxy/line</div>
                   </p>
                   <p>
                     <span>4</span>
-                    <div style={{ display: openWriteText ? 'none' : 'inline' }}>
-                      The number of proxies should not be less or more than the number of profiles
-                    </div>
+                    <div>The number of proxies should not be less or more than the number of profiles</div>
                   </p>
                 </div>
                 <div onClick={changeProxy} className="-list-proxys__save">
