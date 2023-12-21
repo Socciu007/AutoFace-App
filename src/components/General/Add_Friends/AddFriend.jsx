@@ -168,23 +168,25 @@ const AddFriend = ({ onGoBackClick }) => {
                   selectedValueTypeAddFriend === 'groupMembers' ||
                   selectedValueTypeAddFriend === 'friendOfUID') && (
                   <div>
-                    <div className="component-item textAddFriend">
-                      <Editor
-                        value={textContentAddFriendRequest}
-                        onValueChange={(textContentAddFriendRequest) =>
-                          setTextContentAddFriendRequest(textContentAddFriendRequest)
-                        }
-                        highlight={(textContentAddFriendRequest) =>
-                          hightlightWithLineNumbers(textContentAddFriendRequest, languages.js)
-                        }
-                        padding={15}
-                        className="editor"
-                        textareaId="textareaContent"
-                        style={{
-                          background: '#F5F5F5',
-                          fontSize: 15,
-                        }}
-                      />
+                    <div style={{ position: 'relative' }} className="component-item">
+                      <div className="textAddFriend" style={{ width: '100%', height: 204, overflow: 'auto' }}>
+                        <Editor
+                          value={textContentAddFriendRequest}
+                          onValueChange={(textContentAddFriendRequest) =>
+                            setTextContentAddFriendRequest(textContentAddFriendRequest)
+                          }
+                          highlight={(textContentAddFriendRequest) =>
+                            hightlightWithLineNumbers(textContentAddFriendRequest, languages.js)
+                          }
+                          padding={15}
+                          className="editor"
+                          textareaId="textareaContent"
+                          style={{
+                            background: '#F5F5F5',
+                            fontSize: 15,
+                          }}
+                        />
+                      </div>
                       <div
                         onClick={handleDivClick}
                         id="placeholderTypeAddFriend"
@@ -350,21 +352,26 @@ const AddFriend = ({ onGoBackClick }) => {
                             />
                             <p>Comment</p>
                           </div>
-                          <div className={`component-item textComment ${isComment ? 'show' : 'hide'}`}>
-                            <Editor
-                              value={textContentComment}
-                              onValueChange={(textContentComment) => setTextContentComment(textContentComment)}
-                              highlight={(textContentComment) =>
-                                hightlightWithLineNumbersComment(textContentComment, languages.js)
-                              }
-                              padding={15}
-                              className="editor"
-                              textareaId="codeArea"
-                              style={{
-                                background: '#fff',
-                                fontSize: 15,
-                              }}
-                            />
+                          <div
+                            style={{ position: 'relative' }}
+                            className={`component-item  ${isComment ? 'show' : 'hide'}`}
+                          >
+                            <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="textComment">
+                              <Editor
+                                value={textContentComment}
+                                onValueChange={(textContentComment) => setTextContentComment(textContentComment)}
+                                highlight={(textContentComment) =>
+                                  hightlightWithLineNumbersComment(textContentComment, languages.js)
+                                }
+                                padding={15}
+                                className="editor"
+                                textareaId="codeArea"
+                                style={{
+                                  background: '#fff',
+                                  fontSize: 15,
+                                }}
+                              />
+                            </div>
                             <div
                               className={`placeholder ${textContentComment ? 'hide' : ''}`}
                               onClick={handleDivCommentClick}
@@ -394,4 +401,3 @@ const AddFriend = ({ onGoBackClick }) => {
 };
 
 export default AddFriend;
-// TypeError: Cannot read properties of null (reading '_textarea')

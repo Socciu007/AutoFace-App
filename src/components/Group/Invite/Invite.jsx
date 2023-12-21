@@ -124,21 +124,23 @@ const Invite = ({ onGoBackClick }) => {
                         <p>Group UID list</p>
                         <span>({lineCount})</span>
                       </div>
-                      <div className="component-item UIDText">
-                        <Editor
-                          onChange={handleTextareaChangeUIDContent}
-                          onPaste={handleTextareaPaste}
-                          value={UIDContent}
-                          onValueChange={(UIDContent) => setUIDContent(UIDContent)}
-                          highlight={(UIDContent) => hightlightWithLineNumbers(UIDContent, languages.js)}
-                          padding={15}
-                          className="editor"
-                          textareaId="codeArea"
-                          style={{
-                            background: '#f5f5f5',
-                            fontSize: 15,
-                          }}
-                        />
+                      <div className="component-item " style={{ position: 'relative' }}>
+                        <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="UIDText">
+                          <Editor
+                            onChange={handleTextareaChangeUIDContent}
+                            onPaste={handleTextareaPaste}
+                            value={UIDContent}
+                            onValueChange={(UIDContent) => setUIDContent(UIDContent)}
+                            highlight={(UIDContent) => hightlightWithLineNumbers(UIDContent, languages.js)}
+                            padding={15}
+                            className="editor"
+                            textareaId="codeArea"
+                            style={{
+                              background: '#f5f5f5',
+                              fontSize: 15,
+                            }}
+                          />
+                        </div>
                         <div onClick={handleDivClick} className={`placeholder ${UIDContent ? 'hide' : ''}`}>
                           <p>
                             <span>1</span>Enter the UID here

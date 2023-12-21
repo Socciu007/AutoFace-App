@@ -147,19 +147,21 @@ const CreatePostGroup = ({ onGoBackClick }) => {
                 <div>
                   <div className="Text">
                     <p className="selectPost__header">Text</p>
-                    <div className="component-item text">
-                      <Editor
-                        value={textContent}
-                        onValueChange={handleTextareaChange}
-                        highlight={(textContent) => LineNumbersText(textContent, languages.js)}
-                        padding={15}
-                        className="editor"
-                        textareaId="text"
-                        style={{
-                          background: '#f5f5f5',
-                          fontSize: 15,
-                        }}
-                      />
+                    <div className="component-item " style={{ position: 'relative' }}>
+                      <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
+                        <Editor
+                          value={textContent}
+                          onValueChange={handleTextareaChange}
+                          highlight={(textContent) => LineNumbersText(textContent, languages.js)}
+                          padding={15}
+                          className="editor"
+                          textareaId="text"
+                          style={{
+                            background: '#f5f5f5',
+                            fontSize: 15,
+                          }}
+                        />
+                      </div>
                       <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
                         <p>
                           <span>1</span>Enter the content here
@@ -290,19 +292,21 @@ const CreatePostGroup = ({ onGoBackClick }) => {
                         <img src={downButton} alt="Down button" />
                       </div>
                       {selectedValueFriend === 'UIDList' && (
-                        <div className="component-item text">
-                          <Editor
-                            value={UIDtextContent}
-                            onValueChange={handleTextareaUIDChange}
-                            highlight={(UIDtextContent) => LineNumbersUID(UIDtextContent, languages.js)}
-                            padding={15}
-                            className="editor"
-                            textareaId="UID"
-                            style={{
-                              background: '#f5f5f5',
-                              fontSize: 15,
-                            }}
-                          />
+                        <div className="component-item " style={{ position: 'relative' }}>
+                          <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
+                            <Editor
+                              value={UIDtextContent}
+                              onValueChange={handleTextareaUIDChange}
+                              highlight={(UIDtextContent) => LineNumbersUID(UIDtextContent, languages.js)}
+                              padding={15}
+                              className="editor"
+                              textareaId="UID"
+                              style={{
+                                background: '#f5f5f5',
+                                fontSize: 15,
+                              }}
+                            />
+                          </div>
                           <div onClick={handleUIDDivClick} className={`placeholder ${UIDtextContent ? 'hide' : ''}`}>
                             <p>
                               <span>1</span>Enter the content here
@@ -320,21 +324,23 @@ const CreatePostGroup = ({ onGoBackClick }) => {
                         <p>Group UID list</p>
                         <span>({lineCount})</span>
                       </div>
-                      <div className="component-item UID">
-                        <Editor
-                          onChange={handleTextareaChangeUIDList}
-                          onPaste={handleTextareaUIDListPaste}
-                          value={UIDListContent}
-                          onValueChange={(UIDListContent) => setUIDContent(UIDListContent)}
-                          highlight={(UIDListContent) => hightlightWithLineNumbers(UIDListContent, languages.js)}
-                          padding={15}
-                          className="editor"
-                          textareaId="codeArea"
-                          style={{
-                            background: '#f5f5f5',
-                            fontSize: 15,
-                          }}
-                        />
+                      <div className="component-item" style={{ position: 'relative' }}>
+                        <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="UID">
+                          <Editor
+                            onChange={handleTextareaChangeUIDList}
+                            onPaste={handleTextareaUIDListPaste}
+                            value={UIDListContent}
+                            onValueChange={(UIDListContent) => setUIDContent(UIDListContent)}
+                            highlight={(UIDListContent) => hightlightWithLineNumbers(UIDListContent, languages.js)}
+                            padding={15}
+                            className="editor"
+                            textareaId="codeArea"
+                            style={{
+                              background: '#f5f5f5',
+                              fontSize: 15,
+                            }}
+                          />
+                        </div>
 
                         <div onClick={handleDivUIDListClick} className={`placeholder ${UIDListContent ? 'hide' : ''}`}>
                           <p>

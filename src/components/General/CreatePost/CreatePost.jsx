@@ -1,4 +1,4 @@
-// import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './style.scss';
 import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
@@ -136,19 +136,21 @@ const CreatePost = ({ onGoBackClick }) => {
                 {(selectedValuePost === 'background' || selectedValuePost === 'photoOrVideo') && (
                   <div className="Text">
                     <p className="selectPost__header">Text</p>
-                    <div className="component-item text">
-                      <Editor
-                        value={textContent}
-                        onValueChange={handleTextareaChange}
-                        highlight={(textContent) => LineNumbersText(textContent, languages.js)}
-                        padding={15}
-                        className="editor"
-                        textareaId="text"
-                        style={{
-                          background: '#f5f5f5',
-                          fontSize: 15,
-                        }}
-                      />
+                    <div style={{ position: 'relative' }} className="component-item">
+                      <div className="text" style={{ width: '100%', height: 204, overflow: 'auto' }}>
+                        <Editor
+                          value={textContent}
+                          onValueChange={handleTextareaChange}
+                          highlight={(textContent) => LineNumbersText(textContent, languages.js)}
+                          padding={15}
+                          className="editor"
+                          textareaId="text"
+                          style={{
+                            background: '#f5f5f5',
+                            fontSize: 15,
+                          }}
+                        />
+                      </div>
                       <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
                         <p>
                           <span>1</span>Enter the content here
@@ -274,28 +276,28 @@ const CreatePost = ({ onGoBackClick }) => {
                         </Select>
                       </div>
                       {selectedValueFriend === 'UIDList' && (
-                        <div className="component-item text">
-                          <Editor
-                            value={UIDtextContent}
-                            onValueChange={handleTextareaUIDChange}
-                            highlight={(UIDtextContent) =>
-                              LineNumbersUID(UIDtextContent, languages.js)
-                            }
-                            padding={15}
-                            className="editor"
-                            textareaId="UID"
-                            style={{
-                              background: '#f5f5f5',
-                              fontSize: 15,
-                            }}
-                          />
-                          <div onClick={handleUIDDivClick} className={`placeholder ${UIDtextContent ? 'hide' : ''}`}>
-                            <p>
-                              <span>1</span>Enter the content here
-                            </p>
-                            <p>
-                              <span>2</span>Each content/line
-                            </p>
+                        <div style={{ position: 'relative' }} className="component-item">
+                          <div className="text" style={{ width: '100%', height: 204, overflow: 'auto' }}>
+                            <Editor
+                              value={UIDtextContent}
+                              onValueChange={handleTextareaUIDChange}
+                              highlight={(UIDtextContent) => LineNumbersUID(UIDtextContent, languages.js)}
+                              padding={15}
+                              className="editor"
+                              textareaId="UID"
+                              style={{
+                                background: '#f5f5f5',
+                                fontSize: 15,
+                              }}
+                            />
+                            <div onClick={handleUIDDivClick} className={`placeholder ${UIDtextContent ? 'hide' : ''}`}>
+                              <p>
+                                <span>1</span>Enter the content here
+                              </p>
+                              <p>
+                                <span>2</span>Each content/line
+                              </p>
+                            </div>
                           </div>
                         </div>
                       )}

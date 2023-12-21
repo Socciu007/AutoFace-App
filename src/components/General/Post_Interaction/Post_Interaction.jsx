@@ -71,21 +71,23 @@ const Post_Interaction = ({ onGoBackClick }) => {
                 Post UID list
                 <span>({lineCount})</span>
               </p>
-              <div className="component-item text">
-                <Editor
-                  value={TextUIDContent}
-                  onPaste={handleUIDContentPaste}
-                  onChange={handleChangeUID}
-                  onValueChange={(TextUIDContent) => setValueUID(TextUIDContent)}
-                  highlight={(TextUIDContent) => hightlightWithLineNumbersUID(TextUIDContent, languages.js)}
-                  padding={15}
-                  className="editor"
-                  textareaId="UID"
-                  style={{
-                    background: '#f5f5f5',
-                    fontSize: 15,
-                  }}
-                />
+              <div className="component-item" style={{ position: 'relative' }}>
+                <div className=" text" style={{ width: '100%', height: 204, overflow: 'auto' }}>
+                  <Editor
+                    value={TextUIDContent}
+                    onPaste={handleUIDContentPaste}
+                    onChange={handleChangeUID}
+                    onValueChange={(TextUIDContent) => setValueUID(TextUIDContent)}
+                    highlight={(TextUIDContent) => hightlightWithLineNumbersUID(TextUIDContent, languages.js)}
+                    padding={15}
+                    className="editor"
+                    textareaId="UID"
+                    style={{
+                      background: '#f5f5f5',
+                      fontSize: 15,
+                    }}
+                  />
+                </div>
                 <div onClick={handleDivUIDClick} className={`placeholder ${TextUIDContent ? 'hide' : ''}`}>
                   <p>
                     <span>1</span>Enter the content here
@@ -309,20 +311,22 @@ const Post_Interaction = ({ onGoBackClick }) => {
                     <p>Text</p>
                   </div>
 
-                  <div className={`component-item text ${isText ? 'show' : 'hide'}`}>
-                    <Editor
-                      value={TextCommentContent}
-                      onChange={handleChangeComment}
-                      onValueChange={(TextCommentContent) => setValueComment(TextCommentContent)}
-                      highlight={(code) => hightlightWithLineNumbersComment(code, languages.js)}
-                      padding={15}
-                      className="editor"
-                      textareaId="Comment"
-                      style={{
-                        background: '#f5f5f5',
-                        fontSize: 15,
-                      }}
-                    />
+                  <div style={{ position: 'relative' }} className={`component-item  ${isText ? 'show' : 'hide'}`}>
+                    <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
+                      <Editor
+                        value={TextCommentContent}
+                        onChange={handleChangeComment}
+                        onValueChange={(TextCommentContent) => setValueComment(TextCommentContent)}
+                        highlight={(code) => hightlightWithLineNumbersComment(code, languages.js)}
+                        padding={15}
+                        className="editor"
+                        textareaId="Comment"
+                        style={{
+                          background: '#f5f5f5',
+                          fontSize: 15,
+                        }}
+                      />
+                    </div>
                     <div onClick={handleDivCommentClick} className={`placeholder ${TextCommentContent ? 'hide' : ''}`}>
                       <p>
                         <span>1</span>Enter the content here

@@ -131,19 +131,21 @@ const LeaveGroup = ({ onGoBackClick }) => {
                     </div>
                     <div className="KeywordContent">
                       <p>The group name contains the following keywords:</p>
-                      <div className="component-item keywordText">
-                        <Editor
-                          value={KeywordContent}
-                          onValueChange={handleTextareaChangeKeywordContent}
-                          highlight={(KeywordContent) => hightlightWithLineNumbers(KeywordContent, languages.js)}
-                          padding={15}
-                          className="editor"
-                          textareaId="codeArea"
-                          style={{
-                            background: '#fff',
-                            fontSize: 15,
-                          }}
-                        />
+                      <div className="component-item " style={{ position: 'relative' }}>
+                        <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="keywordText">
+                          <Editor
+                            value={KeywordContent}
+                            onValueChange={handleTextareaChangeKeywordContent}
+                            highlight={(KeywordContent) => hightlightWithLineNumbers(KeywordContent, languages.js)}
+                            padding={15}
+                            className="editor"
+                            textareaId="codeArea"
+                            style={{
+                              background: '#fff',
+                              fontSize: 15,
+                            }}
+                          />
+                        </div>
                         <div onClick={handleDivClick} className={`placeholder ${KeywordContent ? 'hide' : ''}`}>
                           <p>
                             <span>1 </span>

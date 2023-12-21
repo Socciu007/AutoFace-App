@@ -133,23 +133,25 @@ const JoinGroup = ({ onGoBackClick }) => {
                           {selectedValueJoinGroup === 'UID' && <p>UID list</p>}
                           <span>({lineCount})</span>
                         </div>
-                        <div className="component-item keywordText">
-                          <Editor
-                            onChange={handleTextareaChangeKeywordContent}
-                            onPaste={handleKeywordTextareaPaste}
-                            value={KeywordContent}
-                            onValueChange={(KeywordContent) => setKeywordContent(KeywordContent)}
-                            highlight={(KeywordContent) =>
-                              hightlightWithLineNumbersKeyword(KeywordContent, languages.js)
-                            }
-                            padding={15}
-                            className="editor"
-                            textareaId="keyword"
-                            style={{
-                              background: '#f5f5f5',
-                              fontSize: 15,
-                            }}
-                          />
+                        <div className="component-item " style={{ position: 'relative' }}>
+                          <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="keywordText">
+                            <Editor
+                              onChange={handleTextareaChangeKeywordContent}
+                              onPaste={handleKeywordTextareaPaste}
+                              value={KeywordContent}
+                              onValueChange={(KeywordContent) => setKeywordContent(KeywordContent)}
+                              highlight={(KeywordContent) =>
+                                hightlightWithLineNumbersKeyword(KeywordContent, languages.js)
+                              }
+                              padding={15}
+                              className="editor"
+                              textareaId="keyword"
+                              style={{
+                                background: '#f5f5f5',
+                                fontSize: 15,
+                              }}
+                            />
+                          </div>
 
                           <div
                             onClick={handleDivKeywordClick}
@@ -170,19 +172,21 @@ const JoinGroup = ({ onGoBackClick }) => {
                         <input type="checkbox" name="autoAnswer" onChange={handleCheckboxChangeAutoAnswer} />
                         <p>Automatically answer the questions</p>
                       </div>
-                      <div className={`component-item AutoAnswerText ${isAutoAnswer ? 'show' : 'hide'}`}>
-                        <Editor
-                          value={AnswerContent}
-                          onValueChange={handleTextareaChangeAnswerContent}
-                          highlight={(AnswerContent) => hightlightWithLineNumbers(AnswerContent, languages.js)}
-                          padding={15}
-                          className="editor"
-                          textareaId="answer"
-                          style={{
-                            background: '#f5f5f5',
-                            fontSize: 15,
-                          }}
-                        />
+                      <div className={`component-item  ${isAutoAnswer ? 'show' : 'hide'}`}>
+                        <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="AutoAnswerText">
+                          <Editor
+                            value={AnswerContent}
+                            onValueChange={handleTextareaChangeAnswerContent}
+                            highlight={(AnswerContent) => hightlightWithLineNumbers(AnswerContent, languages.js)}
+                            padding={15}
+                            className="editor"
+                            textareaId="answer"
+                            style={{
+                              background: '#f5f5f5',
+                              fontSize: 15,
+                            }}
+                          />
+                        </div>
                         <div onClick={handleDivAnswerClick} className={`placeholder ${AnswerContent ? 'hide' : ''}`}>
                           <p>
                             <span>1</span>Enter the answer here

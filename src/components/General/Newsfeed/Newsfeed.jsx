@@ -8,6 +8,7 @@ import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
+import 'prismjs/themes/prism.css';
 import { ShowTextarea, useRangeValues, useShowCheckbox } from './Newsfeed';
 const Newsfeed = ({ onGoBackClick }) => {
   const initialValues = {
@@ -38,6 +39,7 @@ const Newsfeed = ({ onGoBackClick }) => {
   const { isText, handleCheckboxChangeText } = useShowCheckbox(false, 'Text');
 
   const { textContent, handleDivClick, hightlightWithLineNumbers, setTextContent } = ShowTextarea();
+
   return (
     <div className="newsfeed">
       <div className="component_container">
@@ -223,28 +225,32 @@ const Newsfeed = ({ onGoBackClick }) => {
                     <input type="checkbox" name="randomLike" onChange={handleCheckboxChangeText} />
                     <p>Text</p>
                   </div>
-
-                  <div className={`component-item text ${isText ? 'show' : 'hide'}`}>
-                    <Editor
-                      value={textContent}
-                      onValueChange={(textContent) => setTextContent(textContent)}
-                      highlight={(code) => hightlightWithLineNumbers(code, languages.js)}
-                      padding={15}
-                      className="editor"
-                      textareaId="codeArea"
-                      style={{
-                        background: '#f5f5f5',
-                        fontSize: 15,
-                        overflow: 'auto',
-                      }}
-                    />
-                    <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
-                      <p>
-                        <span>1</span>Enter the content here
-                      </p>
-                      <p>
-                        <span>2</span>Each content/line
-                      </p>
+                  <div style={{ position: 'relative' }} className="component-item">
+                    <div
+                      style={{ width: '100%', height: 204, overflow: 'auto' }}
+                      className={`text ${isText ? 'show' : 'hide'}`}
+                    >
+                      <Editor
+                        value={textContent}
+                        onValueChange={(textContent) => setTextContent(textContent)}
+                        highlight={(code) => hightlightWithLineNumbers(code, languages.js)}
+                        padding={15}
+                        className={`editor ${isText ? 'show' : 'hide'}`}
+                        textareaId="codeArea"
+                        onClick={handleDivClick}
+                        style={{
+                          background: '#f5f5f5',
+                          fontSize: 15,
+                        }}
+                      />
+                      <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
+                        <p>
+                          <span>1</span>Enter the content here
+                        </p>
+                        <p>
+                          <span>2</span>Each content/line
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
