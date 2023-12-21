@@ -119,6 +119,8 @@
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
+            overflow-x: hidden;
+            padding: 15px 10px 15px 20px;
           }
         }
       }
@@ -131,22 +133,44 @@
         }
       }
       .text {
-        position: relative;
-        textarea {
-          min-height: 180px;
+        border-radius: 5px;
+        border: 1px dashed rgba(1, 22, 43, 0.2);
+        scrollbar-width: none;
+        &::-webkit-scrollbar {
+          display: none;
+        }
+        .editor {
           min-width: 100%;
-          border-radius: 5px;
-          border: 1px dashed rgba(1, 22, 43, 0.2);
-          background: #f5f5f5;
-          font-size: 15px;
-          padding: 2%;
+          min-height: 100%;
+          float: left;
+
+          font-family: 'GoogleSans';
         }
-        .placeholder {
-          position: absolute;
+
+        .editor #codeArea {
+          outline: none;
+          padding-left: 9% !important;
+        }
+
+        .editor pre {
+          padding-left: 9% !important;
           width: 100%;
-          top: 10%;
-          transform: translate(0, -10%);
         }
+
+        .editor .editorLineNumber {
+          position: absolute;
+          left: 0px;
+          color: #cccccc;
+          text-align: right;
+          width: 6%;
+          font-weight: 100;
+        }
+      }
+      .placeholder {
+        position: absolute;
+        width: 100%;
+        top: 10%;
+        transform: translate(0, -10%);
         p {
           font-size: 15px;
           font-weight: 400;

@@ -1,11 +1,14 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useEffect, useState, useRef } from 'react';
+import React from 'react';
 import './style.scss';
 import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
 import downButton from '../../../assets/icon/icon-down.svg';
-
+import Editor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
 import { AnswerTextarea, CancelFriendOption, KeywordTextarea, ShowAutoAnswer, useRangeValues } from './JoinGroup.js';
 const JoinGroup = ({ onGoBackClick }) => {
   const initialValues = {
@@ -20,10 +23,18 @@ const JoinGroup = ({ onGoBackClick }) => {
 
   const { selectedValueJoinGroup, handleSelectChangeJoinGroup } = CancelFriendOption();
 
-  const { KeywordContent, handleTextareaChangeKeywordContent, handleKeywordTextareaPaste, lineCount } =
-    KeywordTextarea();
+  const {
+    KeywordContent,
+    handleTextareaChangeKeywordContent,
+    handleKeywordTextareaPaste,
+    lineCount,
+    handleDivKeywordClick,
+    hightlightWithLineNumbersKeyword,
+    setKeywordContent,
+  } = KeywordTextarea();
 
-  const { AnswerContent, handleTextareaChangeAnswerContent } = AnswerTextarea();
+  const { AnswerContent, handleTextareaChangeAnswerContent, handleDivAnswerClick, hightlightWithLineNumbers } =
+    AnswerTextarea();
 
   const { isAutoAnswer, handleCheckboxChangeAutoAnswer } = ShowAutoAnswer();
   return (
@@ -122,16 +133,30 @@ const JoinGroup = ({ onGoBackClick }) => {
                           {selectedValueJoinGroup === 'UID' && <p>UID list</p>}
                           <span>({lineCount})</span>
                         </div>
-                        <div className="component-item keywordText">
-                          <textarea
-                            id="KeywordContent"
-                            name="KeywordContent"
-                            rows="10"
-                            value={KeywordContent}
-                            onChange={handleTextareaChangeKeywordContent}
-                            onPaste={handleKeywordTextareaPaste}
-                          ></textarea>
-                          <div className={`placeholder ${KeywordContent ? 'hide' : ''}`}>
+                        <div className="component-item " style={{ position: 'relative' }}>
+                          <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="keywordText">
+                            <Editor
+                              onChange={handleTextareaChangeKeywordContent}
+                              onPaste={handleKeywordTextareaPaste}
+                              value={KeywordContent}
+                              onValueChange={(KeywordContent) => setKeywordContent(KeywordContent)}
+                              highlight={(KeywordContent) =>
+                                hightlightWithLineNumbersKeyword(KeywordContent, languages.js)
+                              }
+                              padding={15}
+                              className="editor"
+                              textareaId="keyword"
+                              style={{
+                                background: '#f5f5f5',
+                                fontSize: 15,
+                              }}
+                            />
+                          </div>
+
+                          <div
+                            onClick={handleDivKeywordClick}
+                            className={`placeholder ${KeywordContent ? 'hide' : ''}`}
+                          >
                             <p>
                               <span>1</span>Enter the keyword here
                             </p>
@@ -147,15 +172,22 @@ const JoinGroup = ({ onGoBackClick }) => {
                         <input type="checkbox" name="autoAnswer" onChange={handleCheckboxChangeAutoAnswer} />
                         <p>Automatically answer the questions</p>
                       </div>
-                      <div className={`component-item AutoAnswerText ${isAutoAnswer ? 'show' : 'hide'}`}>
-                        <textarea
-                          id="AnswerContent"
-                          name="AnswerContent"
-                          rows="10"
-                          value={AnswerContent}
-                          onChange={handleTextareaChangeAnswerContent}
-                        ></textarea>
-                        <div className={`placeholder ${AnswerContent ? 'hide' : ''}`}>
+                      <div className={`component-item  ${isAutoAnswer ? 'show' : 'hide'}`}>
+                        <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="AutoAnswerText">
+                          <Editor
+                            value={AnswerContent}
+                            onValueChange={handleTextareaChangeAnswerContent}
+                            highlight={(AnswerContent) => hightlightWithLineNumbers(AnswerContent, languages.js)}
+                            padding={15}
+                            className="editor"
+                            textareaId="answer"
+                            style={{
+                              background: '#f5f5f5',
+                              fontSize: 15,
+                            }}
+                          />
+                        </div>
+                        <div onClick={handleDivAnswerClick} className={`placeholder ${AnswerContent ? 'hide' : ''}`}>
                           <p>
                             <span>1</span>Enter the answer here
                           </p>

@@ -5,7 +5,10 @@ import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
 import iconQuestion from '../../../assets/icon/icon-question.svg';
-
+import Editor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
 import { TextareaComment, useRangeValues, useShowCheckbox } from './WatchStory';
 const WatchStory = ({ onGoBackClick }) => {
   const initialValues = {
@@ -22,7 +25,7 @@ const WatchStory = ({ onGoBackClick }) => {
 
   const { isComment, handleCheckboxChangeComment } = useShowCheckbox(false, 'Comment');
 
-  const { textContent, handleTextareaChange, handleDivClick, textareaRef } = TextareaComment();
+  const { textContent, handleTextareaChange, handleDivClick, hightlightWithLineNumbers } = TextareaComment();
 
   return (
     <div className={`watch-story`}>
@@ -132,15 +135,21 @@ const WatchStory = ({ onGoBackClick }) => {
                 <img src={iconQuestion} alt="icon Question" />
               </div>
               <div className={`commentContent Text ${isComment ? 'show' : 'hide'}`}>
-                <div className="component-item text">
-                  <textarea
-                    id="textContent"
-                    name="textContent"
-                    rows="10"
-                    value={textContent}
-                    onChange={handleTextareaChange}
-                    ref={textareaRef}
-                  ></textarea>
+                <div className="component-item " style={{ position: 'relative' }}>
+                  <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
+                    <Editor
+                      value={textContent}
+                      onValueChange={handleTextareaChange}
+                      highlight={(textContent) => hightlightWithLineNumbers(textContent, languages.js)}
+                      padding={15}
+                      className="editor"
+                      textareaId="codeArea"
+                      style={{
+                        background: '#f5f5f5',
+                        fontSize: 15,
+                      }}
+                    />
+                  </div>
                   <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
                     <p>
                       <span>1</span>Enter the content here

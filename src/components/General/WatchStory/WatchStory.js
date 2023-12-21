@@ -1,19 +1,18 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useRef, useState } from 'react';
+import { highlight, languages } from 'prismjs/components/prism-core';
 export function handleInputChange(event, setValues, prefix, values) {
   const inputValue = event.target.value;
   const isNumber = /^\d*$/.test(inputValue);
 
-  if (isNumber && inputValue.length < 3) {
-    const newValue = inputValue === '' ? '' : parseInt(inputValue, 10);
+  const newValue = isNumber ? inputValue : '';
 
-    const updatedValues = {
-      ...values,
-      [`${prefix}${event.target.name}`]: newValue,
-    };
+  const updatedValues = {
+    ...values,
+    [`${prefix}${event.target.name}`]: newValue,
+  };
 
-    setValues(updatedValues);
-  }
+  setValues(updatedValues);
 }
 
 export function useRangeValues(initialValues, prefix) {
@@ -68,18 +67,22 @@ export function useShowCheckbox(initialState, featureName) {
 export function TextareaComment() {
   //cai dat cho phan text comment
   const [textContent, setTextContent] = useState('');
-  const textareaRef = useRef(null);
 
-  const handleTextareaChange = (event) => {
-    setTextContent(event.target.value);
+  const handleTextareaChange = (value) => {
+    setTextContent(value);
   };
   const handleDivClick = () => {
-    textareaRef.current.focus();
+    document.getElementById('codeArea').focus();
   };
+  const hightlightWithLineNumbers = (input, language) =>
+    highlight(input, language)
+      .split('\n')
+      .map((line, i) => `<span class='editorLineNumber ${textContent ? '' : 'hide'}'>${i + 1}</span>${line}`)
+      .join('\n');
   return {
     textContent,
     handleTextareaChange,
     handleDivClick,
-    textareaRef,
+    hightlightWithLineNumbers,
   };
 }

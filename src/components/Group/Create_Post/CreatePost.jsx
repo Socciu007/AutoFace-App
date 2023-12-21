@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useEffect, useState, useRef } from 'react';
+import React from 'react';
 import './style.scss';
 import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
@@ -7,15 +7,11 @@ import backButton from '../../../assets/icon/icon-back.svg';
 import DragButton from '../../../assets/icon/icon-drag.svg';
 import DeleteButton from '../../../assets/icon/icon-Delete.svg';
 import downButton from '../../../assets/icon/icon-down.svg';
-import {
-  FriendsOption,
-  PostOption,
-  ShowTag,
-  TextOfTextarea,
-  UIDListContent,
-  URLImg,
-  useRangeValues,
-} from './CreatePost';
+import Editor from 'react-simple-code-editor';
+import { languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
+import { FriendsOption, ListUIDContent, PostOption, ShowTag, URLImg, useRangeValues, useTextarea } from './CreatePost';
 const CreatePostGroup = ({ onGoBackClick }) => {
   const initialValues = {
     PostStart: 5,
@@ -39,9 +35,29 @@ const CreatePostGroup = ({ onGoBackClick }) => {
 
   const { selectedValueFriend, handleSelectChangeFriend } = FriendsOption();
 
-  const { textContent, handleTextareaChange } = TextOfTextarea();
+  const {
+    value: textContent,
+    handleChange: handleTextareaChange,
+    hightlightWithLineNumbers: LineNumbersText,
+    handleDivClick: handleDivClick,
+  } = useTextarea('', 'text');
 
-  const { UIDContent, handleTextareaChangeUID, charCount } = UIDListContent();
+  const {
+    value: UIDtextContent,
+    handleChange: handleTextareaUIDChange,
+    hightlightWithLineNumbers: LineNumbersUID,
+    handleDivClick: handleUIDDivClick,
+  } = useTextarea('', 'UID');
+
+  const {
+    UIDListContent,
+    handleTextareaChangeUIDList,
+    handleTextareaUIDListPaste,
+    lineCount,
+    handleDivUIDListClick,
+    hightlightWithLineNumbers,
+    setUIDContent,
+  } = ListUIDContent();
 
   const { files, getRootProps, getInputProps, handleDeleteButtonClick } = URLImg();
   return (
@@ -131,15 +147,22 @@ const CreatePostGroup = ({ onGoBackClick }) => {
                 <div>
                   <div className="Text">
                     <p className="selectPost__header">Text</p>
-                    <div className="component-item text">
-                      <textarea
-                        id="textContent"
-                        name="textContent"
-                        rows="10"
-                        value={textContent}
-                        onChange={handleTextareaChange}
-                      ></textarea>
-                      <div className={`placeholder ${textContent ? 'hide' : ''}`}>
+                    <div className="component-item " style={{ position: 'relative' }}>
+                      <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
+                        <Editor
+                          value={textContent}
+                          onValueChange={handleTextareaChange}
+                          highlight={(textContent) => LineNumbersText(textContent, languages.js)}
+                          padding={15}
+                          className="editor"
+                          textareaId="text"
+                          style={{
+                            background: '#f5f5f5',
+                            fontSize: 15,
+                          }}
+                        />
+                      </div>
+                      <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
                         <p>
                           <span>1</span>Enter the content here
                         </p>
@@ -269,15 +292,22 @@ const CreatePostGroup = ({ onGoBackClick }) => {
                         <img src={downButton} alt="Down button" />
                       </div>
                       {selectedValueFriend === 'UIDList' && (
-                        <div className="component-item text">
-                          <textarea
-                            id="textContent"
-                            name="textContent"
-                            rows="10"
-                            value={textContent}
-                            onChange={handleTextareaChange}
-                          ></textarea>
-                          <div className={`placeholder ${textContent ? 'hide' : ''}`}>
+                        <div className="component-item " style={{ position: 'relative' }}>
+                          <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
+                            <Editor
+                              value={UIDtextContent}
+                              onValueChange={handleTextareaUIDChange}
+                              highlight={(UIDtextContent) => LineNumbersUID(UIDtextContent, languages.js)}
+                              padding={15}
+                              className="editor"
+                              textareaId="UID"
+                              style={{
+                                background: '#f5f5f5',
+                                fontSize: 15,
+                              }}
+                            />
+                          </div>
+                          <div onClick={handleUIDDivClick} className={`placeholder ${UIDtextContent ? 'hide' : ''}`}>
                             <p>
                               <span>1</span>Enter the content here
                             </p>
@@ -292,17 +322,27 @@ const CreatePostGroup = ({ onGoBackClick }) => {
                     <div className="UIDList">
                       <div className="UIDList__header">
                         <p>Group UID list</p>
-                        <span>({charCount})</span>
+                        <span>({lineCount})</span>
                       </div>
-                      <div className="component-item UID">
-                        <textarea
-                          id="UIDContent"
-                          name="UIDContent"
-                          rows="10"
-                          value={UIDContent}
-                          onChange={handleTextareaChangeUID}
-                        ></textarea>
-                        <div className={`placeholder ${UIDContent ? 'hide' : ''}`}>
+                      <div className="component-item" style={{ position: 'relative' }}>
+                        <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="UID">
+                          <Editor
+                            onChange={handleTextareaChangeUIDList}
+                            onPaste={handleTextareaUIDListPaste}
+                            value={UIDListContent}
+                            onValueChange={(UIDListContent) => setUIDContent(UIDListContent)}
+                            highlight={(UIDListContent) => hightlightWithLineNumbers(UIDListContent, languages.js)}
+                            padding={15}
+                            className="editor"
+                            textareaId="codeArea"
+                            style={{
+                              background: '#f5f5f5',
+                              fontSize: 15,
+                            }}
+                          />
+                        </div>
+
+                        <div onClick={handleDivUIDListClick} className={`placeholder ${UIDListContent ? 'hide' : ''}`}>
                           <p>
                             <span>1</span>Enter the UID here
                           </p>

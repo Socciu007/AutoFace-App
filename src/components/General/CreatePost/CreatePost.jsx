@@ -1,10 +1,16 @@
-// import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './style.scss';
 import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
 import DragButton from '../../../assets/icon/icon-drag.svg';
 import DeleteButton from '../../../assets/icon/icon-Delete.svg';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import Editor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
 import { FriendsOption, PostOption, URLImg, showTag, useRangeValues, useTextarea } from './CreatePost.js';
 const CreatePost = ({ onGoBackClick }) => {
   const initialValues = {
@@ -32,16 +38,16 @@ const CreatePost = ({ onGoBackClick }) => {
   const {
     value: textContent,
     handleChange: handleTextareaChange,
-    textareaRef: TextareaRef,
+    hightlightWithLineNumbers: LineNumbersText,
     handleDivClick: handleDivClick,
-  } = useTextarea('');
+  } = useTextarea('', 'text');
 
   const {
     value: UIDtextContent,
     handleChange: handleTextareaUIDChange,
-    textareaRef: UIDTextareaRef,
+    hightlightWithLineNumbers: LineNumbersUID,
     handleDivClick: handleUIDDivClick,
-  } = useTextarea('');
+  } = useTextarea('', 'UID');
 
   const { files, getRootProps, getInputProps, handleDeleteButtonClick } = URLImg();
   return (
@@ -117,28 +123,34 @@ const CreatePost = ({ onGoBackClick }) => {
               </div>
               <div className="PostContent">
                 <div className="component-item postOption">
-                  <select
+                  <Select
                     name="postOption"
                     className="PostType"
                     onChange={handleSelectChangePost}
                     value={selectedValuePost}
                   >
-                    <option value="background">Using background</option>
-                    <option value="photoOrVideo">Text, Photo/video</option>
-                  </select>
+                    <MenuItem value="background">Using background</MenuItem>
+                    <MenuItem value="photoOrVideo">Text, Photo/video</MenuItem>
+                  </Select>
                 </div>
                 {(selectedValuePost === 'background' || selectedValuePost === 'photoOrVideo') && (
                   <div className="Text">
                     <p className="selectPost__header">Text</p>
-                    <div className="component-item text">
-                      <textarea
-                        id="textContent"
-                        name="textContent"
-                        rows="10"
-                        value={textContent}
-                        onChange={handleTextareaChange}
-                        ref={TextareaRef}
-                      ></textarea>
+                    <div style={{ position: 'relative' }} className="component-item">
+                      <div className="text" style={{ width: '100%', height: 204, overflow: 'auto' }}>
+                        <Editor
+                          value={textContent}
+                          onValueChange={handleTextareaChange}
+                          highlight={(textContent) => LineNumbersText(textContent, languages.js)}
+                          padding={15}
+                          className="editor"
+                          textareaId="text"
+                          style={{
+                            background: '#f5f5f5',
+                            fontSize: 15,
+                          }}
+                        />
+                      </div>
                       <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
                         <p>
                           <span>1</span>Enter the content here
@@ -253,33 +265,39 @@ const CreatePost = ({ onGoBackClick }) => {
                       </div>
                       <p>Friends</p>
                       <div className="component-item optionTag">
-                        <select
+                        <Select
                           name="optionTag"
                           className="TagType"
                           onChange={handleSelectChangeFriend}
                           value={selectedValueFriend}
                         >
-                          <option value="amongFriend">Randomly tag among friends</option>
-                          <option value="UIDList">UID list</option>
-                        </select>
+                          <MenuItem value="amongFriend">Randomly tag among friends</MenuItem>
+                          <MenuItem value="UIDList">UID list</MenuItem>
+                        </Select>
                       </div>
                       {selectedValueFriend === 'UIDList' && (
-                        <div className="component-item text">
-                          <textarea
-                            id="UIDtextContent"
-                            name="UIDtextContent"
-                            rows="10"
-                            value={UIDtextContent}
-                            onChange={handleTextareaUIDChange}
-                            ref={UIDTextareaRef}
-                          ></textarea>
-                          <div onClick={handleUIDDivClick} className={`placeholder ${UIDtextContent ? 'hide' : ''}`}>
-                            <p>
-                              <span>1</span>Enter the content here
-                            </p>
-                            <p>
-                              <span>2</span>Each content/line
-                            </p>
+                        <div style={{ position: 'relative' }} className="component-item">
+                          <div className="text" style={{ width: '100%', height: 204, overflow: 'auto' }}>
+                            <Editor
+                              value={UIDtextContent}
+                              onValueChange={handleTextareaUIDChange}
+                              highlight={(UIDtextContent) => LineNumbersUID(UIDtextContent, languages.js)}
+                              padding={15}
+                              className="editor"
+                              textareaId="UID"
+                              style={{
+                                background: '#f5f5f5',
+                                fontSize: 15,
+                              }}
+                            />
+                            <div onClick={handleUIDDivClick} className={`placeholder ${UIDtextContent ? 'hide' : ''}`}>
+                              <p>
+                                <span>1</span>Enter the content here
+                              </p>
+                              <p>
+                                <span>2</span>Each content/line
+                              </p>
+                            </div>
                           </div>
                         </div>
                       )}

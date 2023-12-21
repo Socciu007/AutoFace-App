@@ -1,20 +1,19 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { highlight } from 'prismjs/components/prism-core';
 import { useDropzone } from 'react-dropzone';
 export function handleInputChange(event, setValues, prefix, values) {
   const inputValue = event.target.value;
   const isNumber = /^\d*$/.test(inputValue);
 
-  if (isNumber && inputValue.length < 3) {
-    const newValue = inputValue === '' ? '' : parseInt(inputValue, 10);
+  const newValue = isNumber ? inputValue : '';
 
-    const updatedValues = {
-      ...values,
-      [`${prefix}${event.target.name}`]: newValue,
-    };
+  const updatedValues = {
+    ...values,
+    [`${prefix}${event.target.name}`]: newValue,
+  };
 
-    setValues(updatedValues);
-  }
+  setValues(updatedValues);
 }
 
 export function useRangeValues(initialValues, prefix) {
@@ -94,31 +93,63 @@ export function FriendsOption() {
     handleSelectChangeFriend,
   };
 }
-export function TextOfTextarea() {
-  //cai dat cho phan text (khi go chu thi placeholder cua textarea se an di)
-  const [textContent, setTextContent] = useState('');
+//cai dat cho phan text (khi go chu thi placeholder cua textarea se an di)
+export function useTextarea(initialValue, id) {
+  const [value, setValue] = useState(initialValue);
 
-  const handleTextareaChange = (event) => {
-    setTextContent(event.target.value);
+  const handleChange = (value) => {
+    setValue(value);
   };
+  const hightlightWithLineNumbers = (input, language) =>
+    highlight(input, language)
+      .split('\n')
+      .map((line, i) => `<span class='editorLineNumber ${value ? '' : 'hide'}'>${i + 1}</span>${line}`)
+      .join('\n');
+  const handleDivClick = () => {
+    document.getElementById(id).focus();
+  };
+
   return {
-    textContent,
-    handleTextareaChange,
+    value,
+    handleChange,
+    hightlightWithLineNumbers,
+    handleDivClick,
   };
 }
-
-export function UIDListContent() {
+export function ListUIDContent() {
   //cai dat cho phan UID List(khi go chu thi placeholder cua textarea se an di)
-  const [UIDContent, setUIDContent] = useState('');
-
-  const handleTextareaChangeUID = (event) => {
-    setUIDContent(event.target.value);
+  const [UIDListContent, setUIDContent] = useState('');
+  const [lineCount, setLineCount] = useState(0);
+  const handleTextareaChangeUIDList = (event) => {
+    // Đếm số lượng dòng
+    const lines = event.target.value.split('\n');
+    setLineCount(lines.length);
   };
-  const charCount = UIDContent.length;
+  const handleTextareaUIDListPaste = (event) => {
+    // Đợi một khoảng nhỏ để textarea cập nhật nội dung sau khi paste
+    setTimeout(() => {
+      const content = event.target.value;
+      // Đếm số lượng dòng sau khi paste
+      const lines = content.split('\n');
+      setLineCount(lines.length);
+    }, 0);
+  };
+  const handleDivUIDListClick = () => {
+    document.getElementById('codeArea').focus();
+  };
+  const hightlightWithLineNumbers = (input, language) =>
+    highlight(input, language)
+      .split('\n')
+      .map((line, i) => `<span class='editorLineNumber ${UIDListContent ? '' : 'hide'}'>${i + 1}</span>${line}`)
+      .join('\n');
   return {
-    UIDContent,
-    handleTextareaChangeUID,
-    charCount,
+    UIDListContent,
+    handleTextareaChangeUIDList,
+    handleTextareaUIDListPaste,
+    lineCount,
+    handleDivUIDListClick,
+    hightlightWithLineNumbers,
+    setUIDContent,
   };
 }
 export function URLImg() {

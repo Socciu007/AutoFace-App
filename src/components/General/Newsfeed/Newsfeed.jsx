@@ -4,7 +4,11 @@ import './style.scss';
 import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
-
+import Editor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/themes/prism.css';
 import { ShowTextarea, useRangeValues, useShowCheckbox } from './Newsfeed';
 const Newsfeed = ({ onGoBackClick }) => {
   const initialValues = {
@@ -34,7 +38,8 @@ const Newsfeed = ({ onGoBackClick }) => {
 
   const { isText, handleCheckboxChangeText } = useShowCheckbox(false, 'Text');
 
-  const { textContent, handleTextareaChange, handleDivClick, textareaRef } = ShowTextarea();
+  const { textContent, handleDivClick, hightlightWithLineNumbers, setTextContent } = ShowTextarea();
+
   return (
     <div className="newsfeed">
       <div className="component_container">
@@ -143,7 +148,11 @@ const Newsfeed = ({ onGoBackClick }) => {
               <div className="component-item__header">
                 <input type="checkbox" name="randomShare" onChange={handleCheckboxChangeShare} />
                 <p>
-                  Share to Feed <span className={`span__content ${isShare ? 'show' : 'hide'}`}>(post)</span>:
+                  Share to Feed{' '}
+                  <span style={{ marginLeft: '2px' }} className={`span__content ${isShare ? 'show' : 'hide'}`}>
+                    (post)
+                  </span>
+                  :
                 </p>
               </div>
               <div className={`component-item__content ${isShare ? 'show' : 'hide'}`}>
@@ -216,23 +225,32 @@ const Newsfeed = ({ onGoBackClick }) => {
                     <input type="checkbox" name="randomLike" onChange={handleCheckboxChangeText} />
                     <p>Text</p>
                   </div>
-
-                  <div className={`component-item text ${isText ? 'show' : 'hide'}`}>
-                    <textarea
-                      id="textContent"
-                      name="textContent"
-                      rows="10"
-                      value={textContent}
-                      onChange={handleTextareaChange}
-                      ref={textareaRef}
-                    ></textarea>
-                    <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
-                      <p>
-                        <span>1</span>Enter the content here
-                      </p>
-                      <p>
-                        <span>2</span>Each content/line
-                      </p>
+                  <div style={{ position: 'relative' }} className="component-item">
+                    <div
+                      style={{ width: '100%', height: 204, overflow: 'auto' }}
+                      className={`text ${isText ? 'show' : 'hide'}`}
+                    >
+                      <Editor
+                        value={textContent}
+                        onValueChange={(textContent) => setTextContent(textContent)}
+                        highlight={(code) => hightlightWithLineNumbers(code, languages.js)}
+                        padding={15}
+                        className={`editor ${isText ? 'show' : 'hide'}`}
+                        textareaId="codeArea"
+                        onClick={handleDivClick}
+                        style={{
+                          background: '#f5f5f5',
+                          fontSize: 15,
+                        }}
+                      />
+                      <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
+                        <p>
+                          <span>1</span>Enter the content here
+                        </p>
+                        <p>
+                          <span>2</span>Each content/line
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -94,6 +94,7 @@ const DnDFlow = ({ onMessageChange }) => {
   };
   const handleDeleteNodeClick = (idToDelete) => {
     setNodes((prevNodes) => prevNodes.filter((node) => node.id !== idToDelete));
+    onMessageChange();
   };
 
   const onConnect = useCallback((params) => {

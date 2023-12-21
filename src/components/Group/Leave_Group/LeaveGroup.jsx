@@ -5,7 +5,10 @@ import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
 import downButton from '../../../assets/icon/icon-down.svg';
-
+import Editor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
 import { KeywordTextarea, LeaveGroupOption, useRangeValues } from './LeaveGroup';
 const LeaveGroup = ({ onGoBackClick }) => {
   const initialValues = {
@@ -22,7 +25,8 @@ const LeaveGroup = ({ onGoBackClick }) => {
 
   const { selectedValueLeaveGroup, handleSelectChangeLeaveGroup } = LeaveGroupOption();
 
-  const { KeywordContent, handleTextareaChangeKeywordContent, handleDivClick, textareaRef } = KeywordTextarea();
+  const { KeywordContent, handleTextareaChangeKeywordContent, handleDivClick, hightlightWithLineNumbers } =
+    KeywordTextarea();
 
   return (
     <div className="leaveGroup">
@@ -127,15 +131,21 @@ const LeaveGroup = ({ onGoBackClick }) => {
                     </div>
                     <div className="KeywordContent">
                       <p>The group name contains the following keywords:</p>
-                      <div className="component-item keywordText">
-                        <textarea
-                          id="KeywordContent"
-                          name="KeywordContent"
-                          rows="10"
-                          value={KeywordContent}
-                          onChange={handleTextareaChangeKeywordContent}
-                          ref={textareaRef}
-                        ></textarea>
+                      <div className="component-item " style={{ position: 'relative' }}>
+                        <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="keywordText">
+                          <Editor
+                            value={KeywordContent}
+                            onValueChange={handleTextareaChangeKeywordContent}
+                            highlight={(KeywordContent) => hightlightWithLineNumbers(KeywordContent, languages.js)}
+                            padding={15}
+                            className="editor"
+                            textareaId="codeArea"
+                            style={{
+                              background: '#fff',
+                              fontSize: 15,
+                            }}
+                          />
+                        </div>
                         <div onClick={handleDivClick} className={`placeholder ${KeywordContent ? 'hide' : ''}`}>
                           <p>
                             <span>1 </span>

@@ -1,19 +1,18 @@
 // eslint-disable-next-line no-unused-vars
+import { highlight, languages } from 'prismjs/components/prism-core';
 import React, { useEffect, useRef, useState } from 'react';
 export function handleInputChange(event, setValues, prefix, values) {
   const inputValue = event.target.value;
   const isNumber = /^\d*$/.test(inputValue);
 
-  if (isNumber && inputValue.length < 3) {
-    const newValue = inputValue === '' ? '' : parseInt(inputValue, 10);
+  const newValue = isNumber ? inputValue : '';
 
-    const updatedValues = {
-      ...values,
-      [`${prefix}${event.target.name}`]: newValue,
-    };
+  const updatedValues = {
+    ...values,
+    [`${prefix}${event.target.name}`]: newValue,
+  };
 
-    setValues(updatedValues);
-  }
+  setValues(updatedValues);
 }
 
 export function useRangeValues(initialValues, prefix) {
@@ -69,18 +68,22 @@ export function LeaveGroupOption() {
 export function KeywordTextarea() {
   //cai dat cho phan Keyword Text (khi go chu thi placeholder cua textarea se an di)
   const [KeywordContent, setKeywordContent] = useState('');
-  const textareaRef = useRef(null);
 
-  const handleTextareaChangeKeywordContent = (event) => {
-    setKeywordContent(event.target.value);
+  const handleTextareaChangeKeywordContent = (value) => {
+    setKeywordContent(value);
   };
+  const hightlightWithLineNumbers = (input, language) =>
+    highlight(input, language)
+      .split('\n')
+      .map((line, i) => `<span class='editorLineNumber ${KeywordContent ? '' : 'hide'}'>${i + 1}</span>${line}`)
+      .join('\n');
   const handleDivClick = () => {
-    textareaRef.current.focus();
+    document.getElementById('codeArea').focus();
   };
   return {
     KeywordContent,
     handleTextareaChangeKeywordContent,
     handleDivClick,
-    textareaRef,
+    hightlightWithLineNumbers,
   };
 }

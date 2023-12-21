@@ -1,19 +1,18 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useEffect, useState } from 'react';
+import { highlight, languages } from 'prismjs/components/prism-core';
+import React, { useEffect, useRef, useState } from 'react';
 export function handleInputChange(event, setValues, prefix, values) {
   const inputValue = event.target.value;
   const isNumber = /^\d*$/.test(inputValue);
 
-  if (isNumber && inputValue.length < 3) {
-    const newValue = inputValue === '' ? '' : parseInt(inputValue, 10);
+  const newValue = isNumber ? inputValue : '';
 
-    const updatedValues = {
-      ...values,
-      [`${prefix}${event.target.name}`]: newValue,
-    };
+  const updatedValues = {
+    ...values,
+    [`${prefix}${event.target.name}`]: newValue,
+  };
 
-    setValues(updatedValues);
-  }
+  setValues(updatedValues);
 }
 
 export function useRangeValues(initialValues, prefix) {
@@ -72,10 +71,8 @@ export function KeywordTextarea() {
   const [lineCount, setLineCount] = useState(0);
 
   const handleTextareaChangeKeywordContent = (event) => {
-    const content = event.target.value;
-    setKeywordContent(event.target.value);
     // Đếm số lượng dòng
-    const lines = content.split('\n');
+    const lines = event.target.value.split('\n');
     setLineCount(lines.length);
   };
   const handleKeywordTextareaPaste = (event) => {
@@ -87,27 +84,48 @@ export function KeywordTextarea() {
       setLineCount(lines.length);
     }, 0);
   };
+  const handleDivKeywordClick = () => {
+    document.getElementById('keyword').focus();
+  };
+  const hightlightWithLineNumbersKeyword = (input, language) =>
+    highlight(input, language)
+      .split('\n')
+      .map((line, i) => `<span class='editorLineNumber ${KeywordContent ? '' : 'hide'}'>${i + 1}</span>${line}`)
+      .join('\n');
   return {
     KeywordContent,
     handleTextareaChangeKeywordContent,
     handleKeywordTextareaPaste,
     lineCount,
+    handleDivKeywordClick,
+    hightlightWithLineNumbersKeyword,
+    setKeywordContent,
   };
 }
 export function AnswerTextarea() {
   //cai dat cho phan Answer question (khi go chu thi placeholder cua textarea se an di)
   const [AnswerContent, setAnswerContent] = useState('');
 
-  const handleTextareaChangeAnswerContent = (event) => {
-    setAnswerContent(event.target.value);
+  const handleTextareaChangeAnswerContent = (value) => {
+    setAnswerContent(value);
   };
+  const handleDivAnswerClick = () => {
+    document.getElementById('answer').focus();
+  };
+  const hightlightWithLineNumbers = (input, language) =>
+    highlight(input, language)
+      .split('\n')
+      .map((line, i) => `<span class='editorLineNumber ${AnswerContent ? '' : 'hide'}'>${i + 1}</span>${line}`)
+      .join('\n');
   return {
     AnswerContent,
     handleTextareaChangeAnswerContent,
+    handleDivAnswerClick,
+    hightlightWithLineNumbers,
   };
 }
+//Hien thi textarea auto answer question
 export function ShowAutoAnswer() {
-  //Hien thi textarea auto answer question
   const [isAutoAnswer, setisAutoAnswer] = useState(false);
   const handleCheckboxChangeAutoAnswer = () => {
     setisAutoAnswer((prevIsAutoAnswer) => !prevIsAutoAnswer);

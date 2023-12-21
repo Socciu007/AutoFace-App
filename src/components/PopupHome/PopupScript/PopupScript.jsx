@@ -14,8 +14,6 @@ const PopupScript = ({
   handleOpenScripts,
   handleTypeScript,
 }) => {
-  const [yourScripts, setYourScripts] = useState(false);
-  const [systemScripts, setSystemScripts] = useState(false);
   const columnsScripts = [
     {
       title: 'Scripts',
@@ -31,16 +29,6 @@ const PopupScript = ({
     onChange: (selectedRowKeys, selectedRows) => {
       console.log(`selectedRowKeys: ${selectedRowKeys}`);
     },
-  };
-  const handleYourScript = () => {
-    setYourScripts(true);
-    setSystemScripts(false);
-    handleTypeScript(false);
-  };
-  const handleSystemScript = () => {
-    setSystemScripts(true);
-    setYourScripts(false);
-    handleTypeScript(true);
   };
   return (
     <PopupComponent open={openScripts} onClose={handleCloseScripts} style={{ margin: 'auto' }}>
@@ -70,14 +58,23 @@ const PopupScript = ({
               <div className="-container-scripts__left">
                 <div className="-container-scripts__left__options">
                   <div className="-container-scripts__left__options__type">
-                    {!yourScripts && !systemScripts && <p>All</p>}
-                    {yourScripts && <p>Your script</p>}
-                    {systemScripts && <p>System’s script</p>}
-                  </div>
-                  <div className="-container-scripts__left__options__list">
-                    <ul>
-                      <li onClick={handleSystemScript}>System’s script</li>
-                      <li onClick={handleYourScript}>Your script</li>
+                    <ul className="-container-scripts__left__options__list">
+                      {dataScripts.map((script) => {
+                        return (
+                          <li
+                            key={script.key}
+                            className={`-option-item ${script.isSystem && 'active'}`}
+                            onClick={() => {
+                              handleTypeScript(script.isSystem);
+                            }}
+                          >
+                            <div className="-option-item__row">
+                              <div className="li-dot" style={{ background: '#E84314' }}></div>
+                              <p className="li-name">{script.notes}</p>
+                            </div>
+                          </li>
+                        );
+                      })}
                     </ul>
                   </div>
                 </div>

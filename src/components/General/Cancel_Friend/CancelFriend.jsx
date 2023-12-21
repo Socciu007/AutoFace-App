@@ -3,7 +3,12 @@ import './style.scss';
 import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
-import downButton from '../../../assets/icon/icon-down.svg';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import Editor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
 import { UIDText, cancelFriendOption, unfriendOption, useRangeValues } from './CancelFriend';
 const CancelFriend = ({ onGoBackClick }) => {
   const initialValues = {
@@ -22,7 +27,7 @@ const CancelFriend = ({ onGoBackClick }) => {
 
   const { selectedValueUnfriend, handleSelectChangeUnfriend } = unfriendOption();
 
-  const { UIDContent, handleTextareaChangeUIDContent, handleDivClick, textareaRef } = UIDText();
+  const { UIDContent, setUIDContent, handleDivClick, hightlightWithLineNumbers } = UIDText();
 
   return (
     <div className="CancelFriend">
@@ -39,15 +44,15 @@ const CancelFriend = ({ onGoBackClick }) => {
               </div>
               <div className="cancelFriendContent">
                 <div className="component-item cancelFriendOption">
-                  <select
+                  <Select
                     name="cancelFriendOption"
                     className="cancelFriendType"
                     onChange={handleSelectChangeCancelFriend}
                     value={selectedValueCancelFriend}
                   >
-                    <option value="cancelRequest">Cancel friend requests</option>
-                    <option value="unfriend">Unfriend</option>
-                  </select>
+                    <MenuItem value="cancelRequest">By suggestions</MenuItem>
+                    <MenuItem value="unfriend">Accept friend requests</MenuItem>
+                  </Select>
                 </div>
                 {selectedValueCancelFriend === 'cancelRequest' && (
                   <div className="component-item numberOfRequests">
@@ -118,16 +123,15 @@ const CancelFriend = ({ onGoBackClick }) => {
                     </div>
                     <div className="unfriendContent">
                       <div className="component-item unfriendOption">
-                        <select
+                        <Select
                           name="unfriendOption"
                           className="unfriendSelector"
                           onChange={handleSelectChangeUnfriend}
                           value={selectedValueUnfriend}
                         >
-                          <option value="random">Randomly</option>
-                          <option value="UID">UID</option>
-                        </select>
-                        <img src={downButton} alt="Down Button" />
+                          <MenuItem value="random">Randomly</MenuItem>
+                          <MenuItem value="UID">UID</MenuItem>
+                        </Select>
                       </div>
                       {selectedValueUnfriend === 'random' && (
                         <div className="component-item comment__numberFriend">
@@ -178,15 +182,21 @@ const CancelFriend = ({ onGoBackClick }) => {
                         </div>
                       )}
                       {selectedValueUnfriend === 'UID' && (
-                        <div className="component-item UIDText">
-                          <textarea
-                            id="UIDContent"
-                            name="UIDContent"
-                            rows="10"
-                            value={UIDContent}
-                            ref={textareaRef}
-                            onChange={handleTextareaChangeUIDContent}
-                          ></textarea>
+                        <div className="component-item" style={{ position: 'relative' }}>
+                          <div className="UIDText" style={{ width: '100%', height: 204, overflow: 'auto' }}>
+                            <Editor
+                              value={UIDContent}
+                              onValueChange={(UIDContent) => setUIDContent(UIDContent)}
+                              highlight={(UIDContent) => hightlightWithLineNumbers(UIDContent, languages.js)}
+                              padding={15}
+                              className="editor"
+                              textareaId="codeArea"
+                              style={{
+                                background: '#f5f5f5',
+                                fontSize: 15,
+                              }}
+                            />
+                          </div>
                           <div onClick={handleDivClick} className={`placeholder ${UIDContent ? 'hide' : ''}`}>
                             <p>
                               <span>1</span>Enter the UID list here
