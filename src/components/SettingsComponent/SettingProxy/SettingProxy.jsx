@@ -6,6 +6,10 @@ import deleted from '../../../assets/pictures/icon-delete.svg';
 import question from '../../../assets/pictures/icon-question.svg';
 import x from '../../../assets/pictures/icon-x.svg';
 import PopupProxyManage from '../../PopupHome/PopupProxyManage/PopupProxyManage';
+import Editor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
 
 const SettingProxy = ({
   data,
@@ -37,8 +41,8 @@ const SettingProxy = ({
     setProxyTpye(type);
   };
 
-  const onchangeProxyString = (value) => {
-    setProxyString(value);
+  const onchangeProxyString = (e) => {
+    setProxyString(e.target.value);
   };
 
   const generateProxyStr = (proxy) => {
@@ -48,7 +52,11 @@ const SettingProxy = ({
 
     return proxyStr;
   };
-
+  const hightlightWithLineNumbers = (input, language) =>
+    highlight(input, language)
+      .split('\n')
+      .map((line, i) => `<span class='editorLineNumber ${proxyString ? '' : 'hide'}'>${i + 1}</span>${line}`)
+      .join('\n');
   return (
     <div className="-settings-proxys">
       <div className="-container-proxys">
@@ -175,15 +183,47 @@ const SettingProxy = ({
                 ></PopupProxyManage>
               </div>
               <div className="-info-add-proxys">
-                <textarea
+                <div style={{ position: 'relative' }} className="proxy-item">
+                  <div className="proxy-editor" style={{ width: '100%', height: 379, overflow: 'auto' }}>
+                    <Editor
+                      value={proxyString}
+                      onValueChange={onchangeProxyString}
+                      highlight={(proxyString) => hightlightWithLineNumbers(proxyString, languages.js)}
+                      padding={15}
+                      onClick={handleOpenWriteText}
+                      className="editor"
+                      textareaId="textareaContent"
+                      style={{
+                        background: '#fff',
+                        fontSize: 15,
+                      }}
+                    />
+                  </div>
+                  <div
+                    onClick={handleOpenWriteText}
+                    id="placeholderTypeAddFriend"
+                    style={{ display: openWriteText ? 'none' : 'inline' }}
+                    className="-list-info"
+                  >
+                    <p>
+                      <span>1</span>
+                      Enter the proxy here
+                    </p>
+                    <p>
+                      <span>2</span>
+                      <b>Proxy format:</b> Host:Port:Username:Passwords
+                    </p>
+                  </div>
+                </div>
+                {/* <textarea
                   onChange={(event) => {
                     onchangeProxyString(event.target.value);
                   }}
                   value={proxyString}
                   className="-info-proxys"
                   onClick={handleOpenWriteText}
-                ></textarea>
-                <div className="-list-info" onClick={handleOpenWriteText}>
+                ></textarea> */}
+                {/* <div className="-list-info" onClick={handleOpenWriteText}>
                   <div className="-list-info__item">
                     <div className="-stt-info">
                       <p>
@@ -202,7 +242,7 @@ const SettingProxy = ({
                       </p>
                     </div>
                   </div>
-                </div>
+                </div> */}
                 <button className="-add" onClick={() => handleAddProxy(proxyString, proxyType)}>
                   ADD
                 </button>

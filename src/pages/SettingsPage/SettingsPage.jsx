@@ -242,8 +242,8 @@ const SettingsPage = () => {
     setKeyList(key);
     setEditProxy(false);
   };
-  const handleOpenWriteText = () => {
-    setOpenWriteText(true);
+  const handleOpenWriteText = (o) => {
+    setOpenWriteText(!o);
   };
 
   const handleAddProxyFromManager = (listProxy) => {
