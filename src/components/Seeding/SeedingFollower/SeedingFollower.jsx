@@ -2,62 +2,81 @@ import React, { useState } from 'react';
 import up from '../../../assets/pictures/icon-Increase.svg';
 import down from '../../../assets/pictures/icon-Descrease.svg';
 import back from '../../../assets/icon/icon-back.svg';
+import Editor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
+import { Select } from 'antd';
 const SeedingFollower = ({ onGoBackClick }) => {
   const [followers, setFollowers] = useState({
     delayTimeStart: 3,
     delayTimeEnd: 5,
-    selectTypeFollow: '',
+    selectTypeFollow: 'Profile',
     UIDList: '',
   });
   const [openUIDList, setOpenUIDList] = useState(false);
+  const hightlightWithLineNumbers = (input, language) =>
+    highlight(input, language)
+      .split('\n')
+      .map((line, i) => `<span class='editorLineNumber ${followers.UIDList ? '' : 'hide'}'>${i + 1}</span>${line}`)
+      .join('\n');
   //delay time
-  const handleUpDelayTimeStart = () => {
-    setFollowers((prevValue) => {
-      return {
-        ...prevValue,
-        delayTimeStart: prevValue.delayTimeStart + 1,
-      };
-    });
+  const handleDelayTimeStart = (type) => {
+    if (type === 'increase') {
+      setFollowers({
+        ...followers,
+        delayTimeStart: followers.delayTimeStart + 1,
+      });
+    } else {
+      setFollowers({
+        ...followers,
+        delayTimeStart: followers.delayTimeStart > 0 ? followers.delayTimeStart - 1 : 0,
+      });
+    }
   };
-  const handleDownDelayTimeStart = () => {
-    setFollowers((prevValue) => {
-      return {
-        ...prevValue,
-        delayTimeStart: prevValue.delayTimeStart > 0 ? prevValue.delayTimeStart - 1 : 0,
-      };
-    });
+  const onChangeDelayTimeStart = (e) => {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      setFollowers({ ...followers, [e.target.name]: parseInt(value) });
+    }
   };
-  const handleUpDelayTimeEnd = () => {
-    setFollowers((prevValue) => {
-      return {
-        ...prevValue,
-        delayTimeEnd: prevValue.delayTimeEnd + 1,
-      };
-    });
+  const handleDelayTimeEnd = (type) => {
+    if (type === 'increase') {
+      setFollowers({
+        ...followers,
+        delayTimeEnd: followers.delayTimeEnd + 1,
+      });
+    } else {
+      setFollowers({
+        ...followers,
+        delayTimeEnd: followers.delayTimeEnd > 0 ? followers.delayTimeEnd - 1 : 0,
+      });
+    }
   };
-  const handleDownDelayTimeEnd = () => {
-    setFollowers((prevValue) => {
-      return {
-        ...prevValue,
-        delayTimeEnd: prevValue.delayTimeEnd > 0 ? prevValue.delayTimeEnd - 1 : 0,
-      };
-    });
+  const onChangeDelayTimeEnd = (e) => {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      setFollowers({ ...followers, [e.target.name]: parseInt(value) });
+    }
   };
+
   //type follower
-  const handleOnchangeTypeFollower = (e) => {
+  const handleOnchangeTypeFollower = (value) => {
     setFollowers({
       ...followers,
-      [e.target.name]: e.target.value,
+      selectTypeFollow: value,
     });
   };
   //UID list
   const handleUIDList = () => {
     setOpenUIDList(true);
   };
-  const handleOnchangeUIDList = (e) => {
+  const handleOnchangeUIDList = (value) => {
     setFollowers({
       ...followers,
-      [e.target.name]: e.target.value,
+      UIDList: value,
     });
   };
   return (
@@ -75,63 +94,93 @@ const SeedingFollower = ({ onGoBackClick }) => {
               </p>
               <div className="-option-boost-like__number">
                 <div className="-option-boost-like__number__icon">
-                  <div style={{ marginBottom: '2px' }} onClick={handleUpDelayTimeStart}>
+                  <div style={{ marginBottom: '2px' }} onClick={() => handleDelayTimeStart('increase')}>
                     <img src={up} alt="up" width={10} height={7} />
                   </div>
-                  <div style={{ marginTop: '2px' }} onClick={handleDownDelayTimeStart}>
+                  <div style={{ marginTop: '2px' }} onClick={() => handleDelayTimeStart('des')}>
                     <img src={down} alt="down" width={10} height={7} />
                   </div>
                 </div>
-                <input type="text" value={followers.delayTimeStart} onChange />
+                <input
+                  type="text"
+                  name="delayTimeStart"
+                  value={followers.delayTimeStart}
+                  onChange={onChangeDelayTimeStart}
+                />
               </div>
               <span>to</span>
               <div className="-option-boost-like__number">
-                <div className="-option-boost-like__number__icon">
-                  <div style={{ marginBottom: '2px' }} onClick={handleUpDelayTimeEnd}>
-                    <img src={up} alt="up" width={10} height={7} />
+                <div>
+                  <div className="-option-boost-like__number__icon">
+                    <div style={{ marginBottom: '2px' }} onClick={() => handleDelayTimeEnd('increase')}>
+                      <img src={up} alt="up" width={10} height={7} />
+                    </div>
+                    <div style={{ marginTop: '2px' }} onClick={() => handleDelayTimeEnd('des')}>
+                      <img src={down} alt="down" width={10} height={7} />
+                    </div>
                   </div>
-                  <div style={{ marginTop: '2px' }} onClick={handleDownDelayTimeEnd}>
-                    <img src={down} alt="down" width={10} height={7} />
-                  </div>
+                  <input
+                    type="text"
+                    name="delayTimeEnd"
+                    value={followers.delayTimeEnd}
+                    onChange={onChangeDelayTimeEnd}
+                  />
                 </div>
-                <input type="text" value={followers.delayTimeEnd} onChange />
               </div>
             </div>
             <div className="-option-boost-like -type-follower">
               <p>Select type</p>
               <div className="PostContent">
-                <div className="component-item postOption">
-                  <select
-                    name="selectTypeFollow"
-                    className="PostType"
-                    onChange={handleOnchangeTypeFollower}
-                    value={followers.selectTypeFollow}
-                  >
-                    <option value="fanpage">Fanpage</option>
-                    <option value="friend">Friend</option>
-                    <option value="group">Group</option>
-                  </select>
-                </div>
+                <Select
+                  id="typeProfile"
+                  className="PostContent__select PostContent__details"
+                  value={followers.selectTypeFollow}
+                  onChange={handleOnchangeTypeFollower}
+                  bordered={false}
+                  options={[
+                    {
+                      value: 'fanpage',
+                      label: 'Fanpage',
+                    },
+                    {
+                      value: 'profile',
+                      label: 'Profile',
+                    },
+                  ]}
+                />
+                {/* </div> */}
               </div>
             </div>
             <div className="-option-boost-like -option-boost-comment">
               <p>UID list</p>
               <div className="-option-boost-comment__wrapper">
-                <textarea
-                  name="UIDList"
-                  style={{ width: '501px' }}
+                <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
+                  <Editor
+                    value={followers.UIDList}
+                    onValueChange={handleOnchangeUIDList}
+                    onClick={handleUIDList}
+                    highlight={(textContent) => hightlightWithLineNumbers(textContent, languages.js)}
+                    padding={15}
+                    className="editor"
+                    textareaId="codeArea"
+                    style={{
+                      background: '#f5f5f5',
+                      fontSize: 15,
+                    }}
+                  />
+                </div>
+                <div
+                  className="-option-boost-comment__wrapper__content"
                   onClick={handleUIDList}
-                  onChange={handleOnchangeUIDList}
-                  value={followers.UIDList}
-                ></textarea>
-                <div className="-option-boost-comment__wrapper__content">
+                  style={{ display: openUIDList ? 'none' : 'inline' }}
+                >
                   <p>
-                    <span style={{ paddingRight: '7%' }}>1</span>
-                    <div style={{ display: openUIDList ? 'none' : 'inline' }}>Enter the UID here</div>
+                    <span>1</span>
+                    <div>Enter the UID here</div>
                   </p>
                   <p>
-                    <span style={{ paddingRight: '6%' }}>2</span>
-                    <div style={{ display: openUIDList ? 'none' : 'inline' }}>Each UID/line</div>
+                    <span>2</span>
+                    <div>Each UID/line</div>
                   </p>
                 </div>
               </div>
