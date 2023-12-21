@@ -171,7 +171,7 @@ const PopupProxyManage = ({
       dataIndex: 'tag',
     },
     {
-      title: 'Expiration Date',
+      title: 'Expires',
       render: (proxy) => {
         return (
           <>
