@@ -53,35 +53,41 @@ import DefaultSciptSettings from '../../resources/defaultSciptSettings.json';
 
 const CreateScript = () => {
   const DnDFlowRef = useRef();
+  const { state } = useLocation();
   const [message, setMessage] = useState('');
   const [statusMessage, setStatusMessage] = useState('warning');
   const [component, setComponent] = useState('default');
   const [nameScript, setNameScript] = useState('');
   const [noteScript, setNoteScript] = useState('');
-  const [designScript, setDesignScript] = useState({
-    design: {},
-    script: [],
-  });
+  const [designScript, setDesignScript] = useState(
+    state
+      ? state
+      : {
+          design: {},
+          script: [],
+        },
+  );
   const [currentComponent, setCurrentComponent] = useState('');
   const [currentSetup, setCurrentSetup] = useState(null);
   const [activeCategory, setActiveCategory] = useState(1);
   const navigate = useNavigate();
-  const { state } = useLocation();
+
   useEffect(() => {
-    if (state) {
-      setNameScript(state.name ? state.name : '');
-      setNoteScript(state.note ? state.note : '');
-      setDesignScript(state);
-    }
+    setDefaultScript();
     connectSocket();
   }, []);
 
+  const setDefaultScript = () => {
+    if (state) {
+      setNameScript(state.name ? state.name : '');
+      setNoteScript(state.note ? state.note : '');
+    }
+  };
+
   const handleMessageChange = (component, id) => {
     console.log(component, id);
-
+    console.log('designScript ' + JSON.stringify(designScript.script));
     const setup = designScript.script.find((e) => e.id == id);
-
-    console.log('setup ' + JSON.stringify(setup));
 
     if (setup) {
       setCurrentSetup(setup);

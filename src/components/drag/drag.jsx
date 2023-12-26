@@ -106,7 +106,18 @@ const DnDFlow = forwardRef(({ onMessageChange, handleDeleteNode, addNewNode, ite
     console.log('itemScript');
     console.log(itemScript);
     if (itemScript && itemScript.design) {
-      setNodes(itemScript.design.nodes);
+      setNodes(
+        itemScript.design.nodes.map((e) => {
+          return {
+            ...e,
+            data: {
+              label: `${e.type} node`,
+              onButtonClick: () => handleNodeButtonClick(e.type, e.id),
+              onDeleteNode: handleDeleteNodeClick(e.id),
+            },
+          };
+        }),
+      );
       setEdges(itemScript.design.edges);
     }
   }, []);
