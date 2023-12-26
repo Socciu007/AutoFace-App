@@ -32,7 +32,7 @@ function cancelFriendNode({ data: { label, onButtonClick, onDeleteNode }, isConn
   };
   // Edit node
   const editNode = () => {
-    onButtonClick();
+    onButtonClick(id);
     handleClose();
   };
   // Delete node

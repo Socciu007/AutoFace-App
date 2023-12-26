@@ -19,16 +19,16 @@ import macosIcon from '../../assets/pictures/icon-macos.png';
 import linuxIcon from '../../assets/pictures/icon-linux.png';
 import windowIcon from '../../assets/pictures/icon-window.svg';
 import androidIcon from '../../assets/pictures/icon-android.png';
-import scripts from '../../resources/scripts.json';
+
 import { EditableCell, EditableRow } from '../../components/EditableTable/EditableTable';
 import PopupProfile from '../../components/PopupHome/PopupProfile/PopupProfile';
 import PopupAddProxy from '../../components/PopupHome/PopupAddProxy/PopupAddProxy';
 import PopupProxyManage from '../../components/PopupHome/PopupProxyManage/PopupProxyManage';
 import PopupDeleteProfile from '../../components/PopupHome/PopupDeleteProfile/PopupDeleteProfile';
 import PopupScript from '../../components/PopupHome/PopupScript/PopupScript';
-import storageService from '../../services/storage.service';
 import { storageProfiles, storageSettings } from '../../common/const.config';
 import { apiGetFolder } from '../../services/api_helper';
+import { connectSocket, getDB, setDB } from '../../services/socket';
 
 const ProfilesPage = () => {
   const [message, setMessage] = useState('');
@@ -37,7 +37,6 @@ const ProfilesPage = () => {
   const [profilesSelected, setProfilesSelected] = useState([]);
   const [dataProfiles, setDataProfiles] = useState([]);
   const [dataSearch, setDataSearch] = useState([]);
-  const [dataScripts, setDataScripts] = useState(scripts);
   const [rowKeys, setRowKeys] = useState([]);
   const [openScripts, setOpenScripts] = useState(false);
   const [openProfiles, setOpenProfiles] = useState(false);
@@ -48,14 +47,17 @@ const ProfilesPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    getProfiles();
-    checkSettings();
+    connectSocket();
+    setTimeout(() => {
+      getProfiles();
+      checkSettings();
+    }, 500);
   }, []);
 
-  const checkSettings = () => {
-    const settings = storageService.get(storageSettings);
+  const checkSettings = async () => {
+    const settings = await getDB(storageSettings);
     if (!settings) {
-      storageService.set(storageSettings, JSON.stringify(defaultSettings));
+      await setDB(storageSettings, JSON.stringify(defaultSettings));
     }
   };
 
@@ -81,7 +83,8 @@ const ProfilesPage = () => {
   }, [dataProfiles]);
 
   const getProfiles = async () => {
-    const profiles = storageService.get(storageProfiles);
+    const profiles = await getDB(storageProfiles);
+
     const folders = await apiGetFolder();
 
     if (folders && folders.success) {
@@ -94,6 +97,7 @@ const ProfilesPage = () => {
     }
     if (profiles) {
       let objProfile = JSON.parse(profiles);
+
       if (folders.data && folders.data.data) {
         objProfile = objProfile.map((e) => {
           const folderName = folders.data.data.find((o) => o.id == e.folder);
@@ -121,17 +125,17 @@ const ProfilesPage = () => {
     return proxyStr;
   };
 
-  const pinProfile = (id) => {
+  const pinProfile = async (id) => {
     const index = dataProfiles.findIndex((e) => e.id == id);
     let newDataProfile = [...dataProfiles];
     newDataProfile[index].isPin = !newDataProfile[index].isPin;
     setDataProfiles(newDataProfile);
-    storageService.set(storageProfiles, JSON.stringify(newDataProfile));
+    await setDB(storageProfiles, JSON.stringify(newDataProfile));
   };
-  const removeProfile = (id) => {
+  const removeProfile = async (id) => {
     const newData = dataProfiles.filter((e) => e.id !== id);
     setDataProfiles(newData);
-    storageService.set(storageProfiles, JSON.stringify(newData));
+    await setDB(storageProfiles, JSON.stringify(newData));
   };
 
   //Pin and remove
@@ -155,7 +159,7 @@ const ProfilesPage = () => {
     {
       title: '#',
       dataIndex: 'key',
-      width: 40,
+      width: 60,
     },
     {
       title: 'Profile',
@@ -341,20 +345,15 @@ const ProfilesPage = () => {
     },
   };
 
-  //handle type scrip
-  const handleTypeScript = (type) => {
-    const scrip = scripts.filter((scrip) => scrip.isSystem === type);
-    setDataScripts(scrip);
-  };
-
   const handleSettings = () => {
     navigate('/settings');
   };
   const handleScript = () => {
     navigate('/scripManager');
   };
-  const handleReloadPage = () => {
-    getProfiles();
+  const handleReloadPage = async () => {
+    await getProfiles();
+    postAlert('Reloaded Profiles', 'success');
   };
   //scripts
   const handleOpenScripts = () => {
@@ -406,7 +405,7 @@ const ProfilesPage = () => {
     }
   };
 
-  const handleRemoveProfiles = () => {
+  const handleRemoveProfiles = async () => {
     const newData = dataProfiles.filter((e) => {
       const check = profilesSelected.find((o) => o.id === e.id);
       return !check;
@@ -421,7 +420,7 @@ const ProfilesPage = () => {
         return { ...e, key: index + 1 };
       }),
     );
-    storageService.set(storageProfiles, JSON.stringify(newData));
+    await setDB(storageProfiles, JSON.stringify(newData));
     handleCloseDelete();
     getProfiles();
   };
@@ -538,12 +537,10 @@ const ProfilesPage = () => {
               <button>Run</button>
             </div>
             <PopupScript
-              dataScripts={dataScripts}
               openScripts={openScripts}
               handleCloseScripts={handleCloseScripts}
               handleSettings={handleSettings}
               handleOpenScripts={handleScript}
-              handleTypeScript={handleTypeScript}
             ></PopupScript>
           </div>
         </div>

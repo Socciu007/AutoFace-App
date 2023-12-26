@@ -5,7 +5,6 @@ import proxy from '../../../assets/pictures/icon-proxy.svg';
 import './style.scss';
 import SnackbarApp from '../../Alert';
 import { apiUpdateProfiles } from '../../../services/api_helper';
-import storageService from '../../../services/storage.service';
 import { storageProfiles } from '../../../common/const.config';
 import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
@@ -14,6 +13,7 @@ import 'prismjs/components/prism-javascript';
 
 // import { Select } from 'antd';
 import { MenuItem, Select } from '@mui/material';
+import { setDB } from '../../../services/socket';
 
 const PopupAddProxy = ({
   profilesSelected,
@@ -82,8 +82,7 @@ const PopupAddProxy = ({
             const index = dataProfiles.findIndex((e) => e.id === profilesSelected[i].id);
             const newData = [...dataProfiles];
             newData[index].proxy = res.data.data.proxy;
-            console.log(newData[index]);
-            storageService.set(storageProfiles, JSON.stringify(newData));
+            await setDB(storageProfiles, JSON.stringify(newData));
           }
         }
         getProfiles();

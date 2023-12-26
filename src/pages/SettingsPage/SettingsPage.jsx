@@ -5,9 +5,9 @@ import SettingNormal from '../../components/SettingsComponent/SettingNormal/Sett
 import SettingAdvenced from '../../components/SettingsComponent/SettingAdvanced/SettingAdvenced';
 import SettingProxy from '../../components/SettingsComponent/SettingProxy/SettingProxy';
 import { storageSettings } from '../../common/const.config';
-import storageService from '../../services/storage.service';
 import SnackbarApp from '../../components/Alert';
 import { v4 as uuidv4 } from 'uuid';
+import { connectSocket, getDB, setDB } from '../../services/socket';
 
 const SettingsPage = () => {
   const navigate = useNavigate();
@@ -20,17 +20,21 @@ const SettingsPage = () => {
   const [statusMessage, setStatusMessage] = useState('warning');
 
   useEffect(() => {
-    const settingStr = storageService.get(storageSettings);
-    console.log(settingStr);
+    configSettings();
+  }, []);
+
+  const configSettings = async () => {
+    await connectSocket();
+    const settingStr = await getDB(storageSettings);
+
     if (settingStr) {
       setSettings(JSON.parse(settingStr));
-      console.log(settings);
     }
-  }, []);
+  };
 
   useEffect(() => {
     if (settings.countProfile && settings.countProfile >= 0) {
-      storageService.set(storageSettings, JSON.stringify(settings));
+      setDB(storageSettings, JSON.stringify(settings));
     }
   }, [settings]);
 

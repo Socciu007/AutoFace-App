@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback, useEffect, forwardRef, useImperativeHandle } from 'react';
 import ReactFlow, {
   ReactFlowProvider,
   addEdge,
@@ -7,6 +7,7 @@ import ReactFlow, {
   Controls,
   MiniMap,
   MarkerType,
+  Panel,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 
@@ -79,23 +80,28 @@ const nodeMessage = {
   viewVideo: 'viewVideo',
 };
 
-let id = 0;
-const getId = () => `dndnode_${id++}`;
+const getId = () => `dndnode_${+new Date()}`;
 
-const DnDFlow = ({ onMessageChange }) => {
+const DnDFlow = forwardRef(({ onMessageChange, handleDeleteNode, addNewNode }, ref) => {
   const reactFlowWrapper = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
   // click edit button in node (listen event from child node)
-  const handleNodeButtonClick = (type) => {
-    onMessageChange(type);
+  const handleNodeButtonClick = (type, id) => {
+    onMessageChange(type, id);
   };
   const handleDeleteNodeClick = (idToDelete) => {
     setNodes((prevNodes) => prevNodes.filter((node) => node.id !== idToDelete));
-    onMessageChange();
+    handleDeleteNode(idToDelete);
   };
+
+  useImperativeHandle(ref, () => ({
+    getReactFlowInstance() {
+      return reactFlowInstance.toObject();
+    },
+  }));
 
   const onConnect = useCallback((params) => {
     const newEdge = {
@@ -138,17 +144,21 @@ const DnDFlow = ({ onMessageChange }) => {
         x: event.clientX,
         y: event.clientY,
       });
+
+      const id = getId();
+
       const newNode = {
-        id: getId(),
+        id,
         type,
         position,
         data: {
           label: `${type} node`,
-          onButtonClick: () => handleNodeButtonClick(nodeMessage[type]),
+          onButtonClick: (id) => handleNodeButtonClick(nodeMessage[type], id),
           onDeleteNode: handleDeleteNodeClick,
         },
         dragging: false,
       };
+      addNewNode(type, id);
       setNodes((nds) => nds.concat(newNode));
     },
     [reactFlowInstance, handleNodeButtonClick],
@@ -176,6 +186,6 @@ const DnDFlow = ({ onMessageChange }) => {
       </ReactFlowProvider>
     </div>
   );
-};
+});
 
 export default DnDFlow;

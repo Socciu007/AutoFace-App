@@ -32,7 +32,7 @@ function sendMsgNode({ data: { label, onButtonClick, onDeleteNode }, isConnectab
   };
   // Edit node
   const editNode = () => {
-    onButtonClick();
+    onButtonClick(id);
     handleClose();
   };
   // Delete node

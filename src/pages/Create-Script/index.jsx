@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './style.scss';
+import { v4 as uuidv4 } from 'uuid';
 import DnDFlow from '../../components/drag/drag';
 import WatchStory from '../../components/General/WatchStory/WatchStory.jsx';
 import WatchVideo from '../../components/General/WatchVideo/WatchVideo.jsx';
@@ -45,74 +46,294 @@ import likeComment from '../../assets/icon/icon-likeComment.svg';
 import follower from '../../assets/icon/icon-follower.svg';
 import viewVideo from '../../assets/icon/icon-viewVideo.svg';
 import CreatePostGroup from '../../components/Group/Create_Post/CreatePost.jsx';
+import { storageScripts } from '../../common/const.config.js';
+import SnackbarApp from '../../components/Alert/index.jsx';
+import { connectSocket, getDB, setDB } from '../../services/socket/index.js';
+import DefaultSciptSettings from '../../resources/defaultSciptSettings.json';
 
 const CreateScript = () => {
+  const DnDFlowRef = useRef();
+  const [message, setMessage] = useState('');
+  const [statusMessage, setStatusMessage] = useState('warning');
   const [component, setComponent] = useState('default');
-  const handleMessageChange = (event) => {
-    setComponent(event);
+  const [nameScript, setNameScript] = useState('');
+  const [noteScript, setNoteScript] = useState('');
+  const [designScript, setDesignScript] = useState({
+    design: {},
+    script: [],
+  });
+  const [currentComponent, setCurrentComponent] = useState('');
+  const [currentSetup, setCurrentSetup] = useState(null);
+  const [activeCategory, setActiveCategory] = useState(1);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    connectSocket();
+  }, []);
+
+  const handleMessageChange = (component, id) => {
+    console.log(component, id);
+
+    const setup = designScript.script.find((e) => e.id == id);
+
+    console.log('setup ' + JSON.stringify(setup));
+
+    if (setup) {
+      setCurrentSetup(setup);
+    }
+    setCurrentComponent(id);
+    setComponent(component);
   };
 
-  const [messageClickBack, setMessageClickBack] = useState(false);
+  const postAlert = (message, status = 'warning', duration = 3000) => {
+    setStatusMessage(status);
+    setMessage(message);
+    setTimeout(() => {
+      setMessage('');
+      setStatusMessage('warning');
+    }, duration);
+  };
 
-  const handleGoBackClick = () => {
+  const handleDeleteNode = (id) => {
+    let newDesign = { ...designScript };
+    newDesign.script = designScript.script.filter((e) => e.id !== id);
+    setDesignScript(newDesign);
+    setCurrentSetup(null);
     setComponent('default');
   };
 
-  const [activeCategory, setActiveCategory] = useState(1);
-  const navigate = useNavigate();
+  const handleGoBackClick = (value, component, id) => {
+    const newDesign = { ...designScript };
+    const index = newDesign.script.findIndex((e) => e.id == id);
+    if (index >= 0) {
+      newDesign.script[index] = { ...value, id, type: component };
+    } else {
+      newDesign.script.push({ ...value, id, type: component });
+    }
+
+    setDesignScript(newDesign);
+    setCurrentSetup(null);
+    setComponent('default');
+  };
+
+  const onSave = async () => {
+    if (nameScript !== '') {
+      const design = DnDFlowRef.current.getReactFlowInstance();
+      let arrScript = [];
+      const scriptStr = await getDB(storageScripts);
+
+      if (scriptStr) {
+        const script = JSON.parse(scriptStr);
+        if (script && script.length) {
+          arrScript = [...script];
+        }
+      }
+      arrScript.push({
+        ...designScript,
+        design,
+        name: nameScript,
+        note: noteScript,
+        id: designScript.id ? designScript.id : uuidv4(),
+        isPin: designScript.isPin ? true : false,
+      });
+      const res = await setDB(storageScripts, JSON.stringify(arrScript));
+      if (res) {
+        postAlert('Save script done!', 'success');
+        handleReturnClick();
+      } else {
+        postAlert('Save script fail!', 'error');
+      }
+    } else {
+      postAlert('Enter name script!');
+    }
+  };
+
+  const onAddNewNode = (component, id) => {
+    const setup = DefaultSciptSettings[component];
+    if (setup) {
+      const newDesign = { ...designScript };
+      newDesign.script.push({ ...setup, id, type: component });
+      setDesignScript(newDesign);
+    }
+
+    setTimeout(() => {
+      console.log(designScript);
+    }, 1000);
+  };
+
+  const handelChangeName = (value) => {
+    setNameScript(value);
+  };
+
+  const handelChangeNote = (value) => {
+    setNoteScript(value);
+  };
+
   const onDragStart = (event, nodeType) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
     event.dataTransfer.effectAllowed = 'move';
   };
+
   const handleReturnClick = () => {
-    // Navigate to the desired route when the button is clicked
     navigate('/scripManager');
   };
   const handleCategoryClick = (categoryNumber) => {
     setActiveCategory(categoryNumber === activeCategory ? null : categoryNumber);
   };
 
-  const renderComponent = (id) => {
-    switch (id) {
-      case 'watchStory':
-        return <WatchStory onGoBackClick={handleGoBackClick} />;
-      case 'watchVideo':
-        return <WatchVideo onGoBackClick={handleGoBackClick} />;
+  const renderComponent = (component) => {
+    switch (component) {
+      // case 'watchStory':
+      //   return <WatchStory onGoBackClick={handleGoBackClick} />;
+      // case 'watchVideo':
+      //   return <WatchVideo onGoBackClick={handleGoBackClick} />;
       case 'newsFeed':
-        return <Newsfeed onGoBackClick={handleGoBackClick} />;
+        return (
+          <Newsfeed
+            component={component}
+            currentSetup={currentSetup}
+            id={currentComponent}
+            onGoBackClick={handleGoBackClick}
+          />
+        );
       case 'createPost':
-        return <CreatePost onGoBackClick={handleGoBackClick} />;
+        return (
+          <CreatePost
+            currentSetup={currentSetup}
+            component={component}
+            id={currentComponent}
+            onGoBackClick={handleGoBackClick}
+          />
+        );
       case 'postInteract':
-        return <Post_Interaction onGoBackClick={handleGoBackClick} />;
+        return (
+          <Post_Interaction
+            currentSetup={currentSetup}
+            component={component}
+            id={currentComponent}
+            onGoBackClick={handleGoBackClick}
+          />
+        );
       case 'deletePost':
-        return <Delete_Post onGoBackClick={handleGoBackClick} />;
+        return (
+          <Delete_Post
+            currentSetup={currentSetup}
+            component={component}
+            id={currentComponent}
+            onGoBackClick={handleGoBackClick}
+          />
+        );
       case 'viewNoti':
-        return <View_Notifications onGoBackClick={handleGoBackClick} />;
+        return (
+          <View_Notifications
+            currentSetup={currentSetup}
+            component={component}
+            id={currentComponent}
+            onGoBackClick={handleGoBackClick}
+          />
+        );
       case 'sendMsg':
-        return <Send_Message onGoBackClick={handleGoBackClick} />;
+        return (
+          <Send_Message
+            currentSetup={currentSetup}
+            component={component}
+            id={currentComponent}
+            onGoBackClick={handleGoBackClick}
+          />
+        );
       case 'replyMsg':
-        return <Reply_Message onGoBackClick={handleGoBackClick} />;
+        return (
+          <Reply_Message
+            currentSetup={currentSetup}
+            component={component}
+            id={currentComponent}
+            onGoBackClick={handleGoBackClick}
+          />
+        );
       case 'addFriend':
-        return <AddFriend onGoBackClick={handleGoBackClick} />;
+        return (
+          <AddFriend
+            currentSetup={currentSetup}
+            component={component}
+            id={currentComponent}
+            onGoBackClick={handleGoBackClick}
+          />
+        );
       case 'cancelFriend':
-        return <CancelFriend onGoBackClick={handleGoBackClick} />;
+        return (
+          <CancelFriend
+            currentSetup={currentSetup}
+            component={component}
+            id={currentComponent}
+            onGoBackClick={handleGoBackClick}
+          />
+        );
       case 'joinGroup':
-        return <JoinGroup onGoBackClick={handleGoBackClick} />;
+        return (
+          <JoinGroup
+            currentSetup={currentSetup}
+            component={component}
+            id={currentComponent}
+            onGoBackClick={handleGoBackClick}
+          />
+        );
       case 'leftGroup':
-        return <LeaveGroup onGoBackClick={handleGoBackClick} />;
+        return (
+          <LeaveGroup
+            currentSetup={currentSetup}
+            component={component}
+            id={currentComponent}
+            onGoBackClick={handleGoBackClick}
+          />
+        );
       case 'inviteGroup':
-        return <Invite onGoBackClick={handleGoBackClick} />;
+        return (
+          <Invite
+            currentSetup={currentSetup}
+            component={component}
+            id={currentComponent}
+            onGoBackClick={handleGoBackClick}
+          />
+        );
       case 'createPostGroup':
-        return <CreatePostGroup onGoBackClick={handleGoBackClick} />;
+        return (
+          <CreatePostGroup
+            currentSetup={currentSetup}
+            component={component}
+            id={currentComponent}
+            onGoBackClick={handleGoBackClick}
+          />
+        );
       case 'likeComment':
-        return <SeedingLikeComment onGoBackClick={handleGoBackClick} />;
+        return (
+          <SeedingLikeComment
+            currentSetup={currentSetup}
+            component={component}
+            id={currentComponent}
+            onGoBackClick={handleGoBackClick}
+          />
+        );
       case 'follower':
-        return <SeedingFollower onGoBackClick={handleGoBackClick} />;
+        return (
+          <SeedingFollower
+            currentSetup={currentSetup}
+            component={component}
+            id={currentComponent}
+            onGoBackClick={handleGoBackClick}
+          />
+        );
       case 'viewVideo':
-        return <SeedingView onGoBackClick={handleGoBackClick} />;
+        return (
+          <SeedingView
+            currentSetup={currentSetup}
+            component={component}
+            id={currentComponent}
+            onGoBackClick={handleGoBackClick}
+          />
+        );
       default:
         return (
-          <div className={messageClickBack ? 'hide' : 'scrollable-container'}>
+          <div className={'scrollable-container'}>
             <div className="left-content">
               <div className="left-content__top">
                 <div className="search">
@@ -143,14 +364,14 @@ const CreateScript = () => {
               </div>
               <div className="left-content__container">
                 <div className={activeCategory === 1 ? 'grid-container' : 'hide'}>
-                  <div className="card" onDragStart={(event) => onDragStart(event, 'watchStory')} draggable>
+                  {/* <div className="card" onDragStart={(event) => onDragStart(event, 'watchStory')} draggable>
                     <img src={watchStory} alt="watch Story General" />
                     <p>Watch story</p>
                   </div>
                   <div className="card" onDragStart={(event) => onDragStart(event, 'watchVideo')} draggable>
                     <img src={watchVideo} alt="watch Video General" />
                     <p>Watch video</p>
-                  </div>
+                  </div> */}
                   <div className="card" onDragStart={(event) => onDragStart(event, 'newsFeed')} draggable>
                     <img src={newsfeed} alt="watch newsfeed General" />
                     <p>Newsfeed</p>
@@ -246,11 +467,21 @@ const CreateScript = () => {
             <div className="right-content">
               <div className="right-content__edit">
                 <div className="edit-input">
-                  <input type="text" placeholder="Enter name" />
+                  <input
+                    type="text"
+                    value={nameScript}
+                    onChange={(event) => handelChangeName(event.target.value)}
+                    placeholder="Enter name"
+                  />
                 </div>
                 <div className="note-input">
                   <img src={newNote} alt="new Note" />
-                  <input type="text" placeholder="New note" />
+                  <input
+                    onChange={(event) => handelChangeNote(event.target.value)}
+                    type="text"
+                    value={noteScript}
+                    placeholder="New note"
+                  />
                 </div>
                 <div className="groupEndBtn">
                   <button className="debug">
@@ -262,18 +493,29 @@ const CreateScript = () => {
                   <button className="more">
                     <img src={option} alt="More" />
                   </button>
-                  <button className="saveBtn">
+                  <button
+                    onClick={() => {
+                      onSave();
+                    }}
+                    className="saveBtn"
+                  >
                     <img src={save} alt="Save" />
                     SAVE
                   </button>
                 </div>
               </div>
               <div className="right-content__container">
-                <DnDFlow onMessageChange={handleMessageChange}></DnDFlow>
+                <DnDFlow
+                  addNewNode={onAddNewNode}
+                  ref={DnDFlowRef}
+                  handleDeleteNode={handleDeleteNode}
+                  onMessageChange={handleMessageChange}
+                ></DnDFlow>
               </div>
             </div>
           </div>
         </div>
+        <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
       </div>
     </>
   );
