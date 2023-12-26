@@ -185,7 +185,9 @@ const ScriptManager = () => {
   };
   // Handle the button edit
   const handleEditClick = () => {
-    navigate('/edit');
+    navigate('/create', {
+      state: itemSelect,
+    });
   };
   // Handle category button
   const handleButtonClick = () => {
@@ -379,10 +381,16 @@ const ScriptManager = () => {
             <div className="right-content">
               <div className="right-content__edit">
                 <h3>SCRIPT OVERVIEW</h3>
-                {/* <div className="edit-input">
+                <div className="edit-input">
                   <img src={newNote} alt="New note" />
-                  <input type="text" value={itemSelect ? itemSelect.note : ''} placeholder="New note" />
-                </div> */}
+
+                  <input
+                    disabled="disabled"
+                    type="text"
+                    value={itemSelect ? itemSelect.note : ''}
+                    placeholder="New note"
+                  />
+                </div>
                 <button className="editBtn" onClick={handleEditClick}>
                   <img src={edit} alt="Edit" />
                   EDIT

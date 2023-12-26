@@ -47,12 +47,14 @@ const ProfilesPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    connectSocket();
-    setTimeout(() => {
-      getProfiles();
-      checkSettings();
-    }, 500);
+    config();
   }, []);
+
+  const config = async () => {
+    await connectSocket();
+    await getProfiles();
+    await checkSettings();
+  };
 
   const checkSettings = async () => {
     const settings = await getDB(storageSettings);

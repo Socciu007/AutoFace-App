@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './style.scss';
 import { v4 as uuidv4 } from 'uuid';
 import DnDFlow from '../../components/drag/drag';
@@ -66,8 +66,13 @@ const CreateScript = () => {
   const [currentSetup, setCurrentSetup] = useState(null);
   const [activeCategory, setActiveCategory] = useState(1);
   const navigate = useNavigate();
-
+  const { state } = useLocation();
   useEffect(() => {
+    if (state) {
+      setNameScript(state.name ? state.name : '');
+      setNoteScript(state.note ? state.note : '');
+      setDesignScript(state);
+    }
     connectSocket();
   }, []);
 
@@ -128,14 +133,26 @@ const CreateScript = () => {
           arrScript = [...script];
         }
       }
-      arrScript.push({
-        ...designScript,
-        design,
-        name: nameScript,
-        note: noteScript,
-        id: designScript.id ? designScript.id : uuidv4(),
-        isPin: designScript.isPin ? true : false,
-      });
+
+      const index = arrScript.findIndex((e) => e.id == designScript.id);
+      if (index >= 0) {
+        arrScript[index] = {
+          ...designScript,
+          design,
+          name: nameScript,
+          note: noteScript,
+        };
+      } else {
+        arrScript.push({
+          ...designScript,
+          design,
+          name: nameScript,
+          note: noteScript,
+          id: designScript.id ? designScript.id : uuidv4(),
+          isPin: designScript.isPin ? true : false,
+        });
+      }
+
       const res = await setDB(storageScripts, JSON.stringify(arrScript));
       if (res) {
         postAlert('Save script done!', 'success');
@@ -458,7 +475,7 @@ const CreateScript = () => {
               <button onClick={handleReturnClick}>
                 <img src={back} alt="Return" />
               </button>
-              <p>Create a new script</p>
+              {state && state.id ? <p>Edit {state.name}</p> : <p>Create a new script</p>}
             </div>
           </div>
           <div className="create-script__content">
@@ -508,6 +525,7 @@ const CreateScript = () => {
                 <DnDFlow
                   addNewNode={onAddNewNode}
                   ref={DnDFlowRef}
+                  itemScript={state}
                   handleDeleteNode={handleDeleteNode}
                   onMessageChange={handleMessageChange}
                 ></DnDFlow>

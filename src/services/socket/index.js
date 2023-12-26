@@ -23,15 +23,13 @@ export const connectSocket = async () => {
     const dataConnect = await connect();
     if (dataConnect && dataConnect.success) {
       socket = io('http://127.0.0.1:' + dataConnect.data.data);
-      setTimeout(() => {
-        connecting = false;
-      }, 1000);
       socket.on('localstorage_result', (response) => {
         if (response && response.key) {
           data[response.key] = response.data;
         }
       });
       await delay(500);
+      connecting = false;
       return true;
     }
     return false;

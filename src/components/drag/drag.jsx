@@ -82,13 +82,12 @@ const nodeMessage = {
 
 const getId = () => `dndnode_${+new Date()}`;
 
-const DnDFlow = forwardRef(({ onMessageChange, handleDeleteNode, addNewNode }, ref) => {
+const DnDFlow = forwardRef(({ onMessageChange, handleDeleteNode, addNewNode, itemScript }, ref) => {
   const reactFlowWrapper = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
-  // click edit button in node (listen event from child node)
   const handleNodeButtonClick = (type, id) => {
     onMessageChange(type, id);
   };
@@ -102,6 +101,15 @@ const DnDFlow = forwardRef(({ onMessageChange, handleDeleteNode, addNewNode }, r
       return reactFlowInstance.toObject();
     },
   }));
+
+  useEffect(() => {
+    console.log('itemScript');
+    console.log(itemScript);
+    if (itemScript && itemScript.design) {
+      setNodes(itemScript.design.nodes);
+      setEdges(itemScript.design.edges);
+    }
+  }, []);
 
   const onConnect = useCallback((params) => {
     const newEdge = {
@@ -137,9 +145,6 @@ const DnDFlow = forwardRef(({ onMessageChange, handleDeleteNode, addNewNode }, r
         return;
       }
 
-      // reactFlowInstance.project was renamed to reactFlowInstance.screenToFlowPosition
-      // and you don't need to subtract the reactFlowBounds.left/top anymore
-      // details: https://reactflow.dev/whats-new/202-11-10
       const position = reactFlowInstance.screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
