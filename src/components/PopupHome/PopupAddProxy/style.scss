@@ -144,13 +144,15 @@
             font-family: 'GoogleSans';
           }
 
-          .editor #codeArea {
+          .editor #proxyString {
             outline: none;
             padding-left: 6% !important;
+            padding-top: 2.5% !important;
           }
 
           .editor pre {
             padding-left: 6% !important;
+            padding-top: 2.5% !important;
             width: 100%;
           }
 
