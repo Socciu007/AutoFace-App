@@ -3,6 +3,7 @@ import Promise from 'bluebird';
 import { apiGetPortSocket } from '../api_helper';
 
 let socket;
+let port;
 let data = {};
 let connecting = false;
 const connect = async () => {
@@ -20,9 +21,14 @@ const delay = async (time) => {
 export const connectSocket = async () => {
   if ((!socket || !socket.connected) && !connecting) {
     connecting = true;
-    const dataConnect = await connect();
-    if (dataConnect && dataConnect.success) {
-      socket = io('http://127.0.0.1:' + dataConnect.data.data);
+    if (!port) {
+      const dataConnect = await connect();
+      if (dataConnect && dataConnect.success) {
+        port = dataConnect.data.data;
+      }
+    }
+    if (port) {
+      socket = io('http://127.0.0.1:' + port);
       socket.on('localstorage_result', (response) => {
         if (response && response.key) {
           data[response.key] = response.data;

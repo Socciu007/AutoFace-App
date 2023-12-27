@@ -9,7 +9,7 @@ import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 
-const Reply_Message = ({ onGoBackClick, id, currentSetup, component }) => {
+const Reply_Message = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
   const initialValues = {
     numberFriendStart: 5,
     numberFriendEnd: 10,
@@ -34,6 +34,10 @@ const Reply_Message = ({ onGoBackClick, id, currentSetup, component }) => {
       setValues({ ...values, text: textContent.split('\n') });
     }
   }, [textContent]);
+
+  useEffect(() => {
+    updateDesignScript(values, component, id);
+  }, [values]);
 
   const parseToNumber = (value) => {
     const isNumber = /^\d*$/.test(value);

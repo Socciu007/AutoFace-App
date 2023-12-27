@@ -539,6 +539,7 @@ const ProfilesPage = () => {
               <button>Run</button>
             </div>
             <PopupScript
+              profilesSelected={profilesSelected}
               openScripts={openScripts}
               handleCloseScripts={handleCloseScripts}
               handleSettings={handleSettings}

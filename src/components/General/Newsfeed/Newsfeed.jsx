@@ -9,7 +9,7 @@ import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/themes/prism.css';
-const Newsfeed = ({ onGoBackClick, id, currentSetup, component }) => {
+const Newsfeed = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
   const initialValues = {
     scrollTimeStart: 300,
     scrollTimeEnd: 400,
@@ -37,6 +37,10 @@ const Newsfeed = ({ onGoBackClick, id, currentSetup, component }) => {
       setValues(currentSetup);
     }
   }, [currentSetup]);
+
+  useEffect(() => {
+    updateDesignScript(values, component, id);
+  }, [values]);
 
   useEffect(() => {
     if (textContent.length) {

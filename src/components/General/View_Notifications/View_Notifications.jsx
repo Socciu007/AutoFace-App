@@ -6,7 +6,7 @@ import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-const View_Notifications = ({ onGoBackClick, id, currentSetup, component }) => {
+const View_Notifications = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
   const initialValues = {
     notificationStart: 5,
     notificationEnd: 10,
@@ -27,6 +27,10 @@ const View_Notifications = ({ onGoBackClick, id, currentSetup, component }) => {
       return parseInt(value) > 0 ? parseInt(value) : 0;
     }
   };
+
+  useEffect(() => {
+    updateDesignScript(values, component, id);
+  }, [values]);
 
   const changeNotificationStart = (noti) => {
     setValues({ ...values, notificationStart: parseToNumber(noti) });

@@ -5,10 +5,11 @@ import settings from '../../../assets/pictures/icon-settings.png';
 import yourScript from '../../../assets/pictures/icon-yourScripts.svg';
 import search from '../../../assets/pictures/icon-search.svg';
 import { Table } from 'antd';
-import { connectSocket, getDB } from '../../../services/socket';
+import { getDB } from '../../../services/socket';
 import { storageScripts } from '../../../common/const.config';
+import { runScript } from '../../../services/runScript';
 
-const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOpenScripts }) => {
+const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOpenScripts, profilesSelected }) => {
   const typeScript = [
     {
       title: 'All',
@@ -26,11 +27,13 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
 
   const [type, setType] = useState('all');
   const [contentArray, setContentArray] = useState([]);
-
+  const [scriptSelected, setScriptSelected] = useState();
   const [listScript, setListScript] = useState([]);
 
   useEffect(() => {
-    getScripts();
+    setTimeout(() => {
+      getScripts();
+    }, 1000);
   }, []);
 
   useEffect(() => {
@@ -51,7 +54,6 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
 
   const getScripts = async () => {
     const scriptStr = await getDB(storageScripts);
-    console.log(scriptStr);
     if (scriptStr) {
       const script = JSON.parse(scriptStr);
       if (script && script.length) {
@@ -62,6 +64,12 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
 
   const handleTypeScript = (value) => {
     setType(value);
+  };
+
+  const runScriptAuto = async () => {
+    if (scriptSelected) {
+      await runScript(profilesSelected, scriptSelected);
+    }
   };
 
   const searchScript = (text) => {
@@ -89,10 +97,13 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
       dataIndex: 'note',
     },
   ];
-  // rowSelection object indicates the need for row selection
+
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
-      console.log(`selectedRowKeys: ${selectedRowKeys}`);
+      if (selectedRows.length) {
+        console.log(selectedRows[0]);
+        setScriptSelected(selectedRows[0]);
+      }
     },
   };
   return (
@@ -115,7 +126,13 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
                   <img src={yourScript} alt="icon-yourscripts"></img>
                 </span>
                 <div>
-                  <button>Run</button>
+                  <button
+                    onClick={async () => {
+                      await runScriptAuto();
+                    }}
+                  >
+                    Run
+                  </button>
                 </div>
               </div>
             </div>
@@ -163,16 +180,21 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
                       <Table
                         rowSelection={{
                           ...rowSelection,
+                          type: 'radio',
                         }}
                         columns={columnsScripts}
-                        dataSource={listScript.filter((e) => {
-                          if (type == 'all') return true;
-                          else if (type == 'system') {
-                            return e.isSystem;
-                          } else {
-                            return !e.isSystem;
-                          }
-                        })}
+                        dataSource={listScript
+                          .map((e, index) => {
+                            return { ...e, key: index };
+                          })
+                          .filter((e) => {
+                            if (type == 'all') return true;
+                            else if (type == 'system') {
+                              return e.isSystem;
+                            } else {
+                              return !e.isSystem;
+                            }
+                          })}
                         pagination={false}
                       ></Table>
                     </div>

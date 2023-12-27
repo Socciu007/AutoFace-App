@@ -111,7 +111,7 @@ const DnDFlow = forwardRef(({ onMessageChange, handleDeleteNode, addNewNode, ite
             data: {
               label: `${e.type} node`,
               onButtonClick: () => handleNodeButtonClick(e.type, e.id),
-              onDeleteNode: handleDeleteNodeClick(e.id),
+              onDeleteNode: () => handleDeleteNodeClick(e.id),
             },
           };
         }),
@@ -149,7 +149,6 @@ const DnDFlow = forwardRef(({ onMessageChange, handleDeleteNode, addNewNode, ite
 
       const type = event.dataTransfer.getData('application/reactflow');
 
-      // check if the dropped element is valid
       if (typeof type === 'undefined' || !type) {
         return;
       }
