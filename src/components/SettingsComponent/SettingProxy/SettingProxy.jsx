@@ -28,7 +28,6 @@ const SettingProxy = ({
   handleDeleteProxy,
   handleAddProxyFromManager,
 }) => {
-  const [openWriteText, setOpenWriteText] = useState(false);
   const [proxyType, setProxyTpye] = useState('http');
   const [proxyString, setProxyString] = useState('');
   const [listProxy, setListProxy] = useState([]);
@@ -41,11 +40,7 @@ const SettingProxy = ({
   };
 
   const handleOpenWriteText = () => {
-    setOpenWriteText(true);
-  };
-
-  const onchangeProxyString = (value) => {
-    setProxyString(value);
+    document.getElementById('proxyString').focus();
   };
 
   const generateProxyStr = (proxy) => {
@@ -177,10 +172,9 @@ const SettingProxy = ({
                       value={proxyString}
                       onValueChange={(proxyString) => setProxyString(proxyString)}
                       highlight={(proxyString) => hightlightWithLineNumbers(proxyString, languages.js)}
-                      onClick={handleOpenWriteText}
                       padding={15}
                       className="editor"
-                      textareaId="textareaContent"
+                      textareaId="proxyString"
                       style={{
                         background: '#fff',
                         fontSize: 15,

@@ -75,7 +75,7 @@ const CreateScript = () => {
   useEffect(() => {
     setDefaultScript();
     connectSocket();
-  }, []);
+  }, [state]);
 
   const setDefaultScript = () => {
     if (state) {

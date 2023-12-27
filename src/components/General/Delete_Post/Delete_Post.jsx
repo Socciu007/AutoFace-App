@@ -8,50 +8,95 @@ import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
-import { UIDTextarea, useRangeValues } from './Delete_Post';
 
-const Delete_Post = ({ onGoBackClick }) => {
+const Delete_Post = ({ onGoBackClick, id, currentSetup, component }) => {
   const initialValues = {
-    ViewTimeStart: 5,
-    ViewTimeEnd: 10,
-    DelayTimeStart: 5,
-    DelayTimeEnd: 10,
+    delayTimeStart: 5,
+    delayTimeEnd: 10,
+    viewTimeStart: 5,
+    viewTimeEnd: 10,
+    text: [],
+    lineCount: 0,
+  };
+  const [values, setValues] = useState(initialValues);
+  const [textContent, setTextContent] = useState('');
+
+  useEffect(() => {
+    if (currentSetup) {
+      if (currentSetup.text && currentSetup.text.length) {
+        setTextContent(currentSetup.text.join('\n'));
+      }
+      setValues(currentSetup);
+    }
+  }, [currentSetup]);
+
+  useEffect(() => {
+    if (textContent.length) {
+      setValues({ ...values, text: textContent.split('\n'), lineCount: textContent.split('\n').length });
+    }
+  }, [textContent]);
+
+  const hightlightWithLineNumbers = (input, language, content) =>
+    highlight(input, language)
+      .split('\n')
+      .map((line, i) => `<span class='editorLineNumber ${content ? '' : 'hide'}'>${i + 1}</span>${line}`)
+      .join('\n');
+  const handleDivClick = () => {
+    document.getElementById('codeArea').focus();
   };
 
-  const viewTimeValues = useRangeValues(initialValues, 'ViewTime');
-  const delayTimeValues = useRangeValues(initialValues, 'DelayTime');
+  const parseToNumber = (value) => {
+    const isNumber = /^\d*$/.test(value);
+    if (isNumber) {
+      return value > 0 ? value : 0;
+    } else {
+      return parseInt(value) > 0 ? parseInt(value) : 0;
+    }
+  };
 
-  const {
-    textContent,
-    handleTextareaChange,
-    handleTextareaPaste,
-    lineCount,
-    handleDivClick,
-    hightlightWithLineNumbers,
-    setTextContent,
-  } = UIDTextarea();
+  const changeViewTimeStart = (viewTime) => {
+    setValues({ ...values, viewTimeStart: parseToNumber(viewTime) });
+  };
+
+  const changeViewTimeEnd = (viewTime) => {
+    setValues({ ...values, viewTimeEnd: parseToNumber(viewTime) });
+  };
+
+  const changeDelayTimeStart = (time) => {
+    setValues({ ...values, delayTimeStart: parseToNumber(time) });
+  };
+
+  const changeDelayTimeEnd = (time) => {
+    setValues({ ...values, delayTimeEnd: parseToNumber(time) });
+  };
   return (
     <div className="Delete_Post">
       <div className="component_container">
         <div className="scrollable-container">
           <div className="component-left">
             <div className="goBack">
-              <img src={backButton} alt="Back button" onClick={() => onGoBackClick(true)} />
+              <img
+                src={backButton}
+                alt="Back button"
+                onClick={() => {
+                  onGoBackClick(values, component, id);
+                }}
+              />
               <p>Delete post</p>
             </div>
             <div className="PostUIDList">
               <p className="selectComment__header">
                 Post UID list
-                <span style={{ marginLeft: '2px' }}>({lineCount})</span>
+                <span style={{ marginLeft: '2px' }}>({values.lineCount})</span>
               </p>
               <div style={{ position: 'relative' }} className="component-item">
                 <div className="text" style={{ width: '100%', height: 204, overflow: 'auto' }}>
                   <Editor
-                    onPaste={handleTextareaPaste}
                     value={textContent}
-                    onChange={handleTextareaChange}
-                    onValueChange={(textContentComment) => setTextContent(textContentComment)}
-                    highlight={(code) => hightlightWithLineNumbers(code, languages.js)}
+                    onValueChange={(text) => {
+                      setTextContent(text);
+                    }}
+                    highlight={(text) => hightlightWithLineNumbers(text, languages.js, textContent)}
                     padding={15}
                     className="editor"
                     textareaId="codeArea"
@@ -78,27 +123,51 @@ const Delete_Post = ({ onGoBackClick }) => {
               </p>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={viewTimeValues.handleIncrement} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={viewTimeValues.handleDecrement} />
+                  <img
+                    src={iconIncrease}
+                    alt="Increase icon"
+                    onClick={() => {
+                      changeViewTimeStart(values.viewTimeStart + 1);
+                    }}
+                  />
+                  <img
+                    src={iconDecrease}
+                    alt="Decrease icon"
+                    onClick={() => {
+                      changeViewTimeStart(values.viewTimeStart - 1);
+                    }}
+                  />
                 </div>
                 <input
                   type="text"
                   name="Start"
-                  value={viewTimeValues.ViewTimeStart}
-                  onChange={(event) => viewTimeValues.handleInputChangeStart(event)}
+                  value={values.viewTimeStart}
+                  onChange={(event) => changeViewTimeStart(event.target.value)}
                 />
               </div>
               <span>to</span>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={viewTimeValues.handleIncrementEnd} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={viewTimeValues.handleDecrementEnd} />
+                  <img
+                    src={iconIncrease}
+                    alt="Increase icon"
+                    onClick={() => {
+                      changeViewTimeEnd(values.viewTimeEnd + 1);
+                    }}
+                  />
+                  <img
+                    src={iconDecrease}
+                    alt="Decrease icon"
+                    onClick={() => {
+                      changeViewTimeEnd(values.viewTimeEnd - 1);
+                    }}
+                  />
                 </div>
                 <input
                   type="text"
                   name="End"
-                  value={viewTimeValues.ViewTimeEnd}
-                  onChange={(event) => viewTimeValues.handleInputChangeEnd(event)}
+                  value={values.viewTimeEnd}
+                  onChange={(event) => changeViewTimeEnd(event.target.value)}
                 />
               </div>
             </div>
@@ -109,27 +178,51 @@ const Delete_Post = ({ onGoBackClick }) => {
               </p>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrement} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrement} />
+                  <img
+                    src={iconIncrease}
+                    alt="Increase icon"
+                    onClick={() => {
+                      changeDelayTimeStart(values.delayTimeStart + 1);
+                    }}
+                  />
+                  <img
+                    src={iconDecrease}
+                    alt="Decrease icon"
+                    onClick={() => {
+                      changeDelayTimeStart(values.delayTimeStart - 1);
+                    }}
+                  />
                 </div>
                 <input
                   name="Start"
                   type="text"
-                  value={delayTimeValues.DelayTimeStart}
-                  onChange={(event) => delayTimeValues.handleInputChangeStart(event)}
+                  value={values.delayTimeStart}
+                  onChange={(event) => changeDelayTimeStart(event.target.value)}
                 />
               </div>
               <span>to</span>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrementEnd} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrementEnd} />
+                  <img
+                    src={iconIncrease}
+                    alt="Increase icon"
+                    onClick={() => {
+                      changeDelayTimeEnd(values.delayTimeEnd + 1);
+                    }}
+                  />
+                  <img
+                    src={iconDecrease}
+                    alt="Decrease icon"
+                    onClick={() => {
+                      changeDelayTimeEnd(values.delayTimeEnd - 1);
+                    }}
+                  />
                 </div>
                 <input
                   name="End"
                   type="text"
-                  value={delayTimeValues.DelayTimeEnd}
-                  onChange={(event) => delayTimeValues.handleInputChangeEnd(event)}
+                  value={values.delayTimeEnd}
+                  onChange={(event) => changeDelayTimeEnd(event.target.value)}
                 />
               </div>
             </div>
