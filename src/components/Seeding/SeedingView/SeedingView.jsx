@@ -6,6 +6,7 @@ import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
+import { document } from 'postcss';
 
 const SeedingView = ({ onGoBackClick }) => {
   const [videoView, setVideoView] = useState({
@@ -13,7 +14,7 @@ const SeedingView = ({ onGoBackClick }) => {
     viewTimeEnd: 50,
     videoID: '',
   });
-  const [openText, setOpenText] = useState(false);
+  const [line, setLine] = useState(0);
   const hightlightWithLineNumbers = (input, language) =>
     highlight(input, language)
       .split('\n')
@@ -61,6 +62,13 @@ const SeedingView = ({ onGoBackClick }) => {
     }
   };
 
+  const handleClickText = () => {
+    document.getElementById('videoID').focus();
+  };
+  const onChangeLine = (e) => {
+    const lines = e.target.value.split('\n');
+    setLine(lines.length);
+  };
   const handleOnchangeVideoID = (value) => {
     setVideoView({
       ...videoView,
@@ -75,7 +83,7 @@ const SeedingView = ({ onGoBackClick }) => {
           <div className="-seeding-wrapper-like">
             <div className="-back-home">
               <img src={back} alt="Back Button" onClick={() => onGoBackClick(true)} />
-              <p>Boost followers</p>
+              <p>Boost video view</p>
             </div>
             <div className="-option-boost-like">
               <p>
@@ -117,18 +125,18 @@ const SeedingView = ({ onGoBackClick }) => {
             </div>
             <div className="-option-boost-like -option-boost-comment">
               <p style={{ width: '100%' }}>
-                Video ID: <span style={{ float: 'inline-end' }}>(0)</span>
+                Video ID: <span style={{ float: 'inline-end' }}>({line})</span>
               </p>
               <div className="-option-boost-comment__wrapper">
                 <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
                   <Editor
                     value={videoView.videoID}
                     onValueChange={handleOnchangeVideoID}
-                    onClick={() => setOpenText(true)}
+                    onChange={onChangeLine}
                     highlight={(textContent) => hightlightWithLineNumbers(textContent, languages.js)}
                     padding={15}
                     className="editor"
-                    textareaId="codeArea"
+                    textareaId="videoID"
                     style={{
                       background: '#f5f5f5',
                       fontSize: 15,
@@ -137,8 +145,8 @@ const SeedingView = ({ onGoBackClick }) => {
                 </div>
                 <div
                   className="-option-boost-comment__wrapper__content"
-                  onClick={() => setOpenText(true)}
-                  style={{ display: openText ? 'none' : 'inline' }}
+                  onClick={handleClickText}
+                  style={{ display: videoView.videoID ? 'none' : 'inline' }}
                 >
                   <p>
                     <span>1</span>
