@@ -14,7 +14,6 @@ const SeedingFollower = ({ onGoBackClick }) => {
     selectTypeFollow: 'Profile',
     UIDList: '',
   });
-  const [openUIDList, setOpenUIDList] = useState(false);
   const hightlightWithLineNumbers = (input, language) =>
     highlight(input, language)
       .split('\n')
@@ -71,7 +70,7 @@ const SeedingFollower = ({ onGoBackClick }) => {
   };
   //UID list
   const handleUIDList = () => {
-    setOpenUIDList(true);
+    document.getElementById('UIDList').focus();
   };
   const handleOnchangeUIDList = (value) => {
     setFollowers({
@@ -158,11 +157,10 @@ const SeedingFollower = ({ onGoBackClick }) => {
                   <Editor
                     value={followers.UIDList}
                     onValueChange={handleOnchangeUIDList}
-                    onClick={handleUIDList}
                     highlight={(textContent) => hightlightWithLineNumbers(textContent, languages.js)}
                     padding={15}
                     className="editor"
-                    textareaId="codeArea"
+                    textareaId="UIDList"
                     style={{
                       background: '#f5f5f5',
                       fontSize: 15,
@@ -172,7 +170,7 @@ const SeedingFollower = ({ onGoBackClick }) => {
                 <div
                   className="-option-boost-comment__wrapper__content"
                   onClick={handleUIDList}
-                  style={{ display: openUIDList ? 'none' : 'inline' }}
+                  style={{ display: followers.UIDList ? 'none' : 'inline' }}
                 >
                   <p>
                     <span>1</span>

@@ -8,27 +8,78 @@ import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
-import { MessageTextarea, useRangeValues } from './Reply_Message';
 
-const Reply_Message = ({ onGoBackClick }) => {
+const Reply_Message = ({ onGoBackClick, id, currentSetup, component }) => {
   const initialValues = {
-    NumberFriendStart: 5,
-    NumberFriendEnd: 10,
-    DelayTimeStart: 5,
-    DelayTimeEnd: 10,
+    numberFriendStart: 5,
+    numberFriendEnd: 10,
+    delayTimeStart: 5,
+    delayTimeEnd: 10,
+    text: [],
   };
 
-  const numberFriendValues = useRangeValues(initialValues, 'NumberFriend');
-  const delayTimeValues = useRangeValues(initialValues, 'DelayTime');
+  const [values, setValues] = useState(initialValues);
+  const [textContent, setTextContent] = useState('');
+  useEffect(() => {
+    if (currentSetup) {
+      if (currentSetup.text && currentSetup.text.length) {
+        setTextContent(currentSetup.text.join('\n'));
+      }
+      setValues(currentSetup);
+    }
+  }, [currentSetup]);
 
-  const { textContentMessage, handleChange, handleDivClick, hightlightWithLineNumbers } = MessageTextarea();
+  useEffect(() => {
+    if (textContent.length) {
+      setValues({ ...values, text: textContent.split('\n') });
+    }
+  }, [textContent]);
+
+  const parseToNumber = (value) => {
+    const isNumber = /^\d*$/.test(value);
+    if (isNumber) {
+      return value > 0 ? value : 0;
+    } else {
+      return parseInt(value) > 0 ? parseInt(value) : 0;
+    }
+  };
+
+  const changeFriendStart = (friend) => {
+    setValues({ ...values, numberFriendStart: parseToNumber(friend) });
+  };
+
+  const changeFriendEnd = (friend) => {
+    setValues({ ...values, numberFriendEnd: parseToNumber(friend) });
+  };
+
+  const changeDelayTimeStart = (time) => {
+    setValues({ ...values, delayTimeStart: parseToNumber(time) });
+  };
+  const changeDelayTimeEnd = (time) => {
+    setValues({ ...values, delayTimeEnd: parseToNumber(time) });
+  };
+
+  const handleDivClick = () => {
+    document.getElementById('codeArea').focus();
+  };
+  const hightlightWithLineNumbers = (input, language, content) =>
+    highlight(input, language)
+      .split('\n')
+      .map((line, i) => `<span class='editorLineNumber ${content ? '' : 'hide'}'>${i + 1}</span>${line}`)
+      .join('\n');
   return (
     <div className="replyMessage">
       <div className="component_container">
         <div className="scrollable-container">
           <div className="component-left">
             <div className="goBack">
-              <img src={backButton} alt="Back button" onClick={() => onGoBackClick(true)} />
+              <img
+                src={backButton}
+                alt="Back button"
+                onClick={() => {
+                  onGoBackClick(values, component, id);
+                }}
+              />
               <p>Reply message</p>
             </div>
 
@@ -36,27 +87,51 @@ const Reply_Message = ({ onGoBackClick }) => {
               <p className="component-item__header">Number of friends:</p>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={numberFriendValues.handleIncrement} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={numberFriendValues.handleDecrement} />
+                  <img
+                    src={iconIncrease}
+                    alt="Increase icon"
+                    onClick={() => {
+                      changeFriendStart(values.numberFriendStart + 1);
+                    }}
+                  />
+                  <img
+                    src={iconDecrease}
+                    alt="Decrease icon"
+                    onClick={() => {
+                      changeFriendStart(values.numberFriendStart - 1);
+                    }}
+                  />
                 </div>
                 <input
                   name="Start"
                   type="text"
-                  value={numberFriendValues.NumberFriendStart}
-                  onChange={(event) => numberFriendValues.handleInputChangeStart(event)}
+                  value={values.numberFriendStart}
+                  onChange={(event) => changeFriendStart(event.target.value)}
                 />
               </div>
               <span>to</span>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={numberFriendValues.handleIncrementEnd} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={numberFriendValues.handleDecrementEnd} />
+                  <img
+                    src={iconIncrease}
+                    alt="Increase icon"
+                    onClick={() => {
+                      changeFriendEnd(values.numberFriendEnd + 1);
+                    }}
+                  />
+                  <img
+                    src={iconDecrease}
+                    alt="Decrease icon"
+                    onClick={() => {
+                      changeFriendEnd(values.numberFriendEnd - 1);
+                    }}
+                  />
                 </div>
                 <input
                   name="End"
                   type="text"
-                  value={numberFriendValues.NumberFriendEnd}
-                  onChange={(event) => numberFriendValues.handleInputChangeEnd(event)}
+                  value={values.numberFriendEnd}
+                  onChange={(event) => changeFriendEnd(event.target.value)}
                 />
               </div>
             </div>
@@ -67,27 +142,51 @@ const Reply_Message = ({ onGoBackClick }) => {
               </p>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrement} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrement} />
+                  <img
+                    src={iconIncrease}
+                    alt="Increase icon"
+                    onClick={() => {
+                      changeDelayTimeStart(values.delayTimeStart + 1);
+                    }}
+                  />
+                  <img
+                    src={iconDecrease}
+                    alt="Decrease icon"
+                    onClick={() => {
+                      changeDelayTimeStart(values.delayTimeStart - 1);
+                    }}
+                  />
                 </div>
                 <input
-                  type="text"
                   name="Start"
-                  value={delayTimeValues.DelayTimeStart}
-                  onChange={(event) => delayTimeValues.handleInputChangeStart(event)}
+                  type="text"
+                  value={values.delayTimeStart}
+                  onChange={(event) => changeDelayTimeStart(event.target.value)}
                 />
               </div>
               <span>to</span>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrementEnd} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrementEnd} />
+                  <img
+                    src={iconIncrease}
+                    alt="Increase icon"
+                    onClick={() => {
+                      changeDelayTimeEnd(values.delayTimeEnd + 1);
+                    }}
+                  />
+                  <img
+                    src={iconDecrease}
+                    alt="Decrease icon"
+                    onClick={() => {
+                      changeDelayTimeEnd(values.delayTimeEnd - 1);
+                    }}
+                  />
                 </div>
                 <input
-                  type="text"
                   name="End"
-                  value={delayTimeValues.DelayTimeEnd}
-                  onChange={(event) => delayTimeValues.handleInputChangeEnd(event)}
+                  type="text"
+                  value={values.delayTimeEnd}
+                  onChange={(event) => changeDelayTimeEnd(event.target.value)}
                 />
               </div>
             </div>
@@ -97,9 +196,11 @@ const Reply_Message = ({ onGoBackClick }) => {
               <div className="component-item " style={{ position: 'relative' }}>
                 <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
                   <Editor
-                    value={textContentMessage}
-                    onValueChange={handleChange}
-                    highlight={(textContentMessage) => hightlightWithLineNumbers(textContentMessage, languages.js)}
+                    value={textContent}
+                    onValueChange={(text) => {
+                      setTextContent(text);
+                    }}
+                    highlight={(text) => hightlightWithLineNumbers(text, languages.js, textContent)}
                     padding={15}
                     className="editor"
                     textareaId="codeArea"
@@ -109,7 +210,7 @@ const Reply_Message = ({ onGoBackClick }) => {
                     }}
                   />
                 </div>
-                <div onClick={handleDivClick} className={`placeholder ${textContentMessage ? 'hide' : ''}`}>
+                <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
                   <p>
                     <span>1</span>Enter the content here
                   </p>

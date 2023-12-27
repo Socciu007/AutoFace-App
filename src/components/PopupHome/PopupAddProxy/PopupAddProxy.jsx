@@ -24,13 +24,12 @@ const PopupAddProxy = ({
   getProfiles,
   postAlert,
 }) => {
-  const [openWriteText, setOpenWriteText] = useState(false);
   const [proxyType, setProxyType] = useState('http');
   const [proxyString, setProxyString] = useState('');
   const [message, setMessage] = useState('');
   const [statusMessage, setStatusMessage] = useState('warning');
   const handleWriteText = () => {
-    setOpenWriteText(true);
+    document.getElementById('proxyString').focus();
   };
 
   const onChangeProxyType = (e) => {
@@ -38,12 +37,7 @@ const PopupAddProxy = ({
   };
 
   const onchangeProxyString = (value) => {
-    if (value.length !== 0) {
-      setOpenWriteText(true);
-      setProxyString(value);
-    } else {
-      setOpenWriteText(false);
-    }
+    setProxyString(value);
   };
 
   const hightlightWithLineNumbers = (input, language) =>
@@ -155,14 +149,14 @@ const PopupAddProxy = ({
                     padding={15}
                     onClick={handleWriteText}
                     className="editor"
-                    textareaId="codeArea"
+                    textareaId="proxyString"
                   />
                 </div>
 
                 <div
                   className="placeholder"
                   onClick={handleWriteText}
-                  style={{ display: openWriteText ? 'none' : 'inline' }}
+                  style={{ display: proxyString ? 'none' : 'inline' }}
                 >
                   <p>
                     <span>1</span>

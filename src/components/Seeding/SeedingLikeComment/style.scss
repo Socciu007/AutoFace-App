@@ -91,6 +91,8 @@
           left: 50%;
           top: 50%;
           transform: translate(-50%, -50%);
+          // overflow-x: hidden;
+          padding: 15px 10px 15px 23px;
         }
       }
     }
@@ -115,7 +117,10 @@
             font-family: 'GoogleSans';
           }
 
-          .editor #codeArea {
+          .editor #postID,
+          .editor #textComment,
+          .editor #videoID,
+          .editor #UIDList {
             outline: none;
             padding-left: 9% !important;
           }
@@ -160,7 +165,7 @@
         &__content {
           position: absolute;
           width: 100%;
-          top: 10%;
+          top: 11%;
           transform: translate(0, -10%);
           p {
             display: flex;
@@ -356,5 +361,8 @@
   .scrollable-container::-webkit-scrollbar-track {
     background-color: #f0f0f0; /* Màu của phần bên dưới thanh cuộn */
     border-radius: 20px;
+  }
+  .hide {
+    display: none !important;
   }
 }

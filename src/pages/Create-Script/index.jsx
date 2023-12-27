@@ -73,19 +73,21 @@ const CreateScript = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    setDefaultScript();
+    connectSocket();
+  }, [state]);
+
+  const setDefaultScript = () => {
     if (state) {
       setNameScript(state.name ? state.name : '');
       setNoteScript(state.note ? state.note : '');
     }
-    connectSocket();
-  }, []);
+  };
 
   const handleMessageChange = (component, id) => {
     console.log(component, id);
-    console.log(designScript.script);
-    const setup = designScript.script.find((e) => e.id == id);
 
-    console.log('setup ' + JSON.stringify(setup));
+    const setup = designScript.script.find((e) => e.id == id);
 
     if (setup) {
       setCurrentSetup(setup);

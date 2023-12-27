@@ -26,11 +26,10 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
     tagFriendEnd: 0,
     textComment: '',
   });
-  const [openWriteText, setOpenWriteText] = useState(false);
-  const [openWritePostID, setOpenWritePostID] = useState(false);
   const [openTagFriend, setOpenTagFriend] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [isFileSelected, setIsFileSelected] = useState(false);
+  const [line, setLine] = useState(0);
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -49,16 +48,20 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
       document.getElementById('dragVideoOrPhotoInput').click();
     }
   };
-  const hightlightWithLineNumbers = (input, language) =>
+
+  const hightlightWithLineNumbers = (input, language, value) =>
     highlight(input, language)
       .split('\n')
-      .map(
-        (line, i) => `<span class='editorLineNumber ${likeComment.textComment ? '' : 'hide'}'>${i + 1}</span>${line}`,
-      )
+      .map((line, i) => `<span class='editorLineNumber ${value ? '' : 'hide'}'>${i + 1}</span>${line}`)
       .join('\n');
+
   //Post ID
   const handleWritePostID = () => {
-    setOpenWritePostID(true);
+    document.getElementById('postID').focus();
+  };
+  const onChangeLine = (e) => {
+    const lines = e.target.value.split('\n');
+    setLine(lines.length);
   };
   const handleOnchangePostID = (value) => {
     setLikeComment({
@@ -66,9 +69,9 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
       postID: value,
     });
   };
-  //Post ID
+  //Text comment
   const handleWriteText = () => {
-    setOpenWriteText(true);
+    document.getElementById('textComment').focus();
   };
   const handleOnchangeText = (value) => {
     setLikeComment({
@@ -408,18 +411,20 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
             </div>
             <div className="-option-boost-like -option-boost-comment">
               <p style={{ width: '100%' }}>
-                Post ID: <span style={{ float: 'inline-end' }}>(0)</span>
+                Post ID: <span style={{ float: 'inline-end' }}>({line})</span>
               </p>
               <div className="-option-boost-comment__wrapper">
                 <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
                   <Editor
                     value={likeComment.postID}
                     onValueChange={handleOnchangePostID}
-                    onClick={handleWritePostID}
-                    highlight={(textContent) => hightlightWithLineNumbers(textContent, languages.js)}
+                    onChange={onChangeLine}
+                    highlight={(textContent) =>
+                      hightlightWithLineNumbers(textContent, languages.js, likeComment.postID)
+                    }
                     padding={15}
                     className="editor"
-                    textareaId="codeArea"
+                    textareaId="postID"
                     style={{
                       background: '#f5f5f5',
                       fontSize: 15,
@@ -429,7 +434,7 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
                 <div
                   className="-option-boost-comment__wrapper__content"
                   onClick={handleWritePostID}
-                  style={{ display: openWritePostID ? 'none' : 'inline' }}
+                  style={{ display: likeComment.postID ? 'none' : 'inline' }}
                 >
                   <p>
                     <span>1</span>
@@ -467,11 +472,12 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
                   <Editor
                     value={likeComment.textComment}
                     onValueChange={handleOnchangeText}
-                    highlight={(textContent) => hightlightWithLineNumbers(textContent, languages.js)}
+                    highlight={(textContent) =>
+                      hightlightWithLineNumbers(textContent, languages.js, likeComment.textComment)
+                    }
                     padding={15}
-                    onClick={handleWriteText}
                     className="editor"
-                    textareaId="codeArea"
+                    textareaId="textComment"
                     style={{
                       background: '#f5f5f5',
                       fontSize: 15,
@@ -481,7 +487,7 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
                 <div
                   className="-option-boost-comment__wrapper__content"
                   onClick={handleWriteText}
-                  style={{ display: openWriteText ? 'none' : 'inline' }}
+                  style={{ display: likeComment.textComment ? 'none' : 'inline' }}
                 >
                   <p>
                     <span>1</span>

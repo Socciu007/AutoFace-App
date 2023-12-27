@@ -19,7 +19,7 @@ const CreatePost = ({ onGoBackClick, id, currentSetup, component }) => {
     delayTimeStart: 5,
     delayTimeEnd: 10,
     option: 'text/photo',
-    text: '',
+    text: [],
     photos: [],
     photoStart: 1,
     photoEnd: 2,
@@ -32,6 +32,7 @@ const CreatePost = ({ onGoBackClick, id, currentSetup, component }) => {
 
   const [values, setValues] = useState(initialValues);
   const [textContent, setTextContent] = useState('');
+  const [UIDContent, setUIDContent] = useState('');
 
   const { getRootProps, getInputProps } = useDropzone({
     maxFiles: 2,
@@ -54,7 +55,10 @@ const CreatePost = ({ onGoBackClick, id, currentSetup, component }) => {
   useEffect(() => {
     if (currentSetup) {
       if (currentSetup.UID && currentSetup.UID.length) {
-        setTextContent(currentSetup.UID.join('\n'));
+        setUIDContent(currentSetup.UID.join('\n'));
+      }
+      if (currentSetup.text && currentSetup.text.length) {
+        setTextContent(currentSetup.text.join('\n'));
       }
       setValues(currentSetup);
     }
@@ -62,9 +66,15 @@ const CreatePost = ({ onGoBackClick, id, currentSetup, component }) => {
 
   useEffect(() => {
     if (textContent.length) {
-      setValues({ ...values, UID: textContent.split('\n') });
+      setValues({ ...values, text: textContent.split('\n') });
     }
   }, [textContent]);
+
+  useEffect(() => {
+    if (UIDContent.length) {
+      setValues({ ...values, UID: UIDContent.split('\n') });
+    }
+  }, [UIDContent]);
 
   const parseToNumber = (value) => {
     const isNumber = /^\d*$/.test(value);
@@ -94,10 +104,6 @@ const CreatePost = ({ onGoBackClick, id, currentSetup, component }) => {
     setValues({ ...values, option: value });
   };
 
-  const changeText = (value) => {
-    setValues({ ...values, text: value });
-  };
-
   const changePhotoStart = (post) => {
     setValues({ ...values, photoStart: parseToNumber(post) });
   };
@@ -121,12 +127,15 @@ const CreatePost = ({ onGoBackClick, id, currentSetup, component }) => {
   };
 
   const handleDivClick = () => {
-    document.getElementById('codeArea').focus();
+    document.getElementById('text').focus();
   };
-  const hightlightWithLineNumbers = (input, language) =>
+  const handleUIDDivClick = () => {
+    document.getElementById('UID').focus();
+  };
+  const hightlightWithLineNumbers = (input, language, content) =>
     highlight(input, language)
       .split('\n')
-      .map((line, i) => `<span class='editorLineNumber ${textContent ? '' : 'hide'}'>${i + 1}</span>${line}`)
+      .map((line, i) => `<span class='editorLineNumber ${content ? '' : 'hide'}'>${i + 1}</span>${line}`)
       .join('\n');
 
   return (
@@ -272,11 +281,11 @@ const CreatePost = ({ onGoBackClick, id, currentSetup, component }) => {
                   <div style={{ position: 'relative' }} className="component-item">
                     <div className="text" style={{ width: '100%', height: 204, overflow: 'auto' }}>
                       <Editor
-                        value={values.text}
+                        value={textContent}
                         onValueChange={(text) => {
-                          changeText(text);
+                          setTextContent(text);
                         }}
-                        highlight={(textContent) => hightlightWithLineNumbers(textContent, languages.js)}
+                        highlight={(text) => hightlightWithLineNumbers(text, languages.js, textContent)}
                         padding={15}
                         className="editor"
                         textareaId="text"
@@ -286,7 +295,7 @@ const CreatePost = ({ onGoBackClick, id, currentSetup, component }) => {
                         }}
                       />
                     </div>
-                    <div onClick={handleDivClick} className={`placeholder ${values.text ? 'hide' : ''}`}>
+                    <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
                       <p>
                         <span>1</span>Enter the content here
                       </p>
@@ -452,11 +461,11 @@ const CreatePost = ({ onGoBackClick, id, currentSetup, component }) => {
                       <div style={{ position: 'relative' }} className="component-item">
                         <div className="text" style={{ width: '100%', height: 204, overflow: 'auto' }}>
                           <Editor
-                            value={textContent}
+                            value={UIDContent}
                             onValueChange={(text) => {
-                              setTextContent(text);
+                              setUIDContent(text);
                             }}
-                            highlight={(text) => hightlightWithLineNumbers(text, languages.js)}
+                            highlight={(text) => hightlightWithLineNumbers(text, languages.js, UIDContent)}
                             padding={15}
                             className="editor"
                             textareaId="UID"
@@ -465,7 +474,7 @@ const CreatePost = ({ onGoBackClick, id, currentSetup, component }) => {
                               fontSize: 15,
                             }}
                           />
-                          <div onClick={handleUIDDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
+                          <div onClick={handleUIDDivClick} className={`placeholder ${UIDContent ? 'hide' : ''}`}>
                             <p>
                               <span>1</span>Enter the content here
                             </p>
