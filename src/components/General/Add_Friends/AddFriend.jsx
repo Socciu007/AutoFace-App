@@ -10,6 +10,7 @@ import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
+import 'prismjs/themes/prism.css';
 const AddFriend = ({ onGoBackClick }) => {
   const initialValues = {
     PostStart: 5,
@@ -174,9 +175,7 @@ const AddFriend = ({ onGoBackClick }) => {
                         onValueChange={(textContentAddFriendRequest) =>
                           setTextContentAddFriendRequest(textContentAddFriendRequest)
                         }
-                        highlight={(textContentAddFriendRequest) =>
-                          hightlightWithLineNumbers(textContentAddFriendRequest, languages.js)
-                        }
+                        highlight={(code) => hightlightWithLineNumbers(code, languages.js)}
                         padding={15}
                         className="editor"
                         textareaId="textareaContent"
@@ -354,9 +353,7 @@ const AddFriend = ({ onGoBackClick }) => {
                             <Editor
                               value={textContentComment}
                               onValueChange={(textContentComment) => setTextContentComment(textContentComment)}
-                              highlight={(textContentComment) =>
-                                hightlightWithLineNumbersComment(textContentComment, languages.js)
-                              }
+                              highlight={(code) => hightlightWithLineNumbersComment(code, languages.js)}
                               padding={15}
                               className="editor"
                               textareaId="codeArea"
@@ -394,4 +391,3 @@ const AddFriend = ({ onGoBackClick }) => {
 };
 
 export default AddFriend;
-// TypeError: Cannot read properties of null (reading '_textarea')
