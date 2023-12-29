@@ -1,6 +1,7 @@
 import { io } from 'socket.io-client';
 import Promise from 'bluebird';
 import { apiGetPortSocket } from '../api_helper';
+import { APP_ID } from '../../common/const.api';
 
 let socket;
 let port;
@@ -34,6 +35,13 @@ export const connectSocket = async () => {
           data[response.key] = response.data;
         }
       });
+      socket.on('exec_result', (response) => {
+        console.log('exec_result');
+        console.log(response);
+
+        if (response.action === 'start') {
+        }
+      });
       await delay(500);
       connecting = false;
       return true;
@@ -41,6 +49,34 @@ export const connectSocket = async () => {
     return false;
   }
   return false;
+};
+
+export const exec = async (code, data, action = '') => {
+  if (!socket) return false;
+  socket.emit('exec', {
+    ...data,
+    action,
+    sourceCode: code,
+  });
+};
+
+export const stop = async () => {
+  if (!this.socket) return;
+  this.socket.emit('exec', {
+    action: 'stop',
+    sourceCode: `
+      const keys = Object.keys(global.appws['${APP_ID}'].browsers);
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i]
+        if (global.appws['${APP_ID}'].browsers[key]) {
+          global.appws['${APP_ID}'].browsers[key].close().then()
+          delete global.appws['${APP_ID}'].browsers[key]
+        }
+      }
+      
+      return true
+    `,
+  });
 };
 
 export const setDB = async (key, data) => {

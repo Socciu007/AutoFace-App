@@ -15,13 +15,12 @@ import SnackbarApp from '../../Alert';
 import { getDB, setDB } from '../../../services/socket';
 
 const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFolderProfiles }) => {
-  let profilesSelected = [];
-
   const [message, setMessage] = useState('');
   const [statusMessage, setStatusMessage] = useState('warning');
   const [dataProfiles, setDataProfiles] = useState([]);
   const [dataSearch, setDataSearch] = useState([]);
   const [listFolder, setListFolder] = useState([]);
+  const [profilesSelected, setProfilesSelected] = useState([]);
   useEffect(() => {
     setListFolder([{ name: 'All', isSelected: true, id: '' }, ...listFolderProfiles]);
     getProfiles();
@@ -70,6 +69,8 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
   };
 
   const addProfiles = async () => {
+    console.log(profilesSelected);
+
     if (profilesSelected.length > 0) {
       const profiles = await getDB(storageProfiles);
       if (profiles) {
@@ -122,8 +123,8 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
 
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
-      if (selectedRows && selectedRows.length) profilesSelected = selectedRows;
-      else profilesSelected = [];
+      if (selectedRows && selectedRows.length) setProfilesSelected(selectedRows);
+      else setProfilesSelected([]);
     },
   };
   const columnsProfiles = [

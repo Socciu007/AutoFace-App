@@ -141,10 +141,10 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
                 <div className="-container-scripts__left__options">
                   <div className="-container-scripts__left__options__type">
                     <ul className="-container-scripts__left__options__list">
-                      {typeScript.map((script) => {
+                      {typeScript.map((script, index) => {
                         return (
                           <li
-                            key={script.key}
+                            key={index}
                             className={`-option-item ${type == script.value && 'active'}`}
                             onClick={() => {
                               handleTypeScript(script.value);
