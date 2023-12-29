@@ -118,6 +118,7 @@ const PopupAddProxy = ({
                   <MenuItem value="socks4">Socks 4</MenuItem>
                   <MenuItem value="socks5">Socks 5</MenuItem>
                   <MenuItem value="ssh">SSH</MenuItem>
+                  <MenuItem value="without">Without</MenuItem>
                 </Select>
                 {/* <Select
                   name="proxyType"

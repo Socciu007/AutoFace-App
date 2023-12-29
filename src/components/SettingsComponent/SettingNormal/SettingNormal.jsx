@@ -55,7 +55,7 @@ const SettingNormal = ({
               <input name="numberLoop" value={settings.countLoop} onChange={onChangeNumberLoop}></input>
             </div>
             <div className="-input-sub-settings">
-              <span>loops(s)</span>
+              <span>loop(s)</span>
             </div>
           </div>
         </div>

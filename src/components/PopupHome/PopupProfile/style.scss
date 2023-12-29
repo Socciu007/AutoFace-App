@@ -63,9 +63,11 @@
         background: #fff;
         box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
         &__options {
-          width: 169px;
+          height: 100%;
+          width: 175px;
           margin: 24px auto;
           .-option-item {
+            margin-left: 5px;
             display: flex;
             align-items: center;
             &__icon {
@@ -73,6 +75,9 @@
               width: 12px;
               border-radius: 14px;
             }
+          }
+          &__type {
+            height: 110%;
           }
           h1 {
             color: #01162b;
@@ -94,6 +99,11 @@
             }
           }
           &__list {
+            height: 80%;
+            padding-right: 6px;
+            overflow-y: auto;
+            border-radius: 15px;
+            background: #fff;
             ul {
               list-style: none;
             }
@@ -130,6 +140,19 @@
               }
             }
           }
+
+          &__list::-webkit-scrollbar {
+            width: 5px;
+          }
+          &__list::-webkit-scrollbar-thumb {
+            background-color: rgba(1, 22, 43, 0.5); /* Màu của thanh cuộn */
+            border-radius: 5px; /* Bo tròn góc của thanh cuộn */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Bóng mờ */
+          }
+          &__list::-webkit-scrollbar-track {
+            background-color: rgba(1, 22, 43, 0.2); /* Màu của phần bên dưới thanh cuộn */
+            border-radius: 5px;
+          }
         }
       }
       &__right {
@@ -160,23 +183,22 @@
             margin-top: 7px;
             height: 100%;
             margin-right: 15px;
+
             &__table {
               height: 100%;
               overflow-y: auto;
-              /* overflow-x: hidden; */
               border-radius: 15px;
               background: #fff;
-              /* box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25); */
               padding-right: 9px;
               scrollbar-width: thin;
               & thead.ant-table-thead {
                 background-color: #d4e7ff;
-                opacity: 0.3;
+                opacity: 0.6;
                 & th.ant-table-cell {
                   font-size: 15px;
                   font-weight: 700;
                   line-height: normal;
-                  color: rgba(1, 22, 43);
+                  color: rgba(1, 22, 43, 0.5);
                   background-color: transparent;
                   .ant-table-column-sorters {
                     display: inline;

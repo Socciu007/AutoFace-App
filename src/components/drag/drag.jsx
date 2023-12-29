@@ -103,8 +103,6 @@ const DnDFlow = forwardRef(({ onMessageChange, handleDeleteNode, addNewNode, ite
   }));
 
   useEffect(() => {
-    console.log('itemScript');
-    console.log(itemScript);
     if (itemScript && itemScript.design) {
       setNodes(
         itemScript.design.nodes.map((e) => {

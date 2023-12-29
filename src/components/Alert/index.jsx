@@ -16,7 +16,7 @@ export default function SnackbarApp(props) {
           icon={
             <img
               src={status == 'success' ? faceSuccess : status == 'warning' ? faceWarning : faceErr}
-              style={{ width: '17px' }}
+              style={{ width: '17px', height: '17px' }}
             />
           }
           className="rounded py-1"

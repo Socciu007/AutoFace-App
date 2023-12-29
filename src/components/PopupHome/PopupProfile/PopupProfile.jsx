@@ -302,6 +302,7 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
                         columns={columnsProfiles}
                         dataSource={dataSearch}
                         pagination={false}
+                        scroll={{ x: 500 }}
                       ></Table>
                     </div>
                   </div>

@@ -1,4 +1,5 @@
 .-settings-proxys {
+  width: 100.5%;
   height: 741px;
   margin-top: 2px;
   border-radius: 15px;
@@ -241,10 +242,13 @@
           .editor .editorLineNumber {
             position: absolute;
             left: 0px;
-            color: #cccccc;
+            color: #cccccc !important;
             text-align: right;
             width: 5%;
             font-weight: 100;
+          }
+          .token.number {
+            color: #01162b !important;
           }
         }
         .-list-info {
