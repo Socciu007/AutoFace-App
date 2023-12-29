@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './style.scss';
-import { Input, Popover, Table, message } from 'antd';
+import { Input, Popover, Table } from 'antd';
 import SnackbarApp from '../../components/Alert';
 import display from '../../assets/pictures/icon-display-setting.png';
 import search from '../../assets/pictures/icon-search.svg';
@@ -161,7 +161,7 @@ const ProfilesPage = () => {
     {
       title: '#',
       dataIndex: 'key',
-      width: 60,
+      width: 50,
     },
     {
       title: 'Profile',
@@ -179,7 +179,7 @@ const ProfilesPage = () => {
           </div>
         );
       },
-      // sorter: (a, b) => a.profile.length - b.profile.length,
+      sorter: (a, b) => a.profile.length - b.profile.length,
     },
     {
       title: 'UID',
@@ -246,7 +246,7 @@ const ProfilesPage = () => {
     {
       title: 'Proxy',
       dataIndex: 'proxy',
-      width: 150,
+      width: 200,
       render: (proxy) => {
         return (
           <>
@@ -266,15 +266,15 @@ const ProfilesPage = () => {
       render: (tag) => {
         return <Input name="tag" value={tag} className="-tag-profiles" onChange={(e) => e.target.value}></Input>;
       },
-      // sorter: (a, b) => a.tag.length - b.tag.length,
-      // sortDirections: ['descend'],
+      sorter: (a, b) => a.tag.length - b.tag.length,
+      sortDirections: ['descend'],
     },
     {
       title: 'Folder',
       dataIndex: 'folderName',
       width: 150,
-      // sorter: (a, b) => a.folder.length - b.folder.length,
-      // sortDirections: ['descend'],
+      sorter: (a, b) => a.folder.length - b.folder.length,
+      sortDirections: ['descend'],
     },
     {
       title: '',
@@ -293,7 +293,7 @@ const ProfilesPage = () => {
                   <div className="-popover-options" onMouseLeave={handleCloseAction}>
                     <div onClick={() => pinProfile(profile.id)} className="-popover-options__attribute border-bottom">
                       <img src={pin} alt="icon-pin"></img>
-                      {!profile.isPin ? <p>Pin</p> : <p>UnpSin</p>}
+                      {!profile.isPin ? <p>Pin</p> : <p>Unpin</p>}
                     </div>
                     <div onClick={() => removeProfile(profile.id)} className="-popover-options__attribute">
                       <img src={deleted} alt="icon-deleted"></img>

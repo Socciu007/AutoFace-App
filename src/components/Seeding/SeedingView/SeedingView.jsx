@@ -6,7 +6,6 @@ import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
-import { document } from 'postcss';
 
 const SeedingView = ({ onGoBackClick }) => {
   const [videoView, setVideoView] = useState({

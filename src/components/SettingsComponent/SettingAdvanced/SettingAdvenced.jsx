@@ -36,7 +36,7 @@ const SettingAdvenced = ({
               <input name="maxTimePerThread" value={settings.maxTime} onChange={onChangeMaxTimePerThread}></input>
             </div>
             <div className="-input-sub-settings">
-              <span>seconds(s)</span>
+              <span>seconds</span>
             </div>
           </div>
         </div>
@@ -59,7 +59,7 @@ const SettingAdvenced = ({
               ></input>
             </div>
             <div className="-input-sub-settings">
-              <span>seconds(s)</span>
+              <span>seconds</span>
             </div>
           </div>
         </div>

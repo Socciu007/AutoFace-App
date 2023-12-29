@@ -146,12 +146,12 @@
 
           .editor #proxyString {
             outline: none;
-            padding-left: 6% !important;
+            padding-left: 5.5% !important;
             padding-top: 2.5% !important;
           }
 
           .editor pre {
-            padding-left: 6% !important;
+            padding-left: 5.5% !important;
             padding-top: 2.5% !important;
             width: 100%;
           }
@@ -163,6 +163,9 @@
             text-align: right;
             width: 5.5%;
             font-weight: 100;
+          }
+          .token.number {
+            color: #01162b !important;
           }
           .hide {
             display: none !important;

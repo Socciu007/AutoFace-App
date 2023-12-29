@@ -47,12 +47,6 @@ const EditableCell = ({ title, editable, children, dataIndex, record, handleSave
           margin: 0,
         }}
         name={dataIndex}
-        rules={[
-          {
-            required: true,
-            message: `${title} is required.`,
-          },
-        ]}
       >
         <Input ref={inputRef} onPressEnter={save} onBlur={save} />
       </Form.Item>
