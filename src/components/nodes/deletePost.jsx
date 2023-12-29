@@ -32,7 +32,7 @@ function deletePostNode({ data: { label, onButtonClick, onDeleteNode }, isConnec
   };
   // Edit node
   const editNode = () => {
-    onButtonClick();
+    onButtonClick(id);
     handleClose();
   };
   // Delete node

@@ -32,7 +32,7 @@ function createPostGroupNode({ data: { label, onButtonClick, onDeleteNode }, isC
   };
   // Edit node
   const editNode = () => {
-    onButtonClick();
+    onButtonClick(id);
     handleClose();
   };
   // Delete node
@@ -88,7 +88,7 @@ function createPostGroupNode({ data: { label, onButtonClick, onDeleteNode }, isC
           <img src={createPostIcon} alt="createPost" />
           <div className="content-right">
             <div className="right-top">
-              <p>Create post</p>
+              <p>Create post group</p>
               <img src={optionNode} alt="More" onClick={handleClick} />
               <Menu
                 id="basic-menu"

@@ -4,7 +4,10 @@ import down from '../../../assets/pictures/icon-Descrease.svg';
 import drag from '../../../assets/pictures/icon-drag.svg';
 import deleted from '../../../assets/pictures/icon-delete.svg';
 import back from '../../../assets/icon/icon-back.svg';
-
+import Editor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
 import './style.scss';
 
 const SeedingLikeComment = ({ onGoBackClick }) => {
@@ -21,12 +24,12 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
     file: '',
     tagFriendStart: 0,
     tagFriendEnd: 0,
+    textComment: '',
   });
-  const [openWriteText, setOpenWriteText] = useState(false);
-  const [openWritePostID, setOpenWritePostID] = useState(false);
   const [openTagFriend, setOpenTagFriend] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [isFileSelected, setIsFileSelected] = useState(false);
+  const [line, setLine] = useState(0);
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -45,24 +48,35 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
       document.getElementById('dragVideoOrPhotoInput').click();
     }
   };
+
+  const hightlightWithLineNumbers = (input, language, value) =>
+    highlight(input, language)
+      .split('\n')
+      .map((line, i) => `<span class='editorLineNumber ${value ? '' : 'hide'}'>${i + 1}</span>${line}`)
+      .join('\n');
+
   //Post ID
   const handleWritePostID = () => {
-    setOpenWritePostID(true);
+    document.getElementById('postID').focus();
   };
-  const handleOnchangePostID = (e) => {
+  const onChangeLine = (e) => {
+    const lines = e.target.value.split('\n');
+    setLine(lines.length);
+  };
+  const handleOnchangePostID = (value) => {
     setLikeComment({
       ...likeComment,
-      [e.target.name]: e.target.value,
+      postID: value,
     });
   };
-  //Post ID
+  //Text comment
   const handleWriteText = () => {
-    setOpenWriteText(true);
+    document.getElementById('textComment').focus();
   };
-  const handleOnchangeText = (e) => {
+  const handleOnchangeText = (value) => {
     setLikeComment({
       ...likeComment,
-      [e.target.name]: e.target.value,
+      textComment: value,
     });
   };
   //Post view time
@@ -397,24 +411,38 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
             </div>
             <div className="-option-boost-like -option-boost-comment">
               <p style={{ width: '100%' }}>
-                Post ID: <span style={{ float: 'inline-end' }}>(0)</span>
+                Post ID: <span style={{ float: 'inline-end' }}>({line})</span>
               </p>
               <div className="-option-boost-comment__wrapper">
-                <textarea
-                  name="postID"
-                  style={{ width: '501px' }}
-                  value={likeComment.postID}
+                <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
+                  <Editor
+                    value={likeComment.postID}
+                    onValueChange={handleOnchangePostID}
+                    onChange={onChangeLine}
+                    highlight={(textContent) =>
+                      hightlightWithLineNumbers(textContent, languages.js, likeComment.postID)
+                    }
+                    padding={15}
+                    className="editor"
+                    textareaId="postID"
+                    style={{
+                      background: '#f5f5f5',
+                      fontSize: 15,
+                    }}
+                  />
+                </div>
+                <div
+                  className="-option-boost-comment__wrapper__content"
                   onClick={handleWritePostID}
-                  onChange={handleOnchangePostID}
-                ></textarea>
-                <div className="-option-boost-comment__wrapper__content">
+                  style={{ display: likeComment.postID ? 'none' : 'inline' }}
+                >
                   <p>
-                    <span style={{ paddingRight: '7%' }}>1</span>
-                    <div style={{ display: openWritePostID ? 'none' : 'inline' }}>Enter the ID here</div>
+                    <span>1</span>
+                    <div>Enter the ID here</div>
                   </p>
                   <p>
-                    <span style={{ paddingRight: '6%' }}>2</span>
-                    <div style={{ display: openWritePostID ? 'none' : 'inline' }}>Each ID/line</div>
+                    <span>2</span>
+                    <div>Each ID/line</div>
                   </p>
                 </div>
               </div>
@@ -440,21 +468,34 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
             <div className="-option-boost-like -option-boost-comment">
               <p>Text</p>
               <div className="-option-boost-comment__wrapper">
-                <textarea
-                  name="textComment"
-                  style={{ width: '501px' }}
-                  value={likeComment.textComment}
+                <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
+                  <Editor
+                    value={likeComment.textComment}
+                    onValueChange={handleOnchangeText}
+                    highlight={(textContent) =>
+                      hightlightWithLineNumbers(textContent, languages.js, likeComment.textComment)
+                    }
+                    padding={15}
+                    className="editor"
+                    textareaId="textComment"
+                    style={{
+                      background: '#f5f5f5',
+                      fontSize: 15,
+                    }}
+                  />
+                </div>
+                <div
+                  className="-option-boost-comment__wrapper__content"
                   onClick={handleWriteText}
-                  onChange={handleOnchangeText}
-                ></textarea>
-                <div className="-option-boost-comment__wrapper__content" onClick={handleWriteText}>
+                  style={{ display: likeComment.textComment ? 'none' : 'inline' }}
+                >
                   <p>
-                    <span style={{ paddingRight: '7%' }}>1</span>
-                    <div style={{ display: openWriteText ? 'none' : 'inline' }}>Enter the content here</div>
+                    <span>1</span>
+                    <div>Enter the content here</div>
                   </p>
                   <p>
-                    <span style={{ paddingRight: '6%' }}>2</span>
-                    <div style={{ display: openWriteText ? 'none' : 'inline' }}>Each content/line</div>
+                    <span>2</span>
+                    <div>Each content/line</div>
                   </p>
                 </div>
               </div>

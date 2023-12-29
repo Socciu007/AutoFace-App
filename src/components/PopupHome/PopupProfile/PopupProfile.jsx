@@ -7,12 +7,12 @@ import macosIcon from '../../../assets/pictures/icon-macos.png';
 import linuxIcon from '../../../assets/pictures/icon-linux.png';
 import windowIcon from '../../../assets/pictures/icon-window.svg';
 import androidIcon from '../../../assets/pictures/icon-android.png';
-import { Table, Tooltip } from 'antd';
+import { Table } from 'antd';
 import './style.scss';
 import { apiGetProfiles } from '../../../services/api_helper';
-import storageService from '../../../services/storage.service';
 import { storageProfiles } from '../../../common/const.config';
 import SnackbarApp from '../../Alert';
+import { getDB, setDB } from '../../../services/socket';
 
 const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFolderProfiles }) => {
   let profilesSelected = [];
@@ -31,7 +31,7 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
     const newProfiles = await apiGetProfiles();
     if (newProfiles && newProfiles.success) {
       let addProfile = [];
-      const profiles = storageService.get(storageProfiles);
+      const profiles = await getDB(storageProfiles);
       if (profiles) {
         const objProfiles = JSON.parse(profiles);
         addProfile = newProfiles.data.data.filter((e) => {
@@ -69,17 +69,17 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
     }
   };
 
-  const addProfiles = () => {
+  const addProfiles = async () => {
     if (profilesSelected.length > 0) {
-      const profiles = storageService.get(storageProfiles);
+      const profiles = await getDB(storageProfiles);
       if (profiles) {
         const objProfiles = JSON.parse(profiles);
         profilesSelected.forEach((e) => {
           objProfiles.push(e);
         });
-        storageService.set(storageProfiles, JSON.stringify(objProfiles));
+        await setDB(storageProfiles, JSON.stringify(objProfiles));
       } else {
-        storageService.set(storageProfiles, JSON.stringify(profilesSelected));
+        await setDB(storageProfiles, JSON.stringify(profilesSelected));
       }
       getProfiles();
       onAddProfile();
@@ -227,7 +227,6 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
     }
     setListFolder(newFolder);
   };
-  console.log('listFolder', listFolder);
 
   return (
     <PopupComponent

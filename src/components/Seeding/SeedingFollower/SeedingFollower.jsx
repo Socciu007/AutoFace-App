@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import up from '../../../assets/pictures/icon-Increase.svg';
 import down from '../../../assets/pictures/icon-Descrease.svg';
 import back from '../../../assets/icon/icon-back.svg';
+import Editor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
 import { Select } from 'antd';
 const SeedingFollower = ({ onGoBackClick }) => {
   const [followers, setFollowers] = useState({
@@ -10,7 +14,11 @@ const SeedingFollower = ({ onGoBackClick }) => {
     selectTypeFollow: 'Profile',
     UIDList: '',
   });
-  const [openUIDList, setOpenUIDList] = useState(false);
+  const hightlightWithLineNumbers = (input, language) =>
+    highlight(input, language)
+      .split('\n')
+      .map((line, i) => `<span class='editorLineNumber ${followers.UIDList ? '' : 'hide'}'>${i + 1}</span>${line}`)
+      .join('\n');
   //delay time
   const handleDelayTimeStart = (type) => {
     if (type === 'increase') {
@@ -62,12 +70,12 @@ const SeedingFollower = ({ onGoBackClick }) => {
   };
   //UID list
   const handleUIDList = () => {
-    setOpenUIDList(true);
+    document.getElementById('UIDList').focus();
   };
-  const handleOnchangeUIDList = (e) => {
+  const handleOnchangeUIDList = (value) => {
     setFollowers({
       ...followers,
-      [e.target.name]: e.target.value,
+      UIDList: value,
     });
   };
   return (
@@ -145,21 +153,32 @@ const SeedingFollower = ({ onGoBackClick }) => {
             <div className="-option-boost-like -option-boost-comment">
               <p>UID list</p>
               <div className="-option-boost-comment__wrapper">
-                <textarea
-                  name="UIDList"
-                  style={{ width: '501px' }}
+                <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
+                  <Editor
+                    value={followers.UIDList}
+                    onValueChange={handleOnchangeUIDList}
+                    highlight={(textContent) => hightlightWithLineNumbers(textContent, languages.js)}
+                    padding={15}
+                    className="editor"
+                    textareaId="UIDList"
+                    style={{
+                      background: '#f5f5f5',
+                      fontSize: 15,
+                    }}
+                  />
+                </div>
+                <div
+                  className="-option-boost-comment__wrapper__content"
                   onClick={handleUIDList}
-                  onChange={handleOnchangeUIDList}
-                  value={followers.UIDList}
-                ></textarea>
-                <div className="-option-boost-comment__wrapper__content">
+                  style={{ display: followers.UIDList ? 'none' : 'inline' }}
+                >
                   <p>
-                    <span style={{ paddingRight: '7%' }}>1</span>
-                    <div style={{ display: openUIDList ? 'none' : 'inline' }}>Enter the UID here</div>
+                    <span>1</span>
+                    <div>Enter the UID here</div>
                   </p>
                   <p>
-                    <span style={{ paddingRight: '6%' }}>2</span>
-                    <div style={{ display: openUIDList ? 'none' : 'inline' }}>Each UID/line</div>
+                    <span>2</span>
+                    <div>Each UID/line</div>
                   </p>
                 </div>
               </div>

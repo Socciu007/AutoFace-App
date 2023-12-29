@@ -2,6 +2,11 @@ import React, { useEffect, useState } from 'react';
 import up from '../../../assets/pictures/icon-Increase.svg';
 import down from '../../../assets/pictures/icon-Descrease.svg';
 import back from '../../../assets/icon/icon-back.svg';
+import Editor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
+import { document } from 'postcss';
 
 const SeedingView = ({ onGoBackClick }) => {
   const [videoView, setVideoView] = useState({
@@ -9,7 +14,12 @@ const SeedingView = ({ onGoBackClick }) => {
     viewTimeEnd: 50,
     videoID: '',
   });
-  const [openText, setOpenText] = useState(false);
+  const [line, setLine] = useState(0);
+  const hightlightWithLineNumbers = (input, language) =>
+    highlight(input, language)
+      .split('\n')
+      .map((line, i) => `<span class='editorLineNumber ${videoView.videoID ? '' : 'hide'}'>${i + 1}</span>${line}`)
+      .join('\n');
   //
   const handleVideoViewTimeStart = (type) => {
     if (type === 'increase') {
@@ -52,10 +62,17 @@ const SeedingView = ({ onGoBackClick }) => {
     }
   };
 
-  const handleOnchangeVideoID = (e) => {
+  const handleClickText = () => {
+    document.getElementById('videoID').focus();
+  };
+  const onChangeLine = (e) => {
+    const lines = e.target.value.split('\n');
+    setLine(lines.length);
+  };
+  const handleOnchangeVideoID = (value) => {
     setVideoView({
       ...videoView,
-      [e.target.name]: e.target.value,
+      videoID: value,
     });
   };
 
@@ -66,7 +83,7 @@ const SeedingView = ({ onGoBackClick }) => {
           <div className="-seeding-wrapper-like">
             <div className="-back-home">
               <img src={back} alt="Back Button" onClick={() => onGoBackClick(true)} />
-              <p>Boost followers</p>
+              <p>Boost video view</p>
             </div>
             <div className="-option-boost-like">
               <p>
@@ -108,24 +125,36 @@ const SeedingView = ({ onGoBackClick }) => {
             </div>
             <div className="-option-boost-like -option-boost-comment">
               <p style={{ width: '100%' }}>
-                Video ID: <span style={{ float: 'inline-end' }}>(0)</span>
+                Video ID: <span style={{ float: 'inline-end' }}>({line})</span>
               </p>
               <div className="-option-boost-comment__wrapper">
-                <textarea
-                  name="videoID"
-                  style={{ width: '501px' }}
-                  value={videoView.videoID}
-                  onClick={() => setOpenText(true)}
-                  onChange={handleOnchangeVideoID}
-                ></textarea>
-                <div className="-option-boost-comment__wrapper__content">
+                <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
+                  <Editor
+                    value={videoView.videoID}
+                    onValueChange={handleOnchangeVideoID}
+                    onChange={onChangeLine}
+                    highlight={(textContent) => hightlightWithLineNumbers(textContent, languages.js)}
+                    padding={15}
+                    className="editor"
+                    textareaId="videoID"
+                    style={{
+                      background: '#f5f5f5',
+                      fontSize: 15,
+                    }}
+                  />
+                </div>
+                <div
+                  className="-option-boost-comment__wrapper__content"
+                  onClick={handleClickText}
+                  style={{ display: videoView.videoID ? 'none' : 'inline' }}
+                >
                   <p>
-                    <span style={{ paddingRight: '7%' }}>1</span>
-                    <div style={{ display: openText ? 'none' : 'inline' }}>Enter the ID here</div>
+                    <span>1</span>
+                    <div>Enter the ID here</div>
                   </p>
                   <p>
-                    <span style={{ paddingRight: '6%' }}>2</span>
-                    <div style={{ display: openText ? 'none' : 'inline' }}>Each ID/line</div>
+                    <span>2</span>
+                    <div>Each ID/line</div>
                   </p>
                 </div>
               </div>

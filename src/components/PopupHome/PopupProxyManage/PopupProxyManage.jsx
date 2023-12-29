@@ -9,7 +9,7 @@ import { formatTimeDay } from '../../../services/utils';
 import { aesDecrypt } from '../../../services/crypto-js';
 import SnackbarApp from '../../Alert';
 import { storageProfiles } from '../../../common/const.config';
-import storageService from '../../../services/storage.service';
+import { setDB } from '../../../services/socket';
 
 const PopupProxyManage = ({
   openProxyManage,
@@ -109,8 +109,8 @@ const PopupProxyManage = ({
           const index = dataProfiles.findIndex((e) => e.id === profilesSelected[i].id);
           const newData = [...dataProfiles];
           newData[index].proxy = res.data.data.proxy;
-          console.log(newData[index]);
-          storageService.set(storageProfiles, JSON.stringify(newData));
+
+          await setDB(storageProfiles, JSON.stringify(newData));
         }
       }
       getProfiles();

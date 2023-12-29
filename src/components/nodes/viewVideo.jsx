@@ -32,7 +32,7 @@ function viewVideoNode({ data: { label, onButtonClick, onDeleteNode }, isConnect
   };
   // Edit node
   const editNode = () => {
-    onButtonClick();
+    onButtonClick(id);
     handleClose();
   };
   // Delete node

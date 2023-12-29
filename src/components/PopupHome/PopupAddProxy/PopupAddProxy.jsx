@@ -5,7 +5,6 @@ import proxy from '../../../assets/pictures/icon-proxy.svg';
 import './style.scss';
 import SnackbarApp from '../../Alert';
 import { apiUpdateProfiles } from '../../../services/api_helper';
-import storageService from '../../../services/storage.service';
 import { storageProfiles } from '../../../common/const.config';
 import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
@@ -14,6 +13,7 @@ import 'prismjs/components/prism-javascript';
 
 // import { Select } from 'antd';
 import { MenuItem, Select } from '@mui/material';
+import { setDB } from '../../../services/socket';
 
 const PopupAddProxy = ({
   profilesSelected,
@@ -24,13 +24,12 @@ const PopupAddProxy = ({
   getProfiles,
   postAlert,
 }) => {
-  const [openWriteText, setOpenWriteText] = useState(false);
   const [proxyType, setProxyType] = useState('http');
   const [proxyString, setProxyString] = useState('');
   const [message, setMessage] = useState('');
   const [statusMessage, setStatusMessage] = useState('warning');
   const handleWriteText = () => {
-    setOpenWriteText(true);
+    document.getElementById('proxyString').focus();
   };
 
   const onChangeProxyType = (e) => {
@@ -38,12 +37,7 @@ const PopupAddProxy = ({
   };
 
   const onchangeProxyString = (value) => {
-    if (value.length !== 0) {
-      setOpenWriteText(true);
-      setProxyString(value);
-    } else {
-      setOpenWriteText(false);
-    }
+    setProxyString(value);
   };
 
   const hightlightWithLineNumbers = (input, language) =>
@@ -82,8 +76,7 @@ const PopupAddProxy = ({
             const index = dataProfiles.findIndex((e) => e.id === profilesSelected[i].id);
             const newData = [...dataProfiles];
             newData[index].proxy = res.data.data.proxy;
-            console.log(newData[index]);
-            storageService.set(storageProfiles, JSON.stringify(newData));
+            await setDB(storageProfiles, JSON.stringify(newData));
           }
         }
         getProfiles();
@@ -156,14 +149,14 @@ const PopupAddProxy = ({
                     padding={15}
                     onClick={handleWriteText}
                     className="editor"
-                    textareaId="codeArea"
+                    textareaId="proxyString"
                   />
                 </div>
 
                 <div
                   className="placeholder"
                   onClick={handleWriteText}
-                  style={{ display: openWriteText ? 'none' : 'inline' }}
+                  style={{ display: proxyString ? 'none' : 'inline' }}
                 >
                   <p>
                     <span>1</span>

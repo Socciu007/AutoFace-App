@@ -14,20 +14,55 @@ import option from '../../assets/icon/icon-options.svg';
 import newNote from '../../assets/icon/icon-newNote.svg';
 import edit from '../../assets/icon/icon-editWhite.svg';
 import close from '../../assets/icon/icon-close.svg';
+import { storageScripts } from '../../common/const.config';
+import { connectSocket, getDB, setDB } from '../../services/socket';
+import ReactFlow, { ReactFlowProvider } from 'reactflow';
+import startingPointNode from '../../components/nodes/startingPoint';
+import watchStoryNode from '../../components/nodes/watchStory';
+import watchVideoNode from '../../components/nodes/watchVideo';
+import newsFeedNode from '../../components/nodes/newsfeed';
+import createPostNode from '../../components/nodes/createPost';
+import postInteractNode from '../../components/nodes/postInteract';
+import deletePostNode from '../../components/nodes/deletePost';
+import viewNotiNode from '../../components/nodes/viewNoti';
+import sendMsgNode from '../../components/nodes/sendMsg';
+import replyMsgNode from '../../components/nodes/replyMsg';
+import addFriendNode from '../../components/nodes/addFriend';
+import cancelFriendNode from '../../components/nodes/cancelFriend';
+import joinGroupNode from '../../components/nodes/joinGroup';
+import leftGroupNode from '../../components/nodes/leftGroup';
+import inviteGroupNode from '../../components/nodes/invite';
+import likeCommentNode from '../../components/nodes/likeComment';
+import followerNode from '../../components/nodes/follower';
+import viewVideoNode from '../../components/nodes/viewVideo';
+import createPostGroupNode from '../../components/nodes/createPostGroup';
+import SnackbarApp from '../../components/Alert';
+import { v4 as uuidv4 } from 'uuid';
+const nodeTypes = {
+  startingPoint: startingPointNode,
+  watchStory: watchStoryNode,
+  watchVideo: watchVideoNode,
+  newsFeed: newsFeedNode,
+  createPost: createPostNode,
+  postInteract: postInteractNode,
+  deletePost: deletePostNode,
+  viewNoti: viewNotiNode,
+  sendMsg: sendMsgNode,
+  replyMsg: replyMsgNode,
+  addFriend: addFriendNode,
+  cancelFriend: cancelFriendNode,
+  joinGroup: joinGroupNode,
+  leftGroup: leftGroupNode,
+  inviteGroup: inviteGroupNode,
+  createPostGroup: createPostGroupNode,
+  likeComment: likeCommentNode,
+  follower: followerNode,
+  viewVideo: viewVideoNode,
+};
 
 const ScriptManager = () => {
   const navigate = useNavigate();
 
-  const initialContentArray = [
-    { id: 1, content: 'Auto watch Live videos' },
-    { id: 2, content: 'Make 50 random friends' },
-    { id: 3, content: 'Auto post on the fanpage' },
-    { id: 4, content: 'Log in' },
-    { id: 5, content: 'Auto post on the fanpage' },
-    { id: 6, content: 'Auto post on the fanpage' },
-    { id: 7, content: 'Auto post on the fanpage' },
-    { id: 8, content: 'Auto post on the fanpage' },
-  ];
   // for style menu materials UI
   const menuStyle = {
     boxShadow:
@@ -38,8 +73,9 @@ const ScriptManager = () => {
   };
   const makeCopy = {
     position: 'fixed',
-    top: '40%',
-    left: '35%',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
     borderRadius: '15px',
     background: '#fff',
     boxShadow: '0px 4px 10px 0px rgba(8, 35, 106, 0.25)',
@@ -52,8 +88,9 @@ const ScriptManager = () => {
   };
   const dialog_delete = {
     position: 'fixed',
-    top: '40%',
-    left: '35%',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
     borderRadius: '15px',
     background: '#fff',
     boxShadow: '0px 4px 10px 0px rgba(8, 35, 106, 0.25)',
@@ -64,15 +101,85 @@ const ScriptManager = () => {
     padding: '25px 25px 35px 25px',
   };
 
-  const [isCategoryActive, setCategoryActive] = useState(true);
-  const [isScriptActive, setScriptActive] = useState(false);
-  const [contentArray, setContentArray] = useState(
-    initialContentArray.map((e) => {
-      return { ...e, isPin: false };
-    }),
-  );
+  const overlay = {
+    background: 'rgba(255,255,255,0.6)',
+  };
+
+  const [isSystem, setIsSystem] = useState(false);
+  const [contentArray, setContentArray] = useState([]);
+  const [message, setMessage] = useState('');
+  const [statusMessage, setStatusMessage] = useState('warning');
+  const [listScript, setListScript] = useState([]);
   const [indexMenu, setIndexMenu] = useState(-1);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [itemSelect, setItemSelect] = useState(null);
+  const [nameCoppy, setNameCoppy] = useState('');
+  useEffect(() => {
+    getScripts();
+  }, []);
+
+  useEffect(() => {
+    if (!contentArray.length) return;
+    reloadListScript();
+  }, [contentArray]);
+
+  const reloadListScript = () => {
+    let newList = [];
+    if (listScript.length) {
+      newList = contentArray.filter((e) => {
+        const check = listScript.find((o) => o.id == e.id);
+        if (check) return true;
+        return false;
+      });
+    } else {
+      newList = contentArray;
+    }
+    newList = newList.sort((x, y) => Number(y.isPin) - Number(x.isPin));
+    setListScript(newList);
+  };
+
+  useEffect(() => {
+    if (!itemSelect) return;
+    const item = listScript.find((e) => e.id == itemSelect.id);
+    if (!item) setItemSelect(null);
+  }, [listScript]);
+
+  const getScripts = async () => {
+    await connectSocket();
+    const scriptStr = await getDB(storageScripts);
+    if (scriptStr) {
+      const script = JSON.parse(scriptStr);
+      if (script && script.length) {
+        setItemSelect(script[0]);
+        setContentArray(script);
+      }
+    }
+  };
+
+  const postAlert = (message, status = 'warning', duration = 3000) => {
+    setStatusMessage(status);
+    setMessage(message);
+    setTimeout(() => {
+      setMessage('');
+      setStatusMessage('warning');
+    }, duration);
+  };
+
+  const searchScript = (text) => {
+    let newScripts = [];
+    if (text == '') {
+      newScripts = contentArray;
+    } else {
+      newScripts = contentArray.filter((e) => {
+        const note = e.note.toLowerCase();
+        const name = e.name.toLowerCase();
+        return note.includes(text.toLowerCase()) || name.includes(text.toLowerCase());
+      });
+    }
+    newScripts = newScripts.sort((x, y) => Number(y.isPin) - Number(x.isPin));
+    setListScript(newScripts);
+  };
+
   // Handle the button add
   const handleAddClick = () => {
     navigate('/create');
@@ -83,21 +190,28 @@ const ScriptManager = () => {
   };
   // Handle the button edit
   const handleEditClick = () => {
-    navigate('/edit');
+    navigate('/create', {
+      state: itemSelect,
+    });
   };
   // Handle category button
   const handleButtonClick = () => {
-    // Toggle the active state
-    setCategoryActive(!isCategoryActive);
+    let newList = contentArray.filter((e) => {
+      if (!e.isSystem && isSystem) return true;
+      return false;
+    });
+    newList = newList.sort((x, y) => Number(y.isPin) - Number(x.isPin));
+    setIsSystem(!isSystem);
+    setListScript(newList);
   };
   // Handle each script div
-  const handleScriptClick = (button) => {
-    setScriptActive(button === isCategoryActive ? null : button);
+  const handleScriptClick = (item) => {
+    setItemSelect(item);
   };
 
   const openCopy = Boolean(anchorEl);
   const descriptionElementRef = React.useRef(null);
-  React.useEffect(() => {
+  useEffect(() => {
     if (openCopy) {
       const { current: descriptionElement } = descriptionElementRef;
       if (descriptionElement !== null) {
@@ -109,9 +223,29 @@ const ScriptManager = () => {
   const [makeCopyDialogOpen, setMakeCopyDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-  // Close dialog
+  const coppyScript = async (id, name) => {
+    const script = contentArray.find((e) => e.id == id);
+    if (script) {
+      const newList = [...contentArray];
+      const newListScript = [...listScript];
+      const newItem = { ...script, name, id: uuidv4(), isPin: false };
+      newListScript.push(newItem);
+      setListScript(newListScript);
+      newList.push(newItem);
+      setContentArray(newList);
+      await setDB(storageScripts, JSON.stringify(newList));
+    }
+  };
+
+  const deleteScript = async (id) => {
+    const newList = contentArray.filter((e) => e.id !== id);
+    const newListScript = listScript.filter((e) => e.id !== id);
+    setListScript(newListScript);
+    setContentArray(newList);
+    await setDB(storageScripts, JSON.stringify(newList));
+  };
+
   const handleCloseDialog = (className) => {
-    // Close logic for each dialog type
     if (className === 'makeCopy') {
       setMakeCopyDialogOpen(false);
     } else if (className === 'delete') {
@@ -120,7 +254,6 @@ const ScriptManager = () => {
   };
 
   const handleOptionClick = (className) => {
-    // Set the state to open the corresponding dialog
     if (className === 'makeCopy') {
       setMakeCopyDialogOpen(true);
     } else if (className === 'delete') {
@@ -129,13 +262,14 @@ const ScriptManager = () => {
     handleClose();
   };
 
-  const handleTogglePin = (scriptId) => {
+  const handleTogglePin = async (scriptId) => {
     const index = contentArray.findIndex((e) => e.id == scriptId);
-
     if (index >= 0) {
       const newArr = contentArray;
       newArr[index].isPin = !newArr[index].isPin;
       setContentArray(newArr);
+      await setDB(storageScripts, JSON.stringify(newArr));
+      reloadListScript();
     }
     setIndexMenu(-1);
   };
@@ -169,9 +303,19 @@ const ScriptManager = () => {
                 <div className="left-content__top">
                   <div className="search">
                     <img src={search} alt="Icon-search" />
-                    <input className="inputSearch" placeholder="Search..."></input>
+                    <input
+                      onChange={(event) => searchScript(event.target.value)}
+                      className="inputSearch"
+                      placeholder="Search..."
+                    ></input>
                   </div>
-                  <button className="reload">
+                  <button
+                    onClick={async () => {
+                      await getScripts();
+                      postAlert('Reloaded Scripts!', 'success');
+                    }}
+                    className="reload"
+                  >
                     <img src={reload} alt="Reload" />
                   </button>
                   <button className="add" onClick={handleAddClick}>
@@ -179,21 +323,21 @@ const ScriptManager = () => {
                   </button>
                 </div>
                 <div className="left-content__category">
-                  <button className={isCategoryActive ? 'category-left' : 'category-right'} onClick={handleButtonClick}>
+                  <button className={!isSystem ? 'category-left' : 'category-right'} onClick={handleButtonClick}>
                     System's Scripts
                   </button>
-                  <button className={isCategoryActive ? 'category-right' : 'category-left'} onClick={handleButtonClick}>
+                  <button className={!isSystem ? 'category-right' : 'category-left'} onClick={handleButtonClick}>
                     Your Scripts
                   </button>
                 </div>
                 <div className="left-content__content">
-                  {contentArray.map((item, index) => (
+                  {listScript.map((item, index) => (
                     <div
-                      className={isScriptActive === item.id ? 'script selected' : 'script'}
-                      onClick={() => handleScriptClick(item.id)}
+                      className={itemSelect && itemSelect.id === item.id ? 'script selected' : 'script'}
+                      onClick={() => handleScriptClick(item)}
                       key={item.id}
                     >
-                      <p className={isScriptActive === item.id ? 'inputSelected' : ''}>{item.content}</p>
+                      <p className={itemSelect && itemSelect.id === item.id ? 'inputSelected' : ''}>{item.name}</p>
                       <div>
                         {/* pin */}
                         {item.isPin ? <img src={pin} alt="Pin" className={'show'} /> : null}
@@ -244,7 +388,13 @@ const ScriptManager = () => {
                 <h3>SCRIPT OVERVIEW</h3>
                 <div className="edit-input">
                   <img src={newNote} alt="New note" />
-                  <input type="text" placeholder="New note" />
+
+                  <input
+                    // disabled="disabled"
+                    type="text"
+                    value={itemSelect ? itemSelect.note : ''}
+                    placeholder="New note"
+                  />
                 </div>
                 <button className="editBtn" onClick={handleEditClick}>
                   <img src={edit} alt="Edit" />
@@ -252,15 +402,30 @@ const ScriptManager = () => {
                 </button>
               </div>
               <div className="right-content__container">
-                <DnDFlow></DnDFlow>
+                {itemSelect && itemSelect.design ? (
+                  <div className="dndflow">
+                    <ReactFlowProvider>
+                      <div className="reactflow-wrapper">
+                        <ReactFlow
+                          defaultViewport={itemSelect.design.viewport}
+                          nodeTypes={nodeTypes}
+                          nodes={itemSelect.design.nodes}
+                          edges={itemSelect.design.edges}
+                        ></ReactFlow>
+                      </div>
+                    </ReactFlowProvider>
+                  </div>
+                ) : null}
               </div>
             </div>
           </div>
           <Dialog
             sx={{
               '& .MuiPaper-root': makeCopy,
+              '& .MuiBackdrop-root': overlay,
             }}
             open={makeCopyDialogOpen}
+            onPlay={() => setNameCoppy('')}
             onClose={() => handleCloseDialog('makeCopy')}
             aria-labelledby="scroll-dialog-title"
             aria-describedby="scroll-dialog-description"
@@ -273,8 +438,24 @@ const ScriptManager = () => {
                 </button>
               </div>
               <div className="makeCopy__bottom">
-                <input type="text" placeholder="Enter name here..." />
-                <button>Create</button>
+                <input
+                  onChange={(event) => setNameCoppy(event.target.value)}
+                  type="text"
+                  placeholder="Enter name here..."
+                />
+                <button
+                  onClick={async () => {
+                    if (nameCoppy == '') {
+                      postAlert('Enter name script');
+                    } else {
+                      coppyScript(itemSelect.id, nameCoppy);
+                      handleCloseDialog('makeCopy');
+                      postAlert('Coppy script success', 'success');
+                    }
+                  }}
+                >
+                  Create
+                </button>
               </div>
             </div>
           </Dialog>
@@ -286,6 +467,7 @@ const ScriptManager = () => {
             aria-describedby="scroll-dialog-description"
             sx={{
               '& .MuiPaper-root': dialog_delete,
+              '& .MuiBackdrop-root': overlay,
             }}
           >
             <div className="dialog_delete">
@@ -293,11 +475,21 @@ const ScriptManager = () => {
               <p>Are you sure to delete this script?</p>
               <div>
                 <button onClick={() => handleCloseDialog('delete')}>Cancel</button>
-                <button className="deleteBtn">Delete</button>
+                <button
+                  onClick={() => {
+                    deleteScript(itemSelect.id);
+                    handleCloseDialog('delete');
+                    postAlert('Delete script success', 'success');
+                  }}
+                  className="deleteBtn"
+                >
+                  Delete
+                </button>
               </div>
             </div>
           </Dialog>
         </div>
+        <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
       </div>
     </>
   );
