@@ -6,57 +6,111 @@ import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import { useRangeValues } from './View_Notifications';
-const View_Notifications = ({ onGoBackClick }) => {
+const View_Notifications = ({ onGoBackClick, id, currentSetup, component }) => {
   const initialValues = {
-    NotificationStart: 5,
-    NotificationEnd: 10,
-    DelayTimeStart: 5,
-    DelayTimeEnd: 10,
+    notificationStart: 5,
+    notificationEnd: 10,
+    delayTimeStart: 5,
+    delayTimeEnd: 10,
+    option: 'randomFriend',
+  };
+  const [values, setValues] = useState(initialValues);
+  const changeOption = (value) => {
+    setValues({ ...values, option: value });
   };
 
-  const notificationValues = useRangeValues(initialValues, 'Notification');
-  const delayTimeValues = useRangeValues(initialValues, 'DelayTime');
-
-  const [selectValue, setSelectValue] = React.useState('randomFriend');
-
-  const handleChange = (event) => {
-    setSelectValue(event.target.value);
+  const parseToNumber = (value) => {
+    const isNumber = /^\d*$/.test(value);
+    if (isNumber) {
+      return value > 0 ? value : 0;
+    } else {
+      return parseInt(value) > 0 ? parseInt(value) : 0;
+    }
   };
+
+  const changeNotificationStart = (noti) => {
+    setValues({ ...values, notificationStart: parseToNumber(noti) });
+  };
+
+  const changeNotificationEnd = (noti) => {
+    setValues({ ...values, notificationEnd: parseToNumber(noti) });
+  };
+
+  const changeDelayTimeStart = (time) => {
+    setValues({ ...values, delayTimeStart: parseToNumber(time) });
+  };
+  const changeDelayTimeEnd = (time) => {
+    setValues({ ...values, delayTimeEnd: parseToNumber(time) });
+  };
+  useEffect(() => {
+    if (currentSetup) {
+      setValues(currentSetup);
+    }
+  }, [currentSetup]);
   return (
     <div className="View_Notifications">
       <div className="component_container">
         <div className="scrollable-container">
           <div className="component-left">
             <div className="goBack">
-              <img src={backButton} alt="Back button" onClick={() => onGoBackClick(true)} />
+              <img
+                src={backButton}
+                alt="Back button"
+                onClick={() => {
+                  onGoBackClick(values, component, id);
+                }}
+              />
               <p>View notifications</p>
             </div>
             <div className="component-item numberOfNotifications">
               <p className="component-item__header">Number of notifications</p>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={notificationValues.handleIncrement} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={notificationValues.handleDecrement} />
+                  <img
+                    src={iconIncrease}
+                    alt="Increase icon"
+                    onClick={() => {
+                      changeNotificationStart(values.notificationStart + 1);
+                    }}
+                  />
+                  <img
+                    src={iconDecrease}
+                    alt="Decrease icon"
+                    onClick={() => {
+                      changeNotificationStart(values.notificationStart - 1);
+                    }}
+                  />
                 </div>
                 <input
                   type="text"
                   name="Start"
-                  value={notificationValues.NotificationStart}
-                  onChange={(event) => notificationValues.handleInputChangeStart(event)}
+                  value={values.notificationStart}
+                  onChange={(event) => changeNotificationStart(event.target.value)}
                 />
               </div>
               <span>to</span>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={notificationValues.handleIncrementEnd} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={notificationValues.handleDecrementEnd} />
+                  <img
+                    src={iconIncrease}
+                    alt="Increase icon"
+                    onClick={() => {
+                      changeNotificationEnd(values.notificationEnd + 1);
+                    }}
+                  />
+                  <img
+                    src={iconDecrease}
+                    alt="Decrease icon"
+                    onClick={() => {
+                      changeNotificationEnd(values.notificationEnd - 1);
+                    }}
+                  />
                 </div>
                 <input
                   type="text"
                   name="End"
-                  value={notificationValues.NotificationEnd}
-                  onChange={(event) => notificationValues.handleInputChangeEnd(event)}
+                  value={values.notificationEnd}
+                  onChange={(event) => changeNotificationEnd(event.target.value)}
                 />
               </div>
             </div>
@@ -66,27 +120,51 @@ const View_Notifications = ({ onGoBackClick }) => {
               </p>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrement} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrement} />
+                  <img
+                    src={iconIncrease}
+                    alt="Increase icon"
+                    onClick={() => {
+                      changeDelayTimeStart(values.delayTimeStart + 1);
+                    }}
+                  />
+                  <img
+                    src={iconDecrease}
+                    alt="Decrease icon"
+                    onClick={() => {
+                      changeDelayTimeStart(values.delayTimeStart - 1);
+                    }}
+                  />
                 </div>
                 <input
-                  type="text"
                   name="Start"
-                  value={delayTimeValues.DelayTimeStart}
-                  onChange={(event) => delayTimeValues.handleInputChangeStart(event)}
+                  type="text"
+                  value={values.delayTimeStart}
+                  onChange={(event) => changeDelayTimeStart(event.target.value)}
                 />
               </div>
               <span>to</span>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
-                  <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrementEnd} />
-                  <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrementEnd} />
+                  <img
+                    src={iconIncrease}
+                    alt="Increase icon"
+                    onClick={() => {
+                      changeDelayTimeEnd(values.delayTimeEnd + 1);
+                    }}
+                  />
+                  <img
+                    src={iconDecrease}
+                    alt="Decrease icon"
+                    onClick={() => {
+                      changeDelayTimeEnd(values.delayTimeEnd - 1);
+                    }}
+                  />
                 </div>
                 <input
-                  type="text"
                   name="End"
-                  value={delayTimeValues.DelayTimeEnd}
-                  onChange={(event) => delayTimeValues.handleInputChangeEnd(event)}
+                  type="text"
+                  value={values.delayTimeEnd}
+                  onChange={(event) => changeDelayTimeEnd(event.target.value)}
                 />
               </div>
             </div>
@@ -97,8 +175,8 @@ const View_Notifications = ({ onGoBackClick }) => {
               <div className="NotificationContent">
                 <div className="component-item notificationOption">
                   <Select
-                    value={selectValue}
-                    onChange={handleChange}
+                    value={values.option}
+                    onChange={(event) => changeOption(event.target.value)}
                     name="NotificationOption"
                     className="NotificationType"
                   >

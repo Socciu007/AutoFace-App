@@ -246,19 +246,21 @@ const WatchVideo = ({ onGoBackClick }) => {
                 {(selectedValue === 'text' || selectedValue === 'all') && (
                   <div className="Text">
                     <p className="selectComment__header">Text</p>
-                    <div className="component-item text">
-                      <Editor
-                        value={textContent}
-                        onValueChange={handleTextareaChange}
-                        highlight={(textContent) => hightlightWithLineNumbers(textContent, languages.js)}
-                        padding={15}
-                        className="editor"
-                        textareaId="codeArea"
-                        style={{
-                          background: '#f5f5f5',
-                          fontSize: 15,
-                        }}
-                      />
+                    <div className="component-item" style={{ position: 'relative' }}>
+                      <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
+                        <Editor
+                          value={textContent}
+                          onValueChange={handleTextareaChange}
+                          highlight={(textContent) => hightlightWithLineNumbers(textContent, languages.js)}
+                          padding={15}
+                          className="editor"
+                          textareaId="codeArea"
+                          style={{
+                            background: '#f5f5f5',
+                            fontSize: 15,
+                          }}
+                        />
+                      </div>
                       <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
                         <p>
                           <span>1</span>Enter the content here

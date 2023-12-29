@@ -9,6 +9,8 @@ import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import { InviteOption, UIDTextarea, useRangeValues } from './Invite';
 const Invite = ({ onGoBackClick }) => {
   const initialValues = {
@@ -106,16 +108,15 @@ const Invite = ({ onGoBackClick }) => {
               </div>
               <div className="InviteContent">
                 <div className="component-item InviteOption">
-                  <select
+                  <Select
                     name="InviteOption"
                     className="InviteType"
                     onChange={handleSelectChangeInvite}
                     value={selectedValueInvite}
                   >
-                    <option value="random">Random</option>
-                    <option value="suggestions">By suggestions</option>
-                  </select>
-                  <img src={downButton} alt="Down Button" />
+                    <MenuItem value="random">Random</MenuItem>
+                    <MenuItem value="suggestions">By suggestions</MenuItem>
+                  </Select>
                 </div>
                 {(selectedValueInvite === 'suggestions' || selectedValueInvite === 'random') && (
                   <div>
@@ -124,21 +125,23 @@ const Invite = ({ onGoBackClick }) => {
                         <p>Group UID list</p>
                         <span>({lineCount})</span>
                       </div>
-                      <div className="component-item UIDText">
-                        <Editor
-                          onChange={handleTextareaChangeUIDContent}
-                          onPaste={handleTextareaPaste}
-                          value={UIDContent}
-                          onValueChange={(UIDContent) => setUIDContent(UIDContent)}
-                          highlight={(UIDContent) => hightlightWithLineNumbers(UIDContent, languages.js)}
-                          padding={15}
-                          className="editor"
-                          textareaId="codeArea"
-                          style={{
-                            background: '#f5f5f5',
-                            fontSize: 15,
-                          }}
-                        />
+                      <div className="component-item " style={{ position: 'relative' }}>
+                        <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="UIDText">
+                          <Editor
+                            onChange={handleTextareaChangeUIDContent}
+                            onPaste={handleTextareaPaste}
+                            value={UIDContent}
+                            onValueChange={(UIDContent) => setUIDContent(UIDContent)}
+                            highlight={(UIDContent) => hightlightWithLineNumbers(UIDContent, languages.js)}
+                            padding={15}
+                            className="editor"
+                            textareaId="codeArea"
+                            style={{
+                              background: '#f5f5f5',
+                              fontSize: 15,
+                            }}
+                          />
+                        </div>
                         <div onClick={handleDivClick} className={`placeholder ${UIDContent ? 'hide' : ''}`}>
                           <p>
                             <span>1</span>Enter the UID here

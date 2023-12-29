@@ -32,7 +32,7 @@ function likeCommentNode({ data: { label, onButtonClick, onDeleteNode }, isConne
   };
   // Edit node
   const editNode = () => {
-    onButtonClick();
+    onButtonClick(id);
     handleClose();
   };
   // Delete node

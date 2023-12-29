@@ -1,7 +1,7 @@
 [
   {
-    "scripts": "automation-x",
     "key": 1,
+    "scripts": "automation-x",
     "notes": "Cookie added",
     "isSystem": true
   },

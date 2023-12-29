@@ -32,7 +32,7 @@ function createPostGroupNode({ data: { label, onButtonClick, onDeleteNode }, isC
   };
   // Edit node
   const editNode = () => {
-    onButtonClick();
+    onButtonClick(id);
     handleClose();
   };
   // Delete node

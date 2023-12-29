@@ -9,6 +9,8 @@ import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import { AnswerTextarea, CancelFriendOption, KeywordTextarea, ShowAutoAnswer, useRangeValues } from './JoinGroup.js';
 const JoinGroup = ({ onGoBackClick }) => {
   const initialValues = {
@@ -52,17 +54,16 @@ const JoinGroup = ({ onGoBackClick }) => {
               </div>
               <div className="JoinGroupContent">
                 <div className="component-item JoinGroupOption">
-                  <select
+                  <Select
                     name="JoinGroupOption"
                     className="JoinGroupType"
                     onChange={handleSelectChangeJoinGroup}
                     value={selectedValueJoinGroup}
                   >
-                    <option value="suggestions">By suggestions</option>
-                    <option value="keywords">By keywords</option>
-                    <option value="UID">By UID</option>
-                  </select>
-                  <img src={downButton} alt="Down Button" />
+                    <MenuItem value="suggestions">By suggestions</MenuItem>
+                    <MenuItem value="keywords">By keywords</MenuItem>
+                    <MenuItem value="UID">By UID</MenuItem>
+                  </Select>
                 </div>
                 {(selectedValueJoinGroup === 'suggestions' ||
                   selectedValueJoinGroup === 'keywords' ||
@@ -133,23 +134,25 @@ const JoinGroup = ({ onGoBackClick }) => {
                           {selectedValueJoinGroup === 'UID' && <p>UID list</p>}
                           <span>({lineCount})</span>
                         </div>
-                        <div className="component-item keywordText">
-                          <Editor
-                            onChange={handleTextareaChangeKeywordContent}
-                            onPaste={handleKeywordTextareaPaste}
-                            value={KeywordContent}
-                            onValueChange={(KeywordContent) => setKeywordContent(KeywordContent)}
-                            highlight={(KeywordContent) =>
-                              hightlightWithLineNumbersKeyword(KeywordContent, languages.js)
-                            }
-                            padding={15}
-                            className="editor"
-                            textareaId="keyword"
-                            style={{
-                              background: '#f5f5f5',
-                              fontSize: 15,
-                            }}
-                          />
+                        <div className="component-item " style={{ position: 'relative' }}>
+                          <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="keywordText">
+                            <Editor
+                              onChange={handleTextareaChangeKeywordContent}
+                              onPaste={handleKeywordTextareaPaste}
+                              value={KeywordContent}
+                              onValueChange={(KeywordContent) => setKeywordContent(KeywordContent)}
+                              highlight={(KeywordContent) =>
+                                hightlightWithLineNumbersKeyword(KeywordContent, languages.js)
+                              }
+                              padding={15}
+                              className="editor"
+                              textareaId="keyword"
+                              style={{
+                                background: '#f5f5f5',
+                                fontSize: 15,
+                              }}
+                            />
+                          </div>
 
                           <div
                             onClick={handleDivKeywordClick}
@@ -170,19 +173,24 @@ const JoinGroup = ({ onGoBackClick }) => {
                         <input type="checkbox" name="autoAnswer" onChange={handleCheckboxChangeAutoAnswer} />
                         <p>Automatically answer the questions</p>
                       </div>
-                      <div className={`component-item AutoAnswerText ${isAutoAnswer ? 'show' : 'hide'}`}>
-                        <Editor
-                          value={AnswerContent}
-                          onValueChange={handleTextareaChangeAnswerContent}
-                          highlight={(AnswerContent) => hightlightWithLineNumbers(AnswerContent, languages.js)}
-                          padding={15}
-                          className="editor"
-                          textareaId="answer"
-                          style={{
-                            background: '#f5f5f5',
-                            fontSize: 15,
-                          }}
-                        />
+                      <div
+                        style={{ position: 'relative' }}
+                        className={`component-item  ${isAutoAnswer ? 'show' : 'hide'}`}
+                      >
+                        <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="AutoAnswerText">
+                          <Editor
+                            value={AnswerContent}
+                            onValueChange={handleTextareaChangeAnswerContent}
+                            highlight={(AnswerContent) => hightlightWithLineNumbers(AnswerContent, languages.js)}
+                            padding={15}
+                            className="editor"
+                            textareaId="answer"
+                            style={{
+                              background: '#f5f5f5',
+                              fontSize: 15,
+                            }}
+                          />
+                        </div>
                         <div onClick={handleDivAnswerClick} className={`placeholder ${AnswerContent ? 'hide' : ''}`}>
                           <p>
                             <span>1</span>Enter the answer here

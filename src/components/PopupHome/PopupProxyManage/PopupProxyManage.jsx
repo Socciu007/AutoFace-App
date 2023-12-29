@@ -1,15 +1,132 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PopupComponent from '../PopupComponent/PopupComponent';
 import closePopup from '../../../assets/pictures/icon-x.svg';
 import search from '../../../assets/pictures/icon-search.svg';
 import refresh from '../../../assets/pictures/icon-refresh.png';
 import { Table } from 'antd';
+import { apiGetProxies, apiUpdateProfiles } from '../../../services/api_helper';
+import { formatTimeDay } from '../../../services/utils';
+import { aesDecrypt } from '../../../services/crypto-js';
+import SnackbarApp from '../../Alert';
+import { storageProfiles } from '../../../common/const.config';
+import { setDB } from '../../../services/socket';
 
-const PopupProxyManage = ({ openProxyManage, handleCloseProxyManage }) => {
-  // rowSelection object indicates the need for row selection
+const PopupProxyManage = ({
+  openProxyManage,
+  handleCloseProxyManage,
+  defaultProxies,
+  handleAddProxyFromManager,
+  startScreen,
+  profilesSelected,
+  getProfiles,
+  dataProfiles,
+  postAlert,
+}) => {
+  const [proxies, setProxies] = useState([]);
+  const [dataSearch, setDataSearch] = useState([]);
+  const [textSearch, setTextSearch] = useState('');
+  const [selectedProxy, setSelectedProxy] = useState([]);
+  const [message, setMessage] = useState('');
+  const [statusMessage, setStatusMessage] = useState('warning');
+
+  const generateProxyStr = (proxy) => {
+    let proxyStr = `${proxy.host}:${proxy.port}${proxy.username && proxy.username != '' ? ':' + proxy.username : ''}${
+      proxy.password ? ':' + proxy.password : ''
+    }`;
+
+    if (proxyStr.length > 30) {
+      proxyStr = `${proxy.host}:${proxy.port}`;
+    }
+    return proxyStr;
+  };
+
+  useEffect(() => {
+    getProxies();
+  }, []);
+  useEffect(() => {
+    getProxies();
+  }, [defaultProxies]);
+
+  const getProxies = async () => {
+    const res = await apiGetProxies();
+    if (res && res.success) {
+      let listProxy = res.data.data.filter((e) => {
+        if (defaultProxies) {
+          const check = defaultProxies.find((o) => o.id == e.id);
+          return !check;
+        }
+        return true;
+      });
+      listProxy = listProxy.map((e, index) => {
+        let username = e.username;
+        let password = e.password;
+        if (e.encrypted) {
+          username = aesDecrypt(e.username);
+          password = aesDecrypt(e.password);
+        }
+        return { ...e, username, password, key: index + 1 };
+      });
+      setProxies(listProxy);
+      setDataSearch(listProxy);
+    }
+  };
+
+  const searchProfiles = (text) => {
+    setTextSearch(text);
+    if (text == '') {
+      setDataSearch(proxies);
+    } else {
+      const newData = proxies.filter((e) => {
+        const textLowerCase = text.toLowerCase();
+        const mode = e.mode ? e.mode.toLowerCase() : '';
+        const host = e.host ? e.host.toLowerCase() : '';
+        const port = e.port ? e.port.toString().toLowerCase() : '';
+        const username = e.username ? e.username.toLowerCase() : '';
+        const password = e.password ? e.password.toLowerCase() : '';
+        return (
+          mode.includes(textLowerCase) ||
+          host.includes(textLowerCase) ||
+          port.includes(textLowerCase) ||
+          username.includes(textLowerCase) ||
+          password.includes(textLowerCase)
+        );
+      });
+      setDataSearch(newData);
+    }
+  };
+
+  const changeProxy = async () => {
+    const listProxy = selectedProxy;
+    if (listProxy.length < profilesSelected.length) {
+      setMessage(`Please select ${profilesSelected.length} proxy!`);
+      setTimeout(() => {
+        setMessage('');
+      }, 2000);
+    } else {
+      for (let i = 0; i < profilesSelected.length; i++) {
+        const res = await apiUpdateProfiles(profilesSelected[i].id, listProxy[i], profilesSelected[i].browserSource);
+        if (res && res.success && res.data.code == 1) {
+          const index = dataProfiles.findIndex((e) => e.id === profilesSelected[i].id);
+          const newData = [...dataProfiles];
+          newData[index].proxy = res.data.data.proxy;
+
+          await setDB(storageProfiles, JSON.stringify(newData));
+        }
+      }
+      getProfiles();
+      handleCloseProxyManage();
+      setTimeout(() => {
+        postAlert(`Add proxy to profiles success!`, 'success', 4000);
+      }, 500);
+    }
+  };
+
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
-      console.log(`selectedRowKeys: ${selectedRowKeys}`);
+      if (selectedRows.length) {
+        console.log(selectedRows);
+        setSelectedProxy(selectedRows);
+      } else setSelectedProxy([]);
     },
   };
   const columnsProxys = [
@@ -19,43 +136,93 @@ const PopupProxyManage = ({ openProxyManage, handleCloseProxyManage }) => {
     },
     {
       title: 'Type',
-      dataIndex: 'type',
-      sorter: (a, b) => a.type.length - b.type.length,
+      dataIndex: 'mode',
     },
     {
       title: 'Proxy',
-      dataIndex: 'proxy',
+      render: (proxy) => {
+        return (
+          <>
+            <div className="-proxy-profiles">
+              <span>{generateProxyStr(proxy)}</span>
+            </div>
+          </>
+        );
+      },
     },
     {
       title: 'Status',
       dataIndex: 'status',
-      sorter: (a, b) => a.status.length - b.status.length,
     },
     {
       title: 'Location',
-      dataIndex: 'location',
-      sorter: (a, b) => a.location.length - b.location.length,
+      render: (proxy) => {
+        return (
+          <>
+            <div className="-proxy-profiles">
+              <span>{proxy.location ? proxy.location + ',' + proxy.countryCode : proxy.location}</span>
+            </div>
+          </>
+        );
+      },
     },
     {
       title: 'Tag',
       dataIndex: 'tag',
     },
     {
-      title: 'Expiration Date',
-      dataIndex: 'expirationdate',
-      sorter: (a, b) => a.expirationdate - b.expirationdate,
+      title: 'Expires',
+      render: (proxy) => {
+        return (
+          <>
+            <div className="-proxy-profiles">
+              <span>{proxy.expireDate !== '' ? formatTimeDay(proxy.expireDate) : ''}</span>
+            </div>
+          </>
+        );
+      },
     },
   ];
   return (
-    <PopupComponent open={openProxyManage} onClose={handleCloseProxyManage}>
+    <PopupComponent
+      open={openProxyManage}
+      onOpen={() => {
+        getProxies();
+      }}
+      onClose={handleCloseProxyManage}
+    >
       {
         <div className="-layout-choose-scripts">
           <div className="-layout-choose-scripts__container -proxy-manage">
-            <div className="-nav-scripts__header">
-              <div className="-nav-scripts__header__close" onClick={handleCloseProxyManage}>
-                <img src={closePopup} alt="icon-x"></img>
+            <div className="-nav-scripts">
+              <div className="-nav-scripts__header">
+                <div className="-nav-scripts__header__close" onClick={handleCloseProxyManage}>
+                  <img src={closePopup} alt="icon-x"></img>
+                </div>
+                <h1>PROXY MANAGEMENT</h1>
               </div>
-              <h1>PROXY MANAGEMENT</h1>
+              <div className="-wrapper-option-profiles -nav-scripts__btn">
+                <button
+                  onClick={() => {
+                    if (selectedProxy.length == 0) {
+                      setMessage('Please select proxies!');
+                      setTimeout(() => {
+                        setMessage('');
+                      }, 2000);
+                    } else if (!startScreen) {
+                      handleAddProxyFromManager(selectedProxy);
+                      handleCloseProxyManage();
+                      setTimeout(() => {
+                        getProxies();
+                      }, 1000);
+                    } else {
+                      changeProxy();
+                    }
+                  }}
+                >
+                  ADD
+                </button>
+              </div>
             </div>
             <div className="-container-scripts -proxy-manage__content">
               <div className="-container-scripts__right__main -proxy-manage__content__main">
@@ -64,10 +231,23 @@ const PopupProxyManage = ({ openProxyManage, handleCloseProxyManage }) => {
                     <span>
                       <img src={search} alt="icon-search" style={{ marginLeft: '11px' }}></img>
                     </span>
-                    <input placeholder="Search..."></input>
+                    <input
+                      value={textSearch}
+                      onChange={(event) => {
+                        searchProfiles(event.target.value);
+                      }}
+                      placeholder="Search..."
+                    ></input>
                   </div>
                   <span className="-option-profiles">
-                    <img src={refresh} alt="image-refresh"></img>
+                    <img
+                      onClick={() => {
+                        setTextSearch('');
+                        getProxies();
+                      }}
+                      src={refresh}
+                      alt="image-refresh"
+                    ></img>
                   </span>
                 </div>
                 <div className="-container-scripts__right__main__content -proxy-manage__content__main__table">
@@ -77,7 +257,7 @@ const PopupProxyManage = ({ openProxyManage, handleCloseProxyManage }) => {
                         ...rowSelection,
                       }}
                       columns={columnsProxys}
-                      dataSource={[]}
+                      dataSource={dataSearch}
                       pagination={false}
                     ></Table>
                   </div>
@@ -85,6 +265,7 @@ const PopupProxyManage = ({ openProxyManage, handleCloseProxyManage }) => {
               </div>
             </div>
           </div>
+          <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
         </div>
       }
     </PopupComponent>

@@ -160,6 +160,7 @@ body {
           box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
           .edit-input,
           .note-input {
+            overflow-x: hidden;
             display: flex;
             align-items: center;
             height: 40px;

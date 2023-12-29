@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './style.scss';
 import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
@@ -9,25 +9,80 @@ import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
-import { UIDText, cancelFriendOption, unfriendOption, useRangeValues } from './CancelFriend';
-const CancelFriend = ({ onGoBackClick }) => {
+const CancelFriend = ({ onGoBackClick, id, currentSetup, component }) => {
   const initialValues = {
-    NumberFriendStart: 5,
-    NumberFriendEnd: 10,
-    DelayTimeStart: 5,
-    DelayTimeEnd: 10,
-    RequestsStart: 5,
-    RequestsEnd: 10,
+    numberFriendStart: 5,
+    numberFriendEnd: 10,
+    delayTimeStart: 5,
+    delayTimeEnd: 10,
+    requestsStart: 5,
+    requestsEnd: 10,
+    optionCancelFriend: 'cancelRequest',
+    optionUnfriend: 'random',
+    UID: '',
   };
-  const numberFriendValues = useRangeValues(initialValues, 'NumberFriend');
-  const delayTimeValues = useRangeValues(initialValues, 'DelayTime');
-  const requestsValues = useRangeValues(initialValues, 'Requests');
+  const [values, setValues] = useState(initialValues);
+  const [UIDContent, setUIDContent] = useState('');
+  useEffect(() => {
+    if (currentSetup) {
+      if (currentSetup.UID && currentSetup.UID.length) {
+        setUIDContent(currentSetup.UID.join('\n'));
+      }
+      setValues(currentSetup);
+    }
+  }, [currentSetup]);
 
-  const { selectedValueCancelFriend, handleSelectChangeCancelFriend } = cancelFriendOption();
+  useEffect(() => {
+    if (UIDContent.length) {
+      setValues({ ...values, UID: UIDContent.split('\n') });
+    }
+  }, [UIDContent]);
+  const changeFriendStart = (friend) => {
+    setValues({ ...values, numberFriendStart: parseToNumber(friend) });
+  };
+  const parseToNumber = (value) => {
+    const isNumber = /^\d*$/.test(value);
+    if (isNumber) {
+      return value > 0 ? value : 0;
+    } else {
+      return parseInt(value) > 0 ? parseInt(value) : 0;
+    }
+  };
+  const changeFriendEnd = (friend) => {
+    setValues({ ...values, numberFriendEnd: parseToNumber(friend) });
+  };
 
-  const { selectedValueUnfriend, handleSelectChangeUnfriend } = unfriendOption();
+  const changeDelayTimeStart = (time) => {
+    setValues({ ...values, delayTimeStart: parseToNumber(time) });
+  };
+  const changeDelayTimeEnd = (time) => {
+    setValues({ ...values, delayTimeEnd: parseToNumber(time) });
+  };
 
-  const { UIDContent, setUIDContent, handleDivClick, hightlightWithLineNumbers } = UIDText();
+  const changeRequestStart = (request) => {
+    setValues({ ...values, requestsStart: parseToNumber(request) });
+  };
+  const changeRequestEnd = (request) => {
+    setValues({ ...values, requestsEnd: parseToNumber(request) });
+  };
+
+  const changeOption = (value) => {
+    setValues({ ...values, optionCancelFriend: value });
+  };
+
+  const changeOptionUnfriend = (value) => {
+    setValues({ ...values, optionUnfriend: value });
+  };
+
+  const handleDivClick = () => {
+    document.getElementById('codeArea').focus();
+  };
+
+  const hightlightWithLineNumbers = (input, language, content) =>
+    highlight(input, language)
+      .split('\n')
+      .map((line, i) => `<span class='editorLineNumber ${content ? '' : 'hide'}'>${i + 1}</span>${line}`)
+      .join('\n');
 
   return (
     <div className="CancelFriend">
@@ -35,7 +90,13 @@ const CancelFriend = ({ onGoBackClick }) => {
         <div className="scrollable-container">
           <div className="component-left">
             <div className="goBack titleCancelFriend">
-              <img src={backButton} alt="Back button" onClick={() => onGoBackClick(true)} />
+              <img
+                src={backButton}
+                alt="Back button"
+                onClick={() => {
+                  onGoBackClick(values, component, id);
+                }}
+              />
               <p>Cancel friend</p>
             </div>
             <div className="component-item cancelFriend">
@@ -47,76 +108,124 @@ const CancelFriend = ({ onGoBackClick }) => {
                   <Select
                     name="cancelFriendOption"
                     className="cancelFriendType"
-                    onChange={handleSelectChangeCancelFriend}
-                    value={selectedValueCancelFriend}
+                    onChange={(event) => {
+                      changeOption(event.target.value);
+                    }}
+                    value={values.optionCancelFriend}
                   >
-                    <MenuItem value="cancelRequest">By suggestions</MenuItem>
-                    <MenuItem value="unfriend">Accept friend requests</MenuItem>
+                    <MenuItem value="cancelRequest">Cancel friend requests</MenuItem>
+                    <MenuItem value="unfriend">Unfriend</MenuItem>
                   </Select>
                 </div>
-                {selectedValueCancelFriend === 'cancelRequest' && (
+                {values.optionCancelFriend === 'cancelRequest' && (
                   <div className="component-item numberOfRequests">
                     <p className="component-item__header">Number of requests:</p>
                     <div className="component-item__number">
                       <div className="component-item__number__icon">
-                        <img src={iconIncrease} alt="Increase icon" onClick={requestsValues.handleIncrement} />
-                        <img src={iconDecrease} alt="Decrease icon" onClick={requestsValues.handleDecrement} />
+                        <img
+                          src={iconIncrease}
+                          alt="Increase icon"
+                          onClick={() => {
+                            changeRequestStart(values.requestsStart + 1);
+                          }}
+                        />
+                        <img
+                          src={iconDecrease}
+                          alt="Decrease icon"
+                          onClick={() => {
+                            changeRequestStart(values.requestsStart - 1);
+                          }}
+                        />
                       </div>
                       <input
                         name="Start"
                         type="text"
-                        value={requestsValues.RequestsStart}
-                        onChange={(event) => requestsValues.handleInputChangeStart(event)}
+                        value={values.requestsStart}
+                        onChange={(event) => changeRequestStart(event.target.value)}
                       />
                     </div>
                     <span>to</span>
                     <div className="component-item__number">
                       <div className="component-item__number__icon">
-                        <img src={iconIncrease} alt="Increase icon" onClick={requestsValues.handleIncrementEnd} />
-                        <img src={iconDecrease} alt="Decrease icon" onClick={requestsValues.handleDecrementEnd} />
+                        <img
+                          src={iconIncrease}
+                          alt="Increase icon"
+                          onClick={() => {
+                            changeRequestEnd(values.requestsEnd + 1);
+                          }}
+                        />
+                        <img
+                          src={iconDecrease}
+                          alt="Decrease icon"
+                          onClick={() => {
+                            changeRequestEnd(values.requestsEnd - 1);
+                          }}
+                        />
                       </div>
                       <input
                         name="End"
                         type="text"
-                        value={requestsValues.RequestsEnd}
-                        onChange={(event) => requestsValues.handleInputChangeEnd(event)}
+                        value={values.requestsEnd}
+                        onChange={(event) => changeRequestEnd(event.target.value)}
                       />
                     </div>
                   </div>
                 )}
-                {(selectedValueCancelFriend === 'cancelRequest' || selectedValueCancelFriend === 'unfriend') && (
-                  <div className="component-item delayTime">
-                    <p className="component-item__header">
-                      Delay time<span style={{ marginLeft: '2px' }}>(s):</span>
-                    </p>
-                    <div className="component-item__number">
-                      <div className="component-item__number__icon">
-                        <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrement} />
-                        <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrement} />
-                      </div>
-                      <input
-                        name="Start"
-                        type="text"
-                        value={delayTimeValues.DelayTimeStart}
-                        onChange={(event) => delayTimeValues.handleInputChangeStart(event)}
+                <div className="component-item delayTime">
+                  <p className="component-item__header">
+                    Delay time<span style={{ marginLeft: '2px' }}>(s):</span>
+                  </p>
+                  <div className="component-item__number">
+                    <div className="component-item__number__icon">
+                      <img
+                        src={iconIncrease}
+                        alt="Increase icon"
+                        onClick={() => {
+                          changeDelayTimeStart(values.delayTimeStart + 1);
+                        }}
+                      />
+                      <img
+                        src={iconDecrease}
+                        alt="Decrease icon"
+                        onClick={() => {
+                          changeDelayTimeStart(values.delayTimeStart - 1);
+                        }}
                       />
                     </div>
-                    <span>to</span>
-                    <div className="component-item__number">
-                      <div className="component-item__number__icon">
-                        <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrementEnd} />
-                        <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrementEnd} />
-                      </div>
-                      <input
-                        name="End"
-                        type="text"
-                        value={delayTimeValues.DelayTimeEnd}
-                        onChange={(event) => delayTimeValues.handleInputChangeEnd(event)}
-                      />
-                    </div>
+                    <input
+                      name="Start"
+                      type="text"
+                      value={values.delayTimeStart}
+                      onChange={(event) => changeDelayTimeStart(event.target.value)}
+                    />
                   </div>
-                )}
-                {selectedValueCancelFriend === 'unfriend' && (
+                  <span>to</span>
+                  <div className="component-item__number">
+                    <div className="component-item__number__icon">
+                      <img
+                        src={iconIncrease}
+                        alt="Increase icon"
+                        onClick={() => {
+                          changeDelayTimeEnd(values.delayTimeEnd + 1);
+                        }}
+                      />
+                      <img
+                        src={iconDecrease}
+                        alt="Decrease icon"
+                        onClick={() => {
+                          changeDelayTimeEnd(values.delayTimeEnd - 1);
+                        }}
+                      />
+                    </div>
+                    <input
+                      name="End"
+                      type="text"
+                      value={values.delayTimeEnd}
+                      onChange={(event) => changeDelayTimeEnd(event.target.value)}
+                    />
+                  </div>
+                </div>
+                {values.optionCancelFriend === 'unfriend' && (
                   <div className="component-item unfriend">
                     <div className="component-item__header">
                       <p>Unfriend options</p>
@@ -126,14 +235,16 @@ const CancelFriend = ({ onGoBackClick }) => {
                         <Select
                           name="unfriendOption"
                           className="unfriendSelector"
-                          onChange={handleSelectChangeUnfriend}
-                          value={selectedValueUnfriend}
+                          onChange={(event) => {
+                            changeOptionUnfriend(event.target.value);
+                          }}
+                          value={values.optionUnfriend}
                         >
-                          <MenuItem value="random">Randomly</MenuItem>
+                          <MenuItem value="random">Random</MenuItem>
                           <MenuItem value="UID">UID</MenuItem>
                         </Select>
                       </div>
-                      {selectedValueUnfriend === 'random' && (
+                      {values.optionUnfriend === 'random' && (
                         <div className="component-item comment__numberFriend">
                           <p className="component-item__header">Number of friends:</p>
                           <div className="component-item__content">
@@ -142,19 +253,23 @@ const CancelFriend = ({ onGoBackClick }) => {
                                 <img
                                   src={iconIncrease}
                                   alt="Increase icon"
-                                  onClick={numberFriendValues.handleIncrement}
+                                  onClick={() => {
+                                    changeFriendStart(values.numberFriendStart + 1);
+                                  }}
                                 />
                                 <img
                                   src={iconDecrease}
                                   alt="Decrease icon"
-                                  onClick={numberFriendValues.handleDecrement}
+                                  onClick={() => {
+                                    changeFriendStart(values.numberFriendStart - 1);
+                                  }}
                                 />
                               </div>
                               <input
                                 name="Start"
                                 type="text"
-                                value={numberFriendValues.NumberFriendStart}
-                                onChange={(event) => numberFriendValues.handleInputChangeStart(event)}
+                                value={values.numberFriendStart}
+                                onChange={(event) => changeFriendStart(event.target.value)}
                               />
                             </div>
                             <span>to</span>
@@ -163,38 +278,44 @@ const CancelFriend = ({ onGoBackClick }) => {
                                 <img
                                   src={iconIncrease}
                                   alt="Increase icon"
-                                  onClick={numberFriendValues.handleIncrementEnd}
+                                  onClick={() => {
+                                    changeFriendEnd(values.numberFriendEnd + 1);
+                                  }}
                                 />
                                 <img
                                   src={iconDecrease}
                                   alt="Decrease icon"
-                                  onClick={numberFriendValues.handleDecrementEnd}
+                                  onClick={() => {
+                                    changeFriendEnd(values.numberFriendEnd - 1);
+                                  }}
                                 />
                               </div>
                               <input
                                 name="End"
                                 type="text"
-                                value={numberFriendValues.NumberFriendEnd}
-                                onChange={(event) => numberFriendValues.handleInputChangeEnd(event)}
+                                value={values.numberFriendEnd}
+                                onChange={(event) => changeFriendEnd(event.target.value)}
                               />
                             </div>
                           </div>
                         </div>
                       )}
-                      {selectedValueUnfriend === 'UID' && (
-                        <div className="component-item UIDText">
-                          <Editor
-                            value={UIDContent}
-                            onValueChange={(UIDContent) => setUIDContent(UIDContent)}
-                            highlight={(UIDContent) => hightlightWithLineNumbers(UIDContent, languages.js)}
-                            padding={15}
-                            className="editor"
-                            textareaId="codeArea"
-                            style={{
-                              background: '#f5f5f5',
-                              fontSize: 15,
-                            }}
-                          />
+                      {values.optionUnfriend === 'UID' && (
+                        <div className="component-item" style={{ position: 'relative' }}>
+                          <div className="UIDText" style={{ width: '100%', height: 204, overflow: 'auto' }}>
+                            <Editor
+                              value={UIDContent}
+                              onValueChange={(UIDContent) => setUIDContent(UIDContent)}
+                              highlight={(text) => hightlightWithLineNumbers(text, languages.js, UIDContent)}
+                              padding={15}
+                              className="editor"
+                              textareaId="codeArea"
+                              style={{
+                                background: '#f5f5f5',
+                                fontSize: 15,
+                              }}
+                            />
+                          </div>
                           <div onClick={handleDivClick} className={`placeholder ${UIDContent ? 'hide' : ''}`}>
                             <p>
                               <span>1</span>Enter the UID list here

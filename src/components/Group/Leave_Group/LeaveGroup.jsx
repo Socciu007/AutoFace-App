@@ -4,7 +4,8 @@ import './style.scss';
 import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
-import downButton from '../../../assets/icon/icon-down.svg';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
@@ -99,17 +100,16 @@ const LeaveGroup = ({ onGoBackClick }) => {
               <div className="LeaveGroup_Selection">
                 <p className="component-item__header">Select Leave group type</p>
                 <div className="component-item LeaveGroupOption">
-                  <select
+                  <Select
                     name="LeaveGroupOption"
                     className="LeaveGroupType"
                     onChange={handleSelectChangeLeaveGroup}
                     value={selectedValueLeaveGroup}
                   >
-                    <option value="Random">Random</option>
-                    <option value="Approve">Group needs Admin to approve posts</option>
-                    <option value="Conditional">Conditional</option>
-                  </select>
-                  <img src={downButton} alt="Down Button" />
+                    <MenuItem value="Random">Random</MenuItem>
+                    <MenuItem value="Approve">Group needs Admin to approve posts</MenuItem>
+                    <MenuItem value="Conditional">Conditional</MenuItem>
+                  </Select>
                 </div>
                 {selectedValueLeaveGroup === 'Conditional' && (
                   <div className="conditional">
@@ -131,19 +131,22 @@ const LeaveGroup = ({ onGoBackClick }) => {
                     </div>
                     <div className="KeywordContent">
                       <p>The group name contains the following keywords:</p>
-                      <div className="component-item keywordText">
-                        <Editor
-                          value={KeywordContent}
-                          onValueChange={handleTextareaChangeKeywordContent}
-                          highlight={(KeywordContent) => hightlightWithLineNumbers(KeywordContent, languages.js)}
-                          padding={15}
-                          className="editor"
-                          textareaId="codeArea"
-                          style={{
-                            background: '#fff',
-                            fontSize: 15,
-                          }}
-                        />
+                      <div className="component-item " style={{ position: 'relative' }}>
+                        <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="keywordText">
+                          <Editor
+                            value={KeywordContent}
+                            onValueChange={handleTextareaChangeKeywordContent}
+                            highlight={(KeywordContent) => hightlightWithLineNumbers(KeywordContent, languages.js)}
+                            padding={15}
+                            className="editor"
+                            textareaId="codeArea"
+                            style={{
+                              background: '#fff',
+                              fontSize: 15,
+                              color: '#333',
+                            }}
+                          />
+                        </div>
                         <div onClick={handleDivClick} className={`placeholder ${KeywordContent ? 'hide' : ''}`}>
                           <p>
                             <span>1 </span>

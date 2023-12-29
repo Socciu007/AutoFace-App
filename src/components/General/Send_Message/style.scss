@@ -122,8 +122,6 @@
             transform: translate(-50%, -50%);
             overflow-x: hidden;
             padding: 15px 10px 15px 20px;
-            border: 1px dashed rgba(1, 22, 43, 0.2);
-            border-radius: 5px;
           }
         }
       }
@@ -175,14 +173,18 @@
       .messages {
         position: relative;
         margin-top: 2%;
+        border-radius: 5px;
+        border: 1px dashed rgba(1, 22, 43, 0.2);
+        scrollbar-width: none;
+        &::-webkit-scrollbar {
+          display: none;
+        }
         .editor {
-          border-radius: 5px;
-          border: 1px dashed rgba(1, 22, 43, 0.2);
-          font-family: 'GoogleSans';
-          min-height: 180px;
           min-width: 100%;
-          width: 368px;
-          height: 204px;
+          min-height: 100%;
+          float: left;
+          -webkit-text-fill-color: #333;
+          font-family: 'GoogleSans';
         }
 
         .editor #UID,
@@ -204,12 +206,13 @@
           width: 6%;
           font-weight: 100;
         }
-        .placeholder {
-          position: absolute;
-          width: 100%;
-          top: 10%;
-          transform: translate(0, -10%);
-        }
+      }
+      .placeholder {
+        position: absolute;
+        width: 100%;
+        top: 0;
+        margin-top: 6%;
+        // top: 10%;
         p {
           font-size: 15px;
           font-weight: 400;
