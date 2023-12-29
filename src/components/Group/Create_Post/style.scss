@@ -35,7 +35,7 @@
     border-radius: 15px;
     background: #fff;
     box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
-    padding: 0 15px;
+    padding: 0 14px 0 21px;
     scrollbar-width: thin;
   }
   .scrollable-container::-webkit-scrollbar {
@@ -70,9 +70,7 @@
           width: 45%;
           display: flex;
           align-items: center;
-          span {
-            font-weight: 400;
-          }
+          // Css check box
           input[type='checkbox']:checked {
             background-color: #2a86ff;
             border: 0;
@@ -104,6 +102,11 @@
           input[type='checkbox']:checked:after {
             display: block;
           }
+
+          // End css checkbox
+          span {
+            font-weight: 400;
+          }
         }
         &__content {
           display: flex;
@@ -128,7 +131,7 @@
             top: 50%;
             transform: translate(-10%, -50%);
             align-items: center;
-            z-index: 1;
+            z-index: 99999;
             img {
               margin: 0.1rem 0;
             }
@@ -173,8 +176,10 @@
         position: relative;
         display: flex;
         align-items: center;
+        margin: 2% 0;
         .PostType,
         .TagType {
+          font-family: 'GoogleSans';
           top: 0;
           width: 100%;
           border-radius: 5px;
@@ -187,9 +192,11 @@
           background-image: url('../../../assets/icon/icon-down.svg');
           background-repeat: no-repeat;
           background-position: right 10px center;
+          border: 0;
           option {
             font-weight: 400;
             color: var(--font-color-para);
+            background-color: #fff;
           }
           svg {
             display: none;
@@ -209,24 +216,41 @@
           transform: translate(-5%, -50%);
         }
       }
-      .text {
+
+      .placeholder {
+        position: absolute;
+        width: 100%;
+        top: 0;
+        margin-top: 5%;
+        p {
+          font-size: 15px;
+          font-weight: 400;
+          opacity: 0.5;
+          margin-left: 5%;
+          span {
+            margin-right: 3%;
+          }
+        }
+      }
+      .text,
+      .UID,
+      .UIDList {
+        border-radius: 5px;
+        border: 1px dashed rgba(1, 22, 43, 0.2);
         scrollbar-width: none;
         &::-webkit-scrollbar {
           display: none;
         }
-        border-radius: 5px;
-        border: 1px dashed rgba(1, 22, 43, 0.2);
         .editor {
           min-width: 100%;
           min-height: 100%;
           float: left;
           font-family: 'GoogleSans';
-          -webkit-text-fill-color: #333;
         }
 
+        .editor #codeArea,
         .editor #text,
-        .editor #UID,
-        .editor #UIDGroup {
+        .editor #UID {
           outline: none;
           padding-left: 9% !important;
         }
@@ -243,21 +267,6 @@
           text-align: right;
           width: 6%;
           font-weight: 100;
-        }
-      }
-      .placeholder {
-        position: absolute;
-        width: 100%;
-        top: 10%;
-        transform: translate(0, -10%);
-        p {
-          font-size: 15px;
-          font-weight: 400;
-          opacity: 0.5;
-          margin-left: 5%;
-          span {
-            margin-right: 3%;
-          }
         }
       }
       .UIDList {
