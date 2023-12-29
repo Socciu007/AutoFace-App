@@ -101,6 +101,10 @@ const ScriptManager = () => {
     padding: '25px 25px 35px 25px',
   };
 
+  const overlay = {
+    background: 'rgba(255,255,255,0.6)',
+  };
+
   const [isSystem, setIsSystem] = useState(false);
   const [contentArray, setContentArray] = useState([]);
   const [message, setMessage] = useState('');
@@ -110,7 +114,6 @@ const ScriptManager = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [itemSelect, setItemSelect] = useState(null);
   const [nameCoppy, setNameCoppy] = useState('');
-
   useEffect(() => {
     getScripts();
   }, []);
@@ -419,6 +422,7 @@ const ScriptManager = () => {
           <Dialog
             sx={{
               '& .MuiPaper-root': makeCopy,
+              '& .MuiBackdrop-root': overlay,
             }}
             open={makeCopyDialogOpen}
             onPlay={() => setNameCoppy('')}
@@ -463,6 +467,7 @@ const ScriptManager = () => {
             aria-describedby="scroll-dialog-description"
             sx={{
               '& .MuiPaper-root': dialog_delete,
+              '& .MuiBackdrop-root': overlay,
             }}
           >
             <div className="dialog_delete">
