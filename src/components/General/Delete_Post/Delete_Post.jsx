@@ -9,7 +9,7 @@ import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 
-const Delete_Post = ({ onGoBackClick, id, currentSetup, component }) => {
+const Delete_Post = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
   const initialValues = {
     delayTimeStart: 5,
     delayTimeEnd: 10,
@@ -29,6 +29,10 @@ const Delete_Post = ({ onGoBackClick, id, currentSetup, component }) => {
       setValues(currentSetup);
     }
   }, [currentSetup]);
+
+  useEffect(() => {
+    updateDesignScript(values, component, id);
+  }, [values]);
 
   useEffect(() => {
     if (textContent.length) {

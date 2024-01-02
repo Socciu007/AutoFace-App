@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './style.scss';
 import { Input, Popover, Table } from 'antd';
@@ -27,7 +27,7 @@ import PopupProxyManage from '../../components/PopupHome/PopupProxyManage/PopupP
 import PopupDeleteProfile from '../../components/PopupHome/PopupDeleteProfile/PopupDeleteProfile';
 import PopupScript from '../../components/PopupHome/PopupScript/PopupScript';
 import { storageProfiles, storageSettings } from '../../common/const.config';
-import { apiGetFolder } from '../../services/api_helper';
+import { apiGetFolder, apiGetProfiles } from '../../services/api_helper';
 import { connectSocket, getDB, setDB } from '../../services/socket';
 
 const ProfilesPage = () => {
@@ -49,12 +49,34 @@ const ProfilesPage = () => {
 
   useEffect(() => {
     config();
+    const id = setInterval(async () => {
+      await syncProfiles();
+    }, 1000);
+
+    return () => clearInterval(id);
   }, []);
 
   const config = async () => {
     await connectSocket();
     await getProfiles();
     await checkSettings();
+  };
+
+  const syncProfiles = async () => {
+    if (dataSearch && dataSearch.length) {
+      const newData = [...dataSearch];
+      const res = await apiGetProfiles();
+      if (res && res.success) {
+        const profiles = res.data.data;
+        for (let i = 0; i < newData.length; i++) {
+          const profile = profiles.find((e) => e.id == newData[i].id);
+          if (profile) {
+            newData[i].status = profile.status;
+          }
+        }
+        setDataSearch(newData);
+      }
+    }
   };
 
   const checkSettings = async () => {
@@ -291,7 +313,6 @@ const ProfilesPage = () => {
             postAlert('Please select profile!');
           }
         };
-        console.log('s', openOptions);
         return (
           <div className="-expand-icon" onClick={handleActionProfiles}>
             <img src={options} alt="image-option"></img>
@@ -332,16 +353,16 @@ const ProfilesPage = () => {
       },
     },
   ];
-  const handleSaveTag = (row) => {
-    const newData = [...dataProfiles];
-    const index = newData.findIndex((profile) => row.id === profile.id);
-    const profile = newData[index];
-    newData.splice(index, 1, {
-      ...profile,
-      ...row,
-    });
-    setDataProfiles(newData);
-  };
+  // const handleSaveTag = (row) => {
+  //   const newData = [...dataProfiles];
+  //   const index = newData.findIndex((profile) => row.id === profile.id);
+  //   const profile = newData[index];
+  //   newData.splice(index, 1, {
+  //     ...profile,
+  //     ...row,
+  //   });
+  //   setDataProfiles(newData);
+  // };
   const components = {
     body: {
       row: EditableRow,
@@ -359,7 +380,7 @@ const ProfilesPage = () => {
         editable: col.editable,
         dataIndex: col.dataIndex,
         title: col.title,
-        handleSaveTag,
+        // handleSaveTag,
       }),
     };
   });
@@ -372,6 +393,9 @@ const ProfilesPage = () => {
   };
 
   const handleSettings = () => {
+    if (syncProfilesInterval) {
+      clearInterval(syncProfilesInterval);
+    }
     navigate('/settings');
   };
   const handleScript = () => {
@@ -383,7 +407,16 @@ const ProfilesPage = () => {
   };
   //scripts
   const handleOpenScripts = () => {
-    setOpenScripts(true);
+    if (profilesSelected.length > 0) {
+      const check = profilesSelected.find((e) => e.status !== 'ready');
+      if (!check) {
+        setOpenScripts(true);
+      } else {
+        postAlert(`Profile ${check.profile} is ${check.status}!`);
+      }
+    } else {
+      postAlert('Please select profile!');
+    }
   };
   const handleCloseScripts = () => {
     setOpenScripts(false);
@@ -559,18 +592,11 @@ const ProfilesPage = () => {
               handleCloseDelete={handleCloseDelete}
               handleRemove={handleRemoveProfiles}
             ></PopupDeleteProfile>
-            <div
-              onClick={() => {
-                if (profilesSelected.length > 0) {
-                  handleOpenScripts();
-                } else {
-                  postAlert('Please select profile!');
-                }
-              }}
-            >
+            <div onClick={handleOpenScripts}>
               <button>Run</button>
             </div>
             <PopupScript
+              profilesSelected={profilesSelected}
               openScripts={openScripts}
               handleCloseScripts={handleCloseScripts}
               handleSettings={handleSettings}

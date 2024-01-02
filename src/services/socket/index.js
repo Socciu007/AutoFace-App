@@ -40,7 +40,6 @@ export const connectSocket = async () => {
         console.log(response);
 
         if (response.action === 'start') {
-          console.log('');
         }
       });
       await delay(500);

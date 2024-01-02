@@ -113,7 +113,12 @@ const CreateScript = () => {
     setComponent('default');
   };
 
-  const handleGoBackClick = (value, component, id) => {
+  const handleGoBackClick = () => {
+    setCurrentSetup(null);
+    setComponent('default');
+  };
+
+  const updateDesignScript = (value, component, id) => {
     const newDesign = { ...designScript };
     const index = newDesign.script.findIndex((e) => e.id == id);
     if (index >= 0) {
@@ -123,8 +128,6 @@ const CreateScript = () => {
     }
 
     setDesignScript(newDesign);
-    setCurrentSetup(null);
-    setComponent('default');
   };
 
   const onSave = async () => {
@@ -217,6 +220,7 @@ const CreateScript = () => {
             currentSetup={currentSetup}
             id={currentComponent}
             onGoBackClick={handleGoBackClick}
+            updateDesignScript={updateDesignScript}
           />
         );
       case 'createPost':
@@ -226,6 +230,7 @@ const CreateScript = () => {
             component={component}
             id={currentComponent}
             onGoBackClick={handleGoBackClick}
+            updateDesignScript={updateDesignScript}
           />
         );
       case 'postInteract':
@@ -235,6 +240,7 @@ const CreateScript = () => {
             component={component}
             id={currentComponent}
             onGoBackClick={handleGoBackClick}
+            updateDesignScript={updateDesignScript}
           />
         );
       case 'deletePost':
@@ -244,6 +250,7 @@ const CreateScript = () => {
             component={component}
             id={currentComponent}
             onGoBackClick={handleGoBackClick}
+            updateDesignScript={updateDesignScript}
           />
         );
       case 'viewNoti':
@@ -253,6 +260,7 @@ const CreateScript = () => {
             component={component}
             id={currentComponent}
             onGoBackClick={handleGoBackClick}
+            updateDesignScript={updateDesignScript}
           />
         );
       case 'sendMsg':
@@ -261,6 +269,7 @@ const CreateScript = () => {
             currentSetup={currentSetup}
             component={component}
             id={currentComponent}
+            updateDesignScript={updateDesignScript}
             onGoBackClick={handleGoBackClick}
           />
         );
@@ -268,6 +277,7 @@ const CreateScript = () => {
         return (
           <Reply_Message
             currentSetup={currentSetup}
+            updateDesignScript={updateDesignScript}
             component={component}
             id={currentComponent}
             onGoBackClick={handleGoBackClick}
@@ -278,6 +288,7 @@ const CreateScript = () => {
           <AddFriend
             currentSetup={currentSetup}
             component={component}
+            updateDesignScript={updateDesignScript}
             id={currentComponent}
             onGoBackClick={handleGoBackClick}
           />
@@ -287,6 +298,7 @@ const CreateScript = () => {
           <CancelFriend
             currentSetup={currentSetup}
             component={component}
+            updateDesignScript={updateDesignScript}
             id={currentComponent}
             onGoBackClick={handleGoBackClick}
           />
@@ -296,6 +308,7 @@ const CreateScript = () => {
           <JoinGroup
             currentSetup={currentSetup}
             component={component}
+            updateDesignScript={updateDesignScript}
             id={currentComponent}
             onGoBackClick={handleGoBackClick}
           />
@@ -305,6 +318,7 @@ const CreateScript = () => {
           <LeaveGroup
             currentSetup={currentSetup}
             component={component}
+            updateDesignScript={updateDesignScript}
             id={currentComponent}
             onGoBackClick={handleGoBackClick}
           />
@@ -314,6 +328,7 @@ const CreateScript = () => {
           <Invite
             currentSetup={currentSetup}
             component={component}
+            updateDesignScript={updateDesignScript}
             id={currentComponent}
             onGoBackClick={handleGoBackClick}
           />
@@ -323,6 +338,7 @@ const CreateScript = () => {
           <CreatePostGroup
             currentSetup={currentSetup}
             component={component}
+            updateDesignScript={updateDesignScript}
             id={currentComponent}
             onGoBackClick={handleGoBackClick}
           />
@@ -332,6 +348,7 @@ const CreateScript = () => {
           <SeedingLikeComment
             currentSetup={currentSetup}
             component={component}
+            updateDesignScript={updateDesignScript}
             id={currentComponent}
             onGoBackClick={handleGoBackClick}
           />
@@ -341,6 +358,7 @@ const CreateScript = () => {
           <SeedingFollower
             currentSetup={currentSetup}
             component={component}
+            updateDesignScript={updateDesignScript}
             id={currentComponent}
             onGoBackClick={handleGoBackClick}
           />
@@ -350,6 +368,7 @@ const CreateScript = () => {
           <SeedingView
             currentSetup={currentSetup}
             component={component}
+            updateDesignScript={updateDesignScript}
             id={currentComponent}
             onGoBackClick={handleGoBackClick}
           />

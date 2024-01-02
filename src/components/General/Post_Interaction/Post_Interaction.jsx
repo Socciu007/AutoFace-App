@@ -9,7 +9,7 @@ import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 
-const Post_Interaction = ({ onGoBackClick, id, currentSetup, component }) => {
+const Post_Interaction = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
   const initialValues = {
     postPerUserStart: 5,
     postPerUserEnd: 10,
@@ -38,7 +38,7 @@ const Post_Interaction = ({ onGoBackClick, id, currentSetup, component }) => {
   useEffect(() => {
     if (currentSetup) {
       if (currentSetup.UID && currentSetup.UID.length) {
-        setTextContent(currentSetup.UID.join('\n'));
+        setUIDContent(currentSetup.UID.join('\n'));
       }
       if (currentSetup.text && currentSetup.text.length) {
         setTextContent(currentSetup.text.join('\n'));
@@ -46,6 +46,10 @@ const Post_Interaction = ({ onGoBackClick, id, currentSetup, component }) => {
       setValues(currentSetup);
     }
   }, [currentSetup]);
+
+  useEffect(() => {
+    updateDesignScript(values, component, id);
+  }, [values]);
 
   useEffect(() => {
     if (UIDContent.length) {

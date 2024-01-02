@@ -9,7 +9,7 @@ import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
-const AddFriend = ({ onGoBackClick, id, currentSetup, component }) => {
+const AddFriend = ({ onGoBackClick, id, currentSetup, component, updateDesignScript }) => {
   const initialValues = {
     postStart: 1,
     postEnd: 2,
@@ -45,6 +45,10 @@ const AddFriend = ({ onGoBackClick, id, currentSetup, component }) => {
       setValues(currentSetup);
     }
   }, [currentSetup]);
+
+  useEffect(() => {
+    updateDesignScript(values, component, id);
+  }, [values]);
 
   useEffect(() => {
     if (textContent.length) {
@@ -88,6 +92,10 @@ const AddFriend = ({ onGoBackClick, id, currentSetup, component }) => {
     } else {
       return parseInt(value) > 0 ? parseInt(value) : 0;
     }
+  };
+
+  const changeOnlyAddFriend = (value) => {
+    setValues({ ...values, isOnlyAddFriend: value });
   };
 
   const changePostStart = (post) => {
@@ -154,7 +162,7 @@ const AddFriend = ({ onGoBackClick, id, currentSetup, component }) => {
                 src={backButton}
                 alt="Back button"
                 onClick={() => {
-                  onGoBackClick(values, component, id);
+                  onGoBackClick();
                 }}
               />
               <p>Add friends</p>
@@ -537,7 +545,13 @@ const AddFriend = ({ onGoBackClick, id, currentSetup, component }) => {
                   )}
                   {(values.option === 'suggestions' || values.option === 'acceptFriendRequests') && (
                     <div className="component-item addFriendHaveMutualFriend">
-                      <input type="checkbox" name="addFriendHaveMutualFriend" id="checkboxAddFriend" />
+                      <input
+                        type="checkbox"
+                        name="addFriendHaveMutualFriend"
+                        checked={values.isOnlyAddFriend}
+                        id="checkboxAddFriend"
+                        onChange={(event) => changeOnlyAddFriend(event.target.checked)}
+                      />
                       <p>Only add friends with people who have mutual friends</p>
                     </div>
                   )}
