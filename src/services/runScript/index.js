@@ -373,16 +373,13 @@ return true;
 
 const getAllFunc = (arrfunction) => {
   let funcStr = '';
-  console.log('arrfunction' + arrfunction);
   arrfunction.forEach((e) => {
-    console.log('e ' + e);
     funcStr += convertToFunc(e);
   });
   return funcStr;
 };
 
 const convertToFunc = (script) => {
-  console.log('t', script.type);
   switch (script.type) {
     case 'newsFeed':
       return newFeed(script);
