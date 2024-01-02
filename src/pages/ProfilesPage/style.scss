@@ -20,6 +20,92 @@
   .-container-profiles {
     padding: 36px 24px;
     height: 100%;
+    .ant-spin-container {
+      display: flex;
+      flex: 1 1;
+      position: relative;
+      height: calc((100vh - 95.5px) - 100px);
+      overflow: hidden;
+      .ant-table.ant-table-fixed-column {
+        width: 100%;
+        .ant-table-content {
+          overflow: auto auto !important;
+          height: 520px;
+          position: relative;
+          table > colgroup {
+            background: #f2f8ff;
+            opacity: 0.3;
+          }
+          table > thead.ant-table-thead {
+            background: #f2f8ff;
+            z-index: 99 !important;
+            position: sticky;
+            top: 0px;
+            tr {
+              background: #f2f8ff;
+              // opacity: 0.3;
+              th.ant-table-cell,
+              td.ant-table-cell {
+                font-size: 15px;
+                font-weight: 700;
+                line-height: normal;
+                background: #f2f8ff;
+                border-bottom: 1px solid #e0e0e0;
+                color: rgba(1, 22, 43, 0.6);
+                font-family: GoogleSans;
+                min-height: 50px;
+                // padding-bottom: 10px;
+                // padding-top: 10px;
+                vertical-align: middle;
+                .ant-table-column-sorters {
+                  display: inline;
+                  span.ant-table-column-title {
+                    margin-right: 5px;
+                  }
+                  span.ant-table-column-sorter-inner {
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                  }
+                }
+              }
+            }
+          }
+          table > tbody.ant-table-tbody {
+            background: #fff;
+            td.ant-table-cell {
+              font-size: 15px;
+
+              line-height: normal;
+
+              font-family: GoogleSans;
+              min-height: 50px;
+              // padding-bottom: 10px;
+              // padding-top: 10px;
+              vertical-align: middle;
+            }
+          }
+        }
+        .ant-table-content::-webkit-scrollbar {
+          height: 5px;
+          width: 5px;
+        }
+        .ant-table-content::-webkit-scrollbar-thumb {
+          background-color: rgba(1, 22, 43, 0.5); /* Màu của thanh cuộn */
+          border-radius: 5px; /* Bo tròn góc của thanh cuộn */
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Bóng mờ */
+        }
+        .ant-table-content::-webkit-scrollbar-track {
+          background-color: rgba(1, 22, 43, 0.2); /* Màu của phần bên dưới thanh cuộn */
+          border-radius: 5px;
+        }
+        @media (min-height: 800px) {
+          .ant-table-content {
+            height: 720px;
+          }
+        }
+      }
+    }
   }
   .-title-profiles {
     color: #01162b;
@@ -78,71 +164,72 @@
       }
     }
   }
-  .-content-profiles {
-    margin: auto 0;
-    height: 80%;
-    .ant-table-content {
-      overflow-x: auto !important;
-    }
-    .ant-table-content::-webkit-scrollbar {
-      height: 5px;
-    }
-    .ant-table-content::-webkit-scrollbar-thumb {
-      background-color: rgba(1, 22, 43, 0.5); /* Màu của thanh cuộn */
-      border-radius: 5px; /* Bo tròn góc của thanh cuộn */
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Bóng mờ */
-    }
-    .ant-table-content::-webkit-scrollbar-track {
-      background-color: rgba(1, 22, 43, 0.2); /* Màu của phần bên dưới thanh cuộn */
-      border-radius: 5px;
-    }
-    & thead.ant-table-thead {
-      background-color: #d4e7ff;
-      opacity: 0.6;
-      & th.ant-table-cell {
-        font-size: 15px;
-        font-weight: 700;
-        line-height: normal;
-        color: rgba(1, 22, 43, 0.5);
-        background-color: transparent;
-        .ant-table-column-sorters {
-          display: inline;
-          span.ant-table-column-title {
-            margin-right: 5px;
-          }
-          span.ant-table-column-sorter-inner {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-          }
-        }
-      }
-      & td.ant-table-cell {
-        background-color: transparent;
-      }
-    }
-    .scrollable-container {
-      height: 100%;
-      overflow-y: auto;
-      border-radius: 15px;
-      background: #fff;
-      // box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
-      // padding-right: 6px;
-      scrollbar-width: thin;
-    }
-    .scrollable-container::-webkit-scrollbar {
-      width: 5px;
-    }
-    .scrollable-container::-webkit-scrollbar-thumb {
-      background-color: rgba(1, 22, 43, 0.5); /* Màu của thanh cuộn */
-      border-radius: 5px; /* Bo tròn góc của thanh cuộn */
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Bóng mờ */
-    }
-    .scrollable-container::-webkit-scrollbar-track {
-      background-color: rgba(1, 22, 43, 0.2); /* Màu của phần bên dưới thanh cuộn */
-      border-radius: 5px;
-    }
-  }
+  // .-content-profiles {
+  //   margin: auto 0;
+  //   height: 80%;
+
+  //   .ant-table-content {
+  //     overflow-x: auto !important;
+  //   }
+  //   .ant-table-content::-webkit-scrollbar {
+  //     height: 5px;
+  //   }
+  //   .ant-table-content::-webkit-scrollbar-thumb {
+  //     background-color: rgba(1, 22, 43, 0.5); /* Màu của thanh cuộn */
+  //     border-radius: 5px; /* Bo tròn góc của thanh cuộn */
+  //     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Bóng mờ */
+  //   }
+  //   .ant-table-content::-webkit-scrollbar-track {
+  //     background-color: rgba(1, 22, 43, 0.2); /* Màu của phần bên dưới thanh cuộn */
+  //     border-radius: 5px;
+  //   }
+  //   & thead.ant-table-thead {
+  //     background-color: #d4e7ff;
+  //     opacity: 0.6;
+  //     & th.ant-table-cell {
+  //       font-size: 15px;
+  //       font-weight: 700;
+  //       line-height: normal;
+  //       color: rgba(1, 22, 43, 0.5);
+  //       background-color: transparent;
+  //       .ant-table-column-sorters {
+  //         display: inline;
+  //         span.ant-table-column-title {
+  //           margin-right: 5px;
+  //         }
+  //         span.ant-table-column-sorter-inner {
+  //           position: absolute;
+  //           top: 50%;
+  //           transform: translateY(-50%);
+  //         }
+  //       }
+  //     }
+  //     & td.ant-table-cell {
+  //       background-color: transparent;
+  //     }
+  //   }
+  //   .scrollable-container {
+  //     height: 100%;
+  //     overflow-y: auto;
+  //     border-radius: 15px;
+  //     background: #fff;
+  //     // box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
+  //     // padding-right: 6px;
+  //     scrollbar-width: thin;
+  //   }
+  //   .scrollable-container::-webkit-scrollbar {
+  //     width: 5px;
+  //   }
+  //   .scrollable-container::-webkit-scrollbar-thumb {
+  //     background-color: rgba(1, 22, 43, 0.5); /* Màu của thanh cuộn */
+  //     border-radius: 5px; /* Bo tròn góc của thanh cuộn */
+  //     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Bóng mờ */
+  //   }
+  //   .scrollable-container::-webkit-scrollbar-track {
+  //     background-color: rgba(1, 22, 43, 0.2); /* Màu của phần bên dưới thanh cuộn */
+  //     border-radius: 5px;
+  //   }
+  // }
   .-expand-icon {
     cursor: pointer;
   }

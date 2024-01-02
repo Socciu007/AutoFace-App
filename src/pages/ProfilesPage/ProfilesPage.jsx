@@ -42,6 +42,7 @@ const ProfilesPage = () => {
   const [openProfiles, setOpenProfiles] = useState(false);
   const [openAddProxy, setOpenAddProxy] = useState(false);
   const [openDeleteProfile, setOpenDeleteProfile] = useState(false);
+  const [openDeleteProfileTable, setOpenDeleteProfileTable] = useState(false);
   const [openProxyManage, setOpenProxyManage] = useState(false);
   const [openOptions, setOpenOptions] = useState(false);
   const navigate = useNavigate();
@@ -138,6 +139,7 @@ const ProfilesPage = () => {
     const newData = dataProfiles.filter((e) => e.id !== id);
     setDataProfiles(newData);
     await setDB(storageProfiles, JSON.stringify(newData));
+    setOpenDeleteProfileTable(false);
   };
 
   //Pin and remove
@@ -281,27 +283,49 @@ const ProfilesPage = () => {
       width: 50,
       fixed: 'right',
       render: (profile) => {
+        const handleClickRemove = () => {
+          if (profile.id !== '') {
+            // setOpenOptions(false);
+            setOpenDeleteProfileTable((o) => !o);
+          } else {
+            postAlert('Please select profile!');
+          }
+        };
+        console.log('s', openOptions);
         return (
           <div className="-expand-icon" onClick={handleActionProfiles}>
             <img src={options} alt="image-option"></img>
             {rowKeys === profile.id && (
-              <Popover
-                open={openOptions}
-                onClose={handleCloseAction}
-                placement="leftTop"
-                content={
-                  <div className="-popover-options" onMouseLeave={handleCloseAction}>
-                    <div onClick={() => pinProfile(profile.id)} className="-popover-options__attribute border-bottom">
-                      <img src={pin} alt="icon-pin"></img>
-                      {!profile.isPin ? <p>Pin</p> : <p>Unpin</p>}
+              <>
+                <Popover
+                  open={openOptions}
+                  trigger="click"
+                  onOpenChange={(newOpen) => setOpenOptions(newOpen)}
+                  // onClose={handleCloseAction}
+                  placement="leftTop"
+                  content={
+                    <div className="-popover-options" onMouseLeave={handleCloseAction}>
+                      <div onClick={() => pinProfile(profile.id)} className="-popover-options__attribute border-bottom">
+                        <img src={pin} alt="icon-pin"></img>
+                        {!profile.isPin ? <p>Pin</p> : <p>Unpin</p>}
+                      </div>
+                      <div
+                        onClick={handleClickRemove}
+                        // onClick={() => removeProfile(profile.id)}
+                        className="-popover-options__attribute"
+                      >
+                        <img src={deleted} alt="icon-deleted"></img>
+                        <p>Remove</p>
+                      </div>
                     </div>
-                    <div onClick={() => removeProfile(profile.id)} className="-popover-options__attribute">
-                      <img src={deleted} alt="icon-deleted"></img>
-                      <p>Remove</p>
-                    </div>
-                  </div>
-                }
-              ></Popover>
+                  }
+                ></Popover>
+                <PopupDeleteProfile
+                  openDeleteProfile={openDeleteProfileTable}
+                  handleCloseDelete={handleCloseDeleteTable}
+                  handleRemove={() => removeProfile(profile.id)}
+                ></PopupDeleteProfile>
+              </>
             )}
           </div>
         );
@@ -385,6 +409,9 @@ const ProfilesPage = () => {
   const handleCloseDelete = () => {
     setOpenDeleteProfile(false);
   };
+  const handleCloseDeleteTable = () => {
+    setOpenDeleteProfileTable(false);
+  };
 
   const searchProfiles = (text) => {
     if (text == '') {
@@ -430,7 +457,12 @@ const ProfilesPage = () => {
   return (
     <div
       className="layout-profiles"
-      style={{ opacity: openAddProxy || openDeleteProfile || openScripts || openProfiles || openProxyManage ? 0.3 : 1 }}
+      style={{
+        opacity:
+          openAddProxy || openDeleteProfile || openDeleteProfileTable || openScripts || openProfiles || openProxyManage
+            ? 0.3
+            : 1,
+      }}
     >
       <div className="-container-profiles">
         <h1 className="-title-profiles">FACEBOOK AUTOMATION</h1>
@@ -546,30 +578,30 @@ const ProfilesPage = () => {
             ></PopupScript>
           </div>
         </div>
-        <div className="-content-profiles">
-          <div className="scrollable-container">
-            <Table
-              rowSelection={{
-                ...rowSelection,
-              }}
-              onRow={(record, rowIndex) => {
-                return {
-                  onClick: () => {
-                    setRowKeys(record.id);
-                  },
-                };
-              }}
-              components={components}
-              rowClassName={'editable-row'}
-              columns={columns}
-              dataSource={dataSearch.sort((x, y) => {
-                return x.isPin === y.isPin ? 0 : x ? -1 : 1;
-              })}
-              scroll={{ x: 1000 }}
-              pagination={false}
-            />
-          </div>
-        </div>
+        {/* <div className="-content-profiles">
+          <div className="scrollable-container"> */}
+        <Table
+          rowSelection={{
+            ...rowSelection,
+          }}
+          onRow={(record, rowIndex) => {
+            return {
+              onClick: () => {
+                setRowKeys(record.id);
+              },
+            };
+          }}
+          components={components}
+          rowClassName={'editable-row'}
+          columns={columns}
+          dataSource={dataSearch.sort((x, y) => {
+            return x.isPin === y.isPin ? 0 : x ? -1 : 1;
+          })}
+          scroll={{ x: 1000 }}
+          pagination={false}
+        />
+        {/* </div>
+        </div> */}
       </div>
       <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
     </div>
