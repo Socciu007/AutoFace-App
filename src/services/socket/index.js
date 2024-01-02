@@ -1,8 +1,10 @@
 import { io } from 'socket.io-client';
 import Promise from 'bluebird';
 import { apiGetPortSocket } from '../api_helper';
+import { APP_ID } from '../../common/const.api';
 
 let socket;
+let port;
 let data = {};
 let connecting = false;
 const connect = async () => {
@@ -20,12 +22,25 @@ const delay = async (time) => {
 export const connectSocket = async () => {
   if ((!socket || !socket.connected) && !connecting) {
     connecting = true;
-    const dataConnect = await connect();
-    if (dataConnect && dataConnect.success) {
-      socket = io('http://127.0.0.1:' + dataConnect.data.data);
+    if (!port) {
+      const dataConnect = await connect();
+      if (dataConnect && dataConnect.success) {
+        port = dataConnect.data.data;
+      }
+    }
+    if (port) {
+      socket = io('http://127.0.0.1:' + port);
       socket.on('localstorage_result', (response) => {
         if (response && response.key) {
           data[response.key] = response.data;
+        }
+      });
+      socket.on('exec_result', (response) => {
+        console.log('exec_result');
+        console.log(response);
+
+        if (response.action === 'start') {
+          console.log('');
         }
       });
       await delay(500);
@@ -35,6 +50,34 @@ export const connectSocket = async () => {
     return false;
   }
   return false;
+};
+
+export const exec = async (code, data, action = '') => {
+  if (!socket) return false;
+  socket.emit('exec', {
+    ...data,
+    action,
+    sourceCode: code,
+  });
+};
+
+export const stop = async () => {
+  if (!this.socket) return;
+  this.socket.emit('exec', {
+    action: 'stop',
+    sourceCode: `
+      const keys = Object.keys(global.appws['${APP_ID}'].browsers);
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i]
+        if (global.appws['${APP_ID}'].browsers[key]) {
+          global.appws['${APP_ID}'].browsers[key].close().then()
+          delete global.appws['${APP_ID}'].browsers[key]
+        }
+      }
+      
+      return true
+    `,
+  });
 };
 
 export const setDB = async (key, data) => {

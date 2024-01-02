@@ -4,4 +4,6 @@ export const FOLDERS = '/folders';
 export const PROFILES = '/profiles';
 export const PROXIES = '/proxies';
 export const AUTO_CONNECT = '/auto/connect/';
+export const START_PROFILE = '/profiles/start/';
+export const STOP_PROFILE = '/profiles/stop/';
 export const APP_ID = 'minitoolFacebook';
