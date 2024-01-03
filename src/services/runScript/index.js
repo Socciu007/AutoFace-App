@@ -434,18 +434,24 @@ const scroll = async (page, newsfeed) => {
         newsfeed.delayTimeEnd * 1000
       );
       await page.mouse.wheel({ deltaY: scrollAmount });
-      const moreNews = await checkExistElementOnScreen(
-        page,
-        "#m_news_feed_stream > a"
-      );
-      if (moreNews == 0) {
-        const moreNewsBtn = await getElement(
-          page,
-          "#m_news_feed_stream > a",
-          10
-        );
-        await moreNewsBtn.click();
-        continue;
+      let hrefs = await page.$$eval("a", (links) => links.map((a) => a.href));
+      if (hrefs.length > 0) {
+        hrefs = hrefs.filter((e) => e.includes("/stories.php?aftercursor"));
+        for (let i = 0; i < hrefs.length; i++) {
+          let seeMoreSelector =
+            '[href="' +
+            hrefs[i].replace("https://mbasic.facebook.com", "") +
+            '"]';
+          let isExist = await checkExistElementOnScreen(page, seeMoreSelector);
+          if (isExist == 0) {
+            const seeMoreBtn = await getElement(page, seeMoreSelector);
+            if (seeMoreBtn) {
+              await delay(1000);
+              await seeMoreBtn.click();
+              continue;
+            }
+          }
+        }
       }
       await delay(randomDelay);
       randomScrollTime = randomScrollTime - randomDelay;
