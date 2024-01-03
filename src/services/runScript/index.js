@@ -980,11 +980,11 @@ const tagFriendsRandomly = async (page, numberFriendTag) => {
   const objCreatePost = ${strSetting};
     let CreatePost = await checkObject(objCreatePost);
     // check page is live reutrn -1, return 1, return 0
-  const isLive1 = await checkIsLive(page);
-  console.log("Tình trạng trang web:", isLive);
-  if (!isLive1) {
-    return -1;
-  }
+  // const isLive1 = await checkIsLive(page);
+  // console.log("Tình trạng trang web:", isLive);
+  // if (!isLive1) {
+  //   return -1;
+  // }
   // check is login: get cookie return -1, return 1, return 0
   // const isLoggedIn = await checkLogin(page);
   // console.log("Tình trạng đăng nhập:", isLoggedIn);
