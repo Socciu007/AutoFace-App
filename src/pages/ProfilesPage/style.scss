@@ -24,13 +24,14 @@
       display: flex;
       flex: 1 1;
       position: relative;
-      height: calc((100vh - 95.5px) - 100px);
+      height: calc(100vh - 95.5px - 100px);
       overflow: hidden;
       .ant-table.ant-table-fixed-column {
         width: 100%;
         .ant-table-content {
           overflow: auto auto !important;
-          height: 520px;
+          // min-height: fit-content;
+          min-height: 514px !important;
           position: relative;
           table > colgroup {
             background: #f2f8ff;
@@ -99,9 +100,14 @@
           background-color: rgba(1, 22, 43, 0.2); /* Màu của phần bên dưới thanh cuộn */
           border-radius: 5px;
         }
+        // @media (min-height: 719px) {
+        //   .ant-table-content {
+        //     min-height: 514px !important;
+        //   }
+        // }
         @media (min-height: 800px) {
           .ant-table-content {
-            height: 720px;
+            min-height: 720px !important;
           }
         }
       }

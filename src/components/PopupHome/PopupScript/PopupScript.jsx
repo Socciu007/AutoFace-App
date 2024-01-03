@@ -122,9 +122,9 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
                 <span className="-option-profiles" onClick={handleSettings}>
                   <img src={settings} alt="image-settings"></img>
                 </span>
-                <span className="-option-profiles" onClick={handleOpenScripts}>
+                {/* <span className="-option-profiles" onClick={handleOpenScripts}>
                   <img src={yourScript} alt="icon-yourscripts"></img>
-                </span>
+                </span> */}
                 <div>
                   <button
                     onClick={async () => {
