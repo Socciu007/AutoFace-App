@@ -49,7 +49,7 @@ function inviteGroupNode({ data: { label, onButtonClick, onDeleteNode }, isConne
           <img src={inviteGroupIcon} alt=" invite Group" />
           <div className="content-right">
             <div className="right-top">
-              <p>G-invite</p>
+              <p>G-Invite</p>
               <img src={optionNode} alt="More" onClick={handleClick} />
               <Menu
                 id="basic-menu"

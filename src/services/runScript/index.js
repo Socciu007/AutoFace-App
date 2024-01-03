@@ -9,10 +9,16 @@ export const runScript = async (profileSelected, scriptDesign) => {
   if (settingStr) {
     settings = JSON.parse(settingStr);
   }
+
   for (let i = 0; i < profileSelected.length; i++) {
     let arrfunction = [];
-    const edges = scriptDesign.design.edges;
     const nodes = scriptDesign.design.nodes;
+    const edges = scriptDesign.design.edges.filter((edge) => {
+      const check = nodes.find((node) => node.id == edge.target);
+      if (check) return true;
+      return false;
+    });
+
     const scripts = scriptDesign.script;
 
     if (edges && edges.length) {
@@ -28,6 +34,8 @@ export const runScript = async (profileSelected, scriptDesign) => {
         }
       }
     }
+
+    console.log(arrfunction);
 
     const res = await apiStartProfiles(
       profileSelected[i].id,
@@ -364,6 +372,9 @@ try {
 
 return true;
 `;
+
+    console.log(code);
+
     if (res && res.success) {
       const data = { key: '1111' };
       await exec(code, data);
@@ -690,11 +701,11 @@ const clickPostComment = async (page) => {
     return -1;
   }
   // check is login: get cookie return -1, return 1, return 0
-  const isLoggedIn = await checkLogin(page);
-  console.log("Tình trạng đăng nhập:", isLoggedIn);
-  if (!isLoggedIn) {
-    return -1;
-  }
+  // const isLoggedIn1 = await checkLogin(page);
+  // console.log("Tình trạng đăng nhập:", isLoggedIn);
+  // if (!isLoggedIn1) {
+  //   return -1;
+  // }
   if (news.randomLike == true) {
     let count = 0;
     let numLikes = getRandomIntBetween(news.likeStart, news.likeEnd);
@@ -771,7 +782,6 @@ const clickPostComment = async (page) => {
 };
 
 const createPost = (setting) => {
-  console.log(setting);
   const strSetting = `
   {
     UID: ${JSON.stringify(setting.UID)},
@@ -970,17 +980,17 @@ const tagFriendsRandomly = async (page, numberFriendTag) => {
   const objCreatePost = ${strSetting};
     let CreatePost = await checkObject(objCreatePost);
     // check page is live reutrn -1, return 1, return 0
-  const isLive = await checkIsLive(page);
-  console.log("Tình trạng trang web:", isLive);
-  if (!isLive) {
-    return -1;
-  }
+  // const isLive1 = await checkIsLive(page);
+  // console.log("Tình trạng trang web:", isLive);
+  // if (!isLive1) {
+  //   return -1;
+  // }
   // check is login: get cookie return -1, return 1, return 0
-  const isLoggedIn = await checkLogin(page);
-  console.log("Tình trạng đăng nhập:", isLoggedIn);
-  if (!isLoggedIn) {
-    return -1;
-  }
+  // const isLoggedIn = await checkLogin(page);
+  // console.log("Tình trạng đăng nhập:", isLoggedIn);
+  // if (!isLoggedIn) {
+  //   return -1;
+  // }
 
     let count = 0;
     const numberOfPost = getRandomIntBetween(CreatePost.postStart, CreatePost.postEnd);

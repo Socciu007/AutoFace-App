@@ -88,7 +88,7 @@ function createPostGroupNode({ data: { label, onButtonClick, onDeleteNode }, isC
           <img src={createPostIcon} alt="createPost" />
           <div className="content-right">
             <div className="right-top">
-              <p>Create post group</p>
+              <p>G-Create post</p>
               <img src={optionNode} alt="More" onClick={handleClick} />
               <Menu
                 id="basic-menu"
