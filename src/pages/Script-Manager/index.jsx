@@ -73,8 +73,9 @@ const ScriptManager = () => {
   };
   const makeCopy = {
     position: 'fixed',
-    top: '40%',
-    left: '35%',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
     borderRadius: '15px',
     background: '#fff',
     boxShadow: '0px 4px 10px 0px rgba(8, 35, 106, 0.25)',
@@ -87,8 +88,9 @@ const ScriptManager = () => {
   };
   const dialog_delete = {
     position: 'fixed',
-    top: '40%',
-    left: '35%',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
     borderRadius: '15px',
     background: '#fff',
     boxShadow: '0px 4px 10px 0px rgba(8, 35, 106, 0.25)',
@@ -97,6 +99,10 @@ const ScriptManager = () => {
     flexShrink: '0',
     margin: '0',
     padding: '25px 25px 35px 25px',
+  };
+
+  const overlay = {
+    background: 'rgba(255,255,255,0.6)',
   };
 
   const [isSystem, setIsSystem] = useState(false);
@@ -108,7 +114,6 @@ const ScriptManager = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [itemSelect, setItemSelect] = useState(null);
   const [nameCoppy, setNameCoppy] = useState('');
-
   useEffect(() => {
     getScripts();
   }, []);
@@ -385,7 +390,7 @@ const ScriptManager = () => {
                   <img src={newNote} alt="New note" />
 
                   <input
-                    disabled="disabled"
+                    // disabled="disabled"
                     type="text"
                     value={itemSelect ? itemSelect.note : ''}
                     placeholder="New note"
@@ -417,6 +422,7 @@ const ScriptManager = () => {
           <Dialog
             sx={{
               '& .MuiPaper-root': makeCopy,
+              '& .MuiBackdrop-root': overlay,
             }}
             open={makeCopyDialogOpen}
             onPlay={() => setNameCoppy('')}
@@ -461,6 +467,7 @@ const ScriptManager = () => {
             aria-describedby="scroll-dialog-description"
             sx={{
               '& .MuiPaper-root': dialog_delete,
+              '& .MuiBackdrop-root': overlay,
             }}
           >
             <div className="dialog_delete">

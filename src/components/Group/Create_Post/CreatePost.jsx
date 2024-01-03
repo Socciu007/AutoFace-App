@@ -8,6 +8,8 @@ import DragButton from '../../../assets/icon/icon-drag.svg';
 import DeleteButton from '../../../assets/icon/icon-Delete.svg';
 import downButton from '../../../assets/icon/icon-down.svg';
 import Editor from 'react-simple-code-editor';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import { languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
@@ -133,16 +135,15 @@ const CreatePostGroup = ({ onGoBackClick }) => {
               </div>
               <div className="PostContent">
                 <div className="component-item postOption">
-                  <select
+                  <Select
                     name="postOption"
                     className="PostType"
                     onChange={handleSelectChangePost}
                     value={selectedValuePost}
                   >
-                    <option value="photoOrVideo">Text, Photo/video</option>
-                    <option value="background">Using background</option>
-                  </select>
-                  <img src={downButton} alt="Down Button" />
+                    <MenuItem value="photoOrVideo">Text, Photo/video</MenuItem>
+                    <MenuItem value="background">Using background</MenuItem>
+                  </Select>
                 </div>
                 <div>
                   <div className="Text">
@@ -279,17 +280,15 @@ const CreatePostGroup = ({ onGoBackClick }) => {
                       </div>
                       <p>Friends</p>
                       <div className="component-item optionTag">
-                        <select
+                        <Select
                           name="optionTag"
                           className="TagType"
                           onChange={handleSelectChangeFriend}
                           value={selectedValueFriend}
                         >
-                          <option value="amongFriend">Randomly tag among friends</option>
-                          <option value="UIDList">UID list</option>
-                        </select>
-
-                        <img src={downButton} alt="Down button" />
+                          <MenuItem value="amongFriend">Randomly tag among friends</MenuItem>
+                          <MenuItem value="UIDList">UID list</MenuItem>
+                        </Select>
                       </div>
                       {selectedValueFriend === 'UIDList' && (
                         <div className="component-item " style={{ position: 'relative' }}>

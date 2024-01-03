@@ -16,6 +16,10 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
     viewTimeEnd: 3,
     delayTimeStart: 5,
     delayTimeEnd: 5,
+    likeStart: 0,
+    likeEnd: 5,
+    shareToFeedStart: 0,
+    shareToFeedEnd: 5,
     postQuantityStart: 0,
     postQuantityEnd: 0,
     postID: '',
@@ -26,6 +30,9 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
     tagFriendEnd: 0,
     textComment: '',
   });
+  const [openTextCmt, setOpenTextCmt] = useState(false);
+  const [like, setLike] = useState(false);
+  const [shareToFeed, setShareToFeed] = useState(false);
   const [openTagFriend, setOpenTagFriend] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [isFileSelected, setIsFileSelected] = useState(false);
@@ -78,6 +85,89 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
       ...likeComment,
       textComment: value,
     });
+  };
+  //like
+  const handleLikeStart = (type) => {
+    if (type === 'increase') {
+      setLikeComment({
+        ...likeComment,
+        likeStart: likeComment.likeStart + 1,
+      });
+    } else {
+      setLikeComment({
+        ...likeComment,
+        likeStart: likeComment.likeStart > 0 ? likeComment.likeStart - 1 : 0,
+      });
+    }
+  };
+  const onChangeLikeStart = (e) => {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
+    }
+  };
+
+  const handleLikeEnd = (type) => {
+    if (type === 'increase') {
+      setLikeComment({
+        ...likeComment,
+        likeEnd: likeComment.likeEnd + 1,
+      });
+    } else {
+      setLikeComment({
+        ...likeComment,
+        likeEnd: likeComment.likeEnd > 0 ? likeComment.likeEnd - 1 : 0,
+      });
+    }
+  };
+  const onChangeLikeEnd = (e) => {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
+    }
+  };
+  //share to feed
+  const handleShareToFeedStart = (type) => {
+    if (type === 'increase') {
+      setLikeComment({
+        ...likeComment,
+        shareToFeedStart: likeComment.shareToFeedStart + 1,
+      });
+    } else {
+      setLikeComment({
+        ...likeComment,
+        shareToFeedStart: likeComment.shareToFeedStart > 0 ? likeComment.shareToFeedStart - 1 : 0,
+      });
+    }
+  };
+  const onChangeShareToFeedStart = (e) => {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
+    }
+  };
+  const handleShareToFeedEnd = (type) => {
+    if (type === 'increase') {
+      setLikeComment({
+        ...likeComment,
+        shareToFeedEnd: likeComment.shareToFeedEnd + 1,
+      });
+    } else {
+      setLikeComment({
+        ...likeComment,
+        shareToFeedEnd: likeComment.shareToFeedEnd > 0 ? likeComment.shareToFeedEnd - 1 : 0,
+      });
+    }
+  };
+  const onChangeShareToFeedEnd = (e) => {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
+    }
   };
   //Post view time
   const handleViewTimeStart = (type) => {
@@ -449,23 +539,86 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
             </div>
             <div className="-option-boost-like">
               <div className="-option-boost-like__header">
-                <input type="checkbox" name="like" onChange />
+                <input type="checkbox" name="like" onChange={() => setLike((o) => !o)} />
                 <p>Like</p>
               </div>
-            </div>
-            <div className="-option-boost-like">
-              <div className="-option-boost-like__header">
-                <input type="checkbox" name="share" onChange />
-                <p>Share to Feed</p>
+              <div className="-option-boost-like__header__content" style={{ display: like ? 'flex' : 'none' }}>
+                <div className="-option-boost-like__number">
+                  <div className="-option-boost-like__number__icon">
+                    <div style={{ marginBottom: '2px' }} onClick={() => handleLikeStart('increase')}>
+                      <img src={up} alt="up" width={10} height={7} />
+                    </div>
+                    <div style={{ marginTop: '2px' }} onClick={() => handleLikeStart('des')}>
+                      <img src={down} alt="down" width={10} height={7} />
+                    </div>
+                  </div>
+                  <input type="text" name="likeStart" value={likeComment.likeStart} onChange={onChangeLikeStart} />
+                </div>
+                <span>to</span>
+                <div className="-option-boost-like__number">
+                  <div className="-option-boost-like__number__icon">
+                    <div style={{ marginBottom: '2px' }} onClick={() => handleLikeEnd('increase')}>
+                      <img src={up} alt="up" width={10} height={7} />
+                    </div>
+                    <div style={{ marginTop: '2px' }} onClick={() => handleLikeEnd('des')}>
+                      <img src={down} alt="down" width={10} height={7} />
+                    </div>
+                  </div>
+                  <input type="text" name="likeEnd" value={likeComment.likeEnd} onChange={onChangeLikeEnd} />
+                </div>
               </div>
             </div>
             <div className="-option-boost-like">
               <div className="-option-boost-like__header">
-                <input type="checkbox" name="comment" onChange />
+                <input type="checkbox" name="share" onChange={() => setShareToFeed((o) => !o)} />
+                <p>Share to Feed</p>
+              </div>
+              <div className="-option-boost-like__header__content" style={{ display: shareToFeed ? 'flex' : 'none' }}>
+                <div className="-option-boost-like__number">
+                  <div className="-option-boost-like__number__icon">
+                    <div style={{ marginBottom: '2px' }} onClick={() => handleShareToFeedStart('increase')}>
+                      <img src={up} alt="up" width={10} height={7} />
+                    </div>
+                    <div style={{ marginTop: '2px' }} onClick={() => handleShareToFeedStart('des')}>
+                      <img src={down} alt="down" width={10} height={7} />
+                    </div>
+                  </div>
+                  <input
+                    type="text"
+                    name="shareToFeedStart"
+                    value={likeComment.shareToFeedStart}
+                    onChange={onChangeShareToFeedStart}
+                  />
+                </div>
+                <span>to</span>
+                <div className="-option-boost-like__number">
+                  <div className="-option-boost-like__number__icon">
+                    <div style={{ marginBottom: '2px' }} onClick={() => handleShareToFeedEnd('increase')}>
+                      <img src={up} alt="up" width={10} height={7} />
+                    </div>
+                    <div style={{ marginTop: '2px' }} onClick={() => handleShareToFeedEnd('des')}>
+                      <img src={down} alt="down" width={10} height={7} />
+                    </div>
+                  </div>
+                  <input
+                    type="text"
+                    name="shareToFeedEnd"
+                    value={likeComment.shareToFeedEnd}
+                    onChange={onChangeShareToFeedEnd}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="-option-boost-like">
+              <div className="-option-boost-like__header">
+                <input type="checkbox" name="comment" onChange={() => setOpenTextCmt((o) => !o)} />
                 <p>Comment</p>
               </div>
             </div>
-            <div className="-option-boost-like -option-boost-comment">
+            <div
+              className="-option-boost-like -option-boost-comment"
+              style={{ display: openTextCmt ? 'block' : 'none' }}
+            >
               <p>Text</p>
               <div className="-option-boost-comment__wrapper">
                 <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">

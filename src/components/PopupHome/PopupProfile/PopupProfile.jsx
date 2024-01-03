@@ -182,6 +182,7 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
     {
       title: 'Proxy',
       dataIndex: 'proxy',
+      width: 200,
       // ellipsis: true,
       render: (proxy) => {
         return (
@@ -294,18 +295,19 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
                       ></input>
                     </div>
                   </div>
-                  <div className="-container-scripts__right__main__content">
-                    <div className="-container-scripts__right__main__content__table">
-                      <Table
-                        rowSelection={{
-                          ...rowSelection,
-                        }}
-                        columns={columnsProfiles}
-                        dataSource={dataSearch}
-                        pagination={false}
-                      ></Table>
-                    </div>
-                  </div>
+                  {/* <div className="-container-scripts__right__main__content">
+                    <div className="-container-scripts__right__main__content__table"> */}
+                  <Table
+                    rowSelection={{
+                      ...rowSelection,
+                    }}
+                    columns={columnsProfiles}
+                    dataSource={dataSearch}
+                    pagination={false}
+                    scroll={{ x: 465 }}
+                  ></Table>
+                  {/* </div>
+                  </div> */}
                 </div>
               </div>
             </div>

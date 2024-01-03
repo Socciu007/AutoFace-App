@@ -85,6 +85,8 @@ const CreateScript = () => {
   };
 
   const handleMessageChange = (component, id) => {
+    console.log(component, id);
+    console.log('designScript ' + JSON.stringify(designScript.script));
     const setup = designScript.script.find((e) => e.id == id);
 
     if (setup) {

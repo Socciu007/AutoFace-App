@@ -43,12 +43,21 @@
         }
       }
       &__header {
-        width: 60%;
+        width: 51%;
         display: flex;
         align-items: center;
+        p {
+          width: 50%;
+        }
 
         span {
           font-weight: 400;
+        }
+        &__content {
+          display: flex;
+          justify-content: space-between;
+          width: 51%;
+          align-items: center;
         }
       }
       &__content {
@@ -122,11 +131,11 @@
           .editor #videoID,
           .editor #UIDList {
             outline: none;
-            padding-left: 9% !important;
+            padding-left: 9.5% !important;
           }
 
           .editor pre {
-            padding-left: 9% !important;
+            padding-left: 9.5% !important;
             width: 100%;
           }
 
@@ -137,6 +146,9 @@
             text-align: right;
             width: 6%;
             font-weight: 100;
+          }
+          .token.number {
+            color: #01162b !important;
           }
         }
         .__content {

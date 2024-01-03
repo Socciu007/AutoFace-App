@@ -9,6 +9,8 @@ import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import { AnswerTextarea, CancelFriendOption, KeywordTextarea, ShowAutoAnswer, useRangeValues } from './JoinGroup.js';
 const JoinGroup = ({ onGoBackClick }) => {
   const initialValues = {
@@ -52,17 +54,16 @@ const JoinGroup = ({ onGoBackClick }) => {
               </div>
               <div className="JoinGroupContent">
                 <div className="component-item JoinGroupOption">
-                  <select
+                  <Select
                     name="JoinGroupOption"
                     className="JoinGroupType"
                     onChange={handleSelectChangeJoinGroup}
                     value={selectedValueJoinGroup}
                   >
-                    <option value="suggestions">By suggestions</option>
-                    <option value="keywords">By keywords</option>
-                    <option value="UID">By UID</option>
-                  </select>
-                  <img src={downButton} alt="Down Button" />
+                    <MenuItem value="suggestions">By suggestions</MenuItem>
+                    <MenuItem value="keywords">By keywords</MenuItem>
+                    <MenuItem value="UID">By UID</MenuItem>
+                  </Select>
                 </div>
                 {(selectedValueJoinGroup === 'suggestions' ||
                   selectedValueJoinGroup === 'keywords' ||
@@ -172,7 +173,10 @@ const JoinGroup = ({ onGoBackClick }) => {
                         <input type="checkbox" name="autoAnswer" onChange={handleCheckboxChangeAutoAnswer} />
                         <p>Automatically answer the questions</p>
                       </div>
-                      <div className={`component-item  ${isAutoAnswer ? 'show' : 'hide'}`}>
+                      <div
+                        style={{ position: 'relative' }}
+                        className={`component-item  ${isAutoAnswer ? 'show' : 'hide'}`}
+                      >
                         <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="AutoAnswerText">
                           <Editor
                             value={AnswerContent}

@@ -175,30 +175,30 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
                       <input onChange={(event) => searchScript(event.target.value)} placeholder="Search..."></input>
                     </div>
                   </div>
-                  <div className="-container-scripts__right__main__content">
-                    <div className="-container-scripts__right__main__content__table">
-                      <Table
-                        rowSelection={{
-                          ...rowSelection,
-                          type: 'radio',
-                        }}
-                        columns={columnsScripts}
-                        dataSource={listScript
-                          .map((e, index) => {
-                            return { ...e, key: index };
-                          })
-                          .filter((e) => {
-                            if (type == 'all') return true;
-                            else if (type == 'system') {
-                              return e.isSystem;
-                            } else {
-                              return !e.isSystem;
-                            }
-                          })}
-                        pagination={false}
-                      ></Table>
-                    </div>
-                  </div>
+                  {/* <div className="-container-scripts__right__main__content">
+                    <div className="-container-scripts__right__main__content__table"> */}
+                  <Table
+                    rowSelection={{
+                      ...rowSelection,
+                      type: 'radio',
+                    }}
+                    columns={columnsScripts}
+                    dataSource={listScript
+                      .map((e, index) => {
+                        return { ...e, key: index };
+                      })
+                      .filter((e) => {
+                        if (type == 'all') return true;
+                        else if (type == 'system') {
+                          return e.isSystem;
+                        } else {
+                          return !e.isSystem;
+                        }
+                      })}
+                    pagination={false}
+                  ></Table>
+                  {/* </div>
+                  </div> */}
                 </div>
               </div>
             </div>

@@ -35,7 +35,7 @@ const CreatePost = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
   const [UIDContent, setUIDContent] = useState('');
 
   const { getRootProps, getInputProps } = useDropzone({
-    maxFiles: 2,
+    maxFiles: 3,
     accept: {
       'image/png': ['.png', '.jpg', '.jpeg'],
     },

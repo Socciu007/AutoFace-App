@@ -4,11 +4,12 @@ import './style.scss';
 import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
-import downButton from '../../../assets/icon/icon-down.svg';
 import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import { InviteOption, UIDTextarea, useRangeValues } from './Invite';
 const Invite = ({ onGoBackClick }) => {
   const initialValues = {
@@ -106,16 +107,15 @@ const Invite = ({ onGoBackClick }) => {
               </div>
               <div className="InviteContent">
                 <div className="component-item InviteOption">
-                  <select
+                  <Select
                     name="InviteOption"
                     className="InviteType"
                     onChange={handleSelectChangeInvite}
                     value={selectedValueInvite}
                   >
-                    <option value="random">Random</option>
-                    <option value="suggestions">By suggestions</option>
-                  </select>
-                  <img src={downButton} alt="Down Button" />
+                    <MenuItem value="random">Random</MenuItem>
+                    <MenuItem value="suggestions">By suggestions</MenuItem>
+                  </Select>
                 </div>
                 {(selectedValueInvite === 'suggestions' || selectedValueInvite === 'random') && (
                   <div>
