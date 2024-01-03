@@ -396,6 +396,8 @@ const convertToFunc = (script) => {
       return newFeed(script);
     case 'createPost':
       return createPost(script);
+    case 'viewNoti':
+      return viewNoti(script);
     default:
       return `console.log("Can't find func");`;
   }
@@ -1060,5 +1062,161 @@ const tagFriendsRandomly = async (page, numberFriendTag) => {
       console.log('Creat post done');
     }
     
+  `;
+};
+const viewNoti = (setting) => {
+  console.log(setting);
+  const strSetting = `{
+          numsNotiStart: ${setting.notificationStart},
+          numsNotiEnd: ${setting.notificationEnd},
+          waitTimeStart: ${setting.delayTimeStart},
+          waitTimeEnd: ${setting.delayTimeStart},
+          viewOptions: ${JSON.stringify(setting.option)},
+  }
+  `;
+  return `
+  const accessPageByHref = async (page, namePage, href, indexHref) => {
+  if (href.length > 0) {
+    const hrefPage = href.filter(e => e.includes(namePage));
+    if (hrefPage.length > 0) {
+      const i = indexHref ? indexHref : getRandomInt(hrefPage.length);
+      const selector = 
+        '[href="' +
+          hrefs[i].replace("https://mbasic.facebook.com", "") +
+        '"]';
+      const clickBtn = await getElement(page, selector);
+      if (clickBtn) {
+        await scrollSmoothIfNotExistOnScreen(page, selector);
+        await clickBtn.click();
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
+};
+
+    const objNoti = ${strSetting}
+    // check page is live reutrn -1, return 1, return 0
+    // const isLive2 = await checkIsLive(page);
+    // if (!isLive2) {
+    //   return -1;
+    // }
+
+    // check cookie xem login chua
+    // const isCookie = await checkLogin(page);
+    // if (!isCookie) {
+    //   console.log("You not log in facebook");
+    //   return;
+    // }
+
+    // check auth fb
+    // let url = await page.url();
+    // if (url.includes("mbasic.facebook.com/checkpoint")) {
+    //   console.log("Account facebook not is auth");
+    //   return;
+    // }
+
+    let countNoti = 0;
+    const numsNoti =
+      objNoti.numsNotiStart < objNoti.numsNotiEnd
+        ? getRandomIntBetween(objNoti.numsNotiStart, objNoti.numsNotiEnd)
+        : getRandomIntBetween(objNoti.numsNotiEnd, objNoti.numsNotiStart);
+
+    while (countNoti < numsNoti) {
+      // wait time before read noti
+      const waitTime =
+        objNoti.waitTimeStart < objNoti.waitTimeEnd
+          ? getRandomIntBetween(
+              objNoti.waitTimeStart * 1000,
+              objNoti.waitTimeEnd * 1000
+            )
+          : getRandomIntBetween(
+              objNoti.waitTimeEnd * 1000,
+              objNoti.waitTimeStart * 1000
+            );
+      await delay(waitTime);
+      //       const ok = await page.$('input[name="view_overview"]');
+      // if(ok) {
+      //   await delay(2000)
+      //   await ok.click();
+      // }
+      // tim nut thong bao và click sang trang thong bao
+      let hrefs = await page.$$eval("a", links => links.map(a => a.href));
+      const isAccessNoti = await accessPageByHref(
+        page,
+        "/notifications",
+        hrefs
+      );
+      if (isAccessNoti) {
+        await delay(getRandomIntBetween(3000, 5000));
+        // check sang trang notification ?
+        url = await page.url();
+        if (!url.includes("/notifications")) {
+          console.log("Notification page has not been loaded");
+          return;
+        }
+      } else {
+        console.log("Error access to notification page");
+        return;
+      }
+
+      //chon che do xem notification
+      if (objNoti.viewOptions == "randomFriend") {
+        hrefs = await page.$$eval("a", links => links.map(a => a.href));
+        const isAccessDetailsNoti = await accessPageByHref(
+          page,
+          "/a/notifications",
+          hrefs
+        );
+        if (isAccessDetailsNoti) {
+          await delay(getRandomIntBetween(3000, 5000));
+          if (countNoti + 1 < numsNoti) {
+            const homeSelector = "#header > table > tbody > tr > td > a";
+            const homeClick = await getElement(page, homeSelector, 10);
+
+            if (homeClick) {
+              await homeClick.click();
+              await delay(getRandomIntBetween(3000, 5000));
+            } else {
+              console.log("Can not click into home facebook");
+              return;
+            }
+          }
+        }
+      } else {
+        hrefs = await page.$$eval("a", links => links.map(a => a.href));
+        const isAccessDetailsNoti = await accessPageByHref(
+          page,
+          "/a/notifications",
+          hrefs,
+          countNoti
+        );
+
+        if (isAccessDetailsNoti) {
+          await delay(getRandomIntBetween(3000, 5000));
+          if (countNoti + 1 < numsNoti) {
+            const homeSelector = "#header > table > tbody > tr > td > a";
+            const homeClick = await getElement(page, homeSelector, 10);
+
+            if (homeClick) {
+              await homeClick.click();
+              await delay(getRandomIntBetween(3000, 5000));
+            } else {
+              console.log("Can not click into home facebook");
+              continue;
+            }
+          }
+        }
+      }
+
+      console.log("so thong bao da doc", countNoti + 1);
+      countNoti++;
+    }
+  ;
   `;
 };
