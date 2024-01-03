@@ -1172,16 +1172,7 @@ const viewNoti = (setting) => {
         if (isAccessDetailsNoti) {
           await delay(getRandomIntBetween(7000, 15000));
           if (countNoti + 1 < numsNoti) {
-            const homeSelector = "#header > table > tbody > tr > td > a";
-            const homeClick = await getElement(page, homeSelector, 10);
-
-            if (homeClick) {
-              await homeClick.click();
-              await delay(getRandomIntBetween(3000, 5000));
-            } else {
-              console.log("Can not click into home facebook");
-              return;
-            }
+            await returnHomePage(page);
           }
         }
       } else {
@@ -1196,16 +1187,7 @@ const viewNoti = (setting) => {
         if (isAccessDetailsNoti) {
           await delay(getRandomIntBetween(7000, 15000));
           if (countNoti + 1 < numsNoti) {
-            const homeSelector = "#header > table > tbody > tr > td > a";
-            const homeClick = await getElement(page, homeSelector, 10);
-
-            if (homeClick) {
-              await homeClick.click();
-              await delay(getRandomIntBetween(3000, 5000));
-            } else {
-              console.log("Can not click into home facebook");
-              continue;
-            }
+            await returnHomePage(page);
           }
         }
       }
