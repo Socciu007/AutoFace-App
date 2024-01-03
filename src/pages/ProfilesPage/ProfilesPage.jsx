@@ -161,6 +161,7 @@ const ProfilesPage = () => {
     const newData = dataProfiles.filter((e) => e.id !== id);
     setDataProfiles(newData);
     await setDB(storageProfiles, JSON.stringify(newData));
+    postAlert('Remove Profiles', 'success');
     setOpenDeleteProfileTable(false);
   };
 
@@ -483,6 +484,7 @@ const ProfilesPage = () => {
       }),
     );
     await setDB(storageProfiles, JSON.stringify(newData));
+    postAlert('Remove Profiles', 'success');
     handleCloseDelete();
     getProfiles();
   };

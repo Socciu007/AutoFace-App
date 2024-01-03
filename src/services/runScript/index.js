@@ -398,6 +398,8 @@ const convertToFunc = (script) => {
       return createPost(script);
     case 'viewNoti':
       return viewNoti(script);
+    case 'replyMsg':
+      return replyMsg(script);
     default:
       return `console.log("Can't find func");`;
   }
@@ -1064,62 +1066,61 @@ const tagFriendsRandomly = async (page, numberFriendTag) => {
     
   `;
 };
+
 const viewNoti = (setting) => {
-  console.log(setting);
   const strSetting = `{
-          numsNotiStart: ${setting.notificationStart},
-          numsNotiEnd: ${setting.notificationEnd},
-          waitTimeStart: ${setting.delayTimeStart},
-          waitTimeEnd: ${setting.delayTimeStart},
-          viewOptions: ${JSON.stringify(setting.option)},
-  }
-  `;
+    numsNotiStart: ${setting.notificationStart},
+    numsNotiEnd: ${setting.notificationEnd},
+    waitTimeStart: ${setting.delayTimeStart},
+    waitTimeEnd: ${setting.delayTimeEnd},
+    viewOptions: ${JSON.stringify(setting.option)},
+  }`;
   return `
-  const accessPageByHref = async (page, namePage, href, indexHref) => {
-  if (href.length > 0) {
-    const hrefPage = href.filter(e => e.includes(namePage));
-    if (hrefPage.length > 0) {
-      const i = indexHref ? indexHref : getRandomInt(hrefPage.length);
-      const selector = 
-        '[href="' +
-          hrefs[i].replace("https://mbasic.facebook.com", "") +
-        '"]';
-      const clickBtn = await getElement(page, selector);
-      if (clickBtn) {
-        await scrollSmoothIfNotExistOnScreen(page, selector);
-        await clickBtn.click();
-        return true;
+    const accessPageByHref = async (page, namePage, href, indexHref) => {
+      if (href.length > 0) {
+        const hrefPage = href.filter(e => e.includes(namePage));
+        if (hrefPage.length > 0) {
+          const index = indexHref ? indexHref : getRandomInt(hrefPage.length);
+          const selector = 
+          '[href="' +
+          hrefPage[index].replace("https://mbasic.facebook.com", "") +
+          '"]';
+          const clickBtn = await getElement(page, selector);
+      
+          if (clickBtn) {
+            await scrollSmoothIfNotExistOnScreen(page, selector);
+            await clickBtn.click();
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return false;
+        }
       } else {
         return false;
       }
-    } else {
-      return false;
-    }
-  } else {
-    return false;
-  }
-};
-
+    };
     const objNoti = ${strSetting}
     // check page is live reutrn -1, return 1, return 0
-    // const isLive2 = await checkIsLive(page);
-    // if (!isLive2) {
-    //   return -1;
-    // }
+    const isLive2 = await checkIsLive(page);
+    if (!isLive2) {
+      return -1;
+    }
 
     // check cookie xem login chua
-    // const isCookie = await checkLogin(page);
-    // if (!isCookie) {
-    //   console.log("You not log in facebook");
-    //   return;
-    // }
+    const isCookie = await checkLogin(page);
+    if (!isCookie) {
+      console.log("You not log in facebook");
+      return;
+    }
 
     // check auth fb
-    // let url = await page.url();
-    // if (url.includes("mbasic.facebook.com/checkpoint")) {
-    //   console.log("Account facebook not is auth");
-    //   return;
-    // }
+    let url = await page.url();
+    if (url.includes("mbasic.facebook.com/checkpoint")) {
+      console.log("Account facebook not is auth");
+      return;
+    }
 
     let countNoti = 0;
     const numsNoti =
@@ -1140,33 +1141,28 @@ const viewNoti = (setting) => {
               objNoti.waitTimeStart * 1000
             );
       await delay(waitTime);
-      //       const ok = await page.$('input[name="view_overview"]');
-      // if(ok) {
-      //   await delay(2000)
-      //   await ok.click();
-      // }
       // tim nut thong bao và click sang trang thong bao
       let hrefs = await page.$$eval("a", links => links.map(a => a.href));
       const isAccessNoti = await accessPageByHref(
         page,
         "/notifications",
         hrefs
-      );
+        );
       if (isAccessNoti) {
         await delay(getRandomIntBetween(3000, 5000));
         // check sang trang notification ?
-        url = await page.url();
-        if (!url.includes("/notifications")) {
-          console.log("Notification page has not been loaded");
-          return;
-        }
+        // url = await page.url();
+        // if (!url.includes("/notifications")) {
+        //   console.log("Notification page has not been loaded");
+        //   return;
+        // }
       } else {
         console.log("Error access to notification page");
         return;
       }
 
       //chon che do xem notification
-      if (objNoti.viewOptions == "randomFriend") {
+      if (objNoti.viewOptions === "randomFriend") {
         hrefs = await page.$$eval("a", links => links.map(a => a.href));
         const isAccessDetailsNoti = await accessPageByHref(
           page,
@@ -1174,7 +1170,7 @@ const viewNoti = (setting) => {
           hrefs
         );
         if (isAccessDetailsNoti) {
-          await delay(getRandomIntBetween(3000, 5000));
+          await delay(getRandomIntBetween(7000, 15000));
           if (countNoti + 1 < numsNoti) {
             const homeSelector = "#header > table > tbody > tr > td > a";
             const homeClick = await getElement(page, homeSelector, 10);
@@ -1198,7 +1194,7 @@ const viewNoti = (setting) => {
         );
 
         if (isAccessDetailsNoti) {
-          await delay(getRandomIntBetween(3000, 5000));
+          await delay(getRandomIntBetween(7000, 15000));
           if (countNoti + 1 < numsNoti) {
             const homeSelector = "#header > table > tbody > tr > td > a";
             const homeClick = await getElement(page, homeSelector, 10);
@@ -1218,5 +1214,141 @@ const viewNoti = (setting) => {
       countNoti++;
     }
   ;
+  `;
+};
+
+const replyMsg = (setting) => {
+  // let replyMsgObj = {
+  //   numsFriendStart: 2,
+  //   numsFriendEnd: 5,
+  //   waitTimeStart: 10,
+  //   waitTimeEnd: 15,
+  //   message: ["Hello", "Hi"],
+  // };
+  console.log(setting);
+  const strSetting = `{
+    numsFriendStart: ${setting.numberFriendStart},
+    numsFriendEnd: ${setting.numberFriendEnd},
+    waitTimeStart: ${setting.delayTimeStart},
+    waitTimeEnd: ${setting.delayTimeEnd},
+    message: ${JSON.stringify(setting.text)},
+  }`;
+  return `
+    const accessPageByHref = async (page, namePage, href, indexHref) => {
+      if (href.length > 0) {
+        const hrefPage = href.filter(e => e.includes(namePage));
+        if (hrefPage.length > 0) {
+          const index = indexHref ? indexHref : getRandomInt(hrefPage.length);
+          const selector =
+          '[href="' +
+          hrefPage[index].replace("https://mbasic.facebook.com", "") +
+          '"]';
+          const clickBtn = await getElement(page, selector);
+  
+          if (clickBtn) {
+            await scrollSmoothIfNotExistOnScreen(page, selector);
+            await clickBtn.click();
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    };
+    const replyMsgObj = ${strSetting}
+    try {
+      // check page is live reutrn -1, return 1, return 0
+      const isLive = await checkIsLive(page);
+      if (!isLive) {
+        return -1;
+      }
+      // check cookie xem login
+      const isCookie = await checkLogin(page);
+      if (!isCookie) {
+        console.log("You not log in facebook");
+        return;
+      }
+  
+      // check auth fb
+      let url = await page.url();
+      if (url.includes("mbasic.facebook.com/checkpoint")) {
+        console.log("Account facebook not is auth");
+        return;
+      }
+  
+      let countFriend = 0;
+      const numsFriend =
+        replyMsgObj.numsFriendStart < replyMsgObj.numsFriendEnd
+          ? getRandomIntBetween(
+              replyMsgObj.numsFriendStart,
+              replyMsgObj.numsFriendEnd
+            )
+          : getRandomIntBetween(
+              replyMsgObj.numsFriendEnd,
+              replyMsgObj.numsFriendStart
+            );
+  
+      while (countFriend < numsFriend) {
+        // wait time before read noti
+        const waitTime =
+          replyMsgObj.waitTimeStart < replyMsgObj.waitTimeEnd
+            ? getRandomIntBetween(
+                replyMsgObj.waitTimeStart * 1000,
+                replyMsgObj.waitTimeEnd * 1000
+              )
+            : getRandomIntBetween(
+                replyMsgObj.waitTimeEnd * 1000,
+                replyMsgObj.waitTimeStart * 1000
+              );
+        await delay(waitTime);
+  
+        // tim nut message và click sang trang mesage to reply
+        let hrefs = await page.$$eval("a", links => links.map(a => a.href));
+        const isAccessMessage = await accessPageByHref(page, "/messages", hrefs);
+  
+        if (isAccessMessage) {
+          await delay(getRandomIntBetween(3000, 5000));
+          // check sang trang chat ?
+          url = await page.url();
+          if (!url.includes("/messages")) {
+            console.log("Messages page has not been loaded");
+            await returnHomePage(page);
+            await replyMessage(page);
+          }
+        } else {
+          console.log("Error access to messages page");
+          return;
+        }
+  
+        // chon ban be de gui tin nhan
+        hrefs = await page.$$eval("a", links => links.map(a => a.href));
+        const isAccessFriendToReply = await accessPageByHref(
+          page,
+          "/messages/read",
+          hrefs
+        );
+        if (isAccessFriendToReply) {
+          await delay(getRandomIntBetween(3000, 5000));
+          const actionReply = await replyMsg(page, replyMsgObj.message);
+          if (actionReply == 1) {
+            await delay(getRandomIntBetween(3000, 5000));
+            await returnHomePage(page);
+            countFriend++;
+            console.log("Count friend send msg", countFriend + 1);
+          } else if (actionReply == 0) {
+            await delay(getRandomIntBetween(3000, 5000));
+            await returnHomePage(page);
+            countFriend;
+            console.log("Count friend send msg", countFriend + 1);
+          }
+        }
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
   `;
 };
