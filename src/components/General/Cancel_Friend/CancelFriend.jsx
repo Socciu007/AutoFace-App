@@ -9,6 +9,7 @@ import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
+import { parseToNumber } from '../../../services/utils';
 const CancelFriend = ({ onGoBackClick, updateDesignScript, id, currentSetup, component }) => {
   const initialValues = {
     numberFriendStart: 5,
@@ -44,14 +45,7 @@ const CancelFriend = ({ onGoBackClick, updateDesignScript, id, currentSetup, com
   const changeFriendStart = (friend) => {
     setValues({ ...values, numberFriendStart: parseToNumber(friend) });
   };
-  const parseToNumber = (value) => {
-    const isNumber = /^\d*$/.test(value);
-    if (isNumber) {
-      return value > 0 ? value : 0;
-    } else {
-      return parseInt(value) > 0 ? parseInt(value) : 0;
-    }
-  };
+
   const changeFriendEnd = (friend) => {
     setValues({ ...values, numberFriendEnd: parseToNumber(friend) });
   };
