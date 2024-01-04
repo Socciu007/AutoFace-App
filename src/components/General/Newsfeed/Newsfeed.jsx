@@ -9,6 +9,7 @@ import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/themes/prism.css';
+import { parseToNumber } from '../../../services/utils';
 const Newsfeed = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
   const initialValues = {
     scrollTimeStart: 300,
@@ -47,15 +48,6 @@ const Newsfeed = ({ onGoBackClick, id, updateDesignScript, currentSetup, compone
       setValues({ ...values, commentStrs: textContent.split('\n') });
     }
   }, [textContent]);
-
-  const parseToNumber = (value) => {
-    const isNumber = /^\d*$/.test(value);
-    if (isNumber) {
-      return value > 0 ? value : 0;
-    } else {
-      return parseInt(value) > 0 ? parseInt(value) : 0;
-    }
-  };
 
   const changeTimeStart = (time) => {
     setValues({ ...values, scrollTimeStart: parseToNumber(time) });
