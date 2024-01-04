@@ -6,6 +6,8 @@ import iosIcon from '../../../assets/pictures/icon-ios.png';
 import macosIcon from '../../../assets/pictures/icon-macos.png';
 import linuxIcon from '../../../assets/pictures/icon-linux.png';
 import windowIcon from '../../../assets/pictures/icon-window.svg';
+import marcoIcon from '../../../assets/pictures/icon-ghosty.png';
+import ghostyIcon from '../../../assets/pictures/icon-ghosty01.png';
 import androidIcon from '../../../assets/pictures/icon-android.png';
 import { Table } from 'antd';
 import './style.scss';
@@ -127,28 +129,43 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
       else setProfilesSelected([]);
     },
   };
+  console.log('se', dataSearch);
   const columnsProfiles = [
     {
       title: '#',
       dataIndex: 'key',
+      width: 50,
     },
     {
       title: 'Profile',
-      dataIndex: 'profile',
+      // dataIndex: 'profile',
+      render: (profile) => {
+        return (
+          <div className="-text-profile">
+            <span>{profile.profile}</span>
+            {profile.os === 'mac' && <img style={{ width: 13 }} src={macosIcon} alt="icon-mac"></img>}
+            {profile.os === 'win' && <img src={windowIcon} style={{ width: 13 }} alt="icon-window"></img>}
+            {profile.os === 'ios' && <img src={iosIcon} style={{ width: 13 }} alt="icon-ios"></img>}
+            {profile.os === 'android' && <img src={androidIcon} style={{ width: 13 }} alt="icon-android"></img>}
+            {profile.os === 'lin' && <img src={linuxIcon} style={{ width: 13 }} alt="icon-linux"></img>}
+          </div>
+        );
+      },
       sorter: (a, b) => a.profile - b.profile,
     },
     {
       title: 'Source',
+      width: 100,
       render: (profile) => {
         return (
           <>
             <div className="-style-source-profile">
-              {profile.isPin && <img src={pin} alt="icon-pin"></img>}
-              {profile.os === 'win' && <img style={{ width: 13 }} src={windowIcon} alt="icon-window"></img>}
-              {profile.os === 'mac' && <img style={{ width: 13 }} src={macosIcon} alt="icon-mac"></img>}
-              {profile.os === 'ios' && <img src={iosIcon} alt="icon-ios" style={{ width: 13 }}></img>}
-              {profile.os === 'android' && <img src={androidIcon} style={{ width: 13 }} alt="icon-android"></img>}
-              {profile.os === 'lin' && <img src={linuxIcon} style={{ width: 13 }} alt="icon-linux"></img>}
+              {profile.browserSource === 'marco' && (
+                <img style={{ width: 20, height: 20 }} src={marcoIcon} alt="icon-marco"></img>
+              )}
+              {profile.browserSource === 'ghosty' && (
+                <img style={{ width: 20, height: 20 }} src={ghostyIcon} alt="icon-ghosty"></img>
+              )}
             </div>
           </>
         );
@@ -157,6 +174,7 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
     {
       title: 'Browser',
       dataIndex: 'browser',
+      render: (browser) => <div>{browser.charAt(0).toUpperCase() + browser.slice(1)}</div>,
     },
     {
       title: 'Status',
@@ -165,13 +183,15 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
         if (status[0] === 'Running') {
           return (
             <>
-              <div className="-status-profiles">{status}</div>
+              <div className="-status-profiles">{status.charAt(0).toUpperCase() + status.slice(1)}</div>
             </>
           );
         } else {
           return (
             <>
-              <div className="-status-profiles -status-profiles-ready">{status}</div>
+              <div className="-status-profiles -status-profiles-ready">
+                {status.charAt(0).toUpperCase() + status.slice(1)}
+              </div>
             </>
           );
         }
@@ -182,7 +202,7 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
     {
       title: 'Proxy',
       dataIndex: 'proxy',
-      width: 200,
+      width: 150,
       // ellipsis: true,
       render: (proxy) => {
         return (
@@ -198,6 +218,9 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
     {
       title: 'Notes',
       dataIndex: 'notes',
+      width: 150,
+      render: (notes) => <p>{notes.slice(0, 20)}</p>,
+      // ellipsis: true,
     },
   ];
 
@@ -304,7 +327,7 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
                     columns={columnsProfiles}
                     dataSource={dataSearch}
                     pagination={false}
-                    scroll={{ x: 465 }}
+                    // scroll={{ x: 465 }}
                   ></Table>
                   {/* </div>
                   </div> */}

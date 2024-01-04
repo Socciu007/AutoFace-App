@@ -122,7 +122,9 @@
 
       .-list-proxys {
         position: relative;
-        display: block;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
         .keywordText {
           scrollbar-width: none;
           &::-webkit-scrollbar {
@@ -164,7 +166,7 @@
             width: 5.5%;
             font-weight: 100;
           }
-          .token.number {
+          .token {
             color: #01162b !important;
           }
           .hide {

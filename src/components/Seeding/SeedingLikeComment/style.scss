@@ -147,7 +147,7 @@
             width: 6%;
             font-weight: 100;
           }
-          .token.number {
+          .token {
             color: #01162b !important;
           }
         }
@@ -367,7 +367,6 @@
   .scrollable-container::-webkit-scrollbar-thumb {
     background-color: #ccc; /* Màu của thanh cuộn */
     border-radius: 20px; /* Bo tròn góc của thanh cuộn */
-
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Bóng mờ */
   }
   .scrollable-container::-webkit-scrollbar-track {

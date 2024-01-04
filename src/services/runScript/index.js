@@ -400,6 +400,8 @@ const convertToFunc = (script) => {
       return viewNoti(script);
     case 'replyMsg':
       return replyMsg(script);
+    case 'sendMsg':
+      return sendMsg(script);
     default:
       return `console.log("Can't find func");`;
   }
@@ -1241,6 +1243,78 @@ const replyMsg = (setting) => {
         return false;
       }
     };
+
+    const replyMsg = async (page, msgs) => {
+      // select msg to send and send msg
+      if (msgs.length < 3) {
+        for (const msg of msgs) {
+          const inputMsgSelector = "table > tbody > tr > td > textarea";
+          const checkExistInputMsg = await checkExistElement(
+            page,
+            inputMsgSelector,
+            3
+          );
+          if (checkExistInputMsg != 1) {
+            console.log("no element exists to enter message");
+            return 0;
+          }
+          await page.type(inputMsgSelector, msg);
+          await delay(getRandomIntBetween(3000, 5000));
+    
+          const sendMsgSelector = 'table > tbody > tr > td > input[value="Send"]';
+          const checkExistSendMsg = await checkExistElement(
+            page,
+            sendMsgSelector,
+            3
+          );
+          if (checkExistSendMsg != 1) {
+            console.log("no element exists to send message");
+            return 0;
+          }
+          await clickElement(page, sendMsgSelector);
+    
+          //random wait time to send next messages
+          await delay(getRandomIntBetween(15000, 30000));
+        }
+        return 1;
+      } else {
+        let countMsg = 0;
+        while (countMsg < getRandomIntBetween(1, 3)) {
+          //random wait time to send next messages
+          await delay(getRandomIntBetween(15000, 30000));
+    
+          const msgRandom = msgs[getRandomInt(msgs.length)];
+          const inputMsgSelector = "table > tbody > tr > td > textarea";
+          const checkExistInputMsg = await checkExistElement(
+            page,
+            inputMsgSelector,
+            3
+          );
+          if (checkExistInputMsg != 1) {
+            console.log("no element exists to enter message");
+            return 0;
+          }
+          await page.type(inputMsgSelector, msgRandom);
+          await delay(getRandomIntBetween(3000, 5000));
+          const sendMsgSelector = 'table > tbody > tr > td > input[value="Send"]';
+          const checkExistSendMsg = await checkExistElement(
+            page,
+            sendMsgSelector,
+            3
+          );
+          if (checkExistSendMsg != 1) {
+            console.log("no element exists to send message");
+            return 0;
+          }
+          await scrollSmoothIfNotExistOnScreen(page, sendMsgSelector);
+          await clickElement(page, sendMsgSelector);
+          await delay(getRandomIntBetween(3000, 5000));
+          countMsg++;
+        }
+        return 1;
+      }
+    };
+    
     const replyMsgObj = ${strSetting}
     try {
       // check page is live reutrn -1, return 1, return 0
@@ -1295,12 +1369,12 @@ const replyMsg = (setting) => {
         if (isAccessMessage) {
           await delay(getRandomIntBetween(3000, 5000));
           // check sang trang chat ?
-          url = await page.url();
-          if (!url.includes("/messages")) {
-            console.log("Messages page has not been loaded");
-            await returnHomePage(page);
-            await replyMessage(page);
-          }
+          // url = await page.url();
+          // if (!url.includes("/messages")) {
+          //   console.log("Messages page has not been loaded");
+          //   await returnHomePage(page);
+          //   await replyMessage(page);
+          // }
         } else {
           console.log("Error access to messages page");
           return;
@@ -1328,6 +1402,355 @@ const replyMsg = (setting) => {
             console.log("Count friend send msg", countFriend + 1);
           }
         }
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  `;
+};
+
+const sendMsg = (setting) => {
+  console.log(setting);
+  const strSetting = `{
+    postStart: ${setting.postStart},
+    postEnd: ${setting.postEnd},
+    delayTimeStart: ${setting.delayTimeStart},
+    delayTimeEnd: ${setting.delayTimeEnd},
+    text: ${JSON.stringify(setting.text)},
+    UID: ${JSON.stringify(setting.UID)},
+    option: ${JSON.stringify(setting.option)},
+  }`;
+  return `
+    const accessPageByHref = async (page, namePage, href, indexHref) => {
+      if (href.length > 0) {
+        const hrefPage = href.filter(e => e.includes(namePage));
+        if (hrefPage.length > 0) {
+          const index = indexHref ? indexHref : getRandomInt(hrefPage.length);
+          const selector =
+          '[href="' +
+          hrefPage[index].replace("https://mbasic.facebook.com", "") +
+          '"]';
+          const clickBtn = await getElement(page, selector);
+  
+          if (clickBtn) {
+            await scrollSmoothIfNotExistOnScreen(page, selector);
+            await clickBtn.click();
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    };
+
+    const sendMsg = async (page, msgs) => {
+  // select msg to send and send msg
+  if (msgs.length < 3) {
+    for (const msg of msgs) {
+      const inputMsgSelector = "table > tbody > tr > td > textarea";
+      const checkExistInputMsg = await checkExistElement(
+        page,
+        inputMsgSelector,
+        3
+      );
+      if (checkExistInputMsg != 1) {
+        console.log("no element exists to enter message");
+        return 0;
+      }
+      await page.type(inputMsgSelector, msg);
+      await delay(getRandomIntBetween(3000, 5000));
+
+      const sendMsgSelector = 'table > tbody > tr > td > input[value="Send"]';
+      const checkExistSendMsg = await checkExistElement(
+        page,
+        sendMsgSelector,
+        3
+      );
+      if (checkExistSendMsg != 1) {
+        console.log("no element exists to send message");
+        return 0;
+      }
+      await clickElement(page, sendMsgSelector);
+
+      //random wait time to send next messages
+      await delay(getRandomIntBetween(10000, 30000));
+    }
+    return 1;
+  } else {
+    let countMsg = 0;
+    while (countMsg < getRandomIntBetween(1, 3)) {
+      //random wait time to send next messages
+      await delay(getRandomIntBetween(15000, 30000));
+
+      const msgRandom = msgs[getRandomInt(msgs.length)];
+      const inputMsgSelector = "table > tbody > tr > td > textarea";
+      const checkExistInputMsg = await checkExistElement(
+        page,
+        inputMsgSelector,
+        3
+      );
+      if (checkExistInputMsg != 1) {
+        console.log("no element exists to enter message");
+        return 0;
+      }
+      await page.type(inputMsgSelector, msgRandom);
+      await delay(getRandomIntBetween(3000, 5000));
+      const sendMsgSelector = 'table > tbody > tr > td > input[value="Send"]';
+      const checkExistSendMsg = await checkExistElement(
+        page,
+        sendMsgSelector,
+        3
+      );
+      if (checkExistSendMsg != 1) {
+        console.log("no element exists to send message");
+        return 0;
+      }
+      await scrollSmoothIfNotExistOnScreen(page, sendMsgSelector);
+      await clickElement(page, sendMsgSelector);
+      await delay(getRandomIntBetween(3000, 5000));
+      countMsg++;
+    }
+    return 1;
+  }
+};
+    
+    const sendMsgObj = ${strSetting}
+    try {
+      // check page is live reutrn -1, return 1, return 0
+      const isLive = await checkIsLive(page);
+      if (!isLive) {
+        return -1;
+      }
+      // check cookie xem login
+      const isCookie = await checkLogin(page);
+      if (!isCookie) {
+        console.log("You not log in facebook");
+        return;
+      }
+  
+      // check auth fb
+      let url = await page.url();
+      if (url.includes("mbasic.facebook.com/checkpoint")) {
+        console.log("Account facebook not is auth");
+        return;
+      }
+      let countFriend = 0;
+      const numsFriend =
+        sendMsgObj.postStart < sendMsgObj.postEnd
+          ? getRandomIntBetween(sendMsgObj.postStart, sendMsgObj.postEnd)
+          : getRandomIntBetween(sendMsgObj.postEnd, sendMsgObj.postStart);
+  
+      while (countFriend < numsFriend) {
+        // wait time before send msg
+        const waitTime =
+          sendMsgObj.delayTimeStart < sendMsgObj.delayTimeEnd
+            ? getRandomIntBetween(
+                sendMsgObj.delayTimeStart * 1000,
+                sendMsgObj.delayTimeEnd * 1000
+              )
+            : getRandomIntBetween(
+                sendMsgObj.delayTimeEnd * 1000,
+                sendMsgObj.delayTimeStart * 1000
+              );
+        await delay(waitTime);
+  
+        // check have special friend ?
+        if (sendMsgObj.UID.length === 0) {
+          // access chat page
+          let hrefs = await page.$$eval("a", links => links.map(a => a.href));
+          const isAccessChat = await accessPageByHref(page, "/buddylist", hrefs);
+          if (isAccessChat) {
+            await delay(getRandomIntBetween(3000, 5000));
+          } else {
+            console.log("Error access to chat page");
+            return;
+          }
+  
+          //access to friend to send msg
+          hrefs = await page.$$eval("a", links => links.map(a => a.href));
+          const isAccessFriendToSend = await accessPageByHref(
+            page,
+            "/messages/read",
+            hrefs
+          );
+          if (isAccessFriendToSend) {
+            //send msg
+            await delay(getRandomIntBetween(3000, 5000));
+            await sendMsg(page, sendMsgObj.text);
+            await delay(getRandomIntBetween(5000, 10000));
+            await returnHomePage(page);
+          } else {
+            console.log("Error access to friendToSend page");
+            return;
+          }
+        } else if (countFriend < sendMsgObj.UID.length) {
+          // access profile page
+          const hrefsProfile = await page.$$eval("a", links =>
+            links.map(a => a.href)
+          );
+          if (hrefsProfile.length > 0) {
+            const hrefPage = hrefsProfile.filter(
+              e =>
+                e.includes("/profile") &&
+                e.includes("header") &&
+                e.includes("home")
+            );
+            const index = getRandomInt(hrefPage.length);
+            const selectorProfilePage = '[href="' +
+            hrefPage[index].replace("https://mbasic.facebook.com", "") +
+            '"]';
+            const clickBtnProfilePage = await getElement(
+              page,
+              selectorProfilePage
+            );
+            if (clickBtnProfilePage) {
+              await scrollSmoothIfNotExistOnScreen(page, selectorProfilePage);
+              await clickBtnProfilePage.click();
+            }
+            await delay(3000);
+          } else {
+            console.log("No link to access to profile page");
+            return;
+          }
+          // access friend page
+          const hrefsFriend = await page.$$eval("a", links =>
+            links.map(a => a.href)
+          );
+          if (hrefsFriend.length > 0) {
+            const hrefFriendPage = hrefsFriend.filter(
+              e => e.includes("v=friends") && e.includes("/profile")
+            );
+  
+            const index = getRandomInt(hrefFriendPage.length);
+            const selectorFriendPage = '[href="' +
+            hrefFriendPage[index].replace("https://mbasic.facebook.com", "") +
+            '"]';
+            const clickBtnFriendPage = await getElement(page, selectorFriendPage);
+            if (clickBtnFriendPage) {
+              await scrollSmoothIfNotExistOnScreen(page, selectorFriendPage);
+              await clickBtnFriendPage.click();
+            }
+            await delay(3000);
+          } else {
+            console.log("No link to access to friend page");
+            return;
+          }
+  
+          //find special friend to send msg
+          const hrefsSpecial = await page.$$eval("a", links =>
+            links.map(a => a.href)
+          );
+          if (hrefsSpecial.length > 0) {
+            let hrefPage = hrefsSpecial.filter(e =>
+              e.includes(sendMsgObj.UID[countFriend])
+            );
+  
+            if (hrefPage.length === 1) {
+              //select special friend
+              const selectorSpecialFriend = '[href="' +
+              hrefPage[0].replace("https://mbasic.facebook.com", "") +
+              '"]';
+              const findSpecialFriendBtn = await scrollSmoothIfNotExistOnScreen(
+                page,
+                selectorSpecialFriend
+              );
+              if (findSpecialFriendBtn === 1) {
+                await clickElement(page, selectorSpecialFriend);
+                await delay(getRandomIntBetween(3000, 5000));
+              }
+  
+              // access message of special friend page
+              const hrefs = await page.$$eval("a", links =>
+                links.map(a => a.href)
+              );
+              const isAccessMsgToSend = await accessPageByHref(
+                page,
+                "/messages/thread",
+                hrefs,
+                0
+              );
+              if (isAccessMsgToSend) {
+                // select msg to send and send msg
+                await delay(getRandomIntBetween(3000, 5000));
+                await sendMsg(page, sendMsgObj.text);
+                await delay(getRandomIntBetween(5000, 10000));
+                await returnHomePage(page);
+                await delay(getRandomIntBetween(3000, 5000));
+              } else {
+                console.log("No access to message page");
+                return;
+              }
+            }
+  
+            while (hrefPage.length === 0) {
+              const moreFriendSelector = "#m_more_friends > a > span";
+              const findMoreFriendBtn = await scrollSmoothIfNotExistOnScreen(
+                page,
+                moreFriendSelector
+              );
+              if (findMoreFriendBtn == 1) {
+                await clickElement(page, moreFriendSelector);
+                await delay(getRandomIntBetween(3000, 5000));
+              }
+  
+              const hrefsSpecial = await page.$$eval("a", links =>
+                links.map(a => a.href)
+              );
+              hrefPage = hrefsSpecial.filter(e =>
+                e.includes(sendMsgObj.UID[countFriend])
+              );
+              //select special friend
+              const selectorSpecialFriend = '[href="' +
+              hrefPage[0].replace("https://mbasic.facebook.com", "") +
+              '"]';
+              const findSpecialFriendBtn = await scrollSmoothIfNotExistOnScreen(
+                page,
+                selectorSpecialFriend
+              );
+              if (findSpecialFriendBtn === 1) {
+                await clickElement(page, selectorSpecialFriend);
+                await delay(getRandomIntBetween(3000, 5000));
+              }
+  
+              // access message of special friend page
+              const hrefs = await page.$$eval("a", links =>
+                links.map(a => a.href)
+              );
+              const isAccessMsgToSend = await accessPageByHref(
+                page,
+                "/messages/thread",
+                hrefs,
+                0
+              );
+              if (isAccessMsgToSend) {
+                // select msg to send and send msg
+                await delay(getRandomIntBetween(3000, 5000));
+                await sendMsg(page, sendMsgObj.text);
+                await delay(getRandomIntBetween(5000, 10000));
+                await returnHomePage(page);
+                await delay(getRandomIntBetween(3000, 5000));
+              } else {
+                console.log("No access to message page");
+                return;
+              }
+            }
+          } else {
+            console.log(
+              "You do not have any friends yet. Please add more friends"
+            );
+            return;
+          }
+        } else {
+          return;
+        }
+  
+        await delay(getRandomIntBetween(3000, 5000));
+        console.log("Count friend send msg", countFriend + 1);
+        countFriend++;
       }
     } catch (error) {
       console.log(error.message);

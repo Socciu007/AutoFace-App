@@ -29,6 +29,7 @@ import PopupScript from '../../components/PopupHome/PopupScript/PopupScript';
 import { storageProfiles, storageSettings } from '../../common/const.config';
 import { apiGetFolder, apiGetProfiles } from '../../services/api_helper';
 import { connectSocket, getDB, setDB } from '../../services/socket';
+import PopupDisplaySetting from '../../components/PopupHome/PopupDisplaySetting/PopupDisplaySetting';
 
 const ProfilesPage = () => {
   const [message, setMessage] = useState('');
@@ -39,6 +40,7 @@ const ProfilesPage = () => {
   const [dataSearch, setDataSearch] = useState([]);
   const [rowKeys, setRowKeys] = useState([]);
   const [openScripts, setOpenScripts] = useState(false);
+  const [openDisplaySetting, setOpenDisplaySetting] = useState(false);
   const [openProfiles, setOpenProfiles] = useState(false);
   const [openAddProxy, setOpenAddProxy] = useState(false);
   const [openDeleteProfile, setOpenDeleteProfile] = useState(false);
@@ -260,11 +262,19 @@ const ProfilesPage = () => {
       width: 150,
       render: (status) => {
         if (status === 'running') {
-          return <div className="-status-profiles">{status}</div>;
+          return <div className="-status-profiles">{status.charAt(0).toUpperCase() + status.slice(1)}</div>;
         } else if (status === 'ready') {
-          return <div className="-status-profiles -status-profiles-ready">{status}</div>;
+          return (
+            <div className="-status-profiles -status-profiles-ready">
+              {status.charAt(0).toUpperCase() + status.slice(1)}
+            </div>
+          );
         } else {
-          return <div className="-status-profiles -status-profiles-used">{status}</div>;
+          return (
+            <div className="-status-profiles -status-profiles-used">
+              {status.charAt(0).toUpperCase() + status.slice(1)}
+            </div>
+          );
         }
       },
     },
@@ -394,9 +404,9 @@ const ProfilesPage = () => {
   };
 
   const handleSettings = () => {
-    if (syncProfilesInterval) {
-      clearInterval(syncProfilesInterval);
-    }
+    // if (syncProfilesInterval) {
+    //   clearInterval(syncProfilesInterval);
+    // }
     navigate('/settings');
   };
   const handleScript = () => {
@@ -429,11 +439,19 @@ const ProfilesPage = () => {
   const handleCloseProfiles = () => {
     setOpenProfiles(false);
   };
+  //display setting
+  const handleOpenDisplaySetting = () => {
+    setOpenDisplaySetting(true);
+  };
+  const handleCloseDisplaySetting = () => {
+    setOpenDisplaySetting(false);
+  };
   //proxy
   const handleOpenProxyManage = () => {
     setOpenProxyManage(true);
   };
   const handleCloseProxyManage = () => {
+    setOpenAddProxy(true);
     setOpenProxyManage(false);
   };
   //
@@ -494,7 +512,13 @@ const ProfilesPage = () => {
       className="layout-profiles"
       style={{
         opacity:
-          openAddProxy || openDeleteProfile || openDeleteProfileTable || openScripts || openProfiles || openProxyManage
+          openAddProxy ||
+          openDeleteProfile ||
+          openDeleteProfileTable ||
+          openScripts ||
+          openProfiles ||
+          openProxyManage ||
+          openDisplaySetting
             ? 0.3
             : 1,
       }}
@@ -518,9 +542,13 @@ const ProfilesPage = () => {
               <span className="-option-profiles" onClick={handleReloadPage}>
                 <img src={refresh} alt="image-refresh"></img>
               </span>
-              <span className="-option-profiles">
+              <span className="-option-profiles" onClick={handleOpenDisplaySetting}>
                 <img src={display} alt="display-setting"></img>
               </span>
+              <PopupDisplaySetting
+                openDisplaySetting={openDisplaySetting}
+                handleCloseDisplaySetting={handleCloseDisplaySetting}
+              ></PopupDisplaySetting>
               <span className="-option-profiles" onClick={handleSettings}>
                 <img src={settings} alt="image-settings"></img>
               </span>

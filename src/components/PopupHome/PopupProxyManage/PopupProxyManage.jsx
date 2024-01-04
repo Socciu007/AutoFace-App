@@ -250,18 +250,18 @@ const PopupProxyManage = ({
                     ></img>
                   </span>
                 </div>
-                <div className="-container-scripts__right__main__content -proxy-manage__content__main__table">
-                  <div className="-container-scripts__right__main__content__table">
-                    <Table
-                      rowSelection={{
-                        ...rowSelection,
-                      }}
-                      columns={columnsProxys}
-                      dataSource={dataSearch}
-                      pagination={false}
-                    ></Table>
-                  </div>
-                </div>
+                {/* <div className="-container-scripts__right__main__content -proxy-manage__content__main__table">
+                  <div className="-container-scripts__right__main__content__table"> */}
+                <Table
+                  rowSelection={{
+                    ...rowSelection,
+                  }}
+                  columns={columnsProxys}
+                  dataSource={dataSearch}
+                  pagination={false}
+                ></Table>
+                {/* </div>
+                </div> */}
               </div>
             </div>
           </div>

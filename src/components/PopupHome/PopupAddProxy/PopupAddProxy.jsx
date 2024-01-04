@@ -103,7 +103,10 @@ const PopupAddProxy = ({
             </div>
             <h1>ADD PROXY</h1>
             <p>
-              Add new proxies to <b>{profilesSelected.length} profiles</b>
+              Add new proxies to{' '}
+              <b>
+                {profilesSelected.length} {profilesSelected.length === 1 ? 'profile' : 'profiles'}
+              </b>
             </p>
             <div className="-add-proxys__type">
               <p>Connection type</p>

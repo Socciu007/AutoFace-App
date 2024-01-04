@@ -185,56 +185,56 @@
             height: 100%;
             margin-right: 15px;
 
-            &__table {
-              height: 100%;
-              overflow-y: auto;
-              border-radius: 15px;
-              background: #fff;
-              padding-right: 9px;
-              scrollbar-width: thin;
-              & thead.ant-table-thead {
-                background-color: #d4e7ff;
-                opacity: 0.6;
-                & th.ant-table-cell {
-                  font-size: 15px;
-                  font-weight: 700;
-                  line-height: normal;
-                  color: rgba(1, 22, 43, 0.5);
-                  background-color: transparent;
-                  .ant-table-column-sorters {
-                    display: inline;
-                    span.ant-table-column-title {
-                      margin-right: 5px;
-                    }
-                    span.ant-table-column-sorter-inner {
-                      position: absolute;
-                      top: 50%;
-                      transform: translateY(-50%);
-                    }
-                  }
-                }
-                & td.ant-table-cell {
-                  background-color: transparent;
-                }
-              }
-            }
-            &__table::-webkit-scrollbar {
-              width: 5px;
-            }
-            &__table::-webkit-scrollbar-thumb {
-              background-color: #ccc; /* Màu của thanh cuộn */
-              border-radius: 20px; /* Bo tròn góc của thanh cuộn */
+            // &__table {
+            //   height: 100%;
+            //   overflow-y: auto;
+            //   border-radius: 15px;
+            //   background: #fff;
+            //   padding-right: 9px;
+            //   scrollbar-width: thin;
+            //   & thead.ant-table-thead {
+            //     background-color: #d4e7ff;
+            //     opacity: 0.6;
+            //     & th.ant-table-cell {
+            //       font-size: 15px;
+            //       font-weight: 700;
+            //       line-height: normal;
+            //       color: rgba(1, 22, 43, 0.5);
+            //       background-color: transparent;
+            //       .ant-table-column-sorters {
+            //         display: inline;
+            //         span.ant-table-column-title {
+            //           margin-right: 5px;
+            //         }
+            //         span.ant-table-column-sorter-inner {
+            //           position: absolute;
+            //           top: 50%;
+            //           transform: translateY(-50%);
+            //         }
+            //       }
+            //     }
+            //     & td.ant-table-cell {
+            //       background-color: transparent;
+            //     }
+            //   }
+            // }
+            // &__table::-webkit-scrollbar {
+            //   width: 5px;
+            // }
+            // &__table::-webkit-scrollbar-thumb {
+            //   background-color: #ccc; /* Màu của thanh cuộn */
+            //   border-radius: 20px; /* Bo tròn góc của thanh cuộn */
 
-              box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Bóng mờ */
-            }
-            &__table::-webkit-scrollbar-track {
-              background-color: #f0f0f0; /* Màu của phần bên dưới thanh cuộn */
-              border-radius: 20px;
-            }
+            //   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Bóng mờ */
+            // }
+            // &__table::-webkit-scrollbar-track {
+            //   background-color: #f0f0f0; /* Màu của phần bên dưới thanh cuộn */
+            //   border-radius: 20px;
+            // }
           }
           .ant-table-wrapper {
             margin-top: 7px;
-            padding-right: 30px;
+            // padding-right: 24px;
           }
           .ant-spin-container {
             display: flex;
@@ -243,11 +243,12 @@
             height: 465px;
             overflow: hidden;
             .ant-table {
-              width: 100%;
+              width: 98.5%;
               height: 100%;
               .ant-table-content {
                 overflow: auto auto !important;
                 height: 458px;
+                padding-right: 10px;
                 position: relative;
                 table > colgroup {
                   background: #f2f8ff;
@@ -286,6 +287,9 @@
                         }
                       }
                     }
+                    th.ant-table-cell::before {
+                      display: none;
+                    }
                   }
                 }
                 table > tbody.ant-table-tbody {
@@ -300,6 +304,11 @@
                     // padding-bottom: 10px;
                     // padding-top: 10px;
                     vertical-align: middle;
+                  }
+                  tr.ant-table-row-selected {
+                    td {
+                      background-color: rgba(25, 118, 210, 0.08) !important;
+                    }
                   }
                 }
               }
@@ -346,6 +355,7 @@
           }
         }
         &__table {
+          width: 102.5%;
           margin-top: 10px;
           height: 115%;
           margin-right: -15px;
@@ -357,4 +367,12 @@
 .-style-source-profile {
   display: flex;
   justify-content: center;
+}
+.-text-profile {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  img {
+    cursor: pointer;
+  }
 }
