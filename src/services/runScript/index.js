@@ -673,7 +673,7 @@ const clickComment = async (page, content) => {
     if (content.length > 0) {
       const randomIndex = getRandomInt(content.length);
       const text = content[randomIndex];
-      await page.keyboard.type(text);
+      await page.keyboard.type(text,{delay: 200});
       console.log("đã nhập xong");
       await delay(2000);
     }
@@ -989,19 +989,6 @@ const tagFriendsRandomly = async (page, numberFriendTag) => {
 
   const objCreatePost = ${strSetting};
     let CreatePost = await checkObject(objCreatePost);
-    // check page is live reutrn -1, return 1, return 0
-  // const isLive1 = await checkIsLive(page);
-  // console.log("Tình trạng trang web:", isLive);
-  // if (!isLive1) {
-  //   return -1;
-  // }
-  // check is login: get cookie return -1, return 1, return 0
-  // const isLoggedIn = await checkLogin(page);
-  // console.log("Tình trạng đăng nhập:", isLoggedIn);
-  // if (!isLoggedIn) {
-  //   return -1;
-  // }
-
     let count = 0;
     const numberOfPost = getRandomIntBetween(CreatePost.postStart, CreatePost.postEnd);
     while (count < numberOfPost) {
@@ -1016,7 +1003,7 @@ const tagFriendsRandomly = async (page, numberFriendTag) => {
 
           if (CreatePost.text.length > 0) {
             const randomTextIndex = getRandomIntBetween(0, CreatePost.text.length - 1);
-            await page.keyboard.type(CreatePost.text[randomTextIndex]);
+            await page.keyboard.type(CreatePost.text[randomTextIndex],{delay: 200});
             console.log('Hoan tat nhap content');
             await delay(2000);
           } else {
@@ -1028,7 +1015,7 @@ const tagFriendsRandomly = async (page, numberFriendTag) => {
           return 0;
         }
 
-        if (CreatePost.option === 'photoOrVideo') {
+        if (CreatePost.option === 'text/photo') {
           const uploadImgResult = await uploadImg(page, CreatePost);
           if (uploadImgResult) {
             console.log('Upload image successful');
@@ -1058,10 +1045,10 @@ const tagFriendsRandomly = async (page, numberFriendTag) => {
       const checkHomeBtn = await checkExistElementOnScreen(page, '#header > table > tbody > tr > td > a');
       if (checkHomeBtn == 0) {
         await page.click('#header > table > tbody > tr > td.m > a');
-        await delay(getRandomIntBetween(CreatePost.delayTimeStart, CreatePost.delayTimeEnd) * 1000);
       }
       count++;
       console.log('Creat post done');
+      await delay(getRandomIntBetween(CreatePost.delayTimeStart, CreatePost.delayTimeEnd) * 1000);
     }
     
   `;
