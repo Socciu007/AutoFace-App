@@ -28,11 +28,23 @@ export const formatBytes = (bytes, decimals = 2) => {
   return `${bytes < 0 ? '-' : ''}${parseFloat((newBytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
 };
 
+// export const parseToNumber = (value) => {
+//   const isNumber = /^\d*$/.test(value);
+//   if (isNumber) {
+//     return value > 0 ? value : 0;
+//   } else {
+//     return parseInt(value) > 0 ? parseInt(value) : 0;
+//   }
+// };
+
 export const parseToNumber = (value) => {
   const isNumber = /^\d*$/.test(value);
+  if (typeof value === 'number') {
+    return value;
+  }
   if (isNumber) {
     const trimmedValue = value.replace(/^0+/, '');
-    return parseInt(trimmedValue);
+    return parseInt(trimmedValue) > 0 ? parseInt(trimmedValue) : 0;
   } else {
     return parseInt(value) > 0 ? parseInt(value) : 0;
   }

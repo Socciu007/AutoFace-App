@@ -402,6 +402,10 @@ const convertToFunc = (script) => {
       return replyMsg(script);
     case 'sendMsg':
       return sendMsg(script);
+    case 'deletePost':
+      return deletePost(script);
+    case 'postInteract':
+      return postInteract(script);
     default:
       return `console.log("Can't find func");`;
   }
@@ -1741,6 +1745,162 @@ const sendMsg = (setting) => {
       }
     } catch (error) {
       console.log(error.message);
+    }
+  `;
+};
+
+const deletePost = (setting) => {
+  const strSetting = `{
+    delayTimeStart: ${setting.delayTimeStart},
+    delayTimeEnd: ${setting.delayTimeEnd},
+    lineCount: ${setting.lineCount},
+    viewTimeStart: ${setting.viewTimeStart},
+    viewTimeEnd: ${setting.viewTimeEnd},
+    text: ${JSON.stringify(setting.text)},
+  }`;
+  return `
+  const scroll = async (page) => {
+    try {
+      let scrollAmount = getRandomIntBetween(50, 300);
+  
+      await page.mouse.wheel({ deltaY: scrollAmount });
+      if ((await checkExistElementOnScreen(page, 'a[href*="/profile/timeline/stream/?cursor"]')) === 0) {
+        await delay(2000);
+        const morePoststBtn = await getElement(page, 'a[href*="/profile/timeline/stream/?cursor"]', 10);
+        await morePoststBtn.click();
+        await delay(2000);
+      }
+      await delay(getRandomIntBetween(3, 5) * 1000);
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  };
+  
+  const findPostToDelete = async (page, DeletePost) => {
+    for (const postText of DeletePost.text) {
+      const postSelector = 'a[href*="/story.php?story_fbid= + postText"]';
+      const fullStorySelector = 'postSelector + [href*="#footer_action_list"]';
+      if ((await checkExistElementOnScreen(page, fullStorySelector)) === 0) {
+        await delay(2000);
+        const postsDelete = await getElement(page, fullStorySelector, 10);
+        await delay(2000);
+        await postsDelete.click();
+        await delay(3000);
+  
+        // Check có nút delete trong màn hình full story
+        if ((await checkExistElementOnScreen(page, 'a[href*="/delete.php?"]')) === 0) {
+          await page.click('a[href*="/delete.php?"]');
+          await delay(2000);
+          // check có nút delete khi xác nhận xóa
+          if ((await checkExistElementOnScreen(page, 'input[value="Delete"]')) === 0) {
+            await page.click('input[value="Delete"]');
+            await delay(3000);
+            return true;
+          }
+        }
+      }
+    }
+  
+    return false;
+  };
+  const returnProfilePage = async (page, currentUrl) => {
+    const url = await page.url();
+    if (
+      url.includes('https://mbasic.facebook.com/profile.php?') ||
+      url.includes('https://mbasic.facebook.com/profile/timeline/stream/?')
+    ) {
+      console.log('URL is correct');
+    } else {
+      console.log('Redirect to profile page');
+      if (currentUrl.includes('https://mbasic.facebook.com/profile/timeline/stream/?')) {
+        await page.goto(currentUrl, {
+          waitUntil: 'networkidle2',
+        });
+      } else {
+        await page.goto('https://mbasic.facebook.com/profile.php?', {
+          waitUntil: 'networkidle2',
+        });
+        await delay(2000);
+        await page.click('#header > nav > a:nth-child(2)');
+        await delay(2000);
+        // Check neu vao profile ma chua hien thi timeline
+        if ((await checkExistElementOnScreen(page, 'a[href*="/profile.php?v=timeline"]')) === 0) {
+          await page.click('a[href*="/profile.php?v=timeline"]');
+          await delay(2000);
+        }
+      }
+    }
+  };
+    
+    const DeletePost = ${strSetting}
+    try {
+      // //Check obj start < end ? random(start,end) : random(end,start)
+      // let post = await checkObject(DeletePost);
+      // console.log('post ' + post);
+      // // check page is live reutrn -1, return 1, return 0
+      // const isLive = await checkIsLive(page);
+      // console.log('Tình trạng trang web:', isLive);
+      // if (!isLive) return -1;
+      // // check is login: get cookie return -1, return 1, return 0
+      // const isLoggedIn = await checkLogin(page);
+      // console.log('Tình trạng đăng nhập:', isLoggedIn);
+      // if (!isLoggedIn) return -1;
+  
+      //Click vao profile
+      if ((await checkExistElementOnScreen(page, '#header > nav > a:nth-child(2)')) === 0) {
+        await page.click('#header > nav > a:nth-child(2)');
+        await delay(2000);
+  
+        let randomViewTime = getRandomIntBetween(post.viewTimeStart * 1000, post.viewTimeEnd * 1000);
+  
+        let countDelete = 0;
+        console.log('Cần delete', post.lineCount, 'bài');
+        while (randomViewTime > 0 && countDelete < post.lineCount) {
+          const startTime = Date.now();
+  
+          // Check neu vao profile ma chua hien thi timeline
+          if ((await checkExistElementOnScreen(page, 'a[href*="/profile.php?v=timeline"]')) === 0) {
+            await page.click('a[href*="/profile.php?v=timeline"]');
+            await delay(2000);
+          }
+          for (let i = 0; i < post.lineCount; i++) {
+            try {
+              const currentUrl = await page.url();
+              await returnProfilePage(page, currentUrl);
+              await scroll(page);
+              const result = await findPostToDelete(page, post);
+              if (result) {
+                countDelete++;
+                console.log('Đã delete được', countDelete, 'bài');
+              } else {
+                console.log('Khong delete post');
+                i--;
+              }
+            } catch (err) {
+              console.log(err);
+            }
+          }
+  
+          const endTime = Date.now();
+          randomViewTime -= endTime - startTime;
+          console.log('randomViewTime ' + randomViewTime);
+  
+          if (
+            (await checkExistElementOnScreen(page, 'a[href*="/profile/timeline/stream/?cursor"]')) !== 0 &&
+            (await checkExistElementOnScreen(page, 'a[href*="/profile/timeline/stream/?end_time"]')) === 0
+          ) {
+            break;
+          }
+        }
+  
+        let randomDelay = getRandomIntBetween(post.delayTimeStart * 1000, post.delayTimeEnd * 1000);
+        await delay(randomDelay);
+      } else {
+        console.log('Khong vao duoc profile');
+      }
+    } catch (error) {
+      console.log(error);
     }
   `;
 };
