@@ -15,6 +15,10 @@ import { apiGetProfiles } from '../../../services/api_helper';
 import { storageProfiles } from '../../../common/const.config';
 import SnackbarApp from '../../Alert';
 import { getDB, setDB } from '../../../services/socket';
+import Editor from 'react-simple-code-editor';
+import { highlight, languages } from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
 
 const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFolderProfiles }) => {
   const [message, setMessage] = useState('');
@@ -253,6 +257,25 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
     setListFolder(newFolder);
   };
 
+  const initialValues = {
+    text: [],
+  };
+  const [values, setValues] = useState(initialValues);
+
+  const [textContent, setTextContent] = useState('');
+  const hightlightWithLineNumbers = (input, language, content) =>
+    highlight(input, language)
+      .split('\n')
+      .map((line, i) => `<span class='editorLineNumber ${content ? '' : 'hide'}'>${i + 1}</span>${line}`)
+      .join('\n');
+  const handleDivClick = () => {
+    document.getElementById('codeArea').focus();
+  };
+  useEffect(() => {
+    if (textContent.length) {
+      setValues({ ...values, text: textContent.split('\n') });
+    }
+  }, [textContent]);
   return (
     <PopupComponent
       open={openProfiles}
@@ -269,68 +292,62 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
                 <div className="-nav-scripts__header__close" onClick={handleCloseProfiles}>
                   <img src={closePopup} alt="icon-x"></img>
                 </div>
-                <h1>CHOOSE PROFILES</h1>
+                <h1>NEW PROFILES</h1>
               </div>
               <div className="-wrapper-option-profiles -nav-scripts__btn">
                 <button onClick={addProfiles}>ADD</button>
               </div>
             </div>
-            <div className="-container-scripts">
-              <div className="-container-scripts__left">
-                <div className="-container-scripts__left__options">
-                  <h1>FOLDER</h1>
-                  <ul className="-container-scripts__left__options__list">
-                    {listFolder.map((folder) => {
-                      return (
-                        <li
-                          key={folder.name}
-                          className={`-option-item ${folder.isSelected && 'active'}`}
-                          onClick={() => {
-                            handleTypeFolder(folder.name);
-                          }}
-                        >
-                          <div className="-option-item__row">
-                            <div
-                              className="li-dot"
-                              style={{ background: folder.name !== 'All' && folder.isSelected && '#E84314' }}
-                            ></div>
-                            <p className="li-name">{folder.name}</p>
-                          </div>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              </div>
-              <div className="-container-scripts__right">
-                <div className="-container-scripts__right__main">
-                  <div className="-container-scripts__right__main__search">
-                    <h1>PROFILES</h1>
-                    <div className="-search-profiles">
-                      <span>
-                        <img src={search} alt="icon-search" style={{ marginLeft: '11px' }}></img>
-                      </span>
-                      <input
-                        onChange={(event) => {
-                          searchProfiles(event.target.value);
-                        }}
-                        placeholder="Search..."
-                      ></input>
-                    </div>
+            <div className="scrollable-container">
+              <div className="newProfile-content">
+                <div className="Textarea" style={{ position: 'relative' }}>
+                  <div style={{ width: '100%', height: 419, overflow: 'auto' }} className="text">
+                    <Editor
+                      value={textContent}
+                      onValueChange={(text) => {
+                        setTextContent(text);
+                      }}
+                      highlight={(text) => hightlightWithLineNumbers(text, languages.js, textContent)}
+                      padding={15}
+                      className="editor"
+                      textareaId="codeArea"
+                      style={{
+                        background: '#fff',
+                        fontSize: 15,
+                      }}
+                    />
                   </div>
-                  {/* <div className="-container-scripts__right__main__content">
-                    <div className="-container-scripts__right__main__content__table"> */}
-                  <Table
-                    rowSelection={{
-                      ...rowSelection,
-                    }}
-                    columns={columnsProfiles}
-                    dataSource={dataSearch}
-                    pagination={false}
-                    // scroll={{ x: 465 }}
-                  ></Table>
-                  {/* </div>
-                  </div> */}
+                  <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
+                    <p>
+                      <span>1</span>Enter the account information here, each account/line
+                    </p>
+                    <p>
+                      <span>2</span>
+                      <strong>Account format:</strong> UID|Password|2FA|Recovery email|Recovery email’s password|Date of
+                      birth
+                    </p>
+                  </div>
+                </div>
+                <div className="chooseOption">
+                  <div className="chooseOption__item facebookAcc">
+                    <input type="checkbox" name="facebookAcc" />
+                    <p>Run and log in Facebook accounts right after add new profiles</p>
+                  </div>
+                  <div className="chooseOption__item tag">
+                    <input type="checkbox" name="tag" />
+                    <p>Add tags</p>
+                  </div>
+                  <textarea
+                    name="OptionTag"
+                    id="OptionTag"
+                    className="OptionTag"
+                    cols="30"
+                    placeholder="Enter tags here, each tag is separated by a comma. Ex: tag 1, tag 2"
+                  ></textarea>
+                  <div className="chooseOption__item proxy">
+                    <input type="checkbox" name="proxy" />
+                    <p>Add proxy</p>
+                  </div>
                 </div>
               </div>
             </div>
