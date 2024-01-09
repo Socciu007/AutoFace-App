@@ -19,7 +19,8 @@ import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
-
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFolderProfiles }) => {
   const [message, setMessage] = useState('');
   const [statusMessage, setStatusMessage] = useState('warning');
@@ -259,10 +260,15 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
 
   const initialValues = {
     text: [],
+    option: 'http',
+    proxy: [],
+    isTag: false,
+    isProxy: true,
   };
   const [values, setValues] = useState(initialValues);
 
   const [textContent, setTextContent] = useState('');
+  const [proxyContent, setProxyContent] = useState('');
   const hightlightWithLineNumbers = (input, language, content) =>
     highlight(input, language)
       .split('\n')
@@ -271,11 +277,28 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
   const handleDivClick = () => {
     document.getElementById('codeArea').focus();
   };
+  const handleDivClickProxy = () => {
+    document.getElementById('textareaProxy').focus();
+  };
   useEffect(() => {
     if (textContent.length) {
       setValues({ ...values, text: textContent.split('\n') });
     }
   }, [textContent]);
+  useEffect(() => {
+    if (proxyContent.length) {
+      setValues({ ...values, proxy: proxyContent.split('\n') });
+    }
+  }, [proxyContent]);
+  const changeOption = (value) => {
+    setValues({ ...values, option: value });
+  };
+  const handleChangeTag = (value) => {
+    setValues({ ...values, isTag: value });
+  };
+  const handleChangeProxy = (value) => {
+    setValues({ ...values, isProxy: value });
+  };
   return (
     <PopupComponent
       open={openProfiles}
@@ -334,19 +357,82 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
                     <p>Run and log in Facebook accounts right after add new profiles</p>
                   </div>
                   <div className="chooseOption__item tag">
-                    <input type="checkbox" name="tag" />
-                    <p>Add tags</p>
+                    <div className="checkbox">
+                      <input
+                        type="checkbox"
+                        name="tag"
+                        checked={values.isTag}
+                        onChange={(event) => handleChangeTag(event.target.checked)}
+                      />
+                      <p>Add tags</p>
+                    </div>
+                    <div className={`OptionTag  ${values.isTag ? 'show' : 'hide'}`}>
+                      <input
+                        type="text"
+                        name="OptionTag"
+                        placeholder="Enter tags here, each tag is separated by a comma. Ex: tag 1, tag 2"
+                      ></input>
+                    </div>
                   </div>
-                  <textarea
-                    name="OptionTag"
-                    id="OptionTag"
-                    className="OptionTag"
-                    cols="30"
-                    placeholder="Enter tags here, each tag is separated by a comma. Ex: tag 1, tag 2"
-                  ></textarea>
                   <div className="chooseOption__item proxy">
-                    <input type="checkbox" name="proxy" />
-                    <p>Add proxy</p>
+                    <div className="checkbox">
+                      <input
+                        type="checkbox"
+                        name="proxy"
+                        checked={values.isProxy}
+                        onChange={(event) => handleChangeProxy(event.target.checked)}
+                      />
+                      <p>Add proxy</p>
+                    </div>
+                    <div className={`OptionProxy  ${values.isProxy ? 'show' : 'hide'}`}>
+                      <div className="selectProxy">
+                        <Select
+                          name="postOption"
+                          className="PostType"
+                          onChange={(event) => changeOption(event.target.value)}
+                          value={values.option}
+                        >
+                          <MenuItem value="http">HTTP</MenuItem>
+                          <MenuItem value="socks4">Socks 4</MenuItem>
+                          <MenuItem value="socks5">Socks 5</MenuItem>
+                          <MenuItem value="ssh">SSH</MenuItem>
+                        </Select>
+                      </div>
+                      <div className="textProxy">
+                        <div style={{ width: '100%', height: 166, overflow: 'auto' }} className="text">
+                          <Editor
+                            value={proxyContent}
+                            onValueChange={(text) => {
+                              setProxyContent(text);
+                            }}
+                            highlight={(text) => hightlightWithLineNumbers(text, languages.js, proxyContent)}
+                            padding={15}
+                            className="editor"
+                            textareaId="textareaProxy"
+                            style={{
+                              background: '#fff',
+                              fontSize: 15,
+                            }}
+                          />
+                        </div>
+                        <div
+                          onClick={handleDivClickProxy}
+                          className={`placeholder placehoderProxy ${proxyContent ? 'hide' : ''}`}
+                        >
+                          <p>
+                            <span>1</span>Enter the proxy here
+                          </p>
+                          <p>
+                            <span>2</span>
+                            <strong>Proxy format:</strong> Host:Port:Username:Password
+                          </p>
+                          <p>
+                            <span>3</span>
+                            Proxy will be assigned to the new profiles in turn from top to bottom
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

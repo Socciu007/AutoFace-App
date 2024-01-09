@@ -267,7 +267,7 @@ const CreatePost = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                     onChange={(event) => changeOption(event.target.value)}
                     value={values.option}
                   >
-                    {/* <MenuItem value="background">Using background</MenuItem> */}
+                    <MenuItem value="background">Using background</MenuItem>
                     <MenuItem value="text/photo">Text, Photo/video</MenuItem>
                   </Select>
                 </div>
