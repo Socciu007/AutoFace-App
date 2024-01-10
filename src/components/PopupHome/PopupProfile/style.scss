@@ -1,18 +1,13 @@
 //css choose scripts
 .-layout-choose-scripts {
-  position: absolute;
-  /* top: -50%; */
-  /* left: -50%; */
-  transform: translate(-50%, -50%);
-  width: 1163px;
-  height: 679px;
+  height: 100%;
   border-radius: 15px;
   background: #fff;
   box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
   &__container {
-    position: absolute;
-    padding: 2% 4% 0 4%;
+    padding: 2% 4% 2% 4%;
     width: 100%;
+    height: 100%;
     .-nav-scripts {
       display: flex;
       justify-content: space-between;
@@ -97,9 +92,11 @@
         .editor #textareaProxy {
           outline: none;
           padding-left: 5.5% !important;
+          color: #01162b !important;
         }
 
         .editor pre {
+          color: #01162b !important;
           padding-left: 5.5% !important;
           width: 100%;
         }
@@ -124,6 +121,7 @@
           opacity: 0.7;
           margin-left: 3%;
           span {
+            color: #01162b;
             margin-right: 2%;
           }
         }

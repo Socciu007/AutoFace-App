@@ -1,26 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import PopupComponent from '../PopupComponent/PopupComponent';
 import closePopup from '../../../assets/pictures/icon-x.svg';
-import search from '../../../assets/pictures/icon-search.svg';
-import iosIcon from '../../../assets/pictures/icon-ios.png';
-import macosIcon from '../../../assets/pictures/icon-macos.png';
-import linuxIcon from '../../../assets/pictures/icon-linux.png';
-import windowIcon from '../../../assets/pictures/icon-window.svg';
-import marcoIcon from '../../../assets/pictures/icon-ghosty.png';
-import ghostyIcon from '../../../assets/pictures/icon-ghosty01.png';
-import androidIcon from '../../../assets/pictures/icon-android.png';
 import { Table } from 'antd';
 import './style.scss';
 import { apiGetProfiles } from '../../../services/api_helper';
 import { storageProfiles } from '../../../common/const.config';
 import SnackbarApp from '../../Alert';
 import { getDB, setDB } from '../../../services/socket';
+
 import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import Dialog from '@mui/material/Dialog';
+
 const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFolderProfiles }) => {
   const [message, setMessage] = useState('');
   const [statusMessage, setStatusMessage] = useState('warning');
@@ -100,173 +95,16 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
     }
   };
 
-  const searchProfiles = (text) => {
-    if (text == '') {
-      setDataSearch(
-        dataProfiles.map((e, index) => {
-          return { ...e, key: index + 1 };
-        }),
-      );
-    } else {
-      const newProfiles = dataProfiles.filter((e) => e.profile.toLowerCase().includes(text.toLowerCase()));
-      setDataSearch(
-        newProfiles.map((e, index) => {
-          return { ...e, key: index + 1 };
-        }),
-      );
-    }
-  };
-
-  const generateProxyStr = (proxy) => {
-    let proxyStr = `${proxy.host}:${proxy.port}${proxy.username && proxy.username != '' ? ':' + proxy.username : ''}${
-      proxy.password ? ':' + proxy.password : ''
-    }`;
-
-    if (proxyStr.length > 30) {
-      proxyStr = `${proxy.host}:${proxy.port}...`;
-    }
-    return proxyStr;
-  };
-
-  const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      if (selectedRows && selectedRows.length) setProfilesSelected(selectedRows);
-      else setProfilesSelected([]);
-    },
-  };
   console.log('se', dataSearch);
-  const columnsProfiles = [
-    {
-      title: '#',
-      dataIndex: 'key',
-      width: 50,
-    },
-    {
-      title: 'Profile',
-      // dataIndex: 'profile',
-      render: (profile) => {
-        return (
-          <div className="-text-profile">
-            <span>{profile.profile}</span>
-            {profile.os === 'mac' && <img style={{ width: 13 }} src={macosIcon} alt="icon-mac"></img>}
-            {profile.os === 'win' && <img src={windowIcon} style={{ width: 13 }} alt="icon-window"></img>}
-            {profile.os === 'ios' && <img src={iosIcon} style={{ width: 13 }} alt="icon-ios"></img>}
-            {profile.os === 'android' && <img src={androidIcon} style={{ width: 13 }} alt="icon-android"></img>}
-            {profile.os === 'lin' && <img src={linuxIcon} style={{ width: 13 }} alt="icon-linux"></img>}
-          </div>
-        );
-      },
-      sorter: (a, b) => a.profile - b.profile,
-    },
-    {
-      title: 'Source',
-      width: 100,
-      render: (profile) => {
-        return (
-          <>
-            <div className="-style-source-profile">
-              {profile.browserSource === 'marco' && (
-                <img style={{ width: 20, height: 20 }} src={marcoIcon} alt="icon-marco"></img>
-              )}
-              {profile.browserSource === 'ghosty' && (
-                <img style={{ width: 20, height: 20 }} src={ghostyIcon} alt="icon-ghosty"></img>
-              )}
-            </div>
-          </>
-        );
-      },
-    },
-    {
-      title: 'Browser',
-      dataIndex: 'browser',
-      render: (browser) => <div>{browser.charAt(0).toUpperCase() + browser.slice(1)}</div>,
-    },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-      render: (status) => {
-        if (status[0] === 'Running') {
-          return (
-            <>
-              <div className="-status-profiles">{status.charAt(0).toUpperCase() + status.slice(1)}</div>
-            </>
-          );
-        } else {
-          return (
-            <>
-              <div className="-status-profiles -status-profiles-ready">
-                {status.charAt(0).toUpperCase() + status.slice(1)}
-              </div>
-            </>
-          );
-        }
-      },
-      sorter: (a, b) => a.status - b.status,
-      sortDirections: ['descend'],
-    },
-    {
-      title: 'Proxy',
-      dataIndex: 'proxy',
-      width: 150,
-      // ellipsis: true,
-      render: (proxy) => {
-        return (
-          // <Tooltip placement="topLeft" className="-proxy-profiles" title={proxy}>
-          <div className="-proxy-profiles">
-            {/* <img src={usaProxy}></img> */}
-            {proxy.host && proxy.host ? <span>{generateProxyStr(proxy)}</span> : <span>none</span>}
-          </div>
-          // </Tooltip>
-        );
-      },
-    },
-    {
-      title: 'Notes',
-      dataIndex: 'notes',
-      width: 150,
-      render: (notes) => <p>{notes.slice(0, 20)}</p>,
-      // ellipsis: true,
-    },
-  ];
-
-  const handleTypeFolder = (name) => {
-    const newFolder = listFolder.map((e) => {
-      if (e.name == name) {
-        return { ...e, isSelected: true };
-      }
-      return {
-        ...e,
-        isSelected: false,
-      };
-    });
-
-    const folder = listFolder.find((e) => e.name == name);
-    if (folder.id == '') {
-      setDataSearch(
-        dataProfiles.map((e, index) => {
-          return { ...e, key: index + 1 };
-        }),
-      );
-    } else {
-      const newData = dataProfiles.filter((e) => e.folder == folder.id);
-      setDataSearch(
-        newData.map((e, index) => {
-          return { ...e, key: index + 1 };
-        }),
-      );
-    }
-    setListFolder(newFolder);
-  };
 
   const initialValues = {
     text: [],
     option: 'http',
     proxy: [],
     isTag: false,
-    isProxy: true,
+    isProxy: false,
   };
   const [values, setValues] = useState(initialValues);
-
   const [textContent, setTextContent] = useState('');
   const [proxyContent, setProxyContent] = useState('');
   const hightlightWithLineNumbers = (input, language, content) =>
@@ -299,138 +137,164 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
   const handleChangeProxy = (value) => {
     setValues({ ...values, isProxy: value });
   };
+  const makeCopy = {
+    position: 'fixed',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    borderRadius: '15px',
+    background: '#fff',
+    boxShadow: '0px 4px 10px 0px rgba(8, 35, 106, 0.25)',
+    flexShrink: '0',
+    zIndex: '99999',
+    margin: '0',
+  };
+
+  const overlay = {
+    background: 'rgba(255,255,255,0.5)',
+  };
+  const MuiDialogPaper = {
+    width: '1163px',
+    // width: '2000px !important',
+    maxHeight: '679px !important',
+    minWidth: '1163px !important',
+    color: '#01162b !important',
+  };
   return (
-    <PopupComponent
+    <Dialog
       open={openProfiles}
       onOpen={() => {
         getProfiles();
       }}
       onClose={handleCloseProfiles}
+      sx={{
+        '& .MuiPaper-root': makeCopy,
+        '& .MuiBackdrop-root': overlay,
+        '& .css-1t1j96h-MuiPaper-root-MuiDialog-paper': MuiDialogPaper,
+      }}
     >
-      {
-        <div className="-layout-choose-scripts">
-          <div className="-layout-choose-scripts__container">
-            <div className="-nav-scripts">
-              <div className="-nav-scripts__header">
-                <div className="-nav-scripts__header__close" onClick={handleCloseProfiles}>
-                  <img src={closePopup} alt="icon-x"></img>
-                </div>
-                <h1>NEW PROFILES</h1>
+      <div className="-layout-choose-scripts">
+        <div className="-layout-choose-scripts__container">
+          <div className="-nav-scripts">
+            <div className="-nav-scripts__header">
+              <div className="-nav-scripts__header__close" onClick={handleCloseProfiles}>
+                <img src={closePopup} alt="icon-x"></img>
               </div>
-              <div className="-wrapper-option-profiles -nav-scripts__btn">
-                <button onClick={addProfiles}>ADD</button>
-              </div>
+              <h1>NEW PROFILES</h1>
             </div>
-            <div className="scrollable-container">
-              <div className="newProfile-content">
-                <div className="Textarea" style={{ position: 'relative' }}>
-                  <div style={{ width: '100%', height: 419, overflow: 'auto' }} className="text">
-                    <Editor
-                      value={textContent}
-                      onValueChange={(text) => {
-                        setTextContent(text);
-                      }}
-                      highlight={(text) => hightlightWithLineNumbers(text, languages.js, textContent)}
-                      padding={15}
-                      className="editor"
-                      textareaId="codeArea"
-                      style={{
-                        background: '#fff',
-                        fontSize: 15,
-                      }}
+            <div className="-wrapper-option-profiles -nav-scripts__btn">
+              <button onClick={addProfiles}>ADD</button>
+            </div>
+          </div>
+          <div className="scrollable-container">
+            <div className="newProfile-content">
+              <div className="Textarea" style={{ position: 'relative' }}>
+                <div style={{ width: '100%', height: 419, overflow: 'auto' }} className="text">
+                  <Editor
+                    value={textContent}
+                    onValueChange={(text) => {
+                      setTextContent(text);
+                    }}
+                    highlight={(text) => hightlightWithLineNumbers(text, languages.js, textContent)}
+                    padding={15}
+                    className="editor"
+                    textareaId="codeArea"
+                    style={{
+                      background: '#fff',
+                      fontSize: 15,
+                    }}
+                  />
+                </div>
+                <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
+                  <p>
+                    <span>1</span>Enter the account information here, each account/line
+                  </p>
+                  <p>
+                    <span>2</span>
+                    <strong>Account format:</strong> UID|Password|2FA|Recovery email|Recovery email’s password|Date of
+                    birth
+                  </p>
+                </div>
+              </div>
+              <div className="chooseOption">
+                <div className="chooseOption__item facebookAcc">
+                  <input type="checkbox" name="facebookAcc" />
+                  <p>Run and log in Facebook accounts right after add new profiles</p>
+                </div>
+                <div className="chooseOption__item tag">
+                  <div className="checkbox">
+                    <input
+                      type="checkbox"
+                      name="tag"
+                      checked={values.isTag}
+                      onChange={(event) => handleChangeTag(event.target.checked)}
                     />
+                    <p>Add tags</p>
                   </div>
-                  <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
-                    <p>
-                      <span>1</span>Enter the account information here, each account/line
-                    </p>
-                    <p>
-                      <span>2</span>
-                      <strong>Account format:</strong> UID|Password|2FA|Recovery email|Recovery email’s password|Date of
-                      birth
-                    </p>
+                  <div className={`OptionTag  ${values.isTag ? 'show' : 'hide'}`}>
+                    <input
+                      type="text"
+                      name="OptionTag"
+                      placeholder="Enter tags here, each tag is separated by a comma. Ex: tag 1, tag 2"
+                    ></input>
                   </div>
                 </div>
-                <div className="chooseOption">
-                  <div className="chooseOption__item facebookAcc">
-                    <input type="checkbox" name="facebookAcc" />
-                    <p>Run and log in Facebook accounts right after add new profiles</p>
+                <div className="chooseOption__item proxy">
+                  <div className="checkbox">
+                    <input
+                      type="checkbox"
+                      name="proxy"
+                      checked={values.isProxy}
+                      onChange={(event) => handleChangeProxy(event.target.checked)}
+                    />
+                    <p>Add proxy</p>
                   </div>
-                  <div className="chooseOption__item tag">
-                    <div className="checkbox">
-                      <input
-                        type="checkbox"
-                        name="tag"
-                        checked={values.isTag}
-                        onChange={(event) => handleChangeTag(event.target.checked)}
-                      />
-                      <p>Add tags</p>
+                  <div className={`OptionProxy  ${values.isProxy ? 'show' : 'hide'}`}>
+                    <div className="selectProxy">
+                      <Select
+                        name="postOption"
+                        className="PostType"
+                        onChange={(event) => changeOption(event.target.value)}
+                        value={values.option}
+                      >
+                        <MenuItem value="http">HTTP</MenuItem>
+                        <MenuItem value="socks4">Socks 4</MenuItem>
+                        <MenuItem value="socks5">Socks 5</MenuItem>
+                        <MenuItem value="ssh">SSH</MenuItem>
+                      </Select>
                     </div>
-                    <div className={`OptionTag  ${values.isTag ? 'show' : 'hide'}`}>
-                      <input
-                        type="text"
-                        name="OptionTag"
-                        placeholder="Enter tags here, each tag is separated by a comma. Ex: tag 1, tag 2"
-                      ></input>
-                    </div>
-                  </div>
-                  <div className="chooseOption__item proxy">
-                    <div className="checkbox">
-                      <input
-                        type="checkbox"
-                        name="proxy"
-                        checked={values.isProxy}
-                        onChange={(event) => handleChangeProxy(event.target.checked)}
-                      />
-                      <p>Add proxy</p>
-                    </div>
-                    <div className={`OptionProxy  ${values.isProxy ? 'show' : 'hide'}`}>
-                      <div className="selectProxy">
-                        <Select
-                          name="postOption"
-                          className="PostType"
-                          onChange={(event) => changeOption(event.target.value)}
-                          value={values.option}
-                        >
-                          <MenuItem value="http">HTTP</MenuItem>
-                          <MenuItem value="socks4">Socks 4</MenuItem>
-                          <MenuItem value="socks5">Socks 5</MenuItem>
-                          <MenuItem value="ssh">SSH</MenuItem>
-                        </Select>
+                    <div className="textProxy">
+                      <div style={{ width: '100%', height: 166, overflow: 'auto' }} className="text">
+                        <Editor
+                          value={proxyContent}
+                          onValueChange={(text) => {
+                            setProxyContent(text);
+                          }}
+                          highlight={(text) => hightlightWithLineNumbers(text, languages.js, proxyContent)}
+                          padding={15}
+                          className="editor"
+                          textareaId="textareaProxy"
+                          style={{
+                            background: '#fff',
+                            fontSize: 15,
+                          }}
+                        />
                       </div>
-                      <div className="textProxy">
-                        <div style={{ width: '100%', height: 166, overflow: 'auto' }} className="text">
-                          <Editor
-                            value={proxyContent}
-                            onValueChange={(text) => {
-                              setProxyContent(text);
-                            }}
-                            highlight={(text) => hightlightWithLineNumbers(text, languages.js, proxyContent)}
-                            padding={15}
-                            className="editor"
-                            textareaId="textareaProxy"
-                            style={{
-                              background: '#fff',
-                              fontSize: 15,
-                            }}
-                          />
-                        </div>
-                        <div
-                          onClick={handleDivClickProxy}
-                          className={`placeholder placehoderProxy ${proxyContent ? 'hide' : ''}`}
-                        >
-                          <p>
-                            <span>1</span>Enter the proxy here
-                          </p>
-                          <p>
-                            <span>2</span>
-                            <strong>Proxy format:</strong> Host:Port:Username:Password
-                          </p>
-                          <p>
-                            <span>3</span>
-                            Proxy will be assigned to the new profiles in turn from top to bottom
-                          </p>
-                        </div>
+                      <div
+                        onClick={handleDivClickProxy}
+                        className={`placeholder placehoderProxy ${proxyContent ? 'hide' : ''}`}
+                      >
+                        <p>
+                          <span>1</span>Enter the proxy here
+                        </p>
+                        <p>
+                          <span>2</span>
+                          <strong>Proxy format:</strong> Host:Port:Username:Password
+                        </p>
+                        <p>
+                          <span>3</span>
+                          Proxy will be assigned to the new profiles in turn from top to bottom
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -438,10 +302,153 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
               </div>
             </div>
           </div>
-          <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
         </div>
-      }
-    </PopupComponent>
+        <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
+      </div>
+    </Dialog>
+
+    // <PopupComponent
+    //   open={openProfiles}
+    //   onOpen={() => {
+    //     getProfiles();
+    //   }}
+    //   onClose={handleCloseProfiles}
+    // >
+    //   {
+    //     <div className="-layout-choose-scripts">
+    //       <div className="-layout-choose-scripts__container">
+    //         <div className="-nav-scripts">
+    //           <div className="-nav-scripts__header">
+    //             <div className="-nav-scripts__header__close" onClick={handleCloseProfiles}>
+    //               <img src={closePopup} alt="icon-x"></img>
+    //             </div>
+    //             <h1>NEW PROFILES</h1>
+    //           </div>
+    //           <div className="-wrapper-option-profiles -nav-scripts__btn">
+    //             <button onClick={addProfiles}>ADD</button>
+    //           </div>
+    //         </div>
+    //         <div className="scrollable-container">
+    //           <div className="newProfile-content">
+    //             <div className="Textarea" style={{ position: 'relative' }}>
+    //               <div style={{ width: '100%', height: 419, overflow: 'auto' }} className="text">
+    //                 <Editor
+    //                   value={textContent}
+    //                   onValueChange={(text) => {
+    //                     setTextContent(text);
+    //                   }}
+    //                   highlight={(text) => hightlightWithLineNumbers(text, languages.js, textContent)}
+    //                   padding={15}
+    //                   className="editor"
+    //                   textareaId="codeArea"
+    //                   style={{
+    //                     background: '#fff',
+    //                     fontSize: 15,
+    //                   }}
+    //                 />
+    //               </div>
+    //               <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
+    //                 <p>
+    //                   <span>1</span>Enter the account information here, each account/line
+    //                 </p>
+    //                 <p>
+    //                   <span>2</span>
+    //                   <strong>Account format:</strong> UID|Password|2FA|Recovery email|Recovery email’s password|Date of
+    //                   birth
+    //                 </p>
+    //               </div>
+    //             </div>
+    //             <div className="chooseOption">
+    //               <div className="chooseOption__item facebookAcc">
+    //                 <input type="checkbox" name="facebookAcc" />
+    //                 <p>Run and log in Facebook accounts right after add new profiles</p>
+    //               </div>
+    //               <div className="chooseOption__item tag">
+    //                 <div className="checkbox">
+    //                   <input
+    //                     type="checkbox"
+    //                     name="tag"
+    //                     checked={values.isTag}
+    //                     onChange={(event) => handleChangeTag(event.target.checked)}
+    //                   />
+    //                   <p>Add tags</p>
+    //                 </div>
+    //                 <div className={`OptionTag  ${values.isTag ? 'show' : 'hide'}`}>
+    //                   <input
+    //                     type="text"
+    //                     name="OptionTag"
+    //                     placeholder="Enter tags here, each tag is separated by a comma. Ex: tag 1, tag 2"
+    //                   ></input>
+    //                 </div>
+    //               </div>
+    //               <div className="chooseOption__item proxy">
+    //                 <div className="checkbox">
+    //                   <input
+    //                     type="checkbox"
+    //                     name="proxy"
+    //                     checked={values.isProxy}
+    //                     onChange={(event) => handleChangeProxy(event.target.checked)}
+    //                   />
+    //                   <p>Add proxy</p>
+    //                 </div>
+    //                 <div className={`OptionProxy  ${values.isProxy ? 'show' : 'hide'}`}>
+    //                   <div className="selectProxy">
+    //                     <Select
+    //                       name="postOption"
+    //                       className="PostType"
+    //                       onChange={(event) => changeOption(event.target.value)}
+    //                       value={values.option}
+    //                     >
+    //                       <MenuItem value="http">HTTP</MenuItem>
+    //                       <MenuItem value="socks4">Socks 4</MenuItem>
+    //                       <MenuItem value="socks5">Socks 5</MenuItem>
+    //                       <MenuItem value="ssh">SSH</MenuItem>
+    //                     </Select>
+    //                   </div>
+    //                   <div className="textProxy">
+    //                     <div style={{ width: '100%', height: 166, overflow: 'auto' }} className="text">
+    //                       <Editor
+    //                         value={proxyContent}
+    //                         onValueChange={(text) => {
+    //                           setProxyContent(text);
+    //                         }}
+    //                         highlight={(text) => hightlightWithLineNumbers(text, languages.js, proxyContent)}
+    //                         padding={15}
+    //                         className="editor"
+    //                         textareaId="textareaProxy"
+    //                         style={{
+    //                           background: '#fff',
+    //                           fontSize: 15,
+    //                         }}
+    //                       />
+    //                     </div>
+    //                     <div
+    //                       onClick={handleDivClickProxy}
+    //                       className={`placeholder placehoderProxy ${proxyContent ? 'hide' : ''}`}
+    //                     >
+    //                       <p>
+    //                         <span>1</span>Enter the proxy here
+    //                       </p>
+    //                       <p>
+    //                         <span>2</span>
+    //                         <strong>Proxy format:</strong> Host:Port:Username:Password
+    //                       </p>
+    //                       <p>
+    //                         <span>3</span>
+    //                         Proxy will be assigned to the new profiles in turn from top to bottom
+    //                       </p>
+    //                     </div>
+    //                   </div>
+    //                 </div>
+    //               </div>
+    //             </div>
+    //           </div>
+    //         </div>
+    //       </div>
+    //       <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
+    //     </div>
+    //   }
+    // </PopupComponent>
   );
 };
 
