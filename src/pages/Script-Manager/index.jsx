@@ -15,7 +15,6 @@ import newNote from '../../assets/icon/icon-newNote.svg';
 import edit from '../../assets/icon/icon-editWhite.svg';
 import close from '../../assets/icon/icon-close.svg';
 import { storageScripts } from '../../common/const.config';
-import { connectSocket, getDB, setDB } from '../../services/socket';
 import ReactFlow, { ReactFlowProvider } from 'reactflow';
 import startingPointNode from '../../components/nodes/startingPoint';
 import watchStoryNode from '../../components/nodes/watchStory';
@@ -38,6 +37,7 @@ import viewVideoNode from '../../components/nodes/viewVideo';
 import createPostGroupNode from '../../components/nodes/createPostGroup';
 import SnackbarApp from '../../components/Alert';
 import { v4 as uuidv4 } from 'uuid';
+import { dbGetLocally, dbSetLocally } from '../../sender';
 const nodeTypes = {
   startingPoint: startingPointNode,
   watchStory: watchStoryNode,
@@ -145,9 +145,8 @@ const ScriptManager = () => {
   }, [listScript]);
 
   const getScripts = async () => {
-    await connectSocket();
-    const scriptStr = await getDB(storageScripts);
-    if (scriptStr) {
+    const scriptStr = await dbGetLocally(storageScripts);
+    if (scriptStr.length) {
       const script = JSON.parse(scriptStr);
       if (script && script.length) {
         setItemSelect(script[0]);
@@ -233,7 +232,7 @@ const ScriptManager = () => {
       setListScript(newListScript);
       newList.push(newItem);
       setContentArray(newList);
-      await setDB(storageScripts, JSON.stringify(newList));
+      await dbSetLocally(storageScripts, JSON.stringify(newList));
     }
   };
 
@@ -242,7 +241,7 @@ const ScriptManager = () => {
     const newListScript = listScript.filter((e) => e.id !== id);
     setListScript(newListScript);
     setContentArray(newList);
-    await setDB(storageScripts, JSON.stringify(newList));
+    await dbSetLocally(storageScripts, JSON.stringify(newList));
   };
 
   const handleCloseDialog = (className) => {
@@ -268,7 +267,7 @@ const ScriptManager = () => {
       const newArr = contentArray;
       newArr[index].isPin = !newArr[index].isPin;
       setContentArray(newArr);
-      await setDB(storageScripts, JSON.stringify(newArr));
+      await dbSetLocally(storageScripts, JSON.stringify(newArr));
       reloadListScript();
     }
     setIndexMenu(-1);

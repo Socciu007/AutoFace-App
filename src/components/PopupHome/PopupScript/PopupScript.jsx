@@ -5,9 +5,10 @@ import settings from '../../../assets/pictures/icon-settings.png';
 import yourScript from '../../../assets/pictures/icon-yourScripts.svg';
 import search from '../../../assets/pictures/icon-search.svg';
 import { Table } from 'antd';
-import { getDB } from '../../../services/socket';
+import './style.scss';
 import { storageScripts } from '../../../common/const.config';
 import { runScript } from '../../../services/runScript';
+import { dbGetLocally } from '../../../sender';
 
 const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOpenScripts, profilesSelected }) => {
   const typeScript = [
@@ -53,8 +54,8 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
   }, [contentArray]);
 
   const getScripts = async () => {
-    const scriptStr = await getDB(storageScripts);
-    if (scriptStr) {
+    const scriptStr = await dbGetLocally(storageScripts);
+    if (scriptStr.length) {
       const script = JSON.parse(scriptStr);
       if (script && script.length) {
         setContentArray(script);
@@ -101,7 +102,6 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
       if (selectedRows.length) {
-        console.log(selectedRows[0]);
         setScriptSelected(selectedRows[0]);
       }
     },

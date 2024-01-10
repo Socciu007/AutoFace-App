@@ -7,7 +7,7 @@ import SettingProxy from '../../components/SettingsComponent/SettingProxy/Settin
 import { storageSettings } from '../../common/const.config';
 import SnackbarApp from '../../components/Alert';
 import { v4 as uuidv4 } from 'uuid';
-import { connectSocket, getDB, setDB } from '../../services/socket';
+import { dbGetLocally, dbSetLocally } from '../../sender';
 
 const SettingsPage = () => {
   const navigate = useNavigate();
@@ -24,17 +24,16 @@ const SettingsPage = () => {
   }, []);
 
   const configSettings = async () => {
-    await connectSocket();
-    const settingStr = await getDB(storageSettings);
+    const setting = await dbGetLocally(storageSettings);
 
-    if (settingStr) {
-      setSettings(JSON.parse(settingStr));
+    if (setting) {
+      setSettings(setting);
     }
   };
 
   useEffect(() => {
     if (settings.countProfile && settings.countProfile >= 0) {
-      setDB(storageSettings, JSON.stringify(settings));
+      dbSetLocally(storageSettings, settings);
     }
   }, [settings]);
 

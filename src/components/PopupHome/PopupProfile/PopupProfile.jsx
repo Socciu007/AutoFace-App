@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import PopupComponent from '../PopupComponent/PopupComponent';
+
 import closePopup from '../../../assets/pictures/icon-x.svg';
-import { Table } from 'antd';
 import './style.scss';
-import { apiGetProfiles } from '../../../services/api_helper';
 import { storageProfiles } from '../../../common/const.config';
 import SnackbarApp from '../../Alert';
-import { getDB, setDB } from '../../../services/socket';
-
 import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
@@ -15,92 +11,107 @@ import 'prismjs/components/prism-javascript';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Dialog from '@mui/material/Dialog';
+import { createProfile, dbGetLocally, dbSetLocally } from '../../../sender';
 
-const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFolderProfiles }) => {
+const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
   const [message, setMessage] = useState('');
   const [statusMessage, setStatusMessage] = useState('warning');
-  const [dataProfiles, setDataProfiles] = useState([]);
-  const [dataSearch, setDataSearch] = useState([]);
-  const [listFolder, setListFolder] = useState([]);
-  const [profilesSelected, setProfilesSelected] = useState([]);
-  useEffect(() => {
-    setListFolder([{ name: 'All', isSelected: true, id: '' }, ...listFolderProfiles]);
-    getProfiles();
-  }, [listFolderProfiles]);
-
-  const getProfiles = async () => {
-    const newProfiles = await apiGetProfiles();
-    if (newProfiles && newProfiles.success) {
-      let addProfile = [];
-      const profiles = await getDB(storageProfiles);
-      if (profiles) {
-        const objProfiles = JSON.parse(profiles);
-        addProfile = newProfiles.data.data.filter((e) => {
-          const check = objProfiles.find((o) => o.id == e.id);
-          return !check;
-        });
-      } else {
-        addProfile = newProfiles.data.data;
-      }
-      addProfile = addProfile.map((e, index) => {
-        return {
-          name: '',
-          id: e.id,
-          isPin: false,
-          profile: e.name,
-          uid: '',
-          proxy: e.proxy,
-          status: e.status,
-          tag: '',
-          os: e.os,
-          folder: e.folder ? e.folder : '',
-          browserSource: e.browserSource,
-          browser: e.browserType,
-          notes: e.notes,
-          script: [],
-          updatedAt: e.updatedAt,
-        };
-      });
-      setDataProfiles(addProfile);
-      setDataSearch(
-        addProfile.map((e, index) => {
-          return { ...e, key: index + 1 };
-        }),
-      );
-    }
-  };
+  const [loading, setLoading] = useState(false);
 
   const addProfiles = async () => {
-    console.log(profilesSelected);
+    if (loading) return;
+    if (textContent == '') {
+      return postAlert('The Account field is required');
+    }
 
-    if (profilesSelected.length > 0) {
-      const profiles = await getDB(storageProfiles);
-      if (profiles) {
-        const objProfiles = JSON.parse(profiles);
-        profilesSelected.forEach((e) => {
-          objProfiles.push(e);
+    let newProfiles = [];
+    const accounts = [];
+    const proxies = [];
+    values.text.forEach((e, index) => {
+      const uid = e.split('|')[0];
+      const password = e.split('|')[1];
+      const recoveryEmail = e.split('|')[2] ? e.split('|')[2] : '';
+      const recoveryPassword = e.split('|')[3] ? e.split('|')[3] : '';
+      const cookies = e.split('|')[4] ? e.split('|')[4] : '';
+      const token = e.split('|')[5] ? e.split('|')[5] : '';
+      if (uid && uid !== '' && password && password !== '') {
+        accounts.push({
+          uid,
+          password,
+          recoveryEmail,
+          recoveryPassword,
+          cookies,
+          token,
+          status: 'ready',
+          tag: values.isTag && values.tag.split(',')[index] ? values.tag.split(',')[index] : '',
         });
-        await setDB(storageProfiles, JSON.stringify(objProfiles));
-      } else {
-        await setDB(storageProfiles, JSON.stringify(profilesSelected));
       }
-      getProfiles();
+    });
+    values.proxy.forEach((e) => {
+      const host = e.split(':')[0];
+      const port = e.split(':')[1];
+      const username = e.split(':')[2] ? e.split(':')[2] : '';
+      const password = e.split(':')[3] ? e.split(':')[3] : '';
+      if (host && host !== '' && port && port !== '') {
+        proxies.push({
+          host,
+          port,
+          username,
+          password,
+          mode: values.option,
+        });
+      }
+    });
+    if (accounts.length) {
+      setLoading(true);
+      const users = await dbGetLocally(storageProfiles);
+      if (users && users.length) newProfiles = [...users];
+
+      for (let i = 0; i < accounts.length; i++) {
+        let proxy = {
+          host: '',
+          port: 80,
+          username: '',
+          password: '',
+        };
+        if (values.isProxy) {
+          proxy = proxies[i % proxies.length]
+            ? proxies[i % proxies.length]
+            : {
+                host: '',
+                port: 80,
+                username: '',
+                password: '',
+              };
+        }
+        const res = await createProfile(accounts[i].uid, proxy);
+        if (res && res.code == 1) {
+          newProfiles.push({ ...res.result, ...accounts[i] });
+        }
+      }
+
+      await dbSetLocally(storageProfiles, newProfiles);
       onAddProfile();
-      handleCloseProfiles();
+      setLoading(false);
     } else {
-      setMessage('Please select profile!');
-      setTimeout(() => {
-        setMessage('');
-      }, 2000);
+      return postAlert('The Account field is required');
     }
   };
 
-  console.log('se', dataSearch);
+  const postAlert = (message, status = 'warning', duration = 3000) => {
+    setStatusMessage(status);
+    setMessage(message);
+    setTimeout(() => {
+      setMessage('');
+      setStatusMessage('warning');
+    }, duration);
+  };
 
   const initialValues = {
     text: [],
     option: 'http',
     proxy: [],
+    tag: [],
     isTag: false,
     isProxy: false,
   };
@@ -134,6 +145,9 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
   const handleChangeTag = (value) => {
     setValues({ ...values, isTag: value });
   };
+  const handleChangeTextTag = (value) => {
+    setValues({ ...values, tag: value });
+  };
   const handleChangeProxy = (value) => {
     setValues({ ...values, isProxy: value });
   };
@@ -155,7 +169,6 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
   };
   const MuiDialogPaper = {
     width: '1163px',
-    // width: '2000px !important',
     maxHeight: '679px !important',
     minWidth: '1163px !important',
     color: '#01162b !important',
@@ -177,7 +190,14 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
         <div className="-layout-choose-scripts__container">
           <div className="-nav-scripts">
             <div className="-nav-scripts__header">
-              <div className="-nav-scripts__header__close" onClick={handleCloseProfiles}>
+              <div
+                className="-nav-scripts__header__close"
+                onClick={() => {
+                  if (!loading) {
+                    handleCloseProfiles();
+                  }
+                }}
+              >
                 <img src={closePopup} alt="icon-x"></img>
               </div>
               <h1>NEW PROFILES</h1>
@@ -233,6 +253,7 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
                   </div>
                   <div className={`OptionTag  ${values.isTag ? 'show' : 'hide'}`}>
                     <input
+                      onChange={(event) => handleChangeTextTag(event.target.value)}
                       type="text"
                       name="OptionTag"
                       placeholder="Enter tags here, each tag is separated by a comma. Ex: tag 1, tag 2"
@@ -260,7 +281,6 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
                         <MenuItem value="http">HTTP</MenuItem>
                         <MenuItem value="socks4">Socks 4</MenuItem>
                         <MenuItem value="socks5">Socks 5</MenuItem>
-                        <MenuItem value="ssh">SSH</MenuItem>
                       </Select>
                     </div>
                     <div className="textProxy">
@@ -303,8 +323,8 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile, listFol
             </div>
           </div>
         </div>
-        <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
       </div>
+      <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
     </Dialog>
 
     // <PopupComponent

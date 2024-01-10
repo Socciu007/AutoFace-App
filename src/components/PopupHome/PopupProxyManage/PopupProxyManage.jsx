@@ -4,12 +4,11 @@ import closePopup from '../../../assets/pictures/icon-x.svg';
 import search from '../../../assets/pictures/icon-search.svg';
 import refresh from '../../../assets/pictures/icon-refresh.png';
 import { Table } from 'antd';
-import { apiGetProxies, apiUpdateProfiles } from '../../../services/api_helper';
 import { formatTimeDay } from '../../../services/utils';
 import { aesDecrypt } from '../../../services/crypto-js';
 import SnackbarApp from '../../Alert';
 import { storageProfiles } from '../../../common/const.config';
-import { setDB } from '../../../services/socket';
+import { dbSetLocally } from '../../../sender';
 
 const PopupProxyManage = ({
   openProxyManage,
@@ -48,7 +47,7 @@ const PopupProxyManage = ({
   }, [defaultProxies]);
 
   const getProxies = async () => {
-    const res = await apiGetProxies();
+    const res = null;
     if (res && res.success) {
       let listProxy = res.data.data.filter((e) => {
         if (defaultProxies) {
@@ -110,7 +109,7 @@ const PopupProxyManage = ({
           const newData = [...dataProfiles];
           newData[index].proxy = res.data.data.proxy;
 
-          await setDB(storageProfiles, JSON.stringify(newData));
+          await dbSetLocally(storageProfiles, newData);
         }
       }
       getProfiles();

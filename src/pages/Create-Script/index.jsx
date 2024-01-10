@@ -48,8 +48,8 @@ import viewVideo from '../../assets/icon/icon-viewVideo.svg';
 import CreatePostGroup from '../../components/Group/Create_Post/CreatePost.jsx';
 import { storageScripts } from '../../common/const.config.js';
 import SnackbarApp from '../../components/Alert/index.jsx';
-import { connectSocket, getDB, setDB } from '../../services/socket/index.js';
 import DefaultSciptSettings from '../../resources/defaultSciptSettings.json';
+import { dbGetLocally, dbSetLocally } from '../../sender';
 
 const CreateScript = () => {
   const DnDFlowRef = useRef();
@@ -74,7 +74,6 @@ const CreateScript = () => {
 
   useEffect(() => {
     setDefaultScript();
-    connectSocket();
   }, [state]);
 
   const setDefaultScript = () => {
@@ -134,9 +133,8 @@ const CreateScript = () => {
     if (nameScript !== '') {
       const design = DnDFlowRef.current.getReactFlowInstance();
       let arrScript = [];
-      const scriptStr = await getDB(storageScripts);
-
-      if (scriptStr) {
+      const scriptStr = await dbGetLocally(storageScripts);
+      if (scriptStr.length) {
         const script = JSON.parse(scriptStr);
         if (script && script.length) {
           arrScript = [...script];
@@ -162,7 +160,8 @@ const CreateScript = () => {
         });
       }
 
-      const res = await setDB(storageScripts, JSON.stringify(arrScript));
+      const res = await dbSetLocally(storageScripts, JSON.stringify(arrScript));
+
       if (res) {
         postAlert('Save script done!', 'success');
         handleReturnClick();

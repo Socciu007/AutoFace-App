@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './style.scss';
 import { Input, Popover, Table } from 'antd';
@@ -13,79 +13,285 @@ import addProxy from '../../assets/pictures/icon-addProxy.png';
 import deleted from '../../assets/pictures/icon-delete.svg';
 import yourScript from '../../assets/pictures/icon-yourScripts.svg';
 import pin from '../../assets/pictures/icon-pin.svg';
-import iosIcon from '../../assets/pictures/icon-ios.png';
 import defaultSettings from '../../resources/defaultSettings.json';
-import macosIcon from '../../assets/pictures/icon-macos.png';
-import linuxIcon from '../../assets/pictures/icon-linux.png';
-import windowIcon from '../../assets/pictures/icon-window.svg';
-import androidIcon from '../../assets/pictures/icon-android.png';
-
+import defaultDisplaySettings from '../../resources/defaultDisplaySettings.json';
 import { EditableCell, EditableRow } from '../../components/EditableTable/EditableTable';
 import PopupProfile from '../../components/PopupHome/PopupProfile/PopupProfile';
 import PopupAddProxy from '../../components/PopupHome/PopupAddProxy/PopupAddProxy';
 import PopupProxyManage from '../../components/PopupHome/PopupProxyManage/PopupProxyManage';
 import PopupDeleteProfile from '../../components/PopupHome/PopupDeleteProfile/PopupDeleteProfile';
 import PopupScript from '../../components/PopupHome/PopupScript/PopupScript';
-import { storageProfiles, storageSettings } from '../../common/const.config';
-import { apiGetFolder, apiGetProfiles } from '../../services/api_helper';
-import { connectSocket, getDB, setDB } from '../../services/socket';
+import { storageDisplaySettings, storageProfiles, storageSettings } from '../../common/const.config';
 import PopupDisplaySetting from '../../components/PopupHome/PopupDisplaySetting/PopupDisplaySetting';
+import { dbGetLocally, dbSetLocally, runProfile } from '../../sender';
 
 const ProfilesPage = () => {
+  let rowID;
   const [message, setMessage] = useState('');
   const [statusMessage, setStatusMessage] = useState('warning');
-  const [listFolder, setListFolder] = useState([]);
+  const [columns, setColumns] = useState([]);
+  const [idSelect, setIdSelect] = useState(null);
+  const [displaySettings, setDisplaySettings] = useState(null);
   const [profilesSelected, setProfilesSelected] = useState([]);
   const [dataProfiles, setDataProfiles] = useState([]);
   const [dataSearch, setDataSearch] = useState([]);
-  const [rowKeys, setRowKeys] = useState([]);
   const [openScripts, setOpenScripts] = useState(false);
   const [openDisplaySetting, setOpenDisplaySetting] = useState(false);
   const [openProfiles, setOpenProfiles] = useState(false);
   const [openAddProxy, setOpenAddProxy] = useState(false);
   const [openDeleteProfile, setOpenDeleteProfile] = useState(false);
-  const [openDeleteProfileTable, setOpenDeleteProfileTable] = useState(false);
   const [openProxyManage, setOpenProxyManage] = useState(false);
-  const [openOptions, setOpenOptions] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
     config();
-    const id = setInterval(async () => {
-      await syncProfiles();
-    }, 1000);
-
-    return () => clearInterval(id);
   }, []);
 
   const config = async () => {
-    await connectSocket();
-    await getProfiles();
     await checkSettings();
-  };
-
-  const syncProfiles = async () => {
-    if (dataSearch && dataSearch.length) {
-      const newData = [...dataSearch];
-      const res = await apiGetProfiles();
-      if (res && res.success) {
-        const profiles = res.data.data;
-        for (let i = 0; i < newData.length; i++) {
-          const profile = profiles.find((e) => e.id == newData[i].id);
-          if (profile) {
-            newData[i].status = profile.status;
-          }
-        }
-        setDataSearch(newData);
-      }
-    }
+    await getProfiles();
   };
 
   const checkSettings = async () => {
-    const settings = await getDB(storageSettings);
+    const settings = await dbGetLocally(storageSettings);
+
     if (!settings) {
-      await setDB(storageSettings, JSON.stringify(defaultSettings));
+      await dbSetLocally(storageSettings, defaultSettings);
     }
+
+    let display = await dbGetLocally(storageDisplaySettings);
+    if (!display) {
+      await dbSetLocally(storageDisplaySettings, defaultDisplaySettings);
+      display = defaultDisplaySettings;
+    }
+    setDisplaySettings(display);
+    renderColumns(display);
+  };
+
+  const renderColumns = async (settings) => {
+    if (!settings) settings = await dbGetLocally(storageDisplaySettings);
+
+    const settingsColumns = [
+      {
+        title: '#',
+        dataIndex: 'key',
+        width: 50,
+      },
+    ];
+
+    // if (settings.profile) {
+    //   settingsColumns.push({
+    //     title: 'Profile',
+    //     width: 250,
+    //     render: (profile) => {
+    //       return (
+    //         <div className="-text-profile">
+    //           <span>{profile.os.charAt(0).toUpperCase() + profile.os.slice(1)}</span>
+    //           {profile.isPin && <img src={pin} alt="icon-pin"></img>}
+    //           {profile.os === 'mac' && <img style={{ width: 13 }} src={macosIcon} alt="icon-mac"></img>}
+    //           {profile.os === 'win' && <img src={windowIcon} style={{ width: 13 }} alt="icon-window"></img>}
+    //           {profile.os === 'ios' && <img src={iosIcon} style={{ width: 13 }} alt="icon-ios"></img>}
+    //           {profile.os === 'android' && <img src={androidIcon} style={{ width: 13 }} alt="icon-android"></img>}
+    //           {profile.os === 'lin' && <img src={linuxIcon} style={{ width: 13 }} alt="icon-linux"></img>}
+    //         </div>
+    //       );
+    //     },
+    //     sorter: (a, b) => a.profile.length - b.profile.length,
+    //   });
+    // }
+    if (settings.uid) {
+      settingsColumns.push({
+        title: 'UID',
+        dataIndex: 'uid',
+        width: 150,
+      });
+    }
+    if (settings.name) {
+      settingsColumns.push({
+        title: 'Name',
+        dataIndex: 'nameAccount',
+        width: 150,
+      });
+    }
+    if (settings.bird) {
+      settingsColumns.push({
+        title: 'Date of birth',
+        dataIndex: 'birth',
+        width: 200,
+      });
+    }
+    if (settings.friends) {
+      settingsColumns.push({
+        title: 'Friends',
+        dataIndex: 'friends',
+        width: 150,
+      });
+    }
+    if (settings.group) {
+      settingsColumns.push({
+        title: 'Group',
+        dataIndex: 'group',
+        width: 150,
+        ellipsis: true,
+      });
+    }
+    if (settings.sex) {
+      settingsColumns.push({
+        title: 'Sex',
+        dataIndex: 'sex',
+        width: 150,
+      });
+    }
+    if (settings.password) {
+      settingsColumns.push({
+        title: 'Password',
+        dataIndex: 'password',
+        width: 150,
+      });
+    }
+    if (settings.email) {
+      settingsColumns.push({
+        title: 'Email',
+        dataIndex: 'recoveryEmail',
+        width: 250,
+      });
+    }
+    if (settings.emailPass) {
+      settingsColumns.push({
+        title: `Email's password`,
+        dataIndex: 'recoveryPassword',
+        width: 200,
+      });
+    }
+    if (settings.status) {
+      settingsColumns.push({
+        title: 'Status',
+        dataIndex: 'status',
+        width: 150,
+        render: (status) => {
+          if (status === 'running') {
+            return <div className="-status-profiles">{status.charAt(0).toUpperCase() + status.slice(1)}</div>;
+          } else if (status === 'ready') {
+            return (
+              <div className="-status-profiles -status-profiles-ready">
+                {status.charAt(0).toUpperCase() + status.slice(1)}
+              </div>
+            );
+          } else {
+            return (
+              <>
+                {status ? (
+                  <div className="-status-profiles -status-profiles-used">
+                    {status.charAt(0).toUpperCase() + status.slice(1)}
+                  </div>
+                ) : null}
+              </>
+            );
+          }
+        },
+      });
+    }
+    if (settings.proxy) {
+      settingsColumns.push({
+        title: 'Proxy',
+        dataIndex: 'proxy',
+        width: 200,
+        render: (proxy) => {
+          return (
+            <>
+              <div className="-proxy-profiles">
+                {/* <img src={usaProxy}></img> */}
+                {proxy.host && proxy.host !== '' ? <span>{generateProxyStr(proxy)}</span> : <span>none</span>}
+              </div>
+            </>
+          );
+        },
+      });
+    }
+    if (settings.tag) {
+      settingsColumns.push({
+        title: 'Tag',
+        dataIndex: 'tag',
+        width: 150,
+        editable: true,
+        render: (tag) => {
+          return <Input name="tag" value={tag} className="-tag-profiles" onChange={(e) => e.target.value}></Input>;
+        },
+        sorter: (a, b) => a.tag.length - b.tag.length,
+        sortDirections: ['descend'],
+      });
+    }
+    settingsColumns.push({
+      width: 50,
+      fixed: 'right',
+      render: (profile) => {
+        const handleClickRemove = () => {
+          if (profile.id !== '') {
+            setIdSelect(profile.id);
+            setOpenDeleteProfile(true);
+          } else {
+            postAlert('Please select profile!');
+          }
+        };
+        return (
+          <div
+            className="-expand-icon"
+            onClick={() => {
+              rowID = profile.id;
+              renderColumns();
+            }}
+          >
+            <img src={options} alt="image-option"></img>
+            <Popover
+              open={rowID == profile.id}
+              trigger="click"
+              onClose={handleCloseAction}
+              placement="leftTop"
+              content={
+                <div className="-popover-options" onMouseLeave={handleCloseAction}>
+                  <div
+                    onClick={() => {
+                      pinProfile(profile.id);
+                      handleCloseAction();
+                    }}
+                    className="-popover-options__attribute border-bottom"
+                  >
+                    <img src={pin} alt="icon-pin"></img>
+                    {!profile.isPin ? <p>Pin</p> : <p>Unpin</p>}
+                  </div>
+                  <div
+                    onClick={() => {
+                      handleClickRemove();
+                    }}
+                    className="-popover-options__attribute"
+                  >
+                    <img src={deleted} alt="icon-deleted"></img>
+                    <p>Remove</p>
+                  </div>
+                </div>
+              }
+            ></Popover>
+          </div>
+        );
+      },
+    });
+    const newColumns = settingsColumns.map((col) => {
+      if (!col.editable) {
+        return col;
+      }
+      return {
+        ...col,
+        onCell: (record) => ({
+          record,
+          editable: col.editable,
+          dataIndex: col.dataIndex,
+          title: col.title,
+          // handleSaveTag,
+        }),
+      };
+    });
+    setColumns(newColumns);
   };
 
   useEffect(() => {
@@ -110,35 +316,49 @@ const ProfilesPage = () => {
   }, [dataProfiles]);
 
   const getProfiles = async () => {
-    const profiles = await getDB(storageProfiles);
-
-    const folders = await apiGetFolder();
-
-    if (folders && folders.success) {
-      const arrFolder = [];
-      folders.data.data.forEach((e) => {
-        const check = listFolder.find((o) => o.id === e.id);
-        if (!check) arrFolder.push({ ...e, isSelected: false });
-      });
-      setListFolder([...listFolder, ...arrFolder]);
-    }
-    if (profiles) {
-      let objProfile = JSON.parse(profiles);
-
-      if (folders.data && folders.data.data) {
-        objProfile = objProfile.map((e) => {
-          const folderName = folders.data.data.find((o) => o.id == e.folder);
-          return { ...e, folderName: folderName ? folderName.name : '' };
-        });
-      }
-      objProfile = objProfile.sort((x, y) => Number(y.isPin) - Number(x.isPin));
-      setDataProfiles(objProfile);
+    let profiles = await dbGetLocally(storageProfiles);
+    if (profiles && profiles.length) {
+      profiles = profiles.sort((x, y) => Number(y.isPin) - Number(x.isPin));
+      setDataProfiles(profiles);
       setDataSearch(
-        objProfile.map((e, index) => {
+        profiles.map((e, index) => {
           return { ...e, key: index + 1 };
         }),
       );
     }
+  };
+
+  const runTest = async () => {
+    // const data = await login('nguyenduykien@oneadx.com', '123456789');
+    // const data = await getProfilesMarco();
+    const data = await runProfile(
+      { id: '659e30c7f3c23d4a45587f23' },
+      `          
+                  const email = await getElementEmail(page);
+                  const password = await getElementPassword(page);
+                  if (email && password) {
+                    await email.type("61553420497858", { delay: 100 });
+                    await delay(1000);
+                    await password.type("X0i6cksy896gndio", { delay: 100 });
+                    await delay(1000);
+                    const emailText = await getInputText(page, email);
+                    const passwordText = await getInputText(page, password);
+                    if (emailText == "") {
+                      await email.type("61553420497858", { delay: 100 });
+                      await delay(1000);
+                    }
+                    if (passwordText == "") {
+                      await password.type("X0i6cksy896gndio", { delay: 100 });
+                      await delay(1000);
+                    }
+                    await page.keyboard.press("Enter");
+                    await delay(3000);
+                    const inputCode = await getElement(page,'[id="approvals_code"]');
+                    
+                  }`,
+    );
+    console.log(data);
+    // handleReloadPage();
   };
 
   const generateProxyStr = (proxy) => {
@@ -157,22 +377,22 @@ const ProfilesPage = () => {
     let newDataProfile = [...dataProfiles];
     newDataProfile[index].isPin = !newDataProfile[index].isPin;
     setDataProfiles(newDataProfile);
-    await setDB(storageProfiles, JSON.stringify(newDataProfile));
+    await dbSetLocally(storageProfiles, newDataProfile);
   };
   const removeProfile = async (id) => {
     const newData = dataProfiles.filter((e) => e.id !== id);
     setDataProfiles(newData);
-    await setDB(storageProfiles, JSON.stringify(newData));
-    postAlert('Remove Profiles', 'success');
-    setOpenDeleteProfileTable(false);
+    await dbSetLocally(storageProfiles, newData);
+    postAlert('Removed account', 'success');
+    setOpenDeleteProfile(false);
+    setIdSelect(null);
   };
 
   //Pin and remove
-  const handleActionProfiles = () => {
-    setOpenOptions(true);
-  };
+
   const handleCloseAction = () => {
-    setOpenOptions(false);
+    rowID = null;
+    renderColumns();
   };
 
   const postAlert = (message, status = 'warning', duration = 3000) => {
@@ -184,186 +404,6 @@ const ProfilesPage = () => {
     }, duration);
   };
 
-  const defaultColumns = [
-    {
-      title: '#',
-      dataIndex: 'key',
-      width: 50,
-    },
-    {
-      title: 'Profile',
-      width: 250,
-      render: (profile) => {
-        return (
-          <div className="-text-profile">
-            <span>{profile.profile}</span>
-            {profile.isPin && <img src={pin} alt="icon-pin"></img>}
-            {profile.os === 'mac' && <img style={{ width: 13 }} src={macosIcon} alt="icon-mac"></img>}
-            {profile.os === 'win' && <img src={windowIcon} style={{ width: 13 }} alt="icon-window"></img>}
-            {profile.os === 'ios' && <img src={iosIcon} style={{ width: 13 }} alt="icon-ios"></img>}
-            {profile.os === 'android' && <img src={androidIcon} style={{ width: 13 }} alt="icon-android"></img>}
-            {profile.os === 'lin' && <img src={linuxIcon} style={{ width: 13 }} alt="icon-linux"></img>}
-          </div>
-        );
-      },
-      sorter: (a, b) => a.profile.length - b.profile.length,
-    },
-    {
-      title: 'UID',
-      dataIndex: 'uid',
-      width: 150,
-    },
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      width: 150,
-    },
-    {
-      title: 'Date of birth',
-      dataIndex: 'birth',
-      width: 200,
-    },
-
-    {
-      title: 'Friends',
-      dataIndex: 'friends',
-      width: 150,
-    },
-    {
-      title: 'Group',
-      dataIndex: 'group',
-      width: 150,
-      ellipsis: true,
-    },
-    {
-      title: 'Sex',
-      dataIndex: 'sex',
-      width: 150,
-    },
-    {
-      title: 'Password',
-      dataIndex: 'password',
-      width: 150,
-    },
-    {
-      title: 'Email',
-      dataIndex: 'email',
-      width: 150,
-    },
-    {
-      title: `Email's password`,
-      dataIndex: 'emailpass',
-      width: 200,
-    },
-
-    {
-      title: 'Status',
-      dataIndex: 'status',
-      width: 150,
-      render: (status) => {
-        if (status === 'running') {
-          return <div className="-status-profiles">{status.charAt(0).toUpperCase() + status.slice(1)}</div>;
-        } else if (status === 'ready') {
-          return (
-            <div className="-status-profiles -status-profiles-ready">
-              {status.charAt(0).toUpperCase() + status.slice(1)}
-            </div>
-          );
-        } else {
-          return (
-            <div className="-status-profiles -status-profiles-used">
-              {status.charAt(0).toUpperCase() + status.slice(1)}
-            </div>
-          );
-        }
-      },
-    },
-    {
-      title: 'Proxy',
-      dataIndex: 'proxy',
-      width: 200,
-      render: (proxy) => {
-        return (
-          <>
-            <div className="-proxy-profiles">
-              {/* <img src={usaProxy}></img> */}
-              {proxy.host && proxy.host !== '' ? <span>{generateProxyStr(proxy)}</span> : <span>none</span>}
-            </div>
-          </>
-        );
-      },
-    },
-    {
-      title: 'Tag',
-      dataIndex: 'tag',
-      width: 150,
-      editable: true,
-      render: (tag) => {
-        return <Input name="tag" value={tag} className="-tag-profiles" onChange={(e) => e.target.value}></Input>;
-      },
-      sorter: (a, b) => a.tag.length - b.tag.length,
-      sortDirections: ['descend'],
-    },
-    {
-      title: 'Folder',
-      dataIndex: 'folderName',
-      width: 150,
-      sorter: (a, b) => a.folder.length - b.folder.length,
-      sortDirections: ['descend'],
-    },
-    {
-      title: '',
-      width: 50,
-      fixed: 'right',
-      render: (profile) => {
-        const handleClickRemove = () => {
-          if (profile.id !== '') {
-            // setOpenOptions(false);
-            setOpenDeleteProfileTable((o) => !o);
-          } else {
-            postAlert('Please select profile!');
-          }
-        };
-        return (
-          <div className="-expand-icon" onClick={handleActionProfiles}>
-            <img src={options} alt="image-option"></img>
-            {rowKeys === profile.id && (
-              <>
-                <Popover
-                  open={openOptions}
-                  trigger="click"
-                  onOpenChange={(newOpen) => setOpenOptions(newOpen)}
-                  // onClose={handleCloseAction}
-                  placement="leftTop"
-                  content={
-                    <div className="-popover-options" onMouseLeave={handleCloseAction}>
-                      <div onClick={() => pinProfile(profile.id)} className="-popover-options__attribute border-bottom">
-                        <img src={pin} alt="icon-pin"></img>
-                        {!profile.isPin ? <p>Pin</p> : <p>Unpin</p>}
-                      </div>
-                      <div
-                        onClick={handleClickRemove}
-                        // onClick={() => removeProfile(profile.id)}
-                        className="-popover-options__attribute"
-                      >
-                        <img src={deleted} alt="icon-deleted"></img>
-                        <p>Remove</p>
-                      </div>
-                    </div>
-                  }
-                ></Popover>
-                <PopupDeleteProfile
-                  openDeleteProfile={openDeleteProfileTable}
-                  handleCloseDelete={handleCloseDeleteTable}
-                  handleRemove={() => removeProfile(profile.id)}
-                ></PopupDeleteProfile>
-              </>
-            )}
-          </div>
-        );
-      },
-    },
-  ];
   // const handleSaveTag = (row) => {
   //   const newData = [...dataProfiles];
   //   const index = newData.findIndex((profile) => row.id === profile.id);
@@ -380,22 +420,7 @@ const ProfilesPage = () => {
       cell: EditableCell,
     },
   };
-  const columns = defaultColumns.map((col) => {
-    if (!col.editable) {
-      return col;
-    }
-    return {
-      ...col,
-      onCell: (record) => ({
-        record,
-        editable: col.editable,
-        dataIndex: col.dataIndex,
-        title: col.title,
-        // handleSaveTag,
-      }),
-    };
-  });
-  // rowSelection object indicates the need for row selection
+
   const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
       if (selectedRows && selectedRows.length) setProfilesSelected(selectedRows);
@@ -404,9 +429,6 @@ const ProfilesPage = () => {
   };
 
   const handleSettings = () => {
-    // if (syncProfilesInterval) {
-    //   clearInterval(syncProfilesInterval);
-    // }
     navigate('/settings');
   };
   const handleScript = () => {
@@ -446,6 +468,11 @@ const ProfilesPage = () => {
   const handleCloseDisplaySetting = () => {
     setOpenDisplaySetting(false);
   };
+  const onSaveDisplaySettings = async (settings) => {
+    await dbSetLocally(storageDisplaySettings, settings);
+    setDisplaySettings(settings);
+    renderColumns(settings);
+  };
   //proxy
   const handleOpenProxyManage = () => {
     setOpenProxyManage(true);
@@ -461,9 +488,6 @@ const ProfilesPage = () => {
   const handleCloseDelete = () => {
     setOpenDeleteProfile(false);
   };
-  const handleCloseDeleteTable = () => {
-    setOpenDeleteProfileTable(false);
-  };
 
   const searchProfiles = (text) => {
     if (text == '') {
@@ -474,9 +498,12 @@ const ProfilesPage = () => {
       );
     } else {
       const newProfiles = dataProfiles.filter((e) => {
-        const profile = e.profile.toLowerCase();
-        const name = e.name.toLowerCase();
-        return profile.includes(text.toLowerCase()) || name.includes(text.toLowerCase());
+        const profile = e.uid.toLowerCase();
+        const mail = e.recoveryEmail ? e.recoveryEmail.toLowerCase() : '';
+        const name = e.nameAccount ? e.nameAccount.toLowerCase() : '';
+        return (
+          profile.includes(text.toLowerCase()) || name.includes(text.toLowerCase()) || mail.includes(text.toLowerCase())
+        );
       });
       setDataSearch(
         newProfiles.map((e, index) => {
@@ -501,8 +528,8 @@ const ProfilesPage = () => {
         return { ...e, key: index + 1 };
       }),
     );
-    await setDB(storageProfiles, JSON.stringify(newData));
-    postAlert('Remove Profiles', 'success');
+    await dbSetLocally(storageProfiles, newData);
+    postAlert('Removed account', 'success');
     handleCloseDelete();
     getProfiles();
   };
@@ -512,13 +539,7 @@ const ProfilesPage = () => {
       className="layout-profiles"
       style={{
         opacity:
-          openAddProxy ||
-          openDeleteProfile ||
-          openDeleteProfileTable ||
-          openScripts ||
-          openProfiles ||
-          openProxyManage ||
-          openDisplaySetting
+          openAddProxy || openDeleteProfile || openScripts || openProfiles || openProxyManage || openDisplaySetting
             ? 0.3
             : 1,
       }}
@@ -546,7 +567,9 @@ const ProfilesPage = () => {
                 <img src={display} alt="display-setting"></img>
               </span>
               <PopupDisplaySetting
+                onSaveDisplaySettings={onSaveDisplaySettings}
                 openDisplaySetting={openDisplaySetting}
+                displaySettings={displaySettings}
                 handleCloseDisplaySetting={handleCloseDisplaySetting}
               ></PopupDisplaySetting>
               <span className="-option-profiles" onClick={handleSettings}>
@@ -559,7 +582,6 @@ const ProfilesPage = () => {
                 <img src={plus} alt="image-plus"></img>
               </span>
               <PopupProfile
-                listFolderProfiles={listFolder}
                 openProfiles={openProfiles}
                 handleCloseProfiles={handleCloseProfiles}
                 onAddProfile={() => {
@@ -620,7 +642,13 @@ const ProfilesPage = () => {
             <PopupDeleteProfile
               openDeleteProfile={openDeleteProfile}
               handleCloseDelete={handleCloseDelete}
-              handleRemove={handleRemoveProfiles}
+              handleRemove={() => {
+                if (!idSelect) {
+                  handleRemoveProfiles();
+                } else {
+                  removeProfile(idSelect);
+                }
+              }}
             ></PopupDeleteProfile>
             <div onClick={handleOpenScripts}>
               <button>Run</button>
@@ -639,13 +667,6 @@ const ProfilesPage = () => {
         <Table
           rowSelection={{
             ...rowSelection,
-          }}
-          onRow={(record, rowIndex) => {
-            return {
-              onClick: () => {
-                setRowKeys(record.id);
-              },
-            };
           }}
           components={components}
           rowClassName={'editable-row'}
