@@ -134,7 +134,7 @@ const CreateScript = () => {
       const design = DnDFlowRef.current.getReactFlowInstance();
       let arrScript = [];
       const scriptStr = await dbGetLocally(storageScripts);
-      if (scriptStr.length) {
+      if (scriptStr && scriptStr.length) {
         const script = JSON.parse(scriptStr);
         if (script && script.length) {
           arrScript = [...script];

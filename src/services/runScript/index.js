@@ -35,8 +35,7 @@ export const runScript = async (profileSelected, scriptDesign) => {
     const browserData = await getBrowserData(profileSelected[i].id);
     if (browserData && browserData.data) {
       const strCode = `
-    const puppeteer = require("puppeteer");
-    const bluebird = require("bluebird");
+   
 
     const logger = (...params) => {
       event.reply("ipc-logger", ...params);
@@ -177,6 +176,7 @@ export const runScript = async (profileSelected, scriptDesign) => {
             if (email) return email;
             else{
               email = await getElement(page, '[type="email"]', 1);
+              if (email) return email;
             }
           }
         }
@@ -267,7 +267,8 @@ export const runScript = async (profileSelected, scriptDesign) => {
             return true;
       `;
 
-      await runProfile(strCode);
+      const result = await runProfile(strCode);
+      console.log(result);
     } else {
       return false;
     }

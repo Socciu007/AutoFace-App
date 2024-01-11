@@ -146,7 +146,7 @@ const ScriptManager = () => {
 
   const getScripts = async () => {
     const scriptStr = await dbGetLocally(storageScripts);
-    if (scriptStr.length) {
+    if (scriptStr && scriptStr.length) {
       const script = JSON.parse(scriptStr);
       if (script && script.length) {
         setItemSelect(script[0]);
