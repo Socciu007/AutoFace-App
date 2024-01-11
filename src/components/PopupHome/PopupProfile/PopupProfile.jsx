@@ -169,6 +169,7 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
   };
   const MuiDialogPaper = {
     width: '1163px',
+    height: '679px',
     maxHeight: '679px !important',
     minWidth: '1163px !important',
     color: '#01162b !important',
@@ -186,8 +187,8 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
         '& .css-1t1j96h-MuiPaper-root-MuiDialog-paper': MuiDialogPaper,
       }}
     >
-      <div className="-layout-choose-scripts">
-        <div className="-layout-choose-scripts__container">
+      <div className="-layout-choose-profile">
+        <div className="-layout-choose-profile__container">
           <div className="-nav-scripts">
             <div className="-nav-scripts__header">
               <div

@@ -328,39 +328,6 @@ const ProfilesPage = () => {
     }
   };
 
-  const runTest = async () => {
-    // const data = await login('nguyenduykien@oneadx.com', '123456789');
-    // const data = await getProfilesMarco();
-    const data = await runProfile(
-      { id: '659e30c7f3c23d4a45587f23' },
-      `          
-                  const email = await getElementEmail(page);
-                  const password = await getElementPassword(page);
-                  if (email && password) {
-                    await email.type("61553420497858", { delay: 100 });
-                    await delay(1000);
-                    await password.type("X0i6cksy896gndio", { delay: 100 });
-                    await delay(1000);
-                    const emailText = await getInputText(page, email);
-                    const passwordText = await getInputText(page, password);
-                    if (emailText == "") {
-                      await email.type("61553420497858", { delay: 100 });
-                      await delay(1000);
-                    }
-                    if (passwordText == "") {
-                      await password.type("X0i6cksy896gndio", { delay: 100 });
-                      await delay(1000);
-                    }
-                    await page.keyboard.press("Enter");
-                    await delay(3000);
-                    const inputCode = await getElement(page,'[id="approvals_code"]');
-                    
-                  }`,
-    );
-    console.log(data);
-    // handleReloadPage();
-  };
-
   const generateProxyStr = (proxy) => {
     let proxyStr = `${proxy.host}:${proxy.port}${proxy.username && proxy.username != '' ? ':' + proxy.username : ''}${
       proxy.password ? ':' + proxy.password : ''

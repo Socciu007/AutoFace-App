@@ -1,7 +1,11 @@
 import { storageSettings } from '../../common/const.config';
-import { dbGetLocally } from '../../sender';
+import { dbGetLocally, getBrowserData, runProfile } from '../../sender';
 
 export const runScript = async (profileSelected, scriptDesign) => {
+  window.electron.ipcRenderer.on('ipc-logger', (...params) => {
+    console.log(params);
+  });
+
   const settings = await dbGetLocally(storageSettings);
 
   for (let i = 0; i < profileSelected.length; i++) {
@@ -28,18 +32,244 @@ export const runScript = async (profileSelected, scriptDesign) => {
         }
       }
     }
+    const browserData = await getBrowserData(profileSelected[i].id);
+    if (browserData && browserData.data) {
+      const strCode = `
+    const puppeteer = require("puppeteer");
+    const bluebird = require("bluebird");
 
-    console.log(arrfunction);
+    const logger = (...params) => {
+      event.reply("ipc-logger", ...params);
+    };
+    
+    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  
+    const getRandomIntBetween = (min, max) => {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min) + min);
+    };
+    
+    const getElementByID = async  (
+      page,
+      id,
+      loop = 10,
+      visible = false
+    ) => {
+      let element;
+      for (let i = 0; i < loop; i++) {
+        try {
+          element = await page.$('[id="' + id + '"]', { timeout: 1000, visible });
+        } catch (error) {
+          element = null;
+        }
+        if (element) return element;
+        await delay(1000);
+      }
+    };
+    
+     const clickElement = async  (page, selector) => {
+      await page.$eval(selector, (e) => e.click());
+    };
+    
+     const waitForNavigation = async (page, timeout = 60000) => {
+      try {
+        return await page.waitForNavigation({
+          waitUntil: "networkidle0",
+          timeout,
+        });
+      } catch (error) {
+        return null;
+      }
+    };
+     const waitForNavigation2 = async  (page, timeout = 60000) =>{
+      try {
+        return await page.waitForNavigation({
+          waitUntil: "networkidle2",
+          timeout,
+        });
+      } catch (error) {
+        return null;
+      }
+    };
+     const getAllText = async  (page) =>{
+      try {
+        const text = await page.$eval("*", (el) => el.innerText);
+        return text;
+      } catch (err) {
+        return "";
+      }
+    };
+    
+     const getText = async (page, element) => {
+      try {
+        const text = await page.evaluate((el) => el.innerText, element);
+        return text;
+      } catch (err) {
+        return "";
+      }
+    };
+    
+     const getElementByName = async (page, name, loop = 10) => {
+      let element;
+      for (let i = 0; i < loop; i++) {
+        try {
+          element = await page.$('[name="' + name + '"]', { timeout: 1000 });
+        } catch (error) {
+          element = null;
+        }
+        if (element) return element;
+        await delay(1000);
+      }
+    };
+    
+     const getElement = async (page, selector, loop = 10) => {
+      let element;
+      for (let i = 0; i < loop; i++) {
+        try {
+          element = await page.$(selector, { timeout: 1000 });
+        } catch (error) {
+          element = null;
+        }
+        if (element) return element;
+        await delay(1000);
+      }
+    };
+    
+     const getElements = async (page, selector, loop = 10) => {
+      let elements;
+      for (let i = 0; i < loop; i++) {
+        try {
+          elements = await page.$$(selector, { timeout: 1000 });
+        } catch (error) {
+          elements = null;
+        }
+        if (elements && elements.length) return elements;
+        await delay(1000);
+      }
+    };
+    
+     const getElementByClass = async (page, name, loop = 10) => {
+      let element;
+      for (let i = 0; i < loop; i++) {
+        try {
+          element = await page.$('[class="' + name + '"]', { timeout: 1000 });
+        } catch (error) {
+          element = null;
+        }
+        if (element) return element;
+        await delay(1500);
+      }
+    };
+  
+    const getElementEmail = async (page) => {
+      for (let i = 0; i < 60; i++) {
+        logger("GET Email");
+        let email;
+        email = await getElementByID(page, "m_login_email", 1);
+        if (email) return email;
+        else {
+          email = await getElementByID(page, "email", 1);
+          if (email) {
+            return email;
+          } else {
+            email = await getElementByName(page, "email", 1);
+            if (email) return email;
+            else{
+              email = await getElement(page, '[type="email"]', 1);
+            }
+          }
+        }
+        await delay(500);
+      }
+      return null;
+    };
+  
+    const getElementPassword = async (page) => {
+      try {
+        let password;
+        password = await getElement(page, '[type="password"]');
+        if (!password) password = await getElementByID(page, "pass");
+        return password;
+      } catch (err) {
+        return null;
+      }
+    };
+  
+    const getInputText = async function (page, element) {
+      try {
+        return await page.evaluate((x) => x.value, element);
+      } catch (err) {
+        return "";
+      }
+    };
+    try {
+    const browser = await puppeteer.launch({
+              executablePath: "${browserData.executablePath}",
+              devtools: false,
+              dumpio: true,
+              headless: false,
+              defaultViewport: null,
+              args: [
+                "--user-data-dir=${browserData.pathProfile}",
+                "--hidemyacc-data=${browserData.data}",
+                "--disable-encryption",
+                "--donut-pie=undefined",
+                "--proxy-bypass-list=https://static.xx.fbcdn.net",
+                "--flag-switches-begin",
+                "--flag-switches-end",
+                "--window-size=360,640"
+              ]
+            });
+  
+            const page = await browser.newPage();
+            await page.setBypassCSP(true);
+            await page.setCacheEnabled(false);
+            const session = await page.target().createCDPSession();
+            await session.send("Page.enable");
+            await session.send("Page.setWebLifecycleState", { state: "active" });
+            await page.goto("https://m.facebook.com");
+            const email = await getElementEmail(page);
+                  const password = await getElementPassword(page);
+                  if (email && password) {
+                    await email.type("61553420497858", { delay: 100 });
+                    await delay(1000);
+                    await password.type("X0i6cksy896gndio", { delay: 100 });
+                    await delay(1000);
+                    const emailText = await getInputText(page, email);
+                    const passwordText = await getInputText(page, password);
+                    if (emailText == "") {
+                      await email.type("61553420497858", { delay: 100 });
+                      await delay(1000);
+                    }
+                    if (passwordText == "") {
+                      await password.type("X0i6cksy896gndio", { delay: 100 });
+                      await delay(1000);
+                    }
+                    await page.keyboard.press("Enter");
+                    await delay(3000);
+                    const inputCode = await getElement(page,'[id="approvals_code"]');
+                    
+                  }
+            ${getAllFunc(arrfunction)}
+           
+  
+          } catch (error) {
+              console.log(error);
+            } finally {
+              if(browser){
+                  await browser.close();
+              }
+              
+             
+            }
+            
+            return true;
+      `;
 
-    const code = `
-
-    `;
-
-    console.log(code);
-
-    if (res && res.success) {
-      const data = { key: '1111' };
-      await exec(code, data);
+      await runProfile(strCode);
+    } else {
+      return false;
     }
   }
 };

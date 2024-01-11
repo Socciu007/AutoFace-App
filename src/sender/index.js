@@ -118,14 +118,14 @@ export const updateProfile = (id, proxy) =>
     }
   });
 
-export const runProfile = (id, code) =>
+export const runProfile = (code) =>
   new Promise((resolve) => {
     try {
-      window.electron.ipcRenderer.sendMessage('ipc-run-profile', { id, code });
+      window.electron.ipcRenderer.sendMessage('ipc-run-profile', { code });
       window.electron.ipcRenderer.once('ipc-run-profile', resolve);
       setTimeout(() => {
         resolve({ success: false, error: 'Timeout!' });
-      }, API_TIMEOUT);
+      }, 1200000);
     } catch (error) {
       resolve({ success: false, error });
     }
