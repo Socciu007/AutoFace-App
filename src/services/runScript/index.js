@@ -1,9 +1,9 @@
 import { storageSettings } from '../../common/const.config';
+import { createPost } from './CreatePost';
 import { dbGetLocally, getBrowserData, runProfile } from '../../sender';
-
 export const runScript = async (profileSelected, scriptDesign) => {
   window.electron.ipcRenderer.on('ipc-logger', (...params) => {
-    console.log(params);
+    console.log(params[0]);
   });
 
   const settings = await dbGetLocally(storageSettings);
@@ -36,7 +36,7 @@ export const runScript = async (profileSelected, scriptDesign) => {
     if (browserData && browserData.data) {
       const strCode = `
    
-
+    let browser;
     const logger = (...params) => {
       event.reply("ipc-logger", ...params);
     };
@@ -47,6 +47,102 @@ export const runScript = async (profileSelected, scriptDesign) => {
       min = Math.ceil(min);
       max = Math.floor(max);
       return Math.floor(Math.random() * (max - min) + min);
+    };
+
+    const checkObject = async (obj) => {
+      for (const key in obj) {
+        if (key.includes('Start') || key.includes('End')) {
+          const startKey = key;
+          const endKey = key.replace('Start', 'End');
+    
+          const startValue = obj[startKey];
+          const endValue = obj[endKey];
+    
+          if (endValue < startValue) {
+            // Swap values if end is less than start
+            obj[startKey] = endValue;
+            obj[endKey] = startValue;
+          }
+        }
+      }
+    
+      return obj;
+    };
+
+    const checkExistElementOnScreen = async (page, JSpath) => {
+      try {
+        const element = await page.$eval(JSpath, (el) => {
+          if (el.getBoundingClientRect().top <= 0) {
+            return -1;
+          } else if (el.getBoundingClientRect().top + el.getBoundingClientRect().height > window.innerHeight) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
+        return element;
+      } catch (error) {
+        return error;
+      }
+    };
+
+    const checkLogin = async (page) => {
+      // Retrieve cookies
+      const cookies = await page.cookies();
+    
+      // Check for login status based on cookies or other indicators
+      const isLoggedIn = cookies.some((cookie) => cookie.name === 'c_user');
+      return isLoggedIn;
+    };
+
+    const clickElement = (element) => {
+      return new Promise(async (resolve) => {
+        try {
+          setTimeout(() => {
+            resolve(true);
+          }, 1000);
+          await element.click();
+        } catch (err) {
+          logger(err);
+        }
+        resolve(true);
+      });
+    };
+
+    const returnHomePage = async (page) => {
+      const url = await page.url();
+      if (url === 'https://m.facebook.com/' || url.includes('https://m.facebook.com/home.php')) {
+        logger('URL is correct');
+      } else {
+        logger('Redirect to homepage');
+        await page.goto('https://m.facebook.com/', {
+          waitUntil: 'networkidle2',
+        });
+      }
+    };
+
+    const checkIsLive = async (page) => {
+      try {
+        if (page && !page.isClosed()) {
+          return true;
+        }
+        return false;
+      } catch (error) {
+        return false;
+      }
+    };
+
+    const scrollSmoothIfNotExistOnScreen = async (page, JSpath) => {
+      try {
+        if ((await checkExistElementOnScreen(page, JSpath)) !== 0) {
+          await page.evaluate((JSpath) => {
+            document.querySelector(JSpath).scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, JSpath);
+        }
+        return 1;
+      } catch (error) {
+        return 0;
+      }
     };
     
     const getElementByID = async  (
@@ -65,10 +161,6 @@ export const runScript = async (profileSelected, scriptDesign) => {
         if (element) return element;
         await delay(1000);
       }
-    };
-    
-     const clickElement = async  (page, selector) => {
-      await page.$eval(selector, (e) => e.click());
     };
     
      const waitForNavigation = async (page, timeout = 60000) => {
@@ -204,7 +296,7 @@ export const runScript = async (profileSelected, scriptDesign) => {
       }
     };
     try {
-    const browser = await puppeteer.launch({
+     browser = await puppeteer.launch({
               executablePath: "${browserData.executablePath}",
               devtools: false,
               dumpio: true,
@@ -228,34 +320,11 @@ export const runScript = async (profileSelected, scriptDesign) => {
             const session = await page.target().createCDPSession();
             await session.send("Page.enable");
             await session.send("Page.setWebLifecycleState", { state: "active" });
-            await page.goto("https://m.facebook.com");
-            const email = await getElementEmail(page);
-                  const password = await getElementPassword(page);
-                  if (email && password) {
-                    await email.type("61553420497858", { delay: 100 });
-                    await delay(1000);
-                    await password.type("X0i6cksy896gndio", { delay: 100 });
-                    await delay(1000);
-                    const emailText = await getInputText(page, email);
-                    const passwordText = await getInputText(page, password);
-                    if (emailText == "") {
-                      await email.type("61553420497858", { delay: 100 });
-                      await delay(1000);
-                    }
-                    if (passwordText == "") {
-                      await password.type("X0i6cksy896gndio", { delay: 100 });
-                      await delay(1000);
-                    }
-                    await page.keyboard.press("Enter");
-                    await delay(3000);
-                    const inputCode = await getElement(page,'[id="approvals_code"]');
-                    
-                  }
+            
             ${getAllFunc(arrfunction)}
            
-  
           } catch (error) {
-              console.log(error);
+              logger(error);
             } finally {
               if(browser){
                   await browser.close();
@@ -300,7 +369,7 @@ const convertToFunc = (script) => {
     case 'postInteract':
       return postInteract(script);
     default:
-      return `console.log("Can't find func");`;
+      return `logger("Can't find func");`;
   }
 };
 
@@ -360,7 +429,7 @@ const scroll = async (page, newsfeed) => {
       randomScrollTime = randomScrollTime - randomDelay;
     }
   } catch (error) {
-    console.log(error);
+    logger(error);
   }
 };
 const findReactBtn = async (page) => {
@@ -388,7 +457,7 @@ const findReactBtn = async (page) => {
     }
     return false;
   } catch (error) {
-    console.log(error);
+    logger(error);
   }
 };
 const clickLike = async (page) => {
@@ -398,7 +467,7 @@ const clickLike = async (page) => {
     await delay(2000);
     const check = await checkExistElement(page, unlikeSelector, 5);
     if (check == 1) {
-      console.log("Đã like từ trước");
+      logger("Đã like từ trước");
       return false;
     }
     const selectorLike =
@@ -414,7 +483,7 @@ const clickLike = async (page) => {
       return false;
     }
   } catch (error) {
-    console.log(error);
+    logger(error);
   }
 };
 const randomLikePost = async (page, newsfeed) => {
@@ -431,7 +500,7 @@ const randomLikePost = async (page, newsfeed) => {
     }
     return false;
   } catch (error) {
-    console.log(error);
+    logger(error);
     return false;
   }
 };
@@ -460,7 +529,7 @@ const findShareBtn = async (page) => {
     }
     return false;
   } catch (error) {
-    console.log(error);
+    logger(error);
     throw error;
   }
 };
@@ -471,14 +540,14 @@ const clickShare = async (page) => {
     if (shareBtn) {
       await scrollSmoothIfNotExistOnScreen(page, selectorShare);
       await shareBtn.click();
-      console.log("Clicked share button");
+      logger("Clicked share button");
       await delay(2000);
       return true;
     } else {
       return false;
     }
   } catch (error) {
-    console.log(error);
+    logger(error);
   }
 };
 const share = async (page, newsfeed) => {
@@ -507,7 +576,7 @@ const comment = async (page, newsfeed) => {
         newsfeed.delayTimeEnd
       );
       await delay(randomDelay);
-      console.log("Đang tìm vùng comment");
+      logger("Đang tìm vùng comment");
       const isClickComment = await clickComment(page, newsfeed.commentStrs);
       if (isClickComment) {
         let randomDelay1 = getRandomIntBetween(
@@ -551,7 +620,7 @@ const findCommentBtn = async (page) => {
     }
     return false;
   } catch (error) {
-    console.log(error);
+    logger(error);
   }
 };
 const clickComment = async (page, content) => {
@@ -573,13 +642,13 @@ const clickComment = async (page, content) => {
       const randomIndex = getRandomInt(content.length);
       const text = content[randomIndex];
       await page.keyboard.type(text,{delay: 200});
-      console.log("đã nhập xong");
+      logger("đã nhập xong");
       await delay(2000);
     }
     isClick = true;
     return isClick;
   } catch (error) {
-    console.log(error);
+    logger(error);
   }
 };
 const clickPostComment = async (page) => {
@@ -596,7 +665,7 @@ const clickPostComment = async (page) => {
       return false;
     }
   } catch (error) {
-    console.log(error);
+    logger(error);
   }
 };
 
@@ -605,20 +674,20 @@ const clickPostComment = async (page) => {
   let news = await checkObject(newsfeed);
   // check page is live reutrn -1, return 1, return 0
   const isLive = await checkIsLive(page);
-  console.log("Tình trạng trang web:", isLive);
+  logger("Tình trạng trang web:", isLive);
   if (!isLive) {
     return -1;
   }
   // check is login: get cookie return -1, return 1, return 0
   // const isLoggedIn1 = await checkLogin(page);
-  // console.log("Tình trạng đăng nhập:", isLoggedIn);
+  // logger("Tình trạng đăng nhập:", isLoggedIn);
   // if (!isLoggedIn1) {
   //   return -1;
   // }
   if (news.randomLike == true) {
     let count = 0;
     let numLikes = getRandomIntBetween(news.likeStart, news.likeEnd);
-    console.log("Cần like", numLikes, "bài");
+    logger("Cần like", numLikes, "bài");
     for (let i = 0; i < numLikes * 2; i++) {
       try {
         await returnHomePage(page);
@@ -626,14 +695,14 @@ const clickPostComment = async (page) => {
         const isLike = await randomLikePost(page, news);
         if (isLike) {
           count++;
-          console.log("Đã like được", count, "bài");
+          logger("Đã like được", count, "bài");
         } else {
-          console.log("Like không thành công");
+          logger("Like không thành công");
         }
         if (count == numLikes) break;
         await delay(5000);
       } catch (error) {
-        console.log(error);
+        logger(error);
       }
     }
   }
@@ -641,7 +710,7 @@ const clickPostComment = async (page) => {
   if (news.randomShare == true) {
     let count = 0;
     let numShares = getRandomIntBetween(news.shareStart, news.shareEnd);
-    console.log("Cần share", numShares, "bài");
+    logger("Cần share", numShares, "bài");
     for (let i = 0; i < numShares * 2; i++) {
       try {
         await returnHomePage(page);
@@ -649,25 +718,25 @@ const clickPostComment = async (page) => {
         const result = await share(page, news);
         if (result) {
           count++;
-          console.log("Đã share được", count, " bài");
+          logger("Đã share được", count, " bài");
         } else {
-          console.log("K tim thay nut share");
+          logger("K tim thay nut share");
         }
         if (count == numShares) break;
         await delay(5000);
       } catch (error) {
-        console.log(error);
+        logger(error);
       }
     }
   }
 
   if (news.randomComment == true) {
     if (!news.commentStrs.length) {
-      console.log("Không thể comment với nội dung rỗng!");
+      logger("Không thể comment với nội dung rỗng!");
       return false;
     }
     const numComments = getRandomIntBetween(news.commentStart, news.commentEnd);
-    console.log("Cần comment", numComments, "bài");
+    logger("Cần comment", numComments, "bài");
     let count = 0;
     for (let i = 0; i < numComments * 2; i++) {
       try {
@@ -676,280 +745,17 @@ const clickPostComment = async (page) => {
         const result = await comment(page, news);
         if (result) {
           count++;
-          console.log("Đã comment được", count, "bài");
+          logger("Đã comment được", count, "bài");
         } else {
-          console.log("Comment không thành công");
+          logger("Comment không thành công");
         }
         if (count == numComments) break;
         await delay(3000);
       } catch (error) {
-        console.log(error);
+        logger(error);
       }
     }
   }
-  `;
-};
-
-const createPost = (setting) => {
-  const strSetting = `
-  {
-    UID: ${JSON.stringify(setting.UID)},
-    delayTimeEnd: ${setting.delayTimeEnd},
-    delayTimeStart: ${setting.delayTimeStart},
-    isTag:${setting.isTag},
-    numberFriendTagEnd: ${setting.numberFriendTagEnd},
-    numberFriendTagStart: ${setting.numberFriendTagStart},
-    option: ${JSON.stringify(setting.option)},
-    photoEnd: ${setting.photoEnd},
-    photoStart: ${setting.photoStart},
-    photos:${JSON.stringify(setting.photos)},
-    postEnd: ${setting.postEnd},
-    postStart: ${setting.postStart},
-    text: ${JSON.stringify(setting.text)},
-    typeTag: ${JSON.stringify(setting.typeTag)},
-  }`;
-  return `
- const uploadImg = async (page, CreatePost) => {
-  try {
-    const numberPhoto =
-      getRandomIntBetween(CreatePost.photoStart, CreatePost.photoEnd) > CreatePost.photos.length
-        ? CreatePost.photos.length
-        : getRandomIntBetween(CreatePost.photoStart, CreatePost.photoEnd);
-    if (numberPhoto < 3 && numberPhoto > 0 && CreatePost.photos != '') {
-      if ((await checkExistElementOnScreen(page, 'input[name="view_photo"]')) == 0) {
-        const clickPhotoBtn = await page.$('input[name="view_photo"]');
-        await clickPhotoBtn.click();
-        await delay(3000);
-        const select = await getElements(page, '#root > table > tbody > tr > td > form > div.z > div > input');
-        let i = 0;
-
-        while (i < numberPhoto) {
-          if (
-            (await checkExistElementOnScreen(page, '#root > table > tbody > tr > td > form > div.z > div > input')) == 0
-          ) {
-            const [fileChooser] = await Promise.all([page.waitForFileChooser(), select[i].click()]);
-            await fileChooser.accept([CreatePost.photos[i]]); // file path
-            await delay(3000);
-            console.log('Choose file done');
-            i++;
-          } else {
-            console.log("Can't find input to upload ");
-            return false;
-          }
-        }
-        const uploadPhoto = await page.$('input[name="add_photo_done"]');
-        await uploadPhoto.click();
-        await delay(3000);
-        if ((await checkExistElementOnScreen(page, '#main-message > h1 > span')) == 0) {
-          console.log("Can't push img");
-          return false;
-        }
-      } else {
-        console.log("Can't find click photo btn");
-        return false;
-      }
-    } else {
-      console.log('So anh random khong hop le');
-      return false;
-    }
-    return true;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
-};
-
-const tagFriend = async (page, CreatePost) => {
-  // TAG
-  try {
-    const numberFriendTag = getRandomIntBetween(CreatePost.numberFriendTagStart, CreatePost.numberFriendTagEnd);
-
-    if (numberFriendTag > 0) {
-      const tagBtn = await page.$('input[name="view_withtag"]');
-      if ((await checkExistElementOnScreen(page, 'input[name="view_withtag"]')) == 0) {
-        await tagBtn.click();
-        await delay(2000);
-        if (CreatePost.typeTag == 'UIDList') {
-          await tagFriendsByUIDList(page, CreatePost);
-        } else {
-          await tagFriendsRandomly(page, numberFriendTag);
-        }
-
-        // Click "Done" button
-        if ((await scrollSmoothIfNotExistOnScreen(page, 'input[name="done"]')) === 1) {
-          await page.click('input[name="done"]');
-          await delay(2000);
-          return true;
-        } else {
-          console.log("Can't find done tag");
-          return false;
-        }
-      }
-    } else {
-      console.log('Khong tag friend');
-    }
-    return true;
-  } catch (error) {
-    console.log(error);
-    return false;
-  }
-};
-
-const tagFriendsByUIDList = async (page, CreatePost) => {
-  try {
-    if (CreatePost.UID !== '') {
-      for (const uid of CreatePost.UID) {
-        let found = false;
-        while (!found) {
-          const valuesFriend = await getFriendValues(page);
-
-          // Check if valuesFriend is defined and not an empty array
-          if (valuesFriend && valuesFriend.length > 0) {
-            if (valuesFriend.includes(uid)) {
-              if ((await checkExistElementOnScreen(page, 'input[name="friend_ids[]"][value="' + uid + '"]')) == 0) {
-                const friendToClick = await page.$('input[name="friend_ids[]"][value="' + uid + '"]');
-                await friendToClick.click();
-                await delay(2000);
-                found = true;
-              }
-            } else {
-              if ((await checkExistElementOnScreen(page, 'input[name="show_more"]')) == 0) {
-                await page.click('input[name="show_more"]');
-                await delay(3000);
-              } else {
-                // If showMore is not present, break the loop
-                break;
-              }
-            }
-          } else {
-            // Handle the case when valuesFriend is undefined or an empty array
-            console.log('Error: valuesFriend is undefined or empty');
-            break;
-          }
-        }
-      }
-      return true;
-    } else {
-      return false;
-    }
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-const getFriendValues = async (page) => {
-  try {
-    const valuesFriend = await page.evaluate(() => {
-      const checkboxes = Array.from(document.querySelectorAll('input[name="friend_ids[]"]'));
-      return checkboxes.map((checkbox) => checkbox.value);
-    });
-
-    return valuesFriend;
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-const tagFriendsRandomly = async (page, numberFriendTag) => {
-  try {
-    let count = 0;
-
-    while (count < numberFriendTag) {
-      // Kiểm tra sự tồn tại của nút "show more"
-      const showMoreButtonExists = (await checkExistElementOnScreen(page, 'input[name="show_more"]')) == 0;
-
-      if (showMoreButtonExists) {
-        // Click vào nút "show more" nếu nó tồn tại
-        await page.click('input[name="show_more"]');
-        await delay(2000);
-      } else {
-        // Nếu không có nút "show more", thoát khỏi vòng lặp
-        break;
-      }
-
-      // Kiểm tra danh sách bạn bè
-      const listFriend = await getElements(page, 'input[name="friend_ids[]"]', 3);
-
-      if (listFriend.length > 0) {
-        // Chọn một bạn bè ngẫu nhiên từ danh sách và click vào
-        const randomFriend = getRandomIntBetween(0, listFriend.length - 1);
-        await listFriend[randomFriend].click();
-        await delay(2000);
-        count++;
-      } else {
-        // Nếu danh sách bạn bè rỗng, thoát khỏi vòng lặp
-        break;
-      }
-    }
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-  const objCreatePost = ${strSetting};
-    let CreatePost = await checkObject(objCreatePost);
-    let count = 0;
-    const numberOfPost = getRandomIntBetween(CreatePost.postStart, CreatePost.postEnd);
-    while (count < numberOfPost) {
-      await returnHomePage(page);
-      const CreatePostBtn = await page.$('input[name="view_overview"]');
-      if ((await checkExistElementOnScreen(page, 'input[name="view_overview"]')) == 0) {
-        await CreatePostBtn.click();
-        await delay(2000);
-        const InputTextContent = await page.$('textarea[name="xc_message"]');
-        if ((await checkExistElementOnScreen(page, 'textarea[name="xc_message"]')) == 0) {
-          await InputTextContent.click();
-
-          if (CreatePost.text.length > 0) {
-            const randomTextIndex = getRandomIntBetween(0, CreatePost.text.length - 1);
-            await page.keyboard.type(CreatePost.text[randomTextIndex],{delay: 200});
-            console.log('Hoan tat nhap content');
-            await delay(2000);
-          } else {
-            console.log('Text is empty');
-            continue;
-          }
-        } else {
-          console.log("Can't input content");
-          return 0;
-        }
-
-        if (CreatePost.option === 'text/photo') {
-          const uploadImgResult = await uploadImg(page, CreatePost);
-          if (uploadImgResult) {
-            console.log('Upload image successful');
-          } else {
-            console.log("Can't upload image");
-          }
-          // TAG
-          if (CreatePost.isTag) {
-            await tagFriend(page, CreatePost);
-          }
-        }
-        // Click Post content
-        if ((await checkExistElementOnScreen(page, 'input[name="view_post"]')) == 0) {
-          const PostBtn = await page.$('input[name="view_post"]');
-          await PostBtn.click();
-          await delay(1000);
-        } else {
-          console.log("can't find post button");
-          break;
-        }
-      } else {
-        console.log("Can't post status");
-        break;
-      }
-
-      // After post reload page by click home
-      const checkHomeBtn = await checkExistElementOnScreen(page, '#header > table > tbody > tr > td > a');
-      if (checkHomeBtn == 0) {
-        await page.click('#header > table > tbody > tr > td.m > a');
-      }
-      count++;
-      console.log('Creat post done');
-      await delay(getRandomIntBetween(CreatePost.delayTimeStart, CreatePost.delayTimeEnd) * 1000);
-    }
-    
   `;
 };
 
@@ -997,14 +803,14 @@ const viewNoti = (setting) => {
     // check cookie xem login chua
     const isCookie = await checkLogin(page);
     if (!isCookie) {
-      console.log("You not log in facebook");
+      logger("You not log in facebook");
       return;
     }
 
     // check auth fb
     let url = await page.url();
     if (url.includes("mbasic.facebook.com/checkpoint")) {
-      console.log("Account facebook not is auth");
+      logger("Account facebook not is auth");
       return;
     }
 
@@ -1039,11 +845,11 @@ const viewNoti = (setting) => {
         // check sang trang notification ?
         // url = await page.url();
         // if (!url.includes("/notifications")) {
-        //   console.log("Notification page has not been loaded");
+        //   logger("Notification page has not been loaded");
         //   return;
         // }
       } else {
-        console.log("Error access to notification page");
+        logger("Error access to notification page");
         return;
       }
 
@@ -1078,7 +884,7 @@ const viewNoti = (setting) => {
         }
       }
 
-      console.log("so thong bao da doc", countNoti + 1);
+      logger("so thong bao da doc", countNoti + 1);
       countNoti++;
     }
   ;
@@ -1093,7 +899,7 @@ const replyMsg = (setting) => {
   //   waitTimeEnd: 15,
   //   message: ["Hello", "Hi"],
   // };
-  console.log(setting);
+  logger(setting);
   const strSetting = `{
     numsFriendStart: ${setting.numberFriendStart},
     numsFriendEnd: ${setting.numberFriendEnd},
@@ -1139,7 +945,7 @@ const replyMsg = (setting) => {
             3
           );
           if (checkExistInputMsg != 1) {
-            console.log("no element exists to enter message");
+            logger("no element exists to enter message");
             return 0;
           }
           await page.type(inputMsgSelector, msg);
@@ -1152,7 +958,7 @@ const replyMsg = (setting) => {
             3
           );
           if (checkExistSendMsg != 1) {
-            console.log("no element exists to send message");
+            logger("no element exists to send message");
             return 0;
           }
           await clickElement(page, sendMsgSelector);
@@ -1175,7 +981,7 @@ const replyMsg = (setting) => {
             3
           );
           if (checkExistInputMsg != 1) {
-            console.log("no element exists to enter message");
+            logger("no element exists to enter message");
             return 0;
           }
           await page.type(inputMsgSelector, msgRandom);
@@ -1187,7 +993,7 @@ const replyMsg = (setting) => {
             3
           );
           if (checkExistSendMsg != 1) {
-            console.log("no element exists to send message");
+            logger("no element exists to send message");
             return 0;
           }
           await scrollSmoothIfNotExistOnScreen(page, sendMsgSelector);
@@ -1209,14 +1015,14 @@ const replyMsg = (setting) => {
       // check cookie xem login
       const isCookie = await checkLogin(page);
       if (!isCookie) {
-        console.log("You not log in facebook");
+        logger("You not log in facebook");
         return;
       }
   
       // check auth fb
       let url = await page.url();
       if (url.includes("mbasic.facebook.com/checkpoint")) {
-        console.log("Account facebook not is auth");
+        logger("Account facebook not is auth");
         return;
       }
   
@@ -1255,12 +1061,12 @@ const replyMsg = (setting) => {
           // check sang trang chat ?
           // url = await page.url();
           // if (!url.includes("/messages")) {
-          //   console.log("Messages page has not been loaded");
+          //   logger("Messages page has not been loaded");
           //   await returnHomePage(page);
           //   await replyMessage(page);
           // }
         } else {
-          console.log("Error access to messages page");
+          logger("Error access to messages page");
           return;
         }
   
@@ -1278,23 +1084,23 @@ const replyMsg = (setting) => {
             await delay(getRandomIntBetween(3000, 5000));
             await returnHomePage(page);
             countFriend++;
-            console.log("Count friend send msg", countFriend + 1);
+            logger("Count friend send msg", countFriend + 1);
           } else if (actionReply == 0) {
             await delay(getRandomIntBetween(3000, 5000));
             await returnHomePage(page);
             countFriend;
-            console.log("Count friend send msg", countFriend + 1);
+            logger("Count friend send msg", countFriend + 1);
           }
         }
       }
     } catch (error) {
-      console.log(error.message);
+      logger(error.message);
     }
   `;
 };
 
 const sendMsg = (setting) => {
-  console.log(setting);
+  logger(setting);
   const strSetting = `{
     postStart: ${setting.postStart},
     postEnd: ${setting.postEnd},
@@ -1342,7 +1148,7 @@ const sendMsg = (setting) => {
         3
       );
       if (checkExistInputMsg != 1) {
-        console.log("no element exists to enter message");
+        logger("no element exists to enter message");
         return 0;
       }
       await page.type(inputMsgSelector, msg);
@@ -1355,7 +1161,7 @@ const sendMsg = (setting) => {
         3
       );
       if (checkExistSendMsg != 1) {
-        console.log("no element exists to send message");
+        logger("no element exists to send message");
         return 0;
       }
       await clickElement(page, sendMsgSelector);
@@ -1378,7 +1184,7 @@ const sendMsg = (setting) => {
         3
       );
       if (checkExistInputMsg != 1) {
-        console.log("no element exists to enter message");
+        logger("no element exists to enter message");
         return 0;
       }
       await page.type(inputMsgSelector, msgRandom);
@@ -1390,7 +1196,7 @@ const sendMsg = (setting) => {
         3
       );
       if (checkExistSendMsg != 1) {
-        console.log("no element exists to send message");
+        logger("no element exists to send message");
         return 0;
       }
       await scrollSmoothIfNotExistOnScreen(page, sendMsgSelector);
@@ -1412,14 +1218,14 @@ const sendMsg = (setting) => {
       // check cookie xem login
       const isCookie = await checkLogin(page);
       if (!isCookie) {
-        console.log("You not log in facebook");
+        logger("You not log in facebook");
         return;
       }
   
       // check auth fb
       let url = await page.url();
       if (url.includes("mbasic.facebook.com/checkpoint")) {
-        console.log("Account facebook not is auth");
+        logger("Account facebook not is auth");
         return;
       }
       let countFriend = 0;
@@ -1450,7 +1256,7 @@ const sendMsg = (setting) => {
           if (isAccessChat) {
             await delay(getRandomIntBetween(3000, 5000));
           } else {
-            console.log("Error access to chat page");
+            logger("Error access to chat page");
             return;
           }
   
@@ -1468,7 +1274,7 @@ const sendMsg = (setting) => {
             await delay(getRandomIntBetween(5000, 10000));
             await returnHomePage(page);
           } else {
-            console.log("Error access to friendToSend page");
+            logger("Error access to friendToSend page");
             return;
           }
         } else if (countFriend < sendMsgObj.UID.length) {
@@ -1497,7 +1303,7 @@ const sendMsg = (setting) => {
             }
             await delay(3000);
           } else {
-            console.log("No link to access to profile page");
+            logger("No link to access to profile page");
             return;
           }
           // access friend page
@@ -1520,7 +1326,7 @@ const sendMsg = (setting) => {
             }
             await delay(3000);
           } else {
-            console.log("No link to access to friend page");
+            logger("No link to access to friend page");
             return;
           }
   
@@ -1565,7 +1371,7 @@ const sendMsg = (setting) => {
                 await returnHomePage(page);
                 await delay(getRandomIntBetween(3000, 5000));
               } else {
-                console.log("No access to message page");
+                logger("No access to message page");
                 return;
               }
             }
@@ -1618,12 +1424,12 @@ const sendMsg = (setting) => {
                 await returnHomePage(page);
                 await delay(getRandomIntBetween(3000, 5000));
               } else {
-                console.log("No access to message page");
+                logger("No access to message page");
                 return;
               }
             }
           } else {
-            console.log(
+            logger(
               "You do not have any friends yet. Please add more friends"
             );
             return;
@@ -1633,11 +1439,11 @@ const sendMsg = (setting) => {
         }
   
         await delay(getRandomIntBetween(3000, 5000));
-        console.log("Count friend send msg", countFriend + 1);
+        logger("Count friend send msg", countFriend + 1);
         countFriend++;
       }
     } catch (error) {
-      console.log(error.message);
+      logger(error.message);
     }
   `;
 };
@@ -1665,7 +1471,7 @@ const deletePost = (setting) => {
       }
       await delay(getRandomIntBetween(3, 5) * 1000);
     } catch (error) {
-      console.log(error);
+      logger(error);
       return false;
     }
   };
@@ -1703,9 +1509,9 @@ const deletePost = (setting) => {
       url.includes('https://mbasic.facebook.com/profile.php?') ||
       url.includes('https://mbasic.facebook.com/profile/timeline/stream/?')
     ) {
-      console.log('URL is correct');
+      logger('URL is correct');
     } else {
-      console.log('Redirect to profile page');
+      logger('Redirect to profile page');
       if (currentUrl.includes('https://mbasic.facebook.com/profile/timeline/stream/?')) {
         await page.goto(currentUrl, {
           waitUntil: 'networkidle2',
@@ -1730,14 +1536,14 @@ const deletePost = (setting) => {
     try {
       // //Check obj start < end ? random(start,end) : random(end,start)
       // let post = await checkObject(DeletePost);
-      // console.log('post ' + post);
+      // logger('post ' + post);
       // // check page is live reutrn -1, return 1, return 0
       // const isLive = await checkIsLive(page);
-      // console.log('Tình trạng trang web:', isLive);
+      // logger('Tình trạng trang web:', isLive);
       // if (!isLive) return -1;
       // // check is login: get cookie return -1, return 1, return 0
       // const isLoggedIn = await checkLogin(page);
-      // console.log('Tình trạng đăng nhập:', isLoggedIn);
+      // logger('Tình trạng đăng nhập:', isLoggedIn);
       // if (!isLoggedIn) return -1;
   
       //Click vao profile
@@ -1748,7 +1554,7 @@ const deletePost = (setting) => {
         let randomViewTime = getRandomIntBetween(post.viewTimeStart * 1000, post.viewTimeEnd * 1000);
   
         let countDelete = 0;
-        console.log('Cần delete', post.lineCount, 'bài');
+        logger('Cần delete', post.lineCount, 'bài');
         while (randomViewTime > 0 && countDelete < post.lineCount) {
           const startTime = Date.now();
   
@@ -1765,19 +1571,19 @@ const deletePost = (setting) => {
               const result = await findPostToDelete(page, post);
               if (result) {
                 countDelete++;
-                console.log('Đã delete được', countDelete, 'bài');
+                logger('Đã delete được', countDelete, 'bài');
               } else {
-                console.log('Khong delete post');
+                logger('Khong delete post');
                 i--;
               }
             } catch (err) {
-              console.log(err);
+              logger(err);
             }
           }
   
           const endTime = Date.now();
           randomViewTime -= endTime - startTime;
-          console.log('randomViewTime ' + randomViewTime);
+          logger('randomViewTime ' + randomViewTime);
   
           if (
             (await checkExistElementOnScreen(page, 'a[href*="/profile/timeline/stream/?cursor"]')) !== 0 &&
@@ -1790,10 +1596,10 @@ const deletePost = (setting) => {
         let randomDelay = getRandomIntBetween(post.delayTimeStart * 1000, post.delayTimeEnd * 1000);
         await delay(randomDelay);
       } else {
-        console.log('Khong vao duoc profile');
+        logger('Khong vao duoc profile');
       }
     } catch (error) {
-      console.log(error);
+      logger(error);
     }
   `;
 };

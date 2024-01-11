@@ -20,6 +20,7 @@
     "bluebird": "^3.7.2",
     "crisp-sdk-web": "^1.0.21",
     "crypto-js": "^4.1.1",
+    "file-system": "^2.2.2",
     "formik": "^2.4.1",
     "i18next": "^23.7.7",
     "moment": "^2.29.4",

@@ -86,7 +86,7 @@ const PopupDisplaySetting = ({
                   <input
                     onChange={(event) => {
                       const checked = event.target.checked;
-                      const newSettings = { ...settings, profile: friends };
+                      const newSettings = { ...settings, friends: checked };
                       setSettings(newSettings);
                     }}
                     checked={settings.friends}

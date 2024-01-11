@@ -55,6 +55,7 @@
       overflow-x: hidden;
       border-radius: 15px;
       scrollbar-width: thin;
+      color: #01162b;
     }
     .scrollable-container::-webkit-scrollbar {
       width: 5px;
@@ -72,6 +73,7 @@
     .newProfile-content {
       margin: 1%;
       .text {
+        width: 100%;
         position: relative;
         border-radius: 8px;
         border: 1px dashed rgba(1, 22, 43, 0.2);
@@ -80,9 +82,10 @@
           display: none;
         }
         .editor {
-          min-width: 100%;
+          max-width: 99%;
+          min-width: 99%;
           min-height: 100%;
-          max-width: 100%;
+          width: 100%;
           float: left;
           font-family: 'GoogleSans';
           -webkit-text-fill-color: #333;
@@ -172,7 +175,7 @@
             position: relative;
             display: flex;
             align-items: center;
-            .PostType {
+            .ProxyType {
               top: 0;
               width: 100%;
               height: 40px;
@@ -210,8 +213,5 @@
         }
       }
     }
-  }
-  .show {
-    display: block;
   }
 }

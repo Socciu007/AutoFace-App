@@ -301,188 +301,189 @@ const CreatePost = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                     </div>
                   </div>
                 </div>
-
-                <div className="photoOrVideo">
-                  <p className="component-item__header">Photo/video</p>
-                  <div className="component-item numberOfPost">
-                    <p className="component-item__header numberOfPostText">Number of photo/video:</p>
-                    <div className="component-item__number">
-                      <div className="component-item__number__icon">
-                        <img
-                          src={iconIncrease}
-                          alt="Increase icon"
-                          onClick={() => {
-                            changePhotoStart(values.photoStart + 1);
-                          }}
-                        />
-                        <img
-                          src={iconDecrease}
-                          alt="Decrease icon"
-                          onClick={() => {
-                            changePhotoStart(values.photoStart - 1);
-                          }}
-                        />
-                      </div>
-                      <input
-                        name="Start"
-                        type="text"
-                        value={values.photoStart}
-                        onChange={(event) => changePhotoStart(event.target.value)}
-                      />
-                    </div>
-                    <span>to</span>
-                    <div className="component-item__number">
-                      <div className="component-item__number__icon">
-                        <img
-                          src={iconIncrease}
-                          alt="Increase icon"
-                          onClick={() => {
-                            changePhotoEnd(values.photoEnd + 1);
-                          }}
-                        />
-                        <img
-                          src={iconDecrease}
-                          alt="Decrease icon"
-                          onClick={() => {
-                            changePhotoEnd(values.photoEnd - 1);
-                          }}
-                        />
-                      </div>
-                      <input
-                        name="End"
-                        type="text"
-                        value={values.photoEnd}
-                        onChange={(event) => changePhotoEnd(event.target.value)}
-                      />
-                    </div>
-                  </div>
-                  {values.photos.length === 0 ? (
-                    <div {...getRootProps({ className: 'component-item dragVideoOrPhoto' })}>
-                      <input {...getInputProps()} />
-                      <img className="mx-auto h-40" src={DragButton} alt="addfile" />
-                      <p>Drag the photo/video folder here</p>
-                    </div>
-                  ) : (
-                    <div className={`folderPhoto`}>
-                      <div className="URLImg">
-                        <span style={{ opacity: '0.5' }}>Folder:</span>
-                        <div>
-                          {values.photos.map((fileName, index) => (
-                            <span key={index}>{fileName}</span>
-                          ))}
-                        </div>
-                      </div>
-                      <img src={DeleteButton} alt="Delete Button" onClick={handleDeleteButtonClick} />
-                    </div>
-                  )}
-                  <div className="component-item__header">
-                    <input
-                      type="checkbox"
-                      checked={values.isTag}
-                      name="CheckTag"
-                      onChange={(event) => changeTag(event.target.checked)}
-                    />
-                    <p>Tag</p>
-                  </div>
-                  <div className={`component-item tag ${values.isTag ? 'show' : 'hide'}`}>
-                    <div className="numberOfFriend">
-                      <p>Number of friends:</p>
-                      <div className="component-item__content">
-                        <div className="component-item__number">
-                          <div className="component-item__number__icon">
-                            <img
-                              src={iconIncrease}
-                              alt="Increase icon"
-                              onClick={() => {
-                                changeNumberFriendTagStart(values.numberFriendTagStart + 1);
-                              }}
-                            />
-                            <img
-                              src={iconDecrease}
-                              alt="Decrease icon"
-                              onClick={() => {
-                                changeNumberFriendTagStart(values.numberFriendTagStart - 1);
-                              }}
-                            />
-                          </div>
-                          <input
-                            name="Start"
-                            type="text"
-                            value={values.numberFriendTagStart}
-                            onChange={(event) => changeNumberFriendTagStart(event.target.value)}
-                          />
-                        </div>
-                        <span>to</span>
-                        <div className="component-item__number">
-                          <div className="component-item__number__icon">
-                            <img
-                              src={iconIncrease}
-                              alt="Increase icon"
-                              onClick={() => {
-                                changeNumberFriendTagEnd(values.numberFriendTagEnd + 1);
-                              }}
-                            />
-                            <img
-                              src={iconDecrease}
-                              alt="Decrease icon"
-                              onClick={() => {
-                                changeNumberFriendTagEnd(values.numberFriendTagEnd - 1);
-                              }}
-                            />
-                          </div>
-                          <input
-                            name="End"
-                            type="text"
-                            value={values.numberFriendTagEnd}
-                            onChange={(event) => changeNumberFriendTagEnd(event.target.value)}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <p>Friends</p>
-                    <div className="component-item optionTag">
-                      <Select
-                        name="optionTag"
-                        className="TagType"
-                        onChange={(event) => {
-                          changeTypeTag(event.target.value);
-                        }}
-                        value={values.typeTag}
-                      >
-                        <MenuItem value="random">Randomly tag among friends</MenuItem>
-                        <MenuItem value="UID">UID list</MenuItem>
-                      </Select>
-                    </div>
-                    {values.typeTag === 'UID' && (
-                      <div style={{ position: 'relative' }} className="component-item">
-                        <div className="text" style={{ width: '100%', height: 204, overflow: 'auto' }}>
-                          <Editor
-                            value={UIDContent}
-                            onValueChange={(text) => {
-                              setUIDContent(text);
-                            }}
-                            highlight={(text) => hightlightWithLineNumbers(text, languages.js, UIDContent)}
-                            padding={15}
-                            className="editor"
-                            textareaId="UID"
-                            style={{
-                              background: '#f5f5f5',
-                              fontSize: 15,
+                {values.option === 'text/photo' && (
+                  <div className="photoOrVideo">
+                    <p className="component-item__header">Photo/video</p>
+                    <div className="component-item numberOfPost">
+                      <p className="component-item__header numberOfPostText">Number of photo/video:</p>
+                      <div className="component-item__number">
+                        <div className="component-item__number__icon">
+                          <img
+                            src={iconIncrease}
+                            alt="Increase icon"
+                            onClick={() => {
+                              changePhotoStart(values.photoStart + 1);
                             }}
                           />
-                          <div onClick={handleUIDDivClick} className={`placeholder ${UIDContent ? 'hide' : ''}`}>
-                            <p>
-                              <span>1</span>Enter the content here
-                            </p>
-                            <p>
-                              <span>2</span>Each content/line
-                            </p>
+                          <img
+                            src={iconDecrease}
+                            alt="Decrease icon"
+                            onClick={() => {
+                              changePhotoStart(values.photoStart - 1);
+                            }}
+                          />
+                        </div>
+                        <input
+                          name="Start"
+                          type="text"
+                          value={values.photoStart}
+                          onChange={(event) => changePhotoStart(event.target.value)}
+                        />
+                      </div>
+                      <span>to</span>
+                      <div className="component-item__number">
+                        <div className="component-item__number__icon">
+                          <img
+                            src={iconIncrease}
+                            alt="Increase icon"
+                            onClick={() => {
+                              changePhotoEnd(values.photoEnd + 1);
+                            }}
+                          />
+                          <img
+                            src={iconDecrease}
+                            alt="Decrease icon"
+                            onClick={() => {
+                              changePhotoEnd(values.photoEnd - 1);
+                            }}
+                          />
+                        </div>
+                        <input
+                          name="End"
+                          type="text"
+                          value={values.photoEnd}
+                          onChange={(event) => changePhotoEnd(event.target.value)}
+                        />
+                      </div>
+                    </div>
+                    {values.photos.length === 0 ? (
+                      <div {...getRootProps({ className: 'component-item dragVideoOrPhoto' })}>
+                        <input {...getInputProps()} />
+                        <img className="mx-auto h-40" src={DragButton} alt="addfile" />
+                        <p>Drag the photo/video folder here</p>
+                      </div>
+                    ) : (
+                      <div className={`folderPhoto`}>
+                        <div className="URLImg">
+                          <span style={{ opacity: '0.5' }}>Folder:</span>
+                          <div>
+                            {values.photos.map((fileName, index) => (
+                              <span key={index}>{fileName}</span>
+                            ))}
                           </div>
                         </div>
+                        <img src={DeleteButton} alt="Delete Button" onClick={handleDeleteButtonClick} />
                       </div>
                     )}
+                    <div className="component-item__header">
+                      <input
+                        type="checkbox"
+                        checked={values.isTag}
+                        name="CheckTag"
+                        onChange={(event) => changeTag(event.target.checked)}
+                      />
+                      <p>Tag</p>
+                    </div>
+                    <div className={`component-item tag ${values.isTag ? 'show' : 'hide'}`}>
+                      <div className="numberOfFriend">
+                        <p>Number of friends:</p>
+                        <div className="component-item__content">
+                          <div className="component-item__number">
+                            <div className="component-item__number__icon">
+                              <img
+                                src={iconIncrease}
+                                alt="Increase icon"
+                                onClick={() => {
+                                  changeNumberFriendTagStart(values.numberFriendTagStart + 1);
+                                }}
+                              />
+                              <img
+                                src={iconDecrease}
+                                alt="Decrease icon"
+                                onClick={() => {
+                                  changeNumberFriendTagStart(values.numberFriendTagStart - 1);
+                                }}
+                              />
+                            </div>
+                            <input
+                              name="Start"
+                              type="text"
+                              value={values.numberFriendTagStart}
+                              onChange={(event) => changeNumberFriendTagStart(event.target.value)}
+                            />
+                          </div>
+                          <span>to</span>
+                          <div className="component-item__number">
+                            <div className="component-item__number__icon">
+                              <img
+                                src={iconIncrease}
+                                alt="Increase icon"
+                                onClick={() => {
+                                  changeNumberFriendTagEnd(values.numberFriendTagEnd + 1);
+                                }}
+                              />
+                              <img
+                                src={iconDecrease}
+                                alt="Decrease icon"
+                                onClick={() => {
+                                  changeNumberFriendTagEnd(values.numberFriendTagEnd - 1);
+                                }}
+                              />
+                            </div>
+                            <input
+                              name="End"
+                              type="text"
+                              value={values.numberFriendTagEnd}
+                              onChange={(event) => changeNumberFriendTagEnd(event.target.value)}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <p>Friends</p>
+                      <div className="component-item optionTag">
+                        <Select
+                          name="optionTag"
+                          className="TagType"
+                          onChange={(event) => {
+                            changeTypeTag(event.target.value);
+                          }}
+                          value={values.typeTag}
+                        >
+                          <MenuItem value="random">Randomly tag among friends</MenuItem>
+                          <MenuItem value="UID">UID list</MenuItem>
+                        </Select>
+                      </div>
+                      {values.typeTag === 'UID' && (
+                        <div style={{ position: 'relative' }} className="component-item">
+                          <div className="text" style={{ width: '100%', height: 204, overflow: 'auto' }}>
+                            <Editor
+                              value={UIDContent}
+                              onValueChange={(text) => {
+                                setUIDContent(text);
+                              }}
+                              highlight={(text) => hightlightWithLineNumbers(text, languages.js, UIDContent)}
+                              padding={15}
+                              className="editor"
+                              textareaId="UID"
+                              style={{
+                                background: '#f5f5f5',
+                                fontSize: 15,
+                              }}
+                            />
+                            <div onClick={handleUIDDivClick} className={`placeholder ${UIDContent ? 'hide' : ''}`}>
+                              <p>
+                                <span>1</span>Enter the content here
+                              </p>
+                              <p>
+                                <span>2</span>Each content/line
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>
