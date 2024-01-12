@@ -170,7 +170,7 @@ export const postInteract = (setting) => {
         logger('Đã chọn vùng comment');
         // comment
         let content = PostInteract.text;
-        let randomString = content[getRandomIntBetween(content.length)];
+        let randomString = content[getRandomIntBetween(1, content.length)];
         await delay(1000);
         await page.keyboard.type(randomString, { delay: 100 });
         await delay(1000);

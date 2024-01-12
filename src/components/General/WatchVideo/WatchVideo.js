@@ -106,7 +106,7 @@ export function URLImg() {
   const [files, setFiles] = useState([]);
 
   const { getRootProps, getInputProps } = useDropzone({
-    maxFiles: 2,
+    maxFiles: 10,
     accept: {
       'image/png': ['.png', '.jpg', '.jpeg'],
     },
