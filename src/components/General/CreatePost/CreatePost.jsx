@@ -49,23 +49,6 @@ const CreatePost = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
 
       setValues({ ...values, photos: [...values.photos, ...newFiles] });
     },
-    // onDrop: async (acceptedFiles) => {
-    //   const newFiles = [];
-    //   // Use FileReader to read the content of each file
-    //   for (const file of acceptedFiles) {
-    //     const reader = new FileReader();
-    //     reader.onload = () => {
-    //       // You can access the file content using reader.result
-    //       // In this example, we are just pushing the file content to newFiles array
-    //       newFiles.push(reader.result);
-    //     };
-    //     reader.readAsDataURL(file);
-    //   }
-    //   // Wait for FileReader to finish reading files before updating state
-    //   await Promise.all(acceptedFiles.map((file) => new Promise((resolve) => (file.onLoad = resolve))));
-    //   // Update state with the new files
-    //   setValues({ ...values, photos: [...values.photos, ...newFiles] });
-    // },
   });
 
   const handleDeleteButtonClick = () => {

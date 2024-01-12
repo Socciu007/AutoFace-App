@@ -3,12 +3,16 @@ import './style.scss';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
+import iconFlagUSA from '../../assets/icon/icon-flagUSA.svg';
+import iconFlagVNI from '../../assets/icon/icon-flagVNI.svg';
 import IconEye from '../../assets/icons/icons-form/IconEye';
 import IconEyeSlash from '../../assets/icons/icons-form/IconEyeSlash';
 import { useTranslation } from 'react-i18next';
 import Loading from '../../components/loading/Loading';
 import { login } from '../../sender';
 import SnackbarApp from '../../components/Alert';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 const Login = () => {
   const navigate = useNavigate();
   const [message, setMessage] = useState('');
@@ -54,11 +58,37 @@ const Login = () => {
       console.log(err);
     }
   };
+  const initialValues = {
+    option: 'EN',
+  };
+  const [values, setValues] = useState(initialValues);
+  const changeOption = (value) => {
+    setValues({ ...values, option: value });
+  };
 
   return (
     <div className="login">
       <div className="login__content">
-        <div className="login__content-logo">{/* <img src={Logo} alt="" /> */}</div>
+        <div className="login__content-logo">
+          <p className="tool-name">AUTOFACE</p>
+          <div className="login__content_switch-language">
+            <Select
+              name="languageOption"
+              className="LanguageType"
+              onChange={(event) => changeOption(event.target.value)}
+              value={values.option}
+            >
+              <MenuItem value="EN">
+                <img src={iconFlagUSA} alt="icon flag USA" />
+                EN
+              </MenuItem>
+              <MenuItem value="VNI">
+                <img src={iconFlagVNI} alt="icon flag VNI" />
+                VNI
+              </MenuItem>
+            </Select>
+          </div>
+        </div>
         <div className="login__content-form">
           <h1 className="login__content-form-title">{t('Welcome back')}!</h1>
           <p className="login__content-form-describe">
@@ -143,6 +173,7 @@ const Login = () => {
           </div>
         </div>
       </div>
+      <div className="login__left-content"></div>
       {/* <div className="login__banner">
         <LoginBanner></LoginBanner>
       </div> */}

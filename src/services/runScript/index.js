@@ -394,19 +394,33 @@ const getAllFunc = (arrfunction) => {
 const convertToFunc = (script) => {
   switch (script.type) {
     case 'newsFeed':
-      return newFeed(script);
+      return `{
+        ${newFeed(script)}
+      }`;
     case 'createPost':
-      return createPost(script);
+      return `{
+        ${createPost(script)}
+      }`;
     case 'viewNoti':
-      return viewNoti(script);
+      return `{
+        ${viewNoti(script)}
+      }`;
     case 'replyMsg':
-      return replyMsg(script);
+      return `{
+        ${replyMsg(script)}
+      }`;
     case 'sendMsg':
-      return sendMsg(script);
+      return `{
+        ${sendMsg(script)}
+      }`;
     case 'deletePost':
-      return deletePost(script);
+      return `{
+        ${deletePost(script)}
+      }`;
     case 'postInteract':
-      return postInteract(script);
+      return `{
+        ${postInteract(script)}
+      }`;
     default:
       return `logger("Can't find func");`;
   }
