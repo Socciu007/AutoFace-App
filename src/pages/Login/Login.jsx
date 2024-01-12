@@ -65,18 +65,23 @@ const Login = () => {
   const changeOption = (value) => {
     setValues({ ...values, option: value });
   };
-  const makeCopy = {
+  const languageSelect = {
     fontFamily: 'GoogleSans !important',
     padding: '5px 15px',
-    gap: '10px',
-    border: 0,
+    display: 'flex',
+    border: '0px solid rgba(8, 35, 106, 0.25)',
+    borderRadius: '20px',
   };
 
   const select = {
     display: 'flex',
-    borderRadius: '20px !important',
-    border: '1px solid rgba(8, 35, 106, 0.25) !important',
+    padding: '0',
   };
+  const languageOption = {
+    borderRadius: '10px !important',
+    boxShadow: '0px 4px 10px 0px rgba(8, 35, 106, 0.25) !important',
+  };
+
   return (
     <div className="login">
       <div className="login__content">
@@ -89,17 +94,18 @@ const Login = () => {
               onChange={(event) => changeOption(event.target.value)}
               value={values.option}
               sx={{
-                '& .MuiInputBase-root': makeCopy,
+                '&.MuiInputBase-root': languageSelect,
                 '& .MuiSelect-select': select,
+                '& .css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper': languageOption,
               }}
             >
               <MenuItem value="EN">
                 <img src={iconFlagUSA} alt="icon flag USA" />
-                <span>EN</span>
+                <span style={{ marginLeft: '5px' }}>EN</span>
               </MenuItem>
               <MenuItem value="VNI">
                 <img src={iconFlagVNI} alt="icon flag VNI" />
-                <span>VNI</span>
+                <span style={{ marginLeft: '5px' }}>VNI</span>
               </MenuItem>
             </Select>
           </div>
@@ -171,13 +177,13 @@ const Login = () => {
                     <p>{t('Forgot password?')}</p>
                   </div>
                 </div>
-                <div>
+                <div className="signInBtn">
                   <button type="submit" className="signIn">
                     {loading ? <Loading></Loading> : null}
-                    {t('SIGN IN')}
+                    {t('Sign in')}
                   </button>
                 </div>
-                <div>
+                <div className="register">
                   <span>{t('Don’t have an account?')}</span>
                   <span className="notAccount" onClick={() => {}}>
                     {t('Register here')}
