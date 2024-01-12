@@ -6,7 +6,9 @@ import CreateScript from './pages/Create-Script/index.jsx';
 import ScriptManager from './pages/Script-Manager/index.jsx';
 import SettingsPage from './pages/SettingsPage/SettingsPage.jsx';
 import ProfilesPage from './pages/ProfilesPage/ProfilesPage.jsx';
+import Login from './pages/Login/Login.jsx';
 import Edit from './pages/Edit/index.jsx';
+
 function App() {
   return (
     <>
@@ -16,6 +18,7 @@ function App() {
         <Route path="/scripManager" element={<ScriptManager></ScriptManager>} />{' '}
         <Route path="/settings" element={<SettingsPage></SettingsPage>} />
         <Route path="/" element={<ProfilesPage></ProfilesPage>} />
+        <Route path="/login" element={<Login></Login>} />
         <Route path="/edit" element={<Edit></Edit>} />
       </Routes>
     </>

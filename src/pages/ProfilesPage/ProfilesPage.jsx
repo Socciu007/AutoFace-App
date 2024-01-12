@@ -21,7 +21,7 @@ import PopupAddProxy from '../../components/PopupHome/PopupAddProxy/PopupAddProx
 import PopupProxyManage from '../../components/PopupHome/PopupProxyManage/PopupProxyManage';
 import PopupDeleteProfile from '../../components/PopupHome/PopupDeleteProfile/PopupDeleteProfile';
 import PopupScript from '../../components/PopupHome/PopupScript/PopupScript';
-import { storageDisplaySettings, storageProfiles, storageSettings } from '../../common/const.config';
+import { accessToken, storageDisplaySettings, storageProfiles, storageSettings } from '../../common/const.config';
 import PopupDisplaySetting from '../../components/PopupHome/PopupDisplaySetting/PopupDisplaySetting';
 import { dbGetLocally, dbSetLocally, runProfile } from '../../sender';
 
@@ -54,8 +54,11 @@ const ProfilesPage = () => {
   };
 
   const checkSettings = async () => {
+    const token = await dbGetLocally(accessToken);
+    if (!token || token == '') {
+      return navigate('/login');
+    }
     const settings = await dbGetLocally(storageSettings);
-
     if (!settings) {
       await dbSetLocally(storageSettings, defaultSettings);
     }
@@ -644,8 +647,6 @@ const ProfilesPage = () => {
           scroll={{ x: 1000 }}
           pagination={false}
         />
-        {/* </div>
-        </div> */}
       </div>
       <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
     </div>
