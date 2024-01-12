@@ -283,7 +283,7 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
                       </Select>
                     </div>
                     <div className="textProxy">
-                      <div style={{ width: '99%', height: 166, overflow: 'auto' }} className="text">
+                      <div style={{ width: '99.5%', height: 166, overflow: 'auto' }} className="text">
                         <Editor
                           value={proxyContent}
                           onValueChange={(text) => {

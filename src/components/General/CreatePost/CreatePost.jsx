@@ -11,7 +11,7 @@ import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
-import { useDropzone } from 'react-dropzone';
+import Dropzone, { useDropzone } from 'react-dropzone';
 import { parseToNumber } from '../../../services/utils';
 const CreatePost = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
   const initialValues = {
@@ -36,17 +36,36 @@ const CreatePost = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
   const [UIDContent, setUIDContent] = useState('');
 
   const { getRootProps, getInputProps } = useDropzone({
-    maxFiles: 3,
+    maxFiles: 10,
+    noClick: true,
     accept: {
       'image/png': ['.png', '.jpg', '.jpeg'],
     },
     onDrop: (acceptedFiles) => {
       const newFiles = acceptedFiles.map((file) => {
-        return file.name;
+        console.log(file);
+        return file.path;
       });
 
       setValues({ ...values, photos: [...values.photos, ...newFiles] });
     },
+    // onDrop: async (acceptedFiles) => {
+    //   const newFiles = [];
+    //   // Use FileReader to read the content of each file
+    //   for (const file of acceptedFiles) {
+    //     const reader = new FileReader();
+    //     reader.onload = () => {
+    //       // You can access the file content using reader.result
+    //       // In this example, we are just pushing the file content to newFiles array
+    //       newFiles.push(reader.result);
+    //     };
+    //     reader.readAsDataURL(file);
+    //   }
+    //   // Wait for FileReader to finish reading files before updating state
+    //   await Promise.all(acceptedFiles.map((file) => new Promise((resolve) => (file.onLoad = resolve))));
+    //   // Update state with the new files
+    //   setValues({ ...values, photos: [...values.photos, ...newFiles] });
+    // },
   });
 
   const handleDeleteButtonClick = () => {
@@ -363,12 +382,22 @@ const CreatePost = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                         <p>Drag the photo/video folder here</p>
                       </div>
                     ) : (
+                      // <Dropzone onDrop={(acceptedFiles) => console.log(acceptedFiles)}>
+                      //   {({ getRootProps, getInputProps }) => (
+                      //     <section>
+                      //       <div {...getRootProps()}>
+                      //         <input {...getInputProps()} />
+                      //         <p>Drag 'n' drop some files here, or click to select files</p>
+                      //       </div>
+                      //     </section>
+                      //   )}
+                      // </Dropzone>
                       <div className={`folderPhoto`}>
                         <div className="URLImg">
                           <span style={{ opacity: '0.5' }}>Folder:</span>
                           <div>
-                            {values.photos.map((fileName, index) => (
-                              <span key={index}>{fileName}</span>
+                            {values.photos.map((filePath, index) => (
+                              <span key={index}>{filePath.replace(/^.*[\\/]/, '')}</span>
                             ))}
                           </div>
                         </div>

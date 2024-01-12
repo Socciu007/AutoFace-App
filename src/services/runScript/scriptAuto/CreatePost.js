@@ -16,6 +16,7 @@ export const createPost = (setting) => {
     text: ${JSON.stringify(setting.text)},
     typeTag: ${JSON.stringify(setting.typeTag)},
   }`;
+  console.log(strSetting);
   return `
   const tagFriendsRandomly = async (page, numberFriendTag) => {
     try {
@@ -70,40 +71,43 @@ export const createPost = (setting) => {
     // TAG
     try {
       const numberFriendTag = getRandomIntBetween(CreatePost.numberFriendTagStart, CreatePost.numberFriendTagEnd);
-      logger("numberFriendTag " + numberFriendTag)
       if (numberFriendTag > 0) {
-        await scrollSmoothIfNotExistOnScreen(page, 'div[aria-label="Tag friends"]');
-        if ((await checkExistElementOnScreen(page, 'div[aria-label="Tag friends"]')) === 0) {
-          const tagBtn = await getElement(page, 'div[aria-label="Tag friends"]', 5);
-          await delay(1000);
-          await clickElement(tagBtn);
+        const tagBtn = await findBtn(page, '󱤇');
+        if (!(await isElementVisible(page, tagBtn))) {
+          await tagBtn.evaluate((el) => {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+          });
           await delay(2000);
-          if (CreatePost.typeTag == 'UIDList') {
-            logger('Khong the tag bang UID list');
-            // await tagFriendsByUIDList(page, CreatePost);
-          } else {
-            await tagFriendsRandomly(page, numberFriendTag);
-          }
+        }
+        await clickElement(tagBtn);
+        await delay(2000);
+        if (CreatePost.typeTag === 'UIDList') {
+          // Tag UID
+          logger('Khong the tag bang UID list');
+          // await tagFriendsByUIDList(page, CreatePost);
+        } else {
+          // tag random
+          await tagFriendsRandomly(page, numberFriendTag);
+        }
   
-          // Click "Done" button after tag
-          if (
-            (await checkExistElementOnScreen(
-              page,
-              '#screen-root > div > div.m.fixed-container.bottom > div > div.m.bg-s3 > div',
-            )) === 0
-          ) {
-            const doneBtn = await getElement(
-              page,
-              '#screen-root > div > div.m.fixed-container.bottom > div > div.m.bg-s3 > div',
-              5,
-            );
-            await clickElement(doneBtn);
-            await delay(2000);
-            return true;
-          } else {
-            logger("Can't find done tag");
-            return false;
-          }
+        // Click "Done" button after tag
+        if (
+          (await checkExistElementOnScreen(
+            page,
+            '#screen-root > div > div.m.fixed-container.bottom > div > div.m.bg-s3 > div',
+          )) === 0
+        ) {
+          const doneBtn = await getElement(
+            page,
+            '#screen-root > div > div.m.fixed-container.bottom > div > div.m.bg-s3 > div',
+            5,
+          );
+          await clickElement(doneBtn);
+          await delay(2000);
+          return true;
+        } else {
+          logger("Can't find done tag");
+          return false;
         }
       } else {
         logger('Khong tag friend');
@@ -190,6 +194,22 @@ export const createPost = (setting) => {
       return false;
     }
   };
+  const findBtn = async (page, content) => {
+    try {
+      const buttons = await getElements(page, '[class="native-text"]');
+      for (let i = 0; i < buttons.length; i++) {
+        const btn = await page.evaluate((el) => {
+          return el.innerHTML;
+        }, buttons[i]);
+  
+        if (btn.includes(content)) {
+          return buttons[i];
+        }
+      }
+    } catch (err) {
+      logger(err);
+    }
+  };
 
   try {
     const object = ${strSetting}
@@ -237,14 +257,9 @@ export const createPost = (setting) => {
           }
           // TAG
           if (CreatePost.isTag) {
-            const resultTag = await tagFriend(page, CreatePost);
-            logger("resultTag " + resultTag);
-            if(resultTag){
-              logger("Tag thanh cong");
-            }
-            else{
-              logger("Khong tag ban be thanh cong");
-            }
+            await tagFriend(page, CreatePost);
+          } else {
+            logger('Khong tag ban be');
           }
         } else {
           // Using background
@@ -273,8 +288,13 @@ export const createPost = (setting) => {
           }
         }
         // Click Post content
-        if ((await checkExistElementOnScreen(page, 'button.native-text')) == 0) {
-          const PostBtn = await getElements(page, 'button.native-text');
+        const PostBtn = await getElements(page, 'button.native-text');
+        if ((await checkExistElementOnScreen(page, 'button.native-text')) !== 0) {
+          await PostBtn[PostBtn.length - 1].evaluate((el) => {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+          });
+          await delay(2000);
+        } else if ((await checkExistElementOnScreen(page, 'button.native-text')) === 0) {
           if (PostBtn.length > 0) {
             await clickElement(PostBtn[PostBtn.length - 1]);
             logger('Da click post');
