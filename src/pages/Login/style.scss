@@ -24,13 +24,16 @@
     justify-content: center;
     flex-direction: column;
     background: #fff;
-
-    &-logo {
+    padding: 30px 40px;
+    &-header {
       // padding-top: 100px;
       margin-bottom: 35px;
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
       .tool-name {
         color: #01162b;
-        font-family: Haettenschweiler;
+        font-family: 'Haettenschweiler';
         font-size: 28px;
         font-style: normal;
         font-weight: 400;
@@ -40,6 +43,25 @@
     }
     ._switch-language {
       display: flex;
+      .LanguageType {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url('../../../assets/icon/icon-down.svg') !important;
+        background-repeat: no-repeat !important;
+        background-position: right 20px center !important;
+        font-family: 'GoogleSans';
+        option {
+          font-weight: 400;
+          color: var(--font-color-para);
+        }
+        svg {
+          display: none;
+        }
+      }
+      .css-yf8vq0-MuiSelect-nativeInput {
+        border: 0;
+      }
     }
     &-form {
       width: 450px;

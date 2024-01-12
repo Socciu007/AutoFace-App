@@ -65,11 +65,22 @@ const Login = () => {
   const changeOption = (value) => {
     setValues({ ...values, option: value });
   };
+  const makeCopy = {
+    fontFamily: 'GoogleSans !important',
+    padding: '5px 15px',
+    gap: '10px',
+    border: 0,
+  };
 
+  const select = {
+    display: 'flex',
+    borderRadius: '20px !important',
+    border: '1px solid rgba(8, 35, 106, 0.25) !important',
+  };
   return (
     <div className="login">
       <div className="login__content">
-        <div className="login__content-logo">
+        <div className="login__content-header">
           <p className="tool-name">AUTOFACE</p>
           <div className="login__content_switch-language">
             <Select
@@ -77,14 +88,18 @@ const Login = () => {
               className="LanguageType"
               onChange={(event) => changeOption(event.target.value)}
               value={values.option}
+              sx={{
+                '& .MuiInputBase-root': makeCopy,
+                '& .MuiSelect-select': select,
+              }}
             >
               <MenuItem value="EN">
                 <img src={iconFlagUSA} alt="icon flag USA" />
-                EN
+                <span>EN</span>
               </MenuItem>
               <MenuItem value="VNI">
                 <img src={iconFlagVNI} alt="icon flag VNI" />
-                VNI
+                <span>VNI</span>
               </MenuItem>
             </Select>
           </div>
