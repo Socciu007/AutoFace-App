@@ -62,7 +62,13 @@
     "viewTimeStart": 60,
     "viewTimeEnd": 120
   },
-  "viewNoti": null,
+  "viewNoti": {
+    "numsNotiStart": 3,
+    "numsNotiEnd": 5,
+    "waitTimeStart": 5,
+    "waitTimeEnd": 10,
+    "viewOptions": "randomly"
+  },
   "sendMsg": null,
   "replyMsg": null,
   "addFriend": null,

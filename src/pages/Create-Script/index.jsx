@@ -208,10 +208,26 @@ const CreateScript = () => {
 
   const renderComponent = (component) => {
     switch (component) {
-      // case 'watchStory':
-      //   return <WatchStory onGoBackClick={handleGoBackClick} />;
-      // case 'watchVideo':
-      //   return <WatchVideo onGoBackClick={handleGoBackClick} />;
+      case 'watchStory':
+        return (
+          <WatchStory
+            component={component}
+            currentSetup={currentSetup}
+            id={currentComponent}
+            onGoBackClick={handleGoBackClick}
+            updateDesignScript={updateDesignScript}
+          />
+        );
+      case 'watchVideo':
+        return (
+          <WatchVideo
+            component={component}
+            currentSetup={currentSetup}
+            id={currentComponent}
+            onGoBackClick={handleGoBackClick}
+            updateDesignScript={updateDesignScript}
+          />
+        );
       case 'newsFeed':
         return (
           <Newsfeed
@@ -405,14 +421,14 @@ const CreateScript = () => {
               </div>
               <div className="left-content__container">
                 <div className={activeCategory === 1 ? 'grid-container' : 'hide'}>
-                  {/* <div className="card" onDragStart={(event) => onDragStart(event, 'watchStory')} draggable>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'watchStory')} draggable>
                     <img src={watchStory} alt="watch Story General" />
                     <p>Watch story</p>
                   </div>
                   <div className="card" onDragStart={(event) => onDragStart(event, 'watchVideo')} draggable>
                     <img src={watchVideo} alt="watch Video General" />
                     <p>Watch video</p>
-                  </div> */}
+                  </div>
                   <div className="card" onDragStart={(event) => onDragStart(event, 'newsFeed')} draggable>
                     <img src={newsfeed} alt="watch newsfeed General" />
                     <p>Newsfeed</p>

@@ -10,29 +10,68 @@ import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import { InviteOption, UIDTextarea, useRangeValues } from './Invite';
-const Invite = ({ onGoBackClick }) => {
+import { parseToNumber } from '../../../services/utils';
+const Invite = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
   const initialValues = {
-    Group_FriendsStart: 5,
-    Group_FriendsEnd: 10,
-    DelayTimeStart: 5,
-    DelayTimeEnd: 10,
+    groupFriendsStart: 5,
+    groupFriendsEnd: 10,
+    delayTimeStart: 5,
+    delayTimeEnd: 10,
+    option: 'random',
+    lineCount: 0,
+    text: [],
+  };
+  const [values, setValues] = useState(initialValues);
+  const [textContent, setTextContent] = useState('');
+
+  useEffect(() => {
+    updateDesignScript(values, component, id);
+  }, [values]);
+
+  useEffect(() => {
+    if (currentSetup) {
+      if (currentSetup.text && currentSetup.text.length) {
+        setTextContent(currentSetup.text.join('\n'));
+      }
+
+      setValues(currentSetup);
+    }
+  }, [currentSetup]);
+
+  useEffect(() => {
+    if (textContent.length) {
+      setValues({ ...values, UIDGroup: textContent.split('\n'), lineCount: textContent.split('\n').length });
+    }
+  }, [textContent]);
+
+  const changeGroupFriendStart = (group) => {
+    setValues({ ...values, groupFriendsStart: parseToNumber(group) });
   };
 
-  const group_FriendsValues = useRangeValues(initialValues, 'Group_Friends');
-  const delayTimeValues = useRangeValues(initialValues, 'DelayTime');
+  const changeGroupFriendEnd = (group) => {
+    setValues({ ...values, groupFriendsEnd: parseToNumber(group) });
+  };
 
-  const { selectedValueInvite, handleSelectChangeInvite } = InviteOption();
+  const changeDelayTimeStart = (time) => {
+    setValues({ ...values, delayTimeStart: parseToNumber(time) });
+  };
+  const changeDelayTimeEnd = (time) => {
+    setValues({ ...values, delayTimeEnd: parseToNumber(time) });
+  };
 
-  const {
-    UIDContent,
-    handleTextareaChangeUIDContent,
-    handleTextareaPaste,
-    lineCount,
-    handleDivClick,
-    hightlightWithLineNumbers,
-    setUIDContent,
-  } = UIDTextarea();
+  const changeOption = (value) => {
+    setValues({ ...values, option: value });
+  };
+
+  const handleDivClick = () => {
+    document.getElementById('codeArea').focus();
+  };
+
+  const hightlightWithLineNumbers = (input, language, content) =>
+    highlight(input, language)
+      .split('\n')
+      .map((line, i) => `<span class='editorLineNumber ${content ? '' : 'hide'}'>${i + 1}</span>${line}`)
+      .join('\n');
 
   return (
     <div className="invite">
@@ -40,7 +79,13 @@ const Invite = ({ onGoBackClick }) => {
         <div className="scrollable-container">
           <div className="component-left">
             <div className="goBack titleInvite">
-              <img src={backButton} alt="Back button" onClick={() => onGoBackClick(true)} />
+              <img
+                src={backButton}
+                alt="Back button"
+                onClick={() => {
+                  onGoBackClick(values, component, id);
+                }}
+              />
               <p>Invite</p>
             </div>
             <div className="component-content__invite">
@@ -48,27 +93,51 @@ const Invite = ({ onGoBackClick }) => {
                 <p className="component-item__header">Number of friends/group:</p>
                 <div className="component-item__number">
                   <div className="component-item__number__icon">
-                    <img src={iconIncrease} alt="Increase icon" onClick={group_FriendsValues.handleIncrement} />
-                    <img src={iconDecrease} alt="Decrease icon" onClick={group_FriendsValues.handleDecrement} />
+                    <img
+                      src={iconIncrease}
+                      alt="Increase icon"
+                      onClick={() => {
+                        changeGroupFriendStart(values.groupFriendsStart + 1);
+                      }}
+                    />
+                    <img
+                      src={iconDecrease}
+                      alt="Decrease icon"
+                      onClick={() => {
+                        changeGroupFriendStart(values.groupFriendsStart - 1);
+                      }}
+                    />
                   </div>
                   <input
                     type="text"
                     name="Start"
-                    value={group_FriendsValues.Group_FriendsStart}
-                    onChange={(event) => group_FriendsValues.handleInputChangeStart(event)}
+                    value={values.groupFriendsStart}
+                    onChange={(event) => changeGroupFriendStart(event.target.value)}
                   />
                 </div>
                 <span>to</span>
                 <div className="component-item__number">
                   <div className="component-item__number__icon">
-                    <img src={iconIncrease} alt="Increase icon" onClick={group_FriendsValues.handleIncrementEnd} />
-                    <img src={iconDecrease} alt="Decrease icon" onClick={group_FriendsValues.handleDecrementEnd} />
+                    <img
+                      src={iconIncrease}
+                      alt="Increase icon"
+                      onClick={() => {
+                        changeGroupFriendEnd(values.groupFriendsEnd + 1);
+                      }}
+                    />
+                    <img
+                      src={iconDecrease}
+                      alt="Decrease icon"
+                      onClick={() => {
+                        changeGroupFriendEnd(values.groupFriendsEnd - 1);
+                      }}
+                    />
                   </div>
                   <input
                     type="text"
                     name="End"
-                    value={group_FriendsValues.Group_FriendsEnd}
-                    onChange={(event) => group_FriendsValues.handleInputChangeEnd(event)}
+                    value={values.groupFriendsEnd}
+                    onChange={(event) => changeGroupFriendEnd(event.target.value)}
                   />
                 </div>
               </div>
@@ -78,27 +147,51 @@ const Invite = ({ onGoBackClick }) => {
                 </p>
                 <div className="component-item__number">
                   <div className="component-item__number__icon">
-                    <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrement} />
-                    <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrement} />
+                    <img
+                      src={iconIncrease}
+                      alt="Increase icon"
+                      onClick={() => {
+                        changeDelayTimeStart(values.delayTimeStart + 1);
+                      }}
+                    />
+                    <img
+                      src={iconDecrease}
+                      alt="Decrease icon"
+                      onClick={() => {
+                        changeDelayTimeStart(values.delayTimeStart - 1);
+                      }}
+                    />
                   </div>
                   <input
                     name="Start"
                     type="text"
-                    value={delayTimeValues.DelayTimeStart}
-                    onChange={(event) => delayTimeValues.handleInputChangeStart(event)}
+                    value={values.delayTimeStart}
+                    onChange={(event) => changeDelayTimeStart(event.target.value)}
                   />
                 </div>
                 <span>to</span>
                 <div className="component-item__number">
                   <div className="component-item__number__icon">
-                    <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrementEnd} />
-                    <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrementEnd} />
+                    <img
+                      src={iconIncrease}
+                      alt="Increase icon"
+                      onClick={() => {
+                        changeDelayTimeEnd(values.delayTimeEnd + 1);
+                      }}
+                    />
+                    <img
+                      src={iconDecrease}
+                      alt="Decrease icon"
+                      onClick={() => {
+                        changeDelayTimeEnd(values.delayTimeEnd - 1);
+                      }}
+                    />
                   </div>
                   <input
                     name="End"
                     type="text"
-                    value={delayTimeValues.DelayTimeEnd}
-                    onChange={(event) => delayTimeValues.handleInputChangeEnd(event)}
+                    value={values.delayTimeEnd}
+                    onChange={(event) => changeDelayTimeEnd(event.target.value)}
                   />
                 </div>
               </div>
@@ -110,28 +203,28 @@ const Invite = ({ onGoBackClick }) => {
                   <Select
                     name="InviteOption"
                     className="InviteType"
-                    onChange={handleSelectChangeInvite}
-                    value={selectedValueInvite}
+                    onChange={(event) => {
+                      changeOption(event.target.value);
+                    }}
+                    value={values.option}
                   >
                     <MenuItem value="random">Random</MenuItem>
                     <MenuItem value="suggestions">By suggestions</MenuItem>
                   </Select>
                 </div>
-                {(selectedValueInvite === 'suggestions' || selectedValueInvite === 'random') && (
+                {(values.option === 'suggestions' || values.option === 'random') && (
                   <div>
                     <div className="UIDContent">
                       <div className="UID_Header">
                         <p>Group UID list</p>
-                        <span>({lineCount})</span>
+                        <span>({values.lineCount})</span>
                       </div>
                       <div className="component-item " style={{ position: 'relative' }}>
                         <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="UIDText">
                           <Editor
-                            onChange={handleTextareaChangeUIDContent}
-                            onPaste={handleTextareaPaste}
-                            value={UIDContent}
-                            onValueChange={(UIDContent) => setUIDContent(UIDContent)}
-                            highlight={(UIDContent) => hightlightWithLineNumbers(UIDContent, languages.js)}
+                            value={textContent}
+                            onValueChange={(text) => setTextContent(text)}
+                            highlight={(text) => hightlightWithLineNumbers(text, languages.js, textContent)}
                             padding={15}
                             className="editor"
                             textareaId="codeArea"
@@ -141,7 +234,7 @@ const Invite = ({ onGoBackClick }) => {
                             }}
                           />
                         </div>
-                        <div onClick={handleDivClick} className={`placeholder ${UIDContent ? 'hide' : ''}`}>
+                        <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
                           <p>
                             <span>1</span>Enter the UID here
                           </p>

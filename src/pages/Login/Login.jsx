@@ -78,8 +78,8 @@ const Login = () => {
     padding: '0',
   };
   const languageOption = {
-    borderRadius: '10px !important',
-    boxShadow: '0px 4px 10px 0px rgba(8, 35, 106, 0.25) !important',
+    borderRadius: '10px',
+    boxShadow: '0px 4px 10px 0px rgba(8, 35, 106, 0.25)',
   };
 
   return (
@@ -96,7 +96,7 @@ const Login = () => {
               sx={{
                 '&.MuiInputBase-root': languageSelect,
                 '& .MuiSelect-select': select,
-                '& .css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper': languageOption,
+                '&.MuiPaper-root': languageOption,
               }}
             >
               <MenuItem value="EN">

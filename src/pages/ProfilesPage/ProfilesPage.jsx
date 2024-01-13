@@ -54,11 +54,11 @@ const ProfilesPage = () => {
   };
 
   const checkSettings = async () => {
-    await dbSetLocally(accessToken, null);
-    // const token = await dbGetLocally(accessToken);
-    // if (!token || token == '') {
-    //   return navigate('/login');
-    // }
+    // await dbSetLocally(accessToken, null);
+    const token = await dbGetLocally(accessToken);
+    if (!token || token == '') {
+      return navigate('/login');
+    }
     const settings = await dbGetLocally(storageSettings);
     if (!settings) {
       await dbSetLocally(storageSettings, defaultSettings);

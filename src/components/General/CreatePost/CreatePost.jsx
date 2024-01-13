@@ -365,20 +365,10 @@ const CreatePost = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                         <p>Drag the photo/video folder here</p>
                       </div>
                     ) : (
-                      // <Dropzone onDrop={(acceptedFiles) => console.log(acceptedFiles)}>
-                      //   {({ getRootProps, getInputProps }) => (
-                      //     <section>
-                      //       <div {...getRootProps()}>
-                      //         <input {...getInputProps()} />
-                      //         <p>Drag 'n' drop some files here, or click to select files</p>
-                      //       </div>
-                      //     </section>
-                      //   )}
-                      // </Dropzone>
                       <div className={`folderPhoto`}>
                         <div className="URLImg">
                           <span style={{ opacity: '0.5' }}>Folder:</span>
-                          <div>
+                          <div style={{ width: '100%' }}>
                             {values.photos.map((filePath, index) => (
                               <span key={index}>{filePath.replace(/^.*[\\/]/, '')}</span>
                             ))}

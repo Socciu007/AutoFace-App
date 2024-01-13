@@ -9,8 +9,8 @@ import Select from '@mui/material/Select';
 import { parseToNumber } from '../../../services/utils';
 const View_Notifications = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
   const initialValues = {
-    notificationStart: 5,
-    notificationEnd: 10,
+    notificationStart: 3,
+    notificationEnd: 5,
     delayTimeStart: 5,
     delayTimeEnd: 10,
     option: 'randomFriend',

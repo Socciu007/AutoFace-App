@@ -1,51 +1,108 @@
 // eslint-disable-next-line no-unused-vars
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './style.scss';
 import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
-import downButton from '../../../assets/icon/icon-down.svg';
 import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import { AnswerTextarea, CancelFriendOption, KeywordTextarea, ShowAutoAnswer, useRangeValues } from './JoinGroup.js';
-const JoinGroup = ({ onGoBackClick }) => {
+import { parseToNumber } from '../../../services/utils.js';
+const JoinGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
   const initialValues = {
-    NumberGroupStart: 5,
-    NumberGroupEnd: 10,
-    DelayTimeStart: 5,
-    DelayTimeEnd: 10,
+    groupStart: 5,
+    groupEnd: 10,
+    delayTimeStart: 5,
+    delayTimeEnd: 10,
+    isAutoAnswer: false,
+    option: 'suggestions',
+    text: [],
+    answer: [],
+    lineCount: 0,
+  };
+  const [values, setValues] = useState(initialValues);
+  const [answerContent, setAnswerContent] = useState('');
+  const [textContent, setTextContent] = useState('');
+
+  useEffect(() => {
+    updateDesignScript(values, component, id);
+  }, [values]);
+
+  useEffect(() => {
+    if (currentSetup) {
+      if (currentSetup.text && currentSetup.text.length) {
+        setTextContent(currentSetup.text.join('\n'));
+      }
+      if (currentSetup.answer && currentSetup.answer.length) {
+        setAnswerContent(currentSetup.answer.join('\n'));
+      }
+      setValues(currentSetup);
+    }
+  }, [currentSetup]);
+
+  useEffect(() => {
+    if (textContent.length) {
+      setValues({ ...values, UIDGroup: textContent.split('\n'), lineCount: textContent.split('\n').length });
+    }
+  }, [textContent]);
+
+  useEffect(() => {
+    if (answerContent.length) {
+      setValues({ ...values, answer: answerContent.split('\n') });
+    }
+  }, [answerContent]);
+
+  const changeOption = (value) => {
+    setValues({ ...values, option: value });
   };
 
-  const numberGroupValues = useRangeValues(initialValues, 'NumberGroup');
-  const delayTimeValues = useRangeValues(initialValues, 'DelayTime');
+  const changeDelayTimeStart = (time) => {
+    setValues({ ...values, delayTimeStart: parseToNumber(time) });
+  };
+  const changeDelayTimeEnd = (time) => {
+    setValues({ ...values, delayTimeEnd: parseToNumber(time) });
+  };
 
-  const { selectedValueJoinGroup, handleSelectChangeJoinGroup } = CancelFriendOption();
+  const changeGroupStart = (group) => {
+    setValues({ ...values, groupStart: parseToNumber(group) });
+  };
+  const changeGroupEnd = (group) => {
+    setValues({ ...values, groupEnd: parseToNumber(group) });
+  };
 
-  const {
-    KeywordContent,
-    handleTextareaChangeKeywordContent,
-    handleKeywordTextareaPaste,
-    lineCount,
-    handleDivKeywordClick,
-    hightlightWithLineNumbersKeyword,
-    setKeywordContent,
-  } = KeywordTextarea();
+  const handleDivKeywordClick = () => {
+    document.getElementById('keyword').focus();
+  };
 
-  const { AnswerContent, handleTextareaChangeAnswerContent, handleDivAnswerClick, hightlightWithLineNumbers } =
-    AnswerTextarea();
+  const handleDivAnswerClick = () => {
+    document.getElementById('answer').focus();
+  };
 
-  const { isAutoAnswer, handleCheckboxChangeAutoAnswer } = ShowAutoAnswer();
+  const changeAnswer = (value) => {
+    setValues({ ...values, isAutoAnswer: value });
+  };
+  const hightlightWithLineNumbers = (input, language, content) =>
+    highlight(input, language)
+      .split('\n')
+      .map((line, i) => `<span class='editorLineNumber ${content ? '' : 'hide'}'>${i + 1}</span>${line}`)
+      .join('\n');
+
   return (
     <div className="joinGroup">
       <div className="component_container">
         <div className="scrollable-container">
           <div className="component-left">
             <div className="goBack titleJoinGroup">
-              <img src={backButton} alt="Back button" onClick={() => onGoBackClick(true)} />
+              <img
+                src={backButton}
+                alt="Back button"
+                onClick={() => {
+                  onGoBackClick(values, component, id);
+                }}
+              />
               <p>Join group</p>
             </div>
             <div className="component-item__joinGroup">
@@ -57,43 +114,67 @@ const JoinGroup = ({ onGoBackClick }) => {
                   <Select
                     name="JoinGroupOption"
                     className="JoinGroupType"
-                    onChange={handleSelectChangeJoinGroup}
-                    value={selectedValueJoinGroup}
+                    onChange={(event) => {
+                      changeOption(event.target.value);
+                    }}
+                    value={values.option}
                   >
                     <MenuItem value="suggestions">By suggestions</MenuItem>
                     <MenuItem value="keywords">By keywords</MenuItem>
                     <MenuItem value="UID">By UID</MenuItem>
                   </Select>
                 </div>
-                {(selectedValueJoinGroup === 'suggestions' ||
-                  selectedValueJoinGroup === 'keywords' ||
-                  selectedValueJoinGroup === 'UID') && (
+                {(values.option === 'suggestions' || values.option === 'keywords' || values.option === 'UID') && (
                   <div>
                     <div className="component-item numberOfGroups">
                       <p className="component-item__header">Number of groups:</p>
                       <div className="component-item__number">
                         <div className="component-item__number__icon">
-                          <img src={iconIncrease} alt="Increase icon" onClick={numberGroupValues.handleIncrement} />
-                          <img src={iconDecrease} alt="Decrease icon" onClick={numberGroupValues.handleDecrement} />
+                          <img
+                            src={iconIncrease}
+                            alt="Increase icon"
+                            onClick={() => {
+                              changeGroupStart(values.groupStart + 1);
+                            }}
+                          />
+                          <img
+                            src={iconDecrease}
+                            alt="Decrease icon"
+                            onClick={() => {
+                              changeGroupStart(values.groupStart - 1);
+                            }}
+                          />
                         </div>
                         <input
                           type="text"
                           name="Start"
-                          value={numberGroupValues.NumberGroupStart}
-                          onChange={(event) => numberGroupValues.handleInputChangeStart(event)}
+                          value={values.groupStart}
+                          onChange={(event) => changeGroupStart(event.target.value)}
                         />
                       </div>
                       <span>to</span>
                       <div className="component-item__number">
                         <div className="component-item__number__icon">
-                          <img src={iconIncrease} alt="Increase icon" onClick={numberGroupValues.handleIncrementEnd} />
-                          <img src={iconDecrease} alt="Decrease icon" onClick={numberGroupValues.handleDecrementEnd} />
+                          <img
+                            src={iconIncrease}
+                            alt="Increase icon"
+                            onClick={() => {
+                              changeGroupEnd(values.groupEnd + 1);
+                            }}
+                          />
+                          <img
+                            src={iconDecrease}
+                            alt="Decrease icon"
+                            onClick={() => {
+                              changeGroupEnd(values.groupEnd - 1);
+                            }}
+                          />
                         </div>
                         <input
                           type="text"
                           name="End"
-                          value={numberGroupValues.NumberGroupEnd}
-                          onChange={(event) => numberGroupValues.handleInputChangeEnd(event)}
+                          value={values.groupEnd}
+                          onChange={(event) => changeGroupEnd(event.target.value)}
                         />
                       </div>
                     </div>
@@ -103,47 +184,69 @@ const JoinGroup = ({ onGoBackClick }) => {
                       </p>
                       <div className="component-item__number">
                         <div className="component-item__number__icon">
-                          <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrement} />
-                          <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrement} />
+                          <img
+                            src={iconIncrease}
+                            alt="Increase icon"
+                            onClick={() => {
+                              changeDelayTimeStart(values.delayTimeStart + 1);
+                            }}
+                          />
+                          <img
+                            src={iconDecrease}
+                            alt="Decrease icon"
+                            onClick={() => {
+                              changeDelayTimeStart(values.delayTimeStart - 1);
+                            }}
+                          />
                         </div>
                         <input
                           name="Start"
                           type="text"
-                          value={delayTimeValues.DelayTimeStart}
-                          onChange={(event) => delayTimeValues.handleInputChangeStart(event)}
+                          value={values.delayTimeStart}
+                          onChange={(event) => changeDelayTimeStart(event.target.value)}
                         />
                       </div>
                       <span>to</span>
                       <div className="component-item__number">
                         <div className="component-item__number__icon">
-                          <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrementEnd} />
-                          <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrementEnd} />
+                          <img
+                            src={iconIncrease}
+                            alt="Increase icon"
+                            onClick={() => {
+                              changeDelayTimeEnd(values.delayTimeEnd + 1);
+                            }}
+                          />
+                          <img
+                            src={iconDecrease}
+                            alt="Decrease icon"
+                            onClick={() => {
+                              changeDelayTimeEnd(values.delayTimeEnd - 1);
+                            }}
+                          />
                         </div>
                         <input
                           name="End"
                           type="text"
-                          value={delayTimeValues.DelayTimeEnd}
-                          onChange={(event) => delayTimeValues.handleInputChangeEnd(event)}
+                          value={values.delayTimeEnd}
+                          onChange={(event) => changeDelayTimeEnd(event.target.value)}
                         />
                       </div>
                     </div>
-                    {(selectedValueJoinGroup === 'keywords' || selectedValueJoinGroup === 'UID') && (
+                    {(values.option === 'keywords' || values.option === 'UID') && (
                       <div className="KeywordContent">
                         <div className="Keyword_Header">
-                          {selectedValueJoinGroup === 'keywords' && <p>Keyword list</p>}
-                          {selectedValueJoinGroup === 'UID' && <p>UID list</p>}
-                          <span>({lineCount})</span>
+                          {values.option === 'keywords' && <p>Keyword list</p>}
+                          {values.option === 'UID' && <p>UID list</p>}
+                          <span>({values.lineCount})</span>
                         </div>
                         <div className="component-item " style={{ position: 'relative' }}>
                           <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="keywordText">
                             <Editor
-                              onChange={handleTextareaChangeKeywordContent}
-                              onPaste={handleKeywordTextareaPaste}
-                              value={KeywordContent}
-                              onValueChange={(KeywordContent) => setKeywordContent(KeywordContent)}
-                              highlight={(KeywordContent) =>
-                                hightlightWithLineNumbersKeyword(KeywordContent, languages.js)
-                              }
+                              value={textContent}
+                              onValueChange={(text) => {
+                                setTextContent(text);
+                              }}
+                              highlight={(text) => hightlightWithLineNumbers(text, languages.js, textContent)}
                               padding={15}
                               className="editor"
                               textareaId="keyword"
@@ -154,10 +257,7 @@ const JoinGroup = ({ onGoBackClick }) => {
                             />
                           </div>
 
-                          <div
-                            onClick={handleDivKeywordClick}
-                            className={`placeholder ${KeywordContent ? 'hide' : ''}`}
-                          >
+                          <div onClick={handleDivKeywordClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
                             <p>
                               <span>1</span>Enter the keyword here
                             </p>
@@ -170,18 +270,23 @@ const JoinGroup = ({ onGoBackClick }) => {
                     )}
                     <div className="AutoAnswerContent">
                       <div className="AutoAnswer_Header">
-                        <input type="checkbox" name="autoAnswer" onChange={handleCheckboxChangeAutoAnswer} />
+                        <input
+                          type="checkbox"
+                          name="autoAnswer"
+                          checked={values.isAutoAnswer}
+                          onChange={(event) => changeAnswer(event.target.checked)}
+                        />
                         <p>Automatically answer the questions</p>
                       </div>
                       <div
                         style={{ position: 'relative' }}
-                        className={`component-item  ${isAutoAnswer ? 'show' : 'hide'}`}
+                        className={`component-item  ${values.isAutoAnswer ? 'show' : 'hide'}`}
                       >
                         <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="AutoAnswerText">
                           <Editor
-                            value={AnswerContent}
-                            onValueChange={handleTextareaChangeAnswerContent}
-                            highlight={(AnswerContent) => hightlightWithLineNumbers(AnswerContent, languages.js)}
+                            value={answerContent}
+                            onValueChange={(text) => setAnswerContent(text)}
+                            highlight={(text) => hightlightWithLineNumbers(text, languages.js, answerContent)}
                             padding={15}
                             className="editor"
                             textareaId="answer"
@@ -191,7 +296,7 @@ const JoinGroup = ({ onGoBackClick }) => {
                             }}
                           />
                         </div>
-                        <div onClick={handleDivAnswerClick} className={`placeholder ${AnswerContent ? 'hide' : ''}`}>
+                        <div onClick={handleDivAnswerClick} className={`placeholder ${answerContent ? 'hide' : ''}`}>
                           <p>
                             <span>1</span>Enter the answer here
                           </p>

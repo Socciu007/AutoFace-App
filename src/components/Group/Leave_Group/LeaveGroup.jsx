@@ -10,24 +10,70 @@ import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
-import { KeywordTextarea, LeaveGroupOption, useRangeValues } from './LeaveGroup';
-const LeaveGroup = ({ onGoBackClick }) => {
+import { parseToNumber } from '../../../services/utils';
+const LeaveGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
   const initialValues = {
-    NumberGroupStart: 5,
-    NumberGroupEnd: 10,
-    DelayTimeStart: 5,
-    DelayTimeEnd: 10,
-    NumberOfMemberStart: 5,
+    groupStart: 5,
+    groupEnd: 10,
+    delayTimeStart: 5,
+    delayTimeEnd: 10,
+    member: 5,
+    text: [],
+    option: 'random',
+  };
+  const [values, setValues] = useState(initialValues);
+  const [textContent, setTextContent] = useState('');
+
+  useEffect(() => {
+    updateDesignScript(values, component, id);
+  }, [values]);
+
+  useEffect(() => {
+    if (currentSetup) {
+      if (currentSetup.text && currentSetup.text.length) {
+        setTextContent(currentSetup.text.join('\n'));
+      }
+      setValues(currentSetup);
+    }
+  }, [currentSetup]);
+
+  useEffect(() => {
+    if (textContent.length) {
+      setValues({ ...values, UIDGroup: textContent.split('\n') });
+    }
+  }, [textContent]);
+
+  const changeOption = (value) => {
+    setValues({ ...values, option: value });
   };
 
-  const numberGroupValues = useRangeValues(initialValues, 'NumberGroup');
-  const delayTimeValues = useRangeValues(initialValues, 'DelayTime');
-  const numberOfMemberValues = useRangeValues(initialValues, 'NumberOfMember');
+  const changeDelayTimeStart = (time) => {
+    setValues({ ...values, delayTimeStart: parseToNumber(time) });
+  };
+  const changeDelayTimeEnd = (time) => {
+    setValues({ ...values, delayTimeEnd: parseToNumber(time) });
+  };
 
-  const { selectedValueLeaveGroup, handleSelectChangeLeaveGroup } = LeaveGroupOption();
+  const changeGroupStart = (group) => {
+    setValues({ ...values, groupStart: parseToNumber(group) });
+  };
+  const changeGroupEnd = (group) => {
+    setValues({ ...values, groupEnd: parseToNumber(group) });
+  };
 
-  const { KeywordContent, handleTextareaChangeKeywordContent, handleDivClick, hightlightWithLineNumbers } =
-    KeywordTextarea();
+  const changeMember = (member) => {
+    setValues({ ...values, member: parseToNumber(member) });
+  };
+
+  const handleDivClick = () => {
+    document.getElementById('codeArea').focus();
+  };
+
+  const hightlightWithLineNumbers = (input, language, content) =>
+    highlight(input, language)
+      .split('\n')
+      .map((line, i) => `<span class='editorLineNumber ${content ? '' : 'hide'}'>${i + 1}</span>${line}`)
+      .join('\n');
 
   return (
     <div className="leaveGroup">
@@ -35,7 +81,13 @@ const LeaveGroup = ({ onGoBackClick }) => {
         <div className="scrollable-container">
           <div className="component-left">
             <div className="goBack titleLeaveGroup">
-              <img src={backButton} alt="Back button" onClick={() => onGoBackClick(true)} />
+              <img
+                src={backButton}
+                alt="Back button"
+                onClick={() => {
+                  onGoBackClick(values, component, id);
+                }}
+              />
               <p>Leave group</p>
             </div>
             <div className="component-content__leaveGroup">
@@ -43,27 +95,51 @@ const LeaveGroup = ({ onGoBackClick }) => {
                 <p className="component-item__header">Number of groups:</p>
                 <div className="component-item__number">
                   <div className="component-item__number__icon">
-                    <img src={iconIncrease} alt="Increase icon" onClick={numberGroupValues.handleIncrement} />
-                    <img src={iconDecrease} alt="Decrease icon" onClick={numberGroupValues.handleDecrement} />
+                    <img
+                      src={iconIncrease}
+                      alt="Increase icon"
+                      onClick={() => {
+                        changeGroupStart(values.groupStart + 1);
+                      }}
+                    />
+                    <img
+                      src={iconDecrease}
+                      alt="Decrease icon"
+                      onClick={() => {
+                        changeGroupStart(values.groupStart - 1);
+                      }}
+                    />
                   </div>
                   <input
                     type="text"
                     name="Start"
-                    value={numberGroupValues.NumberGroupStart}
-                    onChange={(event) => numberGroupValues.handleInputChangeStart(event)}
+                    value={values.groupStart}
+                    onChange={(event) => changeGroupStart(event.target.value)}
                   />
                 </div>
                 <span>to</span>
                 <div className="component-item__number">
                   <div className="component-item__number__icon">
-                    <img src={iconIncrease} alt="Increase icon" onClick={numberGroupValues.handleIncrementEnd} />
-                    <img src={iconDecrease} alt="Decrease icon" onClick={numberGroupValues.handleDecrementEnd} />
+                    <img
+                      src={iconIncrease}
+                      alt="Increase icon"
+                      onClick={() => {
+                        changeGroupEnd(values.groupEnd + 1);
+                      }}
+                    />
+                    <img
+                      src={iconDecrease}
+                      alt="Decrease icon"
+                      onClick={() => {
+                        changeGroupEnd(values.groupEnd - 1);
+                      }}
+                    />
                   </div>
                   <input
                     type="text"
                     name="End"
-                    value={numberGroupValues.NumberGroupEnd}
-                    onChange={(event) => numberGroupValues.handleInputChangeEnd(event)}
+                    value={values.groupEnd}
+                    onChange={(event) => changeGroupEnd(event.target.value)}
                   />
                 </div>
               </div>
@@ -73,27 +149,51 @@ const LeaveGroup = ({ onGoBackClick }) => {
                 </p>
                 <div className="component-item__number">
                   <div className="component-item__number__icon">
-                    <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrement} />
-                    <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrement} />
+                    <img
+                      src={iconIncrease}
+                      alt="Increase icon"
+                      onClick={() => {
+                        changeDelayTimeStart(values.delayTimeStart + 1);
+                      }}
+                    />
+                    <img
+                      src={iconDecrease}
+                      alt="Decrease icon"
+                      onClick={() => {
+                        changeDelayTimeStart(values.delayTimeStart - 1);
+                      }}
+                    />
                   </div>
                   <input
                     name="Start"
                     type="text"
-                    value={delayTimeValues.DelayTimeStart}
-                    onChange={(event) => delayTimeValues.handleInputChangeStart(event)}
+                    value={values.delayTimeStart}
+                    onChange={(event) => changeDelayTimeStart(event.target.value)}
                   />
                 </div>
                 <span>to</span>
                 <div className="component-item__number">
                   <div className="component-item__number__icon">
-                    <img src={iconIncrease} alt="Increase icon" onClick={delayTimeValues.handleIncrementEnd} />
-                    <img src={iconDecrease} alt="Decrease icon" onClick={delayTimeValues.handleDecrementEnd} />
+                    <img
+                      src={iconIncrease}
+                      alt="Increase icon"
+                      onClick={() => {
+                        changeDelayTimeEnd(values.delayTimeEnd + 1);
+                      }}
+                    />
+                    <img
+                      src={iconDecrease}
+                      alt="Decrease icon"
+                      onClick={() => {
+                        changeDelayTimeEnd(values.delayTimeEnd - 1);
+                      }}
+                    />
                   </div>
                   <input
                     name="End"
                     type="text"
-                    value={delayTimeValues.DelayTimeEnd}
-                    onChange={(event) => delayTimeValues.handleInputChangeEnd(event)}
+                    value={values.delayTimeEnd}
+                    onChange={(event) => changeDelayTimeEnd(event.target.value)}
                   />
                 </div>
               </div>
@@ -103,28 +203,30 @@ const LeaveGroup = ({ onGoBackClick }) => {
                   <Select
                     name="LeaveGroupOption"
                     className="LeaveGroupType"
-                    onChange={handleSelectChangeLeaveGroup}
-                    value={selectedValueLeaveGroup}
+                    onChange={(event) => {
+                      changeOption(event.target.value);
+                    }}
+                    value={values.option}
                   >
-                    <MenuItem value="Random">Random</MenuItem>
-                    <MenuItem value="Approve">Group needs Admin to approve posts</MenuItem>
-                    <MenuItem value="Conditional">Conditional</MenuItem>
+                    <MenuItem value="random">Random</MenuItem>
+                    <MenuItem value="approve">Group needs Admin to approve posts</MenuItem>
+                    <MenuItem value="conditional">Conditional</MenuItem>
                   </Select>
                 </div>
-                {selectedValueLeaveGroup === 'Conditional' && (
+                {values.option === 'conditional' && (
                   <div className="conditional">
                     <div className="component-item delayTime">
                       <p>Number of members less than:</p>
                       <div className="component-item__number">
                         <div className="component-item__number__icon">
-                          <img src={iconIncrease} alt="Increase icon" onClick={numberOfMemberValues.handleIncrement} />
-                          <img src={iconDecrease} alt="Decrease icon" onClick={numberOfMemberValues.handleDecrement} />
+                          <img src={iconIncrease} alt="Increase icon" onClick={() => changeMember(values.member + 1)} />
+                          <img src={iconDecrease} alt="Decrease icon" onClick={() => changeMember(values.member - 1)} />
                         </div>
                         <input
                           type="text"
                           name="Start"
-                          value={numberOfMemberValues.NumberOfMemberStart}
-                          onChange={(event) => numberOfMemberValues.handleInputChangeStart(event)}
+                          value={values.member}
+                          onChange={(event) => changeMember(event.target.value)}
                           style={{ background: '#FFF' }}
                         />
                       </div>
@@ -134,9 +236,9 @@ const LeaveGroup = ({ onGoBackClick }) => {
                       <div className="component-item " style={{ position: 'relative' }}>
                         <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="keywordText">
                           <Editor
-                            value={KeywordContent}
-                            onValueChange={handleTextareaChangeKeywordContent}
-                            highlight={(KeywordContent) => hightlightWithLineNumbers(KeywordContent, languages.js)}
+                            value={textContent}
+                            onValueChange={(text) => setTextContent(text)}
+                            highlight={(text) => hightlightWithLineNumbers(text, languages.js, textContent)}
                             padding={15}
                             className="editor"
                             textareaId="codeArea"
@@ -147,7 +249,7 @@ const LeaveGroup = ({ onGoBackClick }) => {
                             }}
                           />
                         </div>
-                        <div onClick={handleDivClick} className={`placeholder ${KeywordContent ? 'hide' : ''}`}>
+                        <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
                           <p>
                             <span>1 </span>
                             <p>Enter the keyword here</p>
