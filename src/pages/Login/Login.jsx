@@ -77,10 +77,6 @@ const Login = () => {
     display: 'flex',
     padding: '0',
   };
-  const languageOption = {
-    borderRadius: '10px',
-    boxShadow: '0px 4px 10px 0px rgba(8, 35, 106, 0.25)',
-  };
 
   return (
     <div className="login">
@@ -96,7 +92,6 @@ const Login = () => {
               sx={{
                 '&.MuiInputBase-root': languageSelect,
                 '& .MuiSelect-select': select,
-                '&.MuiPaper-root': languageOption,
               }}
             >
               <MenuItem value="EN">
