@@ -202,7 +202,9 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
               <h1>NEW PROFILES</h1>
             </div>
             <div className="-wrapper-option-profiles -nav-scripts__btn">
-              <button onClick={addProfiles}>ADD</button>
+              <button onClick={addProfiles} >
+                ADD
+              </button>
             </div>
           </div>
           <div className="scrollable-container">

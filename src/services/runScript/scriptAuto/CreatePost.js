@@ -125,7 +125,7 @@ export const createPost = (setting) => {
           ? CreatePost.photos.length
           : getRandomIntBetween(CreatePost.photoStart, CreatePost.photoEnd);
   
-      if (numberPhoto < 3 && numberPhoto > 0 && CreatePost.photos.length > 0) {
+      if (CreatePost.photos.length > 0) {
         if (
           (await checkExistElementOnScreen(
             page,
@@ -152,7 +152,7 @@ export const createPost = (setting) => {
           return false;
         }
       } else {
-        logger('So anh random khong hop le');
+        logger('Khong co anh duoc nhap vao');
         return false;
       }
       return true;

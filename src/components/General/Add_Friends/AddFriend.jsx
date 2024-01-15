@@ -10,25 +10,10 @@ import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import { parseToNumber } from '../../../services/utils';
+import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
+
 const AddFriend = ({ onGoBackClick, id, currentSetup, component, updateDesignScript }) => {
-  const initialValues = {
-    postStart: 1,
-    postEnd: 2,
-    delayTimeStart: 5,
-    delayTimeEnd: 10,
-    delayTimeInteractStart: 5,
-    delayTimeInteractEnd: 10,
-    requestsStart: 5,
-    requestsEnd: 10,
-    stopTime: 10,
-    isInteract: false,
-    isOnlyAddFriend: false,
-    isComment: false,
-    isLiked: false,
-    option: 'suggestions',
-    text: [],
-    comment: [],
-  };
+  const initialValues = DefaultSciptSettings['addFriend'];
 
   const [values, setValues] = useState(initialValues);
   const [textContent, setTextContent] = useState('');

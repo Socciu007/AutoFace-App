@@ -10,24 +10,10 @@ import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import { parseToNumber } from '../../../services/utils';
+import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
+
 const WatchStory = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
-  const initialValues = {
-    numberStoryStart: 5,
-    numberStoryEnd: 10,
-    delayTimeStart: 5,
-    delayTimeEnd: 10,
-    isReact: false,
-    isComment: false,
-    text: [],
-    isLike: false,
-    isLove: false,
-    isCare: false,
-    isWow: false,
-    isHaha: false,
-    isSad: false,
-    isAngry: false,
-  };
-  const [values, setValues] = useState(initialValues);
+  const [values, setValues] = useState(DefaultSciptSettings['watchStory']);
   const [textContent, setTextContent] = useState('');
 
   useEffect(() => {
@@ -76,7 +62,7 @@ const WatchStory = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
     setValues({ ...values, isLove: value });
   };
   const changeCare = (value) => {
-    setValues({ ...values, isComment: value });
+    setValues({ ...values, isCare: value });
   };
   const changeWow = (value) => {
     setValues({ ...values, isWow: value });

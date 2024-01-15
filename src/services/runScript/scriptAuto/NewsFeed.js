@@ -203,7 +203,7 @@ export const newFeed = (setting) => {
   };
 const newsfeed = ${strSetting};
   try{
-
+    await returnHomePage(page);
       //Check obj start < end ? random(start,end) : random(end,start)
       let news = await checkObject(newsfeed);
       // check page is live reutrn -1, return 1, return 0

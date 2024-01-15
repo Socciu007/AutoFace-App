@@ -14,29 +14,10 @@ import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import { useDropzone } from 'react-dropzone';
 import { parseToNumber } from '../../../services/utils';
-const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
-  const initialValues = {
-    videoStart: 5,
-    videoEnd: 10,
-    delayTimeStart: 5,
-    delayTimeEnd: 10,
-    likeStart: 5,
-    likeEnd: 10,
-    shareStart: 5,
-    shareEnd: 10,
-    commentStart: 5,
-    commentEnd: 10,
-    photoStart: 5,
-    photoEnd: 10,
-    isLiked: false,
-    isShare: false,
-    isComment: false,
-    text: [],
-    photos: [],
-    option: 'text',
-  };
+import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
 
-  const [values, setValues] = useState(initialValues);
+const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
+  const [values, setValues] = useState(DefaultSciptSettings['watchVideo']);
   const [textContent, setTextContent] = useState('');
 
   const { getRootProps, getInputProps } = useDropzone({

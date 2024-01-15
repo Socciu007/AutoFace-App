@@ -38,14 +38,13 @@ export const formatBytes = (bytes, decimals = 2) => {
 // };
 
 export const parseToNumber = (value) => {
-  const isNumber = /^\d*$/.test(value);
-  if (typeof value === 'number') {
-    return value;
-  }
+  const isNumber = /^\d+$/.test(value);
+
   if (isNumber) {
-    const trimmedValue = value.replace(/^0+/, '');
-    return parseInt(trimmedValue) > 0 ? parseInt(trimmedValue) : 0;
+    // For numeric input, remove leading zeros
+    return parseInt(value, 10);
   } else {
-    return parseInt(value) > 0 ? parseInt(value) : 0;
+    // For non-numeric input, parse as an integer
+    return parseInt(value) >= 0 ? parseInt(value) : 0;
   }
 };

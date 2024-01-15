@@ -171,6 +171,7 @@ export const viewNoti = (setting) => {
   };
   const notiObj = ${strSetting}
   try {
+    await returnHomePage(page);
     //check page live
     const isLive = await checkIsLive(page);
     if (isLive) {

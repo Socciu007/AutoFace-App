@@ -7,15 +7,10 @@ import backButton from '../../../assets/icon/icon-back.svg';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import { parseToNumber } from '../../../services/utils';
+import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
+
 const View_Notifications = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
-  const initialValues = {
-    notificationStart: 3,
-    notificationEnd: 5,
-    delayTimeStart: 5,
-    delayTimeEnd: 10,
-    option: 'randomFriend',
-  };
-  const [values, setValues] = useState(initialValues);
+  const [values, setValues] = useState(DefaultSciptSettings['viewNoti']);
   const changeOption = (value) => {
     setValues({ ...values, option: value });
   };

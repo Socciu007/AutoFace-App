@@ -11,27 +11,11 @@ import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
-import Dropzone, { useDropzone } from 'react-dropzone';
+import { useDropzone } from 'react-dropzone';
 import { parseToNumber } from '../../../services/utils';
+import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
 const CreatePost = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
-  const initialValues = {
-    postStart: 1,
-    postEnd: 2,
-    delayTimeStart: 5,
-    delayTimeEnd: 10,
-    option: 'text/photo',
-    text: [],
-    photos: [],
-    photoStart: 1,
-    photoEnd: 2,
-    isTag: false,
-    typeTag: 'random',
-    numberFriendTagStart: 1,
-    numberFriendTagEnd: 2,
-    UID: [],
-  };
-
-  const [values, setValues] = useState(initialValues);
+  const [values, setValues] = useState(DefaultSciptSettings['createPost']);
   const [textContent, setTextContent] = useState('');
   const [UIDContent, setUIDContent] = useState('');
 

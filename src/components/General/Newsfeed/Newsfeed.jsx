@@ -10,25 +10,11 @@ import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/themes/prism.css';
 import { parseToNumber } from '../../../services/utils';
+import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
+
 const Newsfeed = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
-  const initialValues = {
-    scrollTimeStart: 300,
-    scrollTimeEnd: 400,
-    delayTimeStart: 5,
-    delayTimeEnd: 10,
-    randomLike: false,
-    likeStart: 5,
-    likeEnd: 10,
-    randomShare: false,
-    shareStart: 1,
-    shareEnd: 2,
-    randomComment: false,
-    commentStart: 1,
-    commentEnd: 2,
-    commentStrs: [],
-  };
   const [textContent, setTextContent] = useState('');
-  const [values, setValues] = useState(initialValues);
+  const [values, setValues] = useState(DefaultSciptSettings['newsFeed']);
 
   useEffect(() => {
     if (currentSetup) {

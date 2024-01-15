@@ -9,17 +9,10 @@ import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import { parseToNumber } from '../../../services/utils';
+import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
 
 const Reply_Message = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
-  const initialValues = {
-    numberFriendStart: 5,
-    numberFriendEnd: 10,
-    delayTimeStart: 5,
-    delayTimeEnd: 10,
-    text: [],
-  };
-
-  const [values, setValues] = useState(initialValues);
+  const [values, setValues] = useState(DefaultSciptSettings['replyMsg']);
   const [textContent, setTextContent] = useState('');
   useEffect(() => {
     if (currentSetup) {

@@ -452,7 +452,6 @@ const ProfilesPage = () => {
     setOpenAddProxy(true);
     setOpenProxyManage(false);
   };
-  //
   const handleCloseAdd = () => {
     setOpenAddProxy(false);
   };

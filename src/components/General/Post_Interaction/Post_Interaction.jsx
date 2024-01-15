@@ -9,30 +9,10 @@ import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import { parseToNumber } from '../../../services/utils';
+import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
 
 const Post_Interaction = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
-  const initialValues = {
-    postPerUserStart: 5,
-    postPerUserEnd: 10,
-    delayTimeStart: 5,
-    delayTimeEnd: 10,
-    viewTimeStart: 5,
-    viewTimeEnd: 10,
-    isLiked: false,
-    likeStart: 5,
-    likeEnd: 10,
-    isShare: false,
-    shareStart: 5,
-    shareEnd: 10,
-    isComment: false,
-    commentStart: 5,
-    commentEnd: 10,
-    isText: true,
-    UID: [],
-    lineCount: 0,
-    text: [],
-  };
-  const [values, setValues] = useState(initialValues);
+  const [values, setValues] = useState(DefaultSciptSettings['postInteract']);
   const [textContent, setTextContent] = useState('');
   const [UIDContent, setUIDContent] = useState('');
 
