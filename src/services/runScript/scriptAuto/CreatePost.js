@@ -294,17 +294,13 @@ export const createPost = (setting) => {
             el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
           });
           await delay(2000);
-        } else if ((await checkExistElementOnScreen(page, 'button.native-text')) === 0) {
-          if (PostBtn.length > 0) {
-            await clickElement(PostBtn[PostBtn.length - 1]);
-            logger('Da click post');
-            await delay(2000);
-          } else {
-            logger('Button choose image is empty');
-            return 0;
-          }
+        }
+        if (PostBtn.length > 0) {
+          await clickElement(PostBtn[PostBtn.length - 1]);
+          console.log('Da click post');
+          await delay(2000);
         } else {
-          logger("Can't find post button");
+          console.log('Button choose image is empty');
           return 0;
         }
       } else {

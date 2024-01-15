@@ -240,11 +240,11 @@ export const postInteract = (setting) => {
     let post = await checkObject(PostInteract);
     // check page is live reutrn -1, return 1, return 0
     const isLive = await checkIsLive(page);
-    logger('Tình trạng trang web:', isLive);
+    logger('Tình trạng trang web:'+ isLive);
     if (!isLive) return -1;
     // check is login: get cookie return -1, return 1, return 0
     // const isLoggedIn = await checkLogin(page);
-    // logger('Tình trạng đăng nhập:', isLoggedIn);
+    // logger('Tình trạng đăng nhập:'+ isLoggedIn);
     // if (!isLoggedIn) return -1;
   
     for (let index = 0; index < post.lineCount; index++) {
@@ -278,13 +278,12 @@ export const postInteract = (setting) => {
               } else {
                 logger('Like không thành công');
               }
-              if (count == numLikes || countPost > randomPostPerUser) break;
-              // await delay(getRandomIntBetween(2, 5) * 1000);
               let isScroll = await scroll(page, post);
               if (!isScroll) {
                 isBreak = true;
                 break;
               }
+              if (count == numLikes || countPost > randomPostPerUser) break;
             } catch (error) {
               logger(error);
             }
@@ -308,14 +307,12 @@ export const postInteract = (setting) => {
               } else {
                 logger('Share không thành công');
               }
-              if (count == numShares || countPost > randomPostPerUser) break;
-              // await delay(5000);
               let isScroll = await scroll(page, post);
-              logger('is scroll share ' + isScroll);
               if (!isScroll) {
                 isBreak = true;
                 break;
               }
+              if (count == numShares || countPost > randomPostPerUser) break;
             } catch (error) {
               logger(error);
             }
@@ -343,14 +340,12 @@ export const postInteract = (setting) => {
               } else {
                 logger('Comment không thành công');
               }
-              if (count == numComments || countPost > randomPostPerUser) break;
-              // await delay(1000);
               let isScroll = await scroll(page, post);
-              logger('is scroll comment ' + isScroll);
               if (!isScroll) {
                 isBreak = true;
                 break;
               }
+              if (count == numComments || countPost > randomPostPerUser) break;
             } catch (error) {
               logger(error);
             }
