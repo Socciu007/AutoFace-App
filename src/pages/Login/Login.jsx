@@ -58,10 +58,10 @@ const Login = () => {
       console.log(err);
     }
   };
-  const initialValues = {
-    option: 'EN',
-  };
-  const [values, setValues] = useState(initialValues);
+  // const initialValues = {
+  //   option: 'EN',
+  // };
+  const [values, setValues] = useState({ option: 'EN' });
   const changeOption = (value) => {
     setValues({ ...values, option: value });
   };
