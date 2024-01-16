@@ -41,10 +41,8 @@ export const parseToNumber = (value) => {
   const isNumber = /^\d+$/.test(value);
 
   if (isNumber) {
-    // For numeric input, remove leading zeros
     return parseInt(value, 10);
   } else {
-    // For non-numeric input, parse as an integer
     return parseInt(value) >= 0 ? parseInt(value) : 0;
   }
 };
