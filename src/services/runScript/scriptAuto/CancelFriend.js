@@ -127,12 +127,6 @@ export const cancelFriend = (setting) => {
       return -1;
     }
     await returnHomePage(page);
-    // check is login: get cookie return -1, return 1, return 0
-    const isLoggedIn = await checkLogin(page);
-    logger("Tình trạng đăng nhập:" + isLoggedIn);
-    if (!isLoggedIn) {
-      return -1;
-    }
 
     let numCancel = getRandomIntBetween(cancelObj.requestsStart, cancelObj.requestsEnd);
     let randomDelay = getRandomIntBetween(cancelObj.delayTimeStart * 1000, cancelObj.delayTimeEnd * 1000);

@@ -148,8 +148,7 @@ export const watchStory = (setting) => {
     if (isLive) {
       await returnHomePage(page);
       await delay(getRandomIntBetween(3000, 5000));
-      const isLogin = await checkLogin(page);
-      if (isLogin) {
+   
       let countStory = 0;
       const numsStory =
         watchStoryObj.numsStoryStart < watchStoryObj.numsStoryEnd
@@ -244,10 +243,7 @@ export const watchStory = (setting) => {
         }
         countStory++;
       }
-      } else {
-        logger('You need log in');
-        return;
-      }
+      
     }
   } catch (error) {
     logger(error.message);

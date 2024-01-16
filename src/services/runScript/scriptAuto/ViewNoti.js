@@ -176,9 +176,8 @@ export const viewNoti = (setting) => {
     if (isLive) {
       await returnHomePage(page);
       await delay(getRandomIntBetween(3000, 5000));
-      const isLogin = await checkLogin(page);
       await delay(getRandomIntBetween(3000, 5000));
-      if (isLogin) {
+   
         let notiCount = 0;
         const numsNoti =
           notiObj.notificationStart < notiObj.notificationEnd
@@ -218,9 +217,6 @@ export const viewNoti = (setting) => {
 
           notiCount++;
         }
-      } else {
-        logger('You need log in');
-      }
     }
   } catch (error) {
     logger(error.message);

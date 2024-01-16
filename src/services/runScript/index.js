@@ -454,17 +454,21 @@ export const runScript = async (profileSelected, scriptDesign) => {
               ]
             });
   
-            const page = await browser.pages()[0];
+            const page = await browser.newPage();
             await page.setBypassCSP(true);
             await page.setCacheEnabled(false);
             const session = await page.target().createCDPSession();
             await session.send("Page.enable");
             await session.send("Page.setWebLifecycleState", { state: "active" });
 
-            const proxy = {
+            const proxy = ${
+              proxyConvert && proxyConvert.host
+                ? `{
               host:${JSON.stringify(proxyConvert.host)},
               port:${proxyConvert.port}
-            };
+            };`
+                : 'null'
+            } 
 
             {${loginFacebook(profile)}}
             ${getAllFunc(arrfunction)}

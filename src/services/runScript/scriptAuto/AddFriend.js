@@ -544,12 +544,7 @@ export const addFriend = (setting) => {
     if (!isLive) {
       return -1;
     }
-    // check is login: get cookie return -1, return 1, return 0
-    const isLoggedIn = await checkLogin(page);
-    logger('Tình trạng đăng nhập:' + isLoggedIn);
-    if (!isLoggedIn) {
-      return -1;
-    }
+    
     let numsAdd = getRandomIntBetween(addFriendObject.requestsStart, addFriendObject.requestsEnd);
     logger('Cần kết bạn với' + numsAdd + 'người');
     let randomDelay = getRandomIntBetween(addFriendObject.delayTimeStart * 1000, addFriendObject.delayTimeEnd * 1000);

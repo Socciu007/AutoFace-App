@@ -101,7 +101,7 @@
     "notificationEnd": 5,
     "delayTimeStart": 5,
     "delayTimeEnd": 10,
-    "option": "randomly"
+    "option": "randomFriend"
   },
   "sendMsg": null,
   "replyMsg": null,

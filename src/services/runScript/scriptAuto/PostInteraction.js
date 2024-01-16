@@ -244,10 +244,6 @@ export const postInteract = (setting) => {
     if (!isLive) return -1;
     await returnHomePage(page);
     await delay(2000);
-    // check is login: get cookie return -1, return 1, return 0
-    const isLoggedIn = await checkLogin(page);
-    logger('Tình trạng đăng nhập:'+ isLoggedIn);
-    if (!isLoggedIn) return -1;
   
     for (let index = 0; index < post.lineCount; index++) {
       await page.goto('https://m.facebook.com/profile.php/?id='+post.UID[index]);

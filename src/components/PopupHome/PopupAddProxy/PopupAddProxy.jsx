@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import closePopup from '../../../assets/pictures/icon-x.svg';
 import PopupComponent from '../PopupComponent/PopupComponent';
-import proxy from '../../../assets/pictures/icon-proxy.svg';
 import './style.scss';
 import SnackbarApp from '../../Alert';
 import { storageProfiles } from '../../../common/const.config';
@@ -11,7 +10,7 @@ import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import { MenuItem, Select } from '@mui/material';
 import { dbSetLocally, updateProfile } from '../../../sender';
-
+import Dialog from '@mui/material/Dialog';
 const PopupAddProxy = ({
   profilesSelected,
   openAddProxy,
@@ -90,105 +89,117 @@ const PopupAddProxy = ({
       }, 2000);
     }
   };
+  const makeCopy = {
+    position: 'fixed',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    borderRadius: '15px',
+    background: '#fff',
+    boxShadow: '0px 4px 10px 0px rgba(8, 35, 106, 0.25)',
+    flexShrink: '0',
+    zIndex: '99999',
+    margin: '0',
+    overflow: 'inherit !important',
+  };
 
+  const overlay = {
+    background: 'rgba(255,255,255,0.5)',
+  };
+  const MuiDialogPaper = {
+    width: '1163px',
+    height: '679px',
+    maxHeight: '679px !important',
+    minWidth: '1163px !important',
+    color: '#01162b !important',
+  };
   return (
-    <PopupComponent open={openAddProxy} onClose={handleCloseAdd}>
-      {
-        <div className="modal">
-          <div className="-add-proxys">
-            <div className="-close-popup" onClick={handleCloseAdd}>
-              <img src={closePopup} alt="icon-x"></img>
+    <Dialog
+      open={openAddProxy}
+      onClose={handleCloseAdd}
+      sx={{
+        '& .MuiPaper-root': makeCopy,
+        '& .MuiBackdrop-root': overlay,
+        '& .css-1t1j96h-MuiPaper-root-MuiDialog-paper': MuiDialogPaper,
+      }}
+    >
+      <div className="modal">
+        <div className="-add-proxys">
+          <div className="-close-popup" onClick={handleCloseAdd}>
+            <img src={closePopup} alt="icon-x"></img>
+          </div>
+          <h1>ADD PROXY</h1>
+          <p>
+            Add new proxies to{' '}
+            <b>
+              {profilesSelected.length} {profilesSelected.length === 1 ? 'profile' : 'profiles'}
+            </b>
+          </p>
+          <div className="-add-proxys__type">
+            <p>Connection type</p>
+            <div className="-add-proxys-nav">
+              <Select
+                name="proxyType"
+                className="-add-proxys-nav__select -add-proxys-nav__details"
+                onChange={onChangeProxyType}
+                value={proxyType}
+              >
+                <MenuItem value="http">HTTP</MenuItem>
+                <MenuItem value="socks4">Socks 4</MenuItem>
+                <MenuItem value="socks5">Socks 5</MenuItem>
+                <MenuItem value="ssh">SSH</MenuItem>
+              </Select>
             </div>
-            <h1>ADD PROXY</h1>
-            <p>
-              Add new proxies to{' '}
-              <b>
-                {profilesSelected.length} {profilesSelected.length === 1 ? 'profile' : 'profiles'}
-              </b>
-            </p>
-            <div className="-add-proxys__type">
-              <p>Connection type</p>
-              <div className="-add-proxys-nav">
-                <Select
-                  name="proxyType"
-                  className="-add-proxys-nav__select -add-proxys-nav__details"
-                  onChange={onChangeProxyType}
-                  value={proxyType}
-                >
-                  <MenuItem value="http">HTTP</MenuItem>
-                  <MenuItem value="socks4">Socks 4</MenuItem>
-                  <MenuItem value="socks5">Socks 5</MenuItem>
-                  <MenuItem value="ssh">SSH</MenuItem>
-                  <MenuItem value="without">Without</MenuItem>
-                </Select>
-                {/* <Select
-                  name="proxyType"
-                  className="-add-proxys-nav__select -add-proxys-nav__details"
-                  onChange={onChangeProxyType}
-                  value={proxyType}
-                  bordered={false}
-                  options={[
-                    {
-                      value: 'https://mbasic.facebook.com',
-                      label: 'https://mbasic.facebook.com',
-                    },
-                  ]}
-                /> */}
-
-                {/* <div className="-add-proxys__type__icon" onClick={handleOpenProxyManage}>
-                  <img src={proxy} alt="icon-proxy"></img>
-                </div> */}
-              </div>
-            </div>
-            <div className="-add-proxys__type">
-              <p>Proxy list</p>
-              <div className="-add-proxys-nav -list-proxys">
-                <div className="keywordText">
-                  <Editor
-                    value={proxyString}
-                    onValueChange={onchangeProxyString}
-                    highlight={(proxyString) => hightlightWithLineNumbers(proxyString, languages.js)}
-                    padding={15}
-                    onClick={handleWriteText}
-                    className="editor"
-                    textareaId="proxyString"
-                  />
-                </div>
-
-                <div
-                  className="placeholder"
+          </div>
+          <div className="-add-proxys__type">
+            <p>Proxy list</p>
+            <div className="-add-proxys-nav -list-proxys">
+              <div className="keywordText">
+                <Editor
+                  value={proxyString}
+                  onValueChange={onchangeProxyString}
+                  highlight={(proxyString) => hightlightWithLineNumbers(proxyString, languages.js)}
+                  padding={15}
                   onClick={handleWriteText}
-                  style={{ display: proxyString ? 'none' : 'inline' }}
-                >
-                  <p>
-                    <span>1</span>
-                    <div>Enter the content here</div>
-                  </p>
-                  <p>
-                    <span>2</span>
-                    <div>
-                      <span style={{ opacity: 1, fontWeight: 700 }}>Proxy format: </span>IP:Port:Username:Password
-                    </div>
-                  </p>
-                  <p>
-                    <span>3</span>
-                    <div>1 proxy/line</div>
-                  </p>
-                  <p>
-                    <span>4</span>
-                    <div>The number of proxies should not be less or more than the number of profiles</div>
-                  </p>
-                </div>
-                <div onClick={changeProxy} className="-list-proxys__save">
-                  Save
-                </div>
+                  className="editor"
+                  textareaId="proxyString"
+                />
+              </div>
+
+              <div
+                className="placeholder"
+                onClick={handleWriteText}
+                style={{ display: proxyString ? 'none' : 'inline' }}
+              >
+                <p>
+                  <span>1</span>
+                  <div>Enter the content here</div>
+                </p>
+                <p>
+                  <span>2</span>
+                  <div>
+                    <span style={{ opacity: 1, fontWeight: 700 }}>Proxy format: </span>IP:Port:Username:Password
+                  </div>
+                </p>
+                <p>
+                  <span>3</span>
+                  <div>1 proxy/line</div>
+                </p>
+                <p>
+                  <span>4</span>
+                  <div>The number of proxies should not be less or more than the number of profiles</div>
+                </p>
+              </div>
+              <div onClick={changeProxy} className="-list-proxys__save">
+                Save
               </div>
             </div>
           </div>
-          <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
         </div>
-      }
-    </PopupComponent>
+        <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
+      </div>
+      <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
+    </Dialog>
   );
 };
 

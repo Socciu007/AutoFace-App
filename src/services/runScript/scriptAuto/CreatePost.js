@@ -220,10 +220,6 @@ export const createPost = (setting) => {
     if (!checkPageIsLive) return -1;
     await returnHomePage(page);
     await delay(2000);
-    // check is login: get cookie reutrn -1, return 1, return 0
-    const isLogin = await checkLogin(page);
-    logger('Tình trạng đăng nhập:' + isLogin);
-    if (!isLogin) return -1;
     let count = 0;
     const numberOfPost = getRandomIntBetween(CreatePost.postStart, CreatePost.postEnd);
     logger('can create ' + numberOfPost + 'bai');

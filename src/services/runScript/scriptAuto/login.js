@@ -20,14 +20,9 @@ export const loginFacebook = (account) => {
     await returnHomePage(page);
     await delay(2000);
     const { isLogin, error } = await checkLogin(page);
-    if(isLogin){
-       return  { isLogin:true, error:null };
-    }
-    if(error){
-        return  { isLogin, error };
-    }
-
-    if(account.cookies && account.cookies.length ){
+   
+    if(!isLogin){
+        if(account.cookies && account.cookies.length){
         const cookies = [];
         account.cookies.split(";").forEach(acc =>{
             if(acc.split("=")[0] && acc.split("=")[0].length && acc.split("=")[1]){
@@ -62,6 +57,8 @@ export const loginFacebook = (account) => {
         
     }
     else return { isLogin:false, error: '2FA and Cookies not found!' };
+    }
+    
         
     }catch(err){
         logger(err)
