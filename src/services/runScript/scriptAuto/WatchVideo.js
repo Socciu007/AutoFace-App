@@ -215,6 +215,11 @@ export const watchVideo = (setting) => {
         const playElement = await page.$$('div.m > div.inline-video-container');
         const index = getRandomIntBetween(3, playElement.length);
         await clickElementRandom(page, 'div.m > div.inline-video-container', index);
+        
+        const isWatchPage = await checkUrlPage(page, 'm.facebook.com/watch/');
+        if (isWatchPage) {
+          await clickElementRandom(page, 'div.m > div.inline-video-container', index);
+        }
 
         const timeViewVideo =
           watchVideoObj.delayTimeStart < watchVideoObj.delayTimeEnd
@@ -222,14 +227,14 @@ export const watchVideo = (setting) => {
             : getRandomIntBetween(watchVideoObj.delayTimeEnd * 1000, watchVideoObj.delayTimeStart * 1000);
         await delay(timeViewVideo);
 
-        const isWatchPage = await checkUrlPage(page, 'm.facebook.com/watch/');
-        if (isWatchPage) {
-          await delay(getRandomIntBetween(3000, 5000));
-          const likeBtn = await findBtn(page, '󰍸', 'div.fl.ac.am > button.native-text > span');
-          await likeBtn.evaluate((b) => b.click());
-          //div.fl.ac.am > button.native-text > span
-          countVideo++;
-        } else {
+        // const isWatchPage = await checkUrlPage(page, 'm.facebook.com/watch/');
+        // if (isWatchPage) {
+        //   await delay(getRandomIntBetween(3000, 5000));
+        //   const likeBtn = await findBtn(page, '󰍸', 'div.fl.ac.am > button.native-text > span');
+        //   await likeBtn.evaluate((b) => b.click());
+        //   //div.fl.ac.am > button.native-text > span
+        //   countVideo++;
+        // } else {
           //like video
           if (watchVideoObj.isLike) {
             if (countLike <= numsLike && getRandomIntBetween(0, 2) == 1) {
@@ -253,7 +258,7 @@ export const watchVideo = (setting) => {
                 await delay(getRandomIntBetween(3000, 5000));
                 await page.type(
                   'div.m.mentions-text > textarea.internal-input.input-box.native-input',
-                  watchVideoObj.text[getRandomInt(watchVideoObj.text.length)],
+                  watchVideoObj.text[getRandomInt(watchVideoObj.text.length)], {delay: 200}
                 );
                 await delay(getRandomIntBetween(3000, 5000));
                 const sendBtn = await findBtn(page, '󱛅', 'div.m > div.fl.ac > div.native-text > span.f3');
@@ -304,7 +309,7 @@ export const watchVideo = (setting) => {
                 await clickElementRandom(page, 'div.fl.ac.am > button.native-text > span.f2');
               }
             }
-          }
+          // }
           //return watch page
           await delay(getRandomIntBetween(3000, 5000));
           await clickElementRandom(page, 'div.m > div.fl.ac > div.native-text > span.f3');

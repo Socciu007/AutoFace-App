@@ -239,8 +239,7 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
                   </p>
                   <p>
                     <span>2</span>
-                    <strong>Account format:</strong> UID|Password|2FA|Recovery email|Recovery email’s password|Date of
-                    birth
+                    <strong>Account format:</strong> UID|Password|2FA|Recovery email|Recovery email’s password|Cookie
                   </p>
                 </div>
               </div>

@@ -122,6 +122,10 @@ export const runScript = async (profileSelected, scriptDesign) => {
       return Math.floor(Math.random() * (max - min) + min);
     };
 
+    const getRandomInt = (max) => {
+      return Math.floor(Math.random() * max);
+    };
+
     const checkObject = async (obj) => {
       for (const key in obj) {
         if (key.includes('Start') || key.includes('End')) {

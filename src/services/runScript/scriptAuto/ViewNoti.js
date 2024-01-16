@@ -68,15 +68,16 @@ export const viewNoti = (setting) => {
       logger('Error navigating to URL:'+ error.message);
     }
   };
-  const returnPage = async (browser, page) => {
+  const returnPages = async (browser, page) => {
     try {
-      const allPages = await browser.pages();
+      // const allPages = await browser.pages();
       const isHaveUrlGroup = await checkUrlPage(page, 'm.facebook.com/groups');
       const isHaveUrlStory = await checkUrlPage(page, 'm.facebook.com/story');
       const isHaveUrlPost = await checkUrlPage(page, '/posts');
-      if (allPages.length >= 3) {
-        await allPages[2].close();
-      } else if (isHaveUrlGroup || isHaveUrlStory || isHaveUrlPost) {
+      // if (allPages.length >= 3) {
+      //   await allPages[2].close();
+      // } else 
+      if (isHaveUrlGroup || isHaveUrlStory || isHaveUrlPost) {
         const JSSelector = await page.$('div.m > div.m > div.fl.ac > div.native-text > span.f3');
         const isExist = await checkExistElementOnScreen(JSSelector);
         if (isExist) {
@@ -98,8 +99,8 @@ export const viewNoti = (setting) => {
           await delay(getRandomIntBetween(3000, 5000));
           await navigateToUrl(page, 'https://m.facebook.com/notifications/');
         }
-        logger('click2');
-        return true;
+      //   logger('click2');
+      //   return true;
       }
     } catch (error) {
       logger(error.message);
@@ -112,9 +113,6 @@ export const viewNoti = (setting) => {
       const isLive = await checkIsLive(page);
       if (isLive) {
         await delay(getRandomIntBetween(3000, 5000));
-        // const element0 = await page.$$(
-        //   "div.m > div.m > div.m > img.img.contain.rounded.gray-border"
-        // );
         const notiSelectors = await page.$$('div.m > div.m > div.m > img.rounded.gray-border');
         const notiSelectors1 = await page.$$('div.m > div.m > div.m > div.native-text > span.f2');
   
@@ -176,7 +174,6 @@ export const viewNoti = (setting) => {
     if (isLive) {
       await returnHomePage(page);
       await delay(getRandomIntBetween(3000, 5000));
-      await delay(getRandomIntBetween(3000, 5000));
    
         let notiCount = 0;
         const numsNoti =
@@ -201,7 +198,7 @@ export const viewNoti = (setting) => {
             await delay(getRandomIntBetween(3000, 5000));
             await goToNotificationDetail(page);
             await delay(getRandomIntBetween(10000, 15000));
-            await returnPage(browser, page);
+            await returnPages(browser, page);
             await delay(getRandomIntBetween(3000, 5000));
             const isNavigateHome = await clickElementRandom(
               page,

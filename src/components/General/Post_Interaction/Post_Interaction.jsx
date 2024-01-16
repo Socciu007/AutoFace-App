@@ -93,8 +93,8 @@ const Post_Interaction = ({ onGoBackClick, id, updateDesignScript, currentSetup,
   const changeCommentStart = (comment) => {
     setValues({ ...values, commentStart: parseToNumber(comment) });
   };
-  const changeCommenEnd = (comment) => {
-    setValues({ ...values, commenteEnd: parseToNumber(comment) });
+  const changeCommentEnd = (comment) => {
+    setValues({ ...values, commentEnd: parseToNumber(comment) });
   };
   const changeText = (value) => {
     setValues({ ...values, isText: value });
@@ -490,30 +490,30 @@ const Post_Interaction = ({ onGoBackClick, id, updateDesignScript, currentSetup,
                       </div>
                       <input
                         type="text"
-                        name="Start"
                         value={values.commentStart}
                         onChange={(event) => changeCommentStart(event.target.value)}
                       />
                     </div>
+
                     <span>to</span>
+
                     <div className="component-item__number">
                       <div className="component-item__number__icon">
                         <img
                           src={iconIncrease}
                           alt="Increase icon"
-                          onClick={() => changeCommenEnd(values.commentEnd + 1)}
+                          onClick={() => changeCommentEnd(values.commentEnd + 1)}
                         />
                         <img
                           src={iconDecrease}
                           alt="Decrease icon"
-                          onClick={() => changeCommenEnd(values.commentEnd - 1)}
+                          onClick={() => changeCommentEnd(values.commentEnd - 1)}
                         />
                       </div>
                       <input
                         type="text"
-                        name="End"
                         value={values.commentEnd}
-                        onChange={(event) => changeCommenEnd(event.target.value)}
+                        onChange={(event) => changeCommentEnd(event.target.value)}
                       />
                     </div>
                   </div>

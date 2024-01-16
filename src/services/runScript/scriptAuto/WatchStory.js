@@ -184,12 +184,13 @@ export const watchStory = (setting) => {
             'div.m.hscroller.no-hscroller > div.m.nb > div.m.bg-s1 > div.m > div.native-text',
             0,
           );
+          await delay(5000);
           if (isClickComment) {
             const indexText = getRandomInt(watchStoryObj.text.length);
             const inputClick = await page.$('textarea.textbox.multi-line-floating-textbox');
             const isCheckInput = await checkExistElementOnScreens(inputClick);
             if (isCheckInput) {
-              await page.type('textarea.textbox.multi-line-floating-textbox', watchStoryObj.text[indexText]);
+              await page.type('textarea.textbox.multi-line-floating-textbox', watchStoryObj.text[indexText],{delay:200});
               const clickCmt = await page.$('button.textbox-submit-button');
               if (clickCmt) {
                 await clickElement(clickCmt);
