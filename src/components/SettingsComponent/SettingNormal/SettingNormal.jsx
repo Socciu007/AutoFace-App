@@ -81,7 +81,7 @@ const SettingNormal = ({
             />
           </div>
         </div>
-        <div className="-sub-settings">
+        {/* <div className="-sub-settings">
           <p>URL</p>
           <div className="-options-sub-settings">
             <Select
@@ -98,7 +98,7 @@ const SettingNormal = ({
               ]}
             />
           </div>
-        </div>
+        </div> */}
         <div className="-sub-settings -sub1-settings">
           <Switch checked={settings.muteAudio} onChange={handleOnChangeMuteaudio} />
           <p>Mute Audio</p>

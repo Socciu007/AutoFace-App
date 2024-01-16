@@ -9,10 +9,8 @@ import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
-
-// import { Select } from 'antd';
 import { MenuItem, Select } from '@mui/material';
-import { dbSetLocally } from '../../../sender';
+import { dbSetLocally, updateProfile } from '../../../sender';
 
 const PopupAddProxy = ({
   profilesSelected,
@@ -70,11 +68,12 @@ const PopupAddProxy = ({
         }, 2000);
       } else {
         for (let i = 0; i < profilesSelected.length; i++) {
-          const res = await apiUpdateProfiles(profilesSelected[i].id, listProxy[i], profilesSelected[i].browserSource);
-          if (res && res.success && res.data.code == 1) {
+          const res = await updateProfile(profilesSelected[i].id, listProxy[i]);
+
+          if (res && res.code == 1) {
             const index = dataProfiles.findIndex((e) => e.id === profilesSelected[i].id);
             const newData = [...dataProfiles];
-            newData[index].proxy = res.data.data.proxy;
+            newData[index].proxy = res.result.proxy;
             await dbSetLocally(storageProfiles, newData);
           }
         }
@@ -136,9 +135,9 @@ const PopupAddProxy = ({
                   ]}
                 /> */}
 
-                <div className="-add-proxys__type__icon" onClick={handleOpenProxyManage}>
+                {/* <div className="-add-proxys__type__icon" onClick={handleOpenProxyManage}>
                   <img src={proxy} alt="icon-proxy"></img>
-                </div>
+                </div> */}
               </div>
             </div>
             <div className="-add-proxys__type">

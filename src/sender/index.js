@@ -70,7 +70,7 @@ export const getBrowserData = (id) =>
   new Promise((resolve) => {
     try {
       window.electron.ipcRenderer.sendMessage('ipc-get-browser-data', { id });
-      window.electron.ipcRenderer.once('ipc-get-browser-data', resolve);
+      window.electron.ipcRenderer.once('ipc-get-browser-data' + id, resolve);
       setTimeout(() => {
         resolve({ success: false, error: 'Timeout!' });
       }, API_TIMEOUT);
@@ -83,7 +83,7 @@ export const deleteProfile = (id) =>
   new Promise((resolve) => {
     try {
       window.electron.ipcRenderer.sendMessage('ipc-delete-profile', { id });
-      window.electron.ipcRenderer.once('ipc-delete-profile', resolve);
+      window.electron.ipcRenderer.once('ipc-delete-profile' + id, resolve);
       setTimeout(() => {
         resolve({ success: false, error: 'Timeout!' });
       }, API_TIMEOUT);
@@ -118,14 +118,53 @@ export const updateProfile = (id, proxy) =>
     }
   });
 
-export const runProfile = (code) =>
+export const getProxy = (proxy, id) =>
   new Promise((resolve) => {
     try {
-      window.electron.ipcRenderer.sendMessage('ipc-run-profile', { code });
-      window.electron.ipcRenderer.once('ipc-run-profile', resolve);
+      window.electron.ipcRenderer.sendMessage('ipc-convert-proxy', { id, proxy });
+      window.electron.ipcRenderer.once(`ipc-convert-proxy${id ? id : ''}`, resolve);
+      setTimeout(() => {
+        resolve({ success: false, error: 'Timeout!' });
+      }, API_TIMEOUT);
+    } catch (error) {
+      resolve({ success: false, error });
+    }
+  });
+
+export const runProfile = (code, id) =>
+  new Promise((resolve) => {
+    try {
+      window.electron.ipcRenderer.sendMessage('ipc-run-profile', { code, id });
+      window.electron.ipcRenderer.once(`ipc-run-profile${id ? id : ''}`, resolve);
       setTimeout(() => {
         resolve({ success: false, error: 'Timeout!' });
       }, 1200000);
+    } catch (error) {
+      resolve({ success: false, error });
+    }
+  });
+
+export const getAxiosWithProxy = (url, proxy) =>
+  new Promise((resolve) => {
+    try {
+      window.electron.ipcRenderer.sendMessage('ipc-axios-proxy', { url, proxy });
+      window.electron.ipcRenderer.once(`ipc-axios-proxy${url ? url : ''}`, resolve);
+      setTimeout(() => {
+        resolve({ success: false, error: 'Timeout!' });
+      }, API_TIMEOUT);
+    } catch (error) {
+      resolve({ success: false, error });
+    }
+  });
+
+export const getInformation = () =>
+  new Promise((resolve) => {
+    try {
+      window.electron.ipcRenderer.sendMessage('ipc-get-information');
+      window.electron.ipcRenderer.once(`ipc-get-information`, resolve);
+      setTimeout(() => {
+        resolve({ success: false, error: 'Timeout!' });
+      }, API_TIMEOUT);
     } catch (error) {
       resolve({ success: false, error });
     }

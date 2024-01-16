@@ -23,10 +23,11 @@ import PopupDeleteProfile from '../../components/PopupHome/PopupDeleteProfile/Po
 import PopupScript from '../../components/PopupHome/PopupScript/PopupScript';
 import { accessToken, storageDisplaySettings, storageProfiles, storageSettings } from '../../common/const.config';
 import PopupDisplaySetting from '../../components/PopupHome/PopupDisplaySetting/PopupDisplaySetting';
-import { dbGetLocally, dbSetLocally, runProfile } from '../../sender';
+import { dbGetLocally, dbSetLocally, deleteProfile, getProfilesMarco, runProfile } from '../../sender';
 
 const ProfilesPage = () => {
   let rowID;
+  let loading = false;
   const [message, setMessage] = useState('');
   const [statusMessage, setStatusMessage] = useState('warning');
   const [columns, setColumns] = useState([]);
@@ -54,7 +55,6 @@ const ProfilesPage = () => {
   };
 
   const checkSettings = async () => {
-    // await dbSetLocally(accessToken, null);
     const token = await dbGetLocally(accessToken);
     if (!token || token == '') {
       return navigate('/login');
@@ -320,15 +320,29 @@ const ProfilesPage = () => {
   }, [dataProfiles]);
 
   const getProfiles = async () => {
-    let profiles = await dbGetLocally(storageProfiles);
-    if (profiles && profiles.length) {
-      profiles = profiles.sort((x, y) => Number(y.isPin) - Number(x.isPin));
-      setDataProfiles(profiles);
-      setDataSearch(
-        profiles.map((e, index) => {
-          return { ...e, key: index + 1 };
-        }),
-      );
+    if (!loading) {
+      loading = true;
+      const profilesFromServer = await getProfilesMarco();
+      console.log(profilesFromServer);
+      if (profilesFromServer && profilesFromServer.code) {
+        let profiles = await dbGetLocally(storageProfiles);
+        profiles = profiles.filter((e) => {
+          const check = profilesFromServer.result.find((o) => o.id == e.id);
+          if (check) return true;
+          return false;
+        });
+        if (profiles && profiles.length) {
+          profiles = profiles.sort((x, y) => Number(y.isPin) - Number(x.isPin));
+          setDataProfiles(profiles);
+          setDataSearch(
+            profiles.map((e, index) => {
+              return { ...e, key: index + 1 };
+            }),
+          );
+        }
+      }
+
+      loading = false;
     }
   };
 
@@ -351,6 +365,8 @@ const ProfilesPage = () => {
     await dbSetLocally(storageProfiles, newDataProfile);
   };
   const removeProfile = async (id) => {
+    await deleteProfile(id);
+
     const newData = dataProfiles.filter((e) => e.id !== id);
     setDataProfiles(newData);
     await dbSetLocally(storageProfiles, newData);
@@ -484,6 +500,10 @@ const ProfilesPage = () => {
   };
 
   const handleRemoveProfiles = async () => {
+    for (let i = 0; i < profilesSelected.length; i++) {
+      await deleteProfile(profilesSelected[i].id);
+    }
+
     const newData = dataProfiles.filter((e) => {
       const check = profilesSelected.find((o) => o.id === e.id);
       return !check;
@@ -558,24 +578,36 @@ const ProfilesPage = () => {
                   getProfiles();
                 }}
               ></PopupProfile>
+
+              <span
+                className="-option-profiles"
+                onClick={async () => {
+                  await dbSetLocally(accessToken, null);
+                  return navigate('/login');
+                }}
+              >
+                <img src={refresh} alt="image-refresh"></img>
+              </span>
             </div>
           </div>
           <div className="-btn-profiles">
-            <div
-              className="-select-profile"
-              onClick={() => {
-                if (profilesSelected.length > 0) {
-                  setOpenAddProxy((o) => !o);
-                } else {
-                  postAlert('Please select profile!');
-                }
-              }}
-            >
-              <div style={{ position: 'relative' }}>
-                <img src={addProxy} alt="icon-add-proxy" width={15} height={15}></img>
+            {profilesSelected.length ? (
+              <div
+                className="-select-profile"
+                onClick={() => {
+                  if (profilesSelected.length > 0) {
+                    setOpenAddProxy((o) => !o);
+                  } else {
+                    postAlert('Please select profile!');
+                  }
+                }}
+              >
+                <div style={{ position: 'relative' }}>
+                  <img src={addProxy} alt="icon-add-proxy" width={15} height={15}></img>
+                </div>
+                <p>Add Proxy</p>
               </div>
-              <p>Add Proxy</p>
-            </div>
+            ) : null}
             <PopupAddProxy
               profilesSelected={profilesSelected}
               getProfiles={getProfiles}
@@ -594,21 +626,23 @@ const ProfilesPage = () => {
               openProxyManage={openProxyManage}
               handleCloseProxyManage={handleCloseProxyManage}
             ></PopupProxyManage>
-            <div
-              className="-select-profile"
-              onClick={() => {
-                if (profilesSelected.length > 0) {
-                  setOpenDeleteProfile((o) => !o);
-                } else {
-                  postAlert('Please select profile!');
-                }
-              }}
-            >
-              <div>
-                <img src={deleted} alt="icon-delete"></img>
+            {profilesSelected.length ? (
+              <div
+                className="-select-profile"
+                onClick={() => {
+                  if (profilesSelected.length > 0) {
+                    setOpenDeleteProfile((o) => !o);
+                  } else {
+                    postAlert('Please select profile!');
+                  }
+                }}
+              >
+                <div>
+                  <img src={deleted} alt="icon-delete"></img>
+                </div>
+                <p>Remove</p>
               </div>
-              <p>Remove</p>
-            </div>
+            ) : null}
             <PopupDeleteProfile
               openDeleteProfile={openDeleteProfile}
               handleCloseDelete={handleCloseDelete}

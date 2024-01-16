@@ -1,7 +1,8 @@
 import { storageSettings } from '../../common/const.config';
 import { createPost } from './scriptAuto/CreatePost';
-import { dbGetLocally, getBrowserData, runProfile } from '../../sender';
+import { dbGetLocally, getBrowserData, getInformation, getProxy, runProfile } from '../../sender';
 import { deletePost } from './scriptAuto/DeletePost';
+import { loginFacebook } from './scriptAuto/login';
 import { postInteract } from './scriptAuto/PostInteraction';
 import { viewNoti } from './scriptAuto/ViewNoti';
 import { newFeed } from './scriptAuto/NewsFeed';
@@ -9,41 +10,105 @@ import { cancelFriend } from './scriptAuto/CancelFriend';
 import { watchStory } from './scriptAuto/WatchStory';
 import { addFriend } from './scriptAuto/AddFriend';
 import { watchVideo } from './scriptAuto/WatchVideo';
+import Promise from 'bluebird';
+
+window.electron.ipcRenderer.on('ipc-logger', (...params) => {
+  console.log(params[0]);
+});
+
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const splitToChunks = (array, size) => {
+  const results = [];
+  for (let i = 0; i < array.length; i += size) {
+    results.push(array.slice(i, i + size));
+  }
+  return results;
+};
+
 export const runScript = async (profileSelected, scriptDesign) => {
-  window.electron.ipcRenderer.on('ipc-logger', (...params) => {
-    console.log(params[0]);
+  const settings = await dbGetLocally(storageSettings);
+  let thread = 1;
+  if (!isNaN(settings.countProfile)) {
+    thread = settings.countProfile;
+  }
+  const lengthThread = thread <= profileSelected.length ? thread : profileSelected.length;
+
+  const results = splitToChunks(profileSelected, lengthThread);
+
+  let arrfunction = [];
+  const nodes = scriptDesign.design.nodes;
+  const edges = scriptDesign.design.edges.filter((edge) => {
+    const check = nodes.find((node) => node.id == edge.target);
+    if (check) return true;
+    return false;
   });
 
-  const settings = await dbGetLocally(storageSettings);
+  const scripts = scriptDesign.script;
 
-  for (let i = 0; i < profileSelected.length; i++) {
-    let arrfunction = [];
-    const nodes = scriptDesign.design.nodes;
-    const edges = scriptDesign.design.edges.filter((edge) => {
-      const check = nodes.find((node) => node.id == edge.target);
-      if (check) return true;
-      return false;
-    });
-
-    const scripts = scriptDesign.script;
-
-    if (edges && edges.length) {
-      let node = nodes.find((node) => node.id == edges[0].target);
-      while (node) {
-        const script = scripts.find((e) => e.id == node.id);
-        arrfunction.push(script);
-        const edge = edges.find((e) => e.source == node.id);
-        if (edge) {
-          node = nodes.find((node) => node.id == edge.target);
-        } else {
-          node = null;
-        }
+  if (edges && edges.length) {
+    let node = nodes.find((node) => node.id == edges[0].target);
+    while (node) {
+      const script = scripts.find((e) => e.id == node.id);
+      arrfunction.push(script);
+      const edge = edges.find((e) => e.source == node.id);
+      if (edge) {
+        node = nodes.find((node) => node.id == edge.target);
+      } else {
+        node = null;
       }
     }
-    const browserData = await getBrowserData(profileSelected[i].id);
-    if (browserData && browserData.data) {
-      const strCode = `
-   
+  }
+
+  for (let i = 0; i < settings.countLoop; i++) {
+    for (let j = 0; j < results.length; j++) {
+      await new Promise.map(
+        results[j],
+        async (profile, index) => {
+          setTimeout(() => {
+            return false;
+          }, settings.maxTime * 1000);
+          let proxyStr = '';
+          let proxy;
+          let proxyConvert;
+          if (settings.assignProxy) {
+            if (settings.proxies.length) {
+              const indexProfile = index + j * results.length;
+              proxy = settings.proxies[indexProfile % settings.proxies.length];
+            } else {
+              proxy = profile.proxy;
+            }
+          } else {
+            proxy = profile.proxy;
+            if (settings.proxies.length && (!proxy.host || !proxy.host.length)) {
+              const indexProfile = index + j * results.length;
+              proxy = settings.proxies[indexProfile % settings.proxies.length];
+            }
+          }
+
+          if (proxy.host && proxy.host.length) {
+            proxyConvert = await getProxy(proxy, profile.id);
+            if (proxyConvert && proxyConvert.host && proxyConvert.port) {
+              proxyStr = `"--proxy-server=${proxyConvert.mode}://${proxyConvert.host}:${proxyConvert.port}",`;
+            } else {
+              proxyStr = null;
+            }
+          }
+          if (proxyStr || proxyStr == '') {
+            let cpu, mem;
+            const infor = await getInformation();
+            cpu = infor.cpu;
+            mem = infor.mem;
+
+            while (cpu > settings.maxCpu || mem > settings.maxRam) {
+              await delay(5000);
+              const infor = await getInformation();
+              cpu = infor.cpu;
+              mem = infor.mem;
+            }
+            const browserData = await getBrowserData(profile.id);
+            if (browserData && browserData.data) {
+              const strCode = `
+
     let browser;
     const logger = (...params) => {
       event.reply("ipc-logger", ...params);
@@ -55,10 +120,6 @@ export const runScript = async (profileSelected, scriptDesign) => {
       min = Math.ceil(min);
       max = Math.floor(max);
       return Math.floor(Math.random() * (max - min) + min);
-    };
-
-    const getRandomInt = (max) => {
-      return Math.floor(Math.random() * max);
     };
 
     const checkObject = async (obj) => {
@@ -135,13 +196,25 @@ export const runScript = async (profileSelected, scriptDesign) => {
       return flag ? 1 : 0;
     };
 
-    const checkLogin = async (page) => {
-      // Retrieve cookies
-      const cookies = await page.cookies();
-    
-      // Check for login status based on cookies or other indicators
-      const isLoggedIn = cookies.some((cookie) => cookie.name === 'c_user');
-      return isLoggedIn;
+    const checkLogin = async (page, url) => {
+
+      try {
+        const cookies = await page.cookies(url ? url : page.url());
+        logger(cookies)
+        if (cookies) {
+          const c_user = cookies.find((e) => e.name == "c_user");
+          const checkpoint = cookies.find((e) => e.name == "checkpoint");
+          if (checkpoint || page.url().includes("checkpoint")) {
+            return { isLogin:false, error:"Checkpoint" };
+          } else if (c_user) {
+            return { isLogin:true, error:null };
+          } else {
+            return { isLogin:false, error:null };
+          }
+        }
+      } catch (err) {
+        return { isLogin:false, error:null };
+      }
     };
 
     const clickElement = (element) => {
@@ -166,6 +239,7 @@ export const runScript = async (profileSelected, scriptDesign) => {
         logger('Redirect to homepage');
         await page.goto('https://m.facebook.com/', {
           waitUntil: 'networkidle2',
+          timeout: 60000,
         });
       }
     };
@@ -336,6 +410,14 @@ export const runScript = async (profileSelected, scriptDesign) => {
         return null;
       }
     };
+
+    const toOTPCode = async (code, proxy)=>{
+        const res = await apiAxiosWithProxy('https://2fa.live/tok/'+code,proxy);
+        if(res && res.token){
+          return res.token;
+        }
+        return false;
+    }
   
     const getInputText = async function (page, element) {
       try {
@@ -345,16 +427,25 @@ export const runScript = async (profileSelected, scriptDesign) => {
       }
     };
     try {
+
+      setTimeout(() => {
+        return false;
+      }, ${settings.maxTime} * 1000);
+
      browser = await puppeteer.launch({
               executablePath: "${browserData.executablePath}",
               devtools: false,
               dumpio: true,
               headless: false,
               defaultViewport: null,
+              ignoreDefaultArgs: ${settings.muteAudio ? `["--mute-audio"]` : `""`},
               args: [
                 "--user-data-dir=${browserData.pathProfile}",
+                ${proxyStr && proxyStr.length ? proxyStr : ''}
+                ${settings.showImage ? `"--blink-settings=imagesEnabled=false",` : ''}
                 "--hidemyacc-data=${browserData.data}",
                 "--disable-encryption",
+                "--restore-last-session",
                 "--donut-pie=undefined",
                 "--proxy-bypass-list=https://static.xx.fbcdn.net",
                 "--flag-switches-begin",
@@ -363,13 +454,19 @@ export const runScript = async (profileSelected, scriptDesign) => {
               ]
             });
   
-            const page = await browser.newPage();
+            const page = await browser.pages()[0];
             await page.setBypassCSP(true);
             await page.setCacheEnabled(false);
             const session = await page.target().createCDPSession();
             await session.send("Page.enable");
             await session.send("Page.setWebLifecycleState", { state: "active" });
 
+            const proxy = {
+              host:${JSON.stringify(proxyConvert.host)},
+              port:${proxyConvert.port}
+            };
+
+            {${loginFacebook(profile)}}
             ${getAllFunc(arrfunction)}
            
           } catch (error) {
@@ -378,19 +475,24 @@ export const runScript = async (profileSelected, scriptDesign) => {
               if(browser){
                   await browser.close();
               }
-              
-             
             }
-            
             return true;
       `;
 
-      const result = await runProfile(strCode);
-      console.log(result);
-    } else {
-      return false;
+              const result = await runProfile(strCode, profile.id);
+              console.log(result);
+            } else {
+              console.log('Open Profile Fail!');
+            }
+          } else {
+            console.log('Connect proxy Fail!');
+          }
+        },
+        { concurrency: lengthThread },
+      );
     }
   }
+  return;
 };
 
 const getAllFunc = (arrfunction) => {

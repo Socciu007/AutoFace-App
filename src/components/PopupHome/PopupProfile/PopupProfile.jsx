@@ -12,11 +12,29 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Dialog from '@mui/material/Dialog';
 import { createProfile, dbGetLocally, dbSetLocally } from '../../../sender';
+import Loading from '../../loading/Loading';
 
 const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
+  const initialValues = {
+    text: [],
+    option: 'http',
+    proxy: [],
+    tag: [],
+    isTag: false,
+    isProxy: false,
+  };
   const [message, setMessage] = useState('');
   const [statusMessage, setStatusMessage] = useState('warning');
   const [loading, setLoading] = useState(false);
+  const [values, setValues] = useState(initialValues);
+  const [textContent, setTextContent] = useState('');
+  const [proxyContent, setProxyContent] = useState('');
+
+  const setInitialValues = () => {
+    setValues(initialValues);
+    setTextContent('');
+    setProxyContent('');
+  };
 
   const addProfiles = async () => {
     if (loading) return;
@@ -30,10 +48,10 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
     values.text.forEach((e, index) => {
       const uid = e.split('|')[0];
       const password = e.split('|')[1];
-      const recoveryEmail = e.split('|')[2] ? e.split('|')[2] : '';
-      const recoveryPassword = e.split('|')[3] ? e.split('|')[3] : '';
-      const cookies = e.split('|')[4] ? e.split('|')[4] : '';
-      const token = e.split('|')[5] ? e.split('|')[5] : '';
+      const twoFA = e.split('|')[2] ? e.split('|')[2] : '';
+      const recoveryEmail = e.split('|')[3] ? e.split('|')[3] : '';
+      const recoveryPassword = e.split('|')[4] ? e.split('|')[4] : '';
+      const cookies = e.split('|')[5] ? e.split('|')[5] : '';
       if (uid && uid !== '' && password && password !== '') {
         accounts.push({
           uid,
@@ -41,7 +59,7 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
           recoveryEmail,
           recoveryPassword,
           cookies,
-          token,
+          twoFA,
           status: 'ready',
           tag: values.isTag && values.tag.split(',')[index] ? values.tag.split(',')[index] : '',
         });
@@ -93,6 +111,8 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
       await dbSetLocally(storageProfiles, newProfiles);
       onAddProfile();
       setLoading(false);
+      setInitialValues();
+      handleCloseProfiles();
     } else {
       return postAlert('The Account field is required');
     }
@@ -107,17 +127,6 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
     }, duration);
   };
 
-  const initialValues = {
-    text: [],
-    option: 'http',
-    proxy: [],
-    tag: [],
-    isTag: false,
-    isProxy: false,
-  };
-  const [values, setValues] = useState(initialValues);
-  const [textContent, setTextContent] = useState('');
-  const [proxyContent, setProxyContent] = useState('');
   const hightlightWithLineNumbers = (input, language, content) =>
     highlight(input, language)
       .split('\n')
@@ -202,9 +211,7 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
               <h1>NEW PROFILES</h1>
             </div>
             <div className="-wrapper-option-profiles -nav-scripts__btn">
-              <button onClick={addProfiles} >
-                ADD
-              </button>
+              <button onClick={addProfiles}>{loading ? <Loading></Loading> : ''} ADD</button>
             </div>
           </div>
           <div className="scrollable-container">

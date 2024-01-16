@@ -142,7 +142,7 @@ const SettingProxy = ({
                     ]}
                   />
                 </div>
-                <div className="-icon-proxys" onClick={handleOpenProxyManage}>
+                {/* <div className="-icon-proxys" onClick={handleOpenProxyManage}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none">
                     <path
                       fillRule="evenodd"
@@ -157,13 +157,13 @@ const SettingProxy = ({
                       fill="#01162B"
                     />
                   </svg>
-                </div>
-                <PopupProxyManage
+                </div> */}
+                {/* <PopupProxyManage
                   defaultProxies={settings.proxies}
                   handleAddProxyFromManager={handleAddProxyFromManager}
                   openProxyManage={openProxyManage}
                   handleCloseProxyManage={handleCloseProxyManage}
-                ></PopupProxyManage>
+                ></PopupProxyManage> */}
               </div>
               <div className="-info-add-proxys">
                 <div style={{ position: 'relative' }} className="proxy-item">
@@ -211,7 +211,7 @@ const SettingProxy = ({
                     </div>
                   </div>
                 </div>
-                <div className="-setting-proxys baseline">
+                {/* <div className="-setting-proxys baseline">
                   <Switch checked={settings.apiChange} onChange={onChangeAPIProxy} width={32} height={20} />
 
                   <p>
@@ -223,7 +223,7 @@ const SettingProxy = ({
                       </div>
                     </div>
                   </p>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
