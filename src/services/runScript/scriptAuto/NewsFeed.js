@@ -203,21 +203,22 @@ export const newFeed = (setting) => {
   };
 const newsfeed = ${strSetting};
   try{
+    //Check obj start < end ? random(start,end) : random(end,start)
+    let news = await checkObject(newsfeed);
+    // check page is live reutrn -1, return 1, return 0
+    const isLive = await checkIsLive(page);
+    logger('Tình trạng trang web:'+ isLive);
+    if (!isLive) {
+      return -1;
+    }
     await returnHomePage(page);
-      //Check obj start < end ? random(start,end) : random(end,start)
-      let news = await checkObject(newsfeed);
-      // check page is live reutrn -1, return 1, return 0
-      const isLive = await checkIsLive(page);
-      logger('Tình trạng trang web:', isLive);
-      if (!isLive) {
-        return -1;
-      }
+    await delay(2000);
       // check is login: get cookie return -1, return 1, return 0
-      //   const isLoggedIn = await checkLogin(page);
-      //   logger('Tình trạng đăng nhập:', isLoggedIn);
-      //   if (!isLoggedIn) {
-      //     return -1;
-      //   }
+        const isLoggedIn = await checkLogin(page);
+        logger('Tình trạng đăng nhập:'+ isLoggedIn);
+        if (!isLoggedIn) {
+          return -1;
+        }
       let randomDelay = getRandomIntBetween(newsfeed.delayTimeStart * 1000, newsfeed.delayTimeEnd * 1000);
       await scroll(page, news);
       if (news.randomLike == true) {

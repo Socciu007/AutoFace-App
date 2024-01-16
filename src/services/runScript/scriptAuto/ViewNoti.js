@@ -1,10 +1,10 @@
 export const viewNoti = (setting) => {
   const strSetting = `{
-      numsNotiStart: ${setting.notificationStart},
-      numsNotiEnd: ${setting.notificationEnd},
-      waitTimeStart: ${setting.waitTimeStart},
-      waitTimeEnd: ${setting.waitTimeEnd},
-      viewOptions: ${JSON.stringify(setting.option)},
+      notificationStart: ${setting.notificationStart},
+      notificationEnd: ${setting.notificationEnd},
+      delayTimeStart: ${setting.delayTimeStart},
+      delayTimeEnd: ${setting.delayTimeEnd},
+      option: ${JSON.stringify(setting.option)},
     }`;
   return `
   const scrollSmoothIfNotExistOnScreen = async (JSSelector) => {
@@ -171,48 +171,56 @@ export const viewNoti = (setting) => {
   };
   const notiObj = ${strSetting}
   try {
-    await returnHomePage(page);
     //check page live
     const isLive = await checkIsLive(page);
     if (isLive) {
+      await returnHomePage(page);
       await delay(getRandomIntBetween(3000, 5000));
+      const isLogin = await checkLogin(page);
+      await delay(getRandomIntBetween(3000, 5000));
+      if (isLogin) {
+        let notiCount = 0;
+        const numsNoti =
+          notiObj.notificationStart < notiObj.notificationEnd
+            ? getRandomIntBetween(notiObj.notificationStart, notiObj.notificationEnd)
+            : getRandomIntBetween(notiObj.notificationEnd, notiObj.notificationStart);
+        while (notiCount < numsNoti) {
+          // wait time before read noti
+          const waitTime =
+            notiObj.delayTimeStart < notiObj.delayTimeEnd
+              ? getRandomIntBetween(notiObj.delayTimeStart * 1000, notiObj.delayTimeEnd * 1000)
+              : getRandomIntBetween(notiObj.delayTimeEnd * 1000, notiObj.delayTimeStart * 1000);
+          await delay(waitTime);
 
-      let notiCount = 0;
-      const numsNoti =
-        notiObj.numsNotiStart < notiObj.numsNotiEnd
-          ? getRandomIntBetween(notiObj.numsNotiStart, notiObj.numsNotiEnd)
-          : getRandomIntBetween(notiObj.numsNotiEnd, notiObj.numsNotiStart);
-      while (notiCount < numsNoti) {
-        // wait time before read noti
-        const waitTime =
-          notiObj.waitTimeStart < notiObj.waitTimeEnd
-            ? getRandomIntBetween(notiObj.waitTimeStart * 1000, notiObj.waitTimeEnd * 1000)
-            : getRandomIntBetween(notiObj.waitTimeEnd * 1000, notiObj.waitTimeStart * 1000);
-        await delay(waitTime);
-
-        const isGoToNoti = await clickElementRandom(
-          page,
-          'div[data-comp-id="7"]',
-          0,
-          'https://m.facebook.com/notifications/',
-        );
-        if (isGoToNoti) {
-          await delay(getRandomIntBetween(3000, 5000));
-          await goToNotificationDetail(page);
-          await delay(getRandomIntBetween(10000, 15000));
-          await returnPage(browser, page);
-          await delay(getRandomIntBetween(3000, 5000));
-          const isNavigateHome = await clickElementRandom(page, 'div[data-comp-id="3"]', 0, 'https://m.facebook.com/');
-          if (!isNavigateHome) {
-            await navigateToUrl(page, 'https://m.facebook.com/');
+          const isGoToNoti = await clickElementRandom(
+            page,
+            'div[data-comp-id="7"]',
+            0,
+            'https://m.facebook.com/notifications/',
+          );
+          if (isGoToNoti) {
+            await delay(getRandomIntBetween(3000, 5000));
+            await goToNotificationDetail(page);
+            await delay(getRandomIntBetween(10000, 15000));
+            await returnPage(browser, page);
+            await delay(getRandomIntBetween(3000, 5000));
+            const isNavigateHome = await clickElementRandom(
+              page,
+              'div[data-comp-id="3"]',
+              0,
+              'https://m.facebook.com/',
+            );
+            if (!isNavigateHome) {
+              await navigateToUrl(page, 'https://m.facebook.com/');
+            }
+            await delay(getRandomIntBetween(3000, 5000));
           }
-          await delay(getRandomIntBetween(3000, 5000));
-        }
 
-        notiCount++;
+          notiCount++;
+        }
+      } else {
+        logger('You need log in');
       }
-    } else {
-      logger('You need log in');
     }
   } catch (error) {
     logger(error.message);

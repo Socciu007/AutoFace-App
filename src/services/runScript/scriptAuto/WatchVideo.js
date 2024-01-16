@@ -174,9 +174,10 @@ export const watchVideo = (setting) => {
     //check page live
     const isLive = await checkIsLive(page);
     if (isLive) {
+      await returnHomePage(page);
       await delay(getRandomIntBetween(3000, 5000));
       const isLogin = await checkLogin(page);
-      // if (isLogin) {
+      if (isLogin) {
       let countVideo = 0;
       let countLike = 0;
       let countShare = 0;
@@ -312,10 +313,10 @@ export const watchVideo = (setting) => {
           countVideo++;
         }
       }
-      // } else {
-      //   logger("You need log in");
-      //   return;
-      // }
+      } else {
+        logger("You need log in");
+        return;
+      }
     }
   } catch (error) {
     logger(error.message);

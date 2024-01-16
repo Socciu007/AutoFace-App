@@ -97,11 +97,11 @@
     "viewTimeEnd": 120
   },
   "viewNoti": {
-    "numsNotiStart": 3,
-    "numsNotiEnd": 5,
-    "waitTimeStart": 5,
-    "waitTimeEnd": 10,
-    "viewOptions": "randomly"
+    "notificationStart": 3,
+    "notificationEnd": 5,
+    "delayTimeStart": 5,
+    "delayTimeEnd": 10,
+    "option": "randomly"
   },
   "sendMsg": null,
   "replyMsg": null,

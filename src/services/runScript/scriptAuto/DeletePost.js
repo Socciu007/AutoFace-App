@@ -91,10 +91,12 @@ const returnPost = async (page, id, fbid) => {
         const isLive = await checkIsLive(page);
         logger('Tình trạng trang web:'+ isLive);
         if (!isLive) return -1;
+        await returnHomePage(page);
+        await delay(2000);
         // check is login: get cookie return -1, return 1, return 0
-        // const isLoggedIn = await checkLogin(page);
-        // logger('Tình trạng đăng nhập:'+ isLoggedIn);
-        // if (!isLoggedIn) return -1;
+        const isLoggedIn = await checkLogin(page);
+        logger('Tình trạng đăng nhập:'+ isLoggedIn);
+        if (!isLoggedIn) return -1;
       
         let randomViewTime = getRandomIntBetween(post.viewTimeStart * 1000, post.viewTimeEnd * 1000);
       

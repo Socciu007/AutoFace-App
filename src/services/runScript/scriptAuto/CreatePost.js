@@ -218,10 +218,12 @@ export const createPost = (setting) => {
     // check page is live reutrn -1, return 1, return 0
     const checkPageIsLive = await checkIsLive(page);
     if (!checkPageIsLive) return -1;
-  
+    await returnHomePage(page);
+    await delay(2000);
     // check is login: get cookie reutrn -1, return 1, return 0
-    // const isLogin = await checkLogin(page);
-    // if (!isLogin) return -1;
+    const isLogin = await checkLogin(page);
+    logger('Tình trạng đăng nhập:' + isLogin);
+    if (!isLogin) return -1;
     let count = 0;
     const numberOfPost = getRandomIntBetween(CreatePost.postStart, CreatePost.postEnd);
     logger('can create ' + numberOfPost + 'bai');
