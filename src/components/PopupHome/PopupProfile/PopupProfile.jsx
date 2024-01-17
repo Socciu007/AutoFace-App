@@ -175,7 +175,7 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
   };
 
   const overlay = {
-    background: 'rgba(255,255,255,0.5)',
+    background: 'rgba(255,255,255,0.9)',
   };
   const MuiDialogPaper = {
     width: '1163px',

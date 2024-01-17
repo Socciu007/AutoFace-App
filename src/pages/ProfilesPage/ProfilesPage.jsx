@@ -108,7 +108,7 @@ const ProfilesPage = () => {
       settingsColumns.push({
         title: 'UID',
         dataIndex: 'uid',
-        width: 150,
+        width: 200,
       });
     }
     if (settings.name) {

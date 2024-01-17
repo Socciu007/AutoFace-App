@@ -295,7 +295,7 @@ const WatchStory = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                   }}
                 />
                 <p>Randomly Comment</p>
-                <img src={iconQuestion} alt="icon Question" />
+                {/* <img src={iconQuestion} alt="icon Question" /> */}
               </div>
               <div className={`commentContent Text ${values.isComment ? 'show' : 'hide'}`}>
                 <div className="component-item " style={{ position: 'relative' }}>
