@@ -548,9 +548,9 @@ const CreateScript = () => {
                   <button className="test">
                     <img src={runTest} alt="Debug" />
                   </button>
-                  <button className="more">
+                  {/* <button className="more">
                     <img src={option} alt="More" />
-                  </button>
+                  </button> */}
                   <button
                     onClick={() => {
                       onSave();
