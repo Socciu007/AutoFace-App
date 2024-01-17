@@ -160,7 +160,7 @@ const ProfilesPage = () => {
         title: 'Email',
         dataIndex: 'recoveryEmail',
         width: 250,
-        sorter: (a, b) => a.tag.length - b.tag.length,
+        sorter: (a, b) => a.email.length - b.email.length,
       });
     }
     if (settings.emailPass) {
@@ -213,7 +213,7 @@ const ProfilesPage = () => {
             </>
           );
         },
-        sorter: (a, b) => a.tag.length - b.tag.length,
+        sorter: (a, b) => a.proxy.length - b.proxy.length,
       });
     }
     if (settings.tag) {
