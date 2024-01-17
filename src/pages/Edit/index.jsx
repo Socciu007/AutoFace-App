@@ -259,9 +259,9 @@ const Edit = () => {
                   <button className="test">
                     <img src={runTest} alt="Debug" />
                   </button>
-                  {/* <button className="more">
+                  <button className="more" style={{ display: 'none' }}>
                     <img src={option} alt="More" />
-                  </button> */}
+                  </button>
                   <button className="saveBtn">
                     <img src={save} alt="Save" />
                     SAVE

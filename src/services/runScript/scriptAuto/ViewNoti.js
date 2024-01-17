@@ -6,10 +6,11 @@ export const viewNoti = (setting) => {
       delayTimeEnd: ${setting.delayTimeEnd},
       option: ${JSON.stringify(setting.option)},
     }`;
+  console.log(setting);
   return `
-  const scrollSmoothIfNotExistOnScreen = async (JSSelector) => {
+  const scrollSmoothIfNotExistOnScreens = async (JSSelector) => {
     try {
-      const isExistElementOnScreen = await checkExistElementOnScreen(JSSelector);
+      const isExistElementOnScreen = await checkExistElementOnScreens(JSSelector);
       if (!isExistElementOnScreen) {
         await JSSelector.evaluate((el) => {
           el.scrollIntoView({
@@ -28,7 +29,6 @@ export const viewNoti = (setting) => {
   };
   const checkUrlPage = async (page, urlText) => {
     try {
-      await delay(getRandomIntBetween(5000, 10000));
       const url = page.url();
       if (url.includes(urlText)) return true;
       return false;
@@ -37,7 +37,7 @@ export const viewNoti = (setting) => {
       return false;
     }
   };
-  const checkExistElementOnScreen = async (JSSelector) => {
+  const checkExistElementOnScreens = async (JSSelector) => {
     try {
       const isElementVisible = await JSSelector.evaluate((el) => {
         const { top, left, bottom, right } = el.getBoundingClientRect();
@@ -68,63 +68,77 @@ export const viewNoti = (setting) => {
       logger('Error navigating to URL:'+ error.message);
     }
   };
-  const returnPages = async (browser, page) => {
+  const returnPages = async page => {
     try {
-      // const allPages = await browser.pages();
-      const isHaveUrlGroup = await checkUrlPage(page, 'm.facebook.com/groups');
-      const isHaveUrlStory = await checkUrlPage(page, 'm.facebook.com/story');
-      const isHaveUrlPost = await checkUrlPage(page, '/posts');
-      // if (allPages.length >= 3) {
-      //   await allPages[2].close();
-      // } else 
-      if (isHaveUrlGroup || isHaveUrlStory || isHaveUrlPost) {
-        const JSSelector = await page.$('div.m > div.m > div.fl.ac > div.native-text > span.f3');
-        const isExist = await checkExistElementOnScreen(JSSelector);
+      const isHaveUrlGroup = await checkUrlPage(page, "m.facebook.com/groups");
+      const isHaveUrlStory = await checkUrlPage(page, "m.facebook.com/story");
+      const isHaveUrlEvent = await checkUrlPage(page, "m.facebook.com/events");
+      const isHaveUrlFriend = await checkUrlPage(page, "m.facebook.com/friends");
+      const isHaveUrlPost = await checkUrlPage(page, "/posts");
+      if (isHaveUrlGroup || isHaveUrlStory || isHaveUrlPost || isHaveUrlEvent) {
+        const JSSelector = await page.$(
+          "div.m > div.m > div.fl.ac > div.native-text > span.f3"
+        );
+        const isExist = await checkExistElementOnScreens(JSSelector);
         if (isExist) {
           await delay(getRandomIntBetween(3000, 5000));
-          await JSSelector.evaluate((b) => b.click());
+          await JSSelector.evaluate(b => b.click());
         } else {
           await delay(getRandomIntBetween(3000, 5000));
-          await navigateToUrl(page, 'https://m.facebook.com/notifications/');
+          await navigateToUrl(page, "https://m.facebook.com/notifications/");
         }
-        logger('click2');
+        console.log("return prev page");
         return true;
-      } else {
-        const JSSelectors = await page.$$('div.m > div.m > div.native-text > span.f2');
-        const isExist = await checkExistElementOnScreen(JSSelectors[2]);
+      } else if (isHaveUrlFriend) {
+        const isGoToNoti = await clickElementRandom(
+          page,
+          'data-comp-id="6"',
+          0,
+          "https://m.facebook.com/notifications/"
+        );
+      }
+       else {
+        const JSSelectors = await page.$$(
+          "div.m > div.m > div.native-text > span.f2"
+        );
+        const isExist = await checkExistElementOnScreens(JSSelectors[2]);
         if (isExist) {
           await delay(getRandomIntBetween(3000, 5000));
-          await JSSelectors[2].evaluate((b) => b.click());
+          await JSSelectors[2].evaluate(b => b.click());
         } else {
           await delay(getRandomIntBetween(3000, 5000));
-          await navigateToUrl(page, 'https://m.facebook.com/notifications/');
+          await navigateToUrl(page, "https://m.facebook.com/notifications/");
         }
-      //   logger('click2');
-      //   return true;
+        console.log("return prev page");
+        return true;
       }
     } catch (error) {
-      logger(error.message);
+      console.log(error.message);
       return false;
     }
   };
+  
   const goToNotificationDetail = async (page) => {
     try {
       //check page live
       const isLive = await checkIsLive(page);
       if (isLive) {
         await delay(getRandomIntBetween(3000, 5000));
+        // const element0 = await page.$$(
+        //   "div.m > div.m > div.m > img.img.contain.rounded.gray-border"
+        // );
         const notiSelectors = await page.$$('div.m > div.m > div.m > img.rounded.gray-border');
         const notiSelectors1 = await page.$$('div.m > div.m > div.m > div.native-text > span.f2');
   
         if (notiSelectors.length > 0) {
           const index = getRandomInt(notiSelectors.length);
-          await scrollSmoothIfNotExistOnScreen(notiSelectors[index]);
+          await scrollSmoothIfNotExistOnScreens(notiSelectors[index]);
           await delay(getRandomIntBetween(3000, 5000));
           await notiSelectors[index].evaluate((b) => b.click());
           return true;
         } else if (notiSelectors1.length > 0) {
           const index = getRandomInt(notiSelectors1.length);
-          await scrollSmoothIfNotExistOnScreen(notiSelectors1[index]);
+          await scrollSmoothIfNotExistOnScreens(notiSelectors1[index]);
           await delay(getRandomIntBetween(3000, 5000));
           await notiSelectors1[index].evaluate((b) => b.click());
           return true;
@@ -149,7 +163,7 @@ export const viewNoti = (setting) => {
   
         if (selectors.length > 0) {
           const x = index ? index : getRandomInt(selectors.length);
-          await scrollSmoothIfNotExistOnScreen(selectors[x]);
+          await scrollSmoothIfNotExistOnScreens(selectors[x]);
           await delay(getRandomIntBetween(3000, 5000));
           await selectors[x].evaluate((b) => b.click());
           return true;
@@ -174,46 +188,64 @@ export const viewNoti = (setting) => {
     if (isLive) {
       await returnHomePage(page);
       await delay(getRandomIntBetween(3000, 5000));
-   
+      const isLogin = await checkLogin(page);
+      if (isLogin) {
         let notiCount = 0;
         const numsNoti =
           notiObj.notificationStart < notiObj.notificationEnd
-            ? getRandomIntBetween(notiObj.notificationStart, notiObj.notificationEnd)
-            : getRandomIntBetween(notiObj.notificationEnd, notiObj.notificationStart);
+            ? getRandomIntBetween(
+                notiObj.notificationStart,
+                notiObj.notificationEnd
+              )
+            : getRandomIntBetween(
+                notiObj.notificationEnd,
+                notiObj.notificationStart
+              );
+              const isGoToNoti = await clickElementRandom(
+                page,
+                'div[data-comp-id="7"]',
+                0,
+                "https://m.facebook.com/notifications/"
+              );
         while (notiCount < numsNoti) {
           // wait time before read noti
           const waitTime =
             notiObj.delayTimeStart < notiObj.delayTimeEnd
-              ? getRandomIntBetween(notiObj.delayTimeStart * 1000, notiObj.delayTimeEnd * 1000)
-              : getRandomIntBetween(notiObj.delayTimeEnd * 1000, notiObj.delayTimeStart * 1000);
+              ? getRandomIntBetween(
+                  notiObj.delayTimeStart * 1000,
+                  notiObj.delayTimeEnd * 1000
+                )
+              : getRandomIntBetween(
+                  notiObj.delayTimeEnd * 1000,
+                  notiObj.delayTimeStart * 1000
+                );
           await delay(waitTime);
 
-          const isGoToNoti = await clickElementRandom(
-            page,
-            'div[data-comp-id="7"]',
-            0,
-            'https://m.facebook.com/notifications/',
-          );
           if (isGoToNoti) {
             await delay(getRandomIntBetween(3000, 5000));
             await goToNotificationDetail(page);
             await delay(getRandomIntBetween(10000, 15000));
-            await returnPages(browser, page);
+            // if (notiObj.option === "randomly") {
+            // }
+            await returnPages(page);
             await delay(getRandomIntBetween(3000, 5000));
-            const isNavigateHome = await clickElementRandom(
-              page,
-              'div[data-comp-id="3"]',
-              0,
-              'https://m.facebook.com/',
-            );
-            if (!isNavigateHome) {
-              await navigateToUrl(page, 'https://m.facebook.com/');
-            }
-            await delay(getRandomIntBetween(3000, 5000));
+            // const isNavigateHome = await clickElementRandom(
+            //   page,
+            //   'div[data-comp-id="3"]',
+            //   0,
+            //   "https://m.facebook.com/"
+            // );
+            // if (!isNavigateHome) {
+            //   await navigateToUrl(page, "https://m.facebook.com/");
+            // }
+            // await delay(getRandomIntBetween(3000, 5000));
           }
 
           notiCount++;
         }
+      } else {
+        logger("You need log in");
+      }
     }
   } catch (error) {
     logger(error.message);

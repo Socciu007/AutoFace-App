@@ -18,20 +18,20 @@
   position: fixed;
   inset: 0px;
   .-container-profiles {
-    padding: 36px 24px;
+    padding: 36px 24px 0 24px;
     height: 100%;
     .ant-spin-container {
       display: flex;
       flex: 1 1;
       position: relative;
-      height: calc(100vh - 95.5px - 100px);
+      // height: calc(100vh - 95.5px - 100px);
       overflow: hidden;
       .ant-table.ant-table-fixed-column {
         width: 100%;
         .ant-table-content {
           overflow: auto auto !important;
           // min-height: fit-content;
-          // height: 514px !important;
+          height: 550px !important;
           position: relative;
           .ant-table-cell-fix-right {
             z-index: 1;
@@ -352,4 +352,18 @@
   img {
     cursor: pointer;
   }
+}
+:where(.css-dev-only-do-not-override-p7e5j5).ant-table-wrapper
+  .ant-table-tbody
+  .ant-table-row.ant-table-row-selected
+  > .ant-table-cell {
+  background-color: #f2f8ff;
+}
+:where(.css-dev-only-do-not-override-p7e5j5).ant-table-wrapper .ant-table-column-sorter-up.active,
+:where(.css-dev-only-do-not-override-p7e5j5).ant-table-wrapper .ant-table-column-sorter-down.active {
+  color: #ccc;
+}
+:where(.css-dev-only-do-not-override-p7e5j5).ant-table-wrapper .ant-table-column-sorter-up,
+:where(.css-dev-only-do-not-override-p7e5j5).ant-table-wrapper .ant-table-column-sorter-down {
+  font-size: 10px;
 }

@@ -19,16 +19,15 @@ export const newFeed = (setting) => {
   return `
   
   const scroll = async (page, newsfeed) => {
-    let randomScrollTime = getRandomIntBetween(3, 7);
+    let randomScrollTime = getRandomIntBetween(4, 7);
     try {
       let randomDelay = getRandomIntBetween(newsfeed.delayTimeStart * 1000, newsfeed.delayTimeEnd * 1000);
       while (randomScrollTime > 0) {
-        let scrollAmount = getRandomIntBetween(300, 400);
+        let scrollAmount = getRandomIntBetween(200, 300);
         await scrollByWheel(page, scrollAmount);
         await delay(randomDelay);
         randomScrollTime--;
       }
-      logger('Đã scroll xong');
     } catch (error) {
       logger(error);
     }
@@ -207,7 +206,7 @@ try {
   let news = await checkObject(newsfeed);
   // check page is live reutrn -1, return 1, return 0
   const isLive = await checkIsLive(page);
-  logger('Tình trạng trang web:', isLive);
+  logger('Tình trạng trang web: '+ isLive);
   if (!isLive) {
     return -1;
   }
@@ -223,14 +222,15 @@ try {
     if (news.randomLike == true && loopLike == 0) {
       let count = 0;
       let numLikes = getRandomIntBetween(news.likeStart, news.likeEnd);
-      logger('Cần like', numLikes, 'bài');
+      logger('Cần like ' + numLikes + ' bài');
       for (let i = 0; i < numLikes * 2; i++) {
         try {
           await returnHomePage(page);
+          await delay(1000)
           const isLike = await randomLike(page, news);
           if (isLike) {
             count++;
-            logger('Đã like được', count, 'bài');
+            logger('Đã like được '+ count + ' bài');
           } else {
             logger('Like không thành công');
           }
@@ -251,14 +251,14 @@ try {
     if (news.randomShare == true && loopShare == 0) {
       let count = 0;
       let numShares = getRandomIntBetween(news.shareStart, news.shareEnd);
-      logger('Cần share', numShares, 'bài');
+      logger('Cần share ' + numShares + ' bài');
       for (let i = 0; i < numShares * 2; i++) {
         try {
           await returnHomePage(page);
           const result = await randomShare(page, news);
           if (result) {
             count++;
-            logger('Đã share được', count, ' bài');
+            logger('Đã share được ' + count + ' bài');
           } else {
             logger('Share không thành công');
           }
@@ -282,7 +282,7 @@ try {
         return false;
       }
       const numComments = getRandomIntBetween(news.commentStart, news.commentEnd);
-      logger('Cần comment', numComments, 'bài');
+      logger('Cần comment '+  numComments + ' bài');
       let count = 0;
       for (let i = 0; i < numComments * 2; i++) {
         try {
@@ -291,7 +291,7 @@ try {
           await delay(randomDelay);
           if (result) {
             count++;
-            logger('Đã comment được', count, 'bài');
+            logger('Đã comment được ' + count + ' bài');
           } else {
             logger('Comment không thành công');
           }

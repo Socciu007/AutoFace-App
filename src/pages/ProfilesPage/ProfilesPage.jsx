@@ -109,6 +109,7 @@ const ProfilesPage = () => {
         title: 'UID',
         dataIndex: 'uid',
         width: 200,
+        sorter: (a, b) => a.uid - b.uid,
       });
     }
     if (settings.name) {
@@ -159,6 +160,7 @@ const ProfilesPage = () => {
         title: 'Email',
         dataIndex: 'recoveryEmail',
         width: 250,
+        sorter: (a, b) => a.tag.length - b.tag.length,
       });
     }
     if (settings.emailPass) {
@@ -211,6 +213,7 @@ const ProfilesPage = () => {
             </>
           );
         },
+        sorter: (a, b) => a.tag.length - b.tag.length,
       });
     }
     if (settings.tag) {
@@ -223,7 +226,6 @@ const ProfilesPage = () => {
           return <Input name="tag" value={tag} className="-tag-profiles" onChange={(e) => e.target.value}></Input>;
         },
         sorter: (a, b) => a.tag.length - b.tag.length,
-        sortDirections: ['descend'],
       });
     }
     settingsColumns.push({
@@ -331,6 +333,7 @@ const ProfilesPage = () => {
           if (check) return true;
           return false;
         });
+
         if (profiles && profiles.length) {
           profiles = profiles.sort((x, y) => Number(y.isPin) - Number(x.isPin));
           setDataProfiles(profiles);
