@@ -38,20 +38,6 @@
   src: local('Visby Round CF'),
     url('../../assets/fonts/Visby-Round-www.Dfonts.org/VisbyRoundCF-Regular.otf') format('truetype');
 }
-@font-face {
-  font-family: 'Visby Round CF Bold';
-  font-style: normal;
-  font-weight: 700;
-  src: local('Visby Round CF'),
-    url('../../assets/fonts/Visby-Round-www.Dfonts.org/VisbyRoundCF-Bold.otf') format('truetype');
-}
-@font-face {
-  font-family: 'Visby Round CF Medium';
-  font-style: normal;
-  font-weight: 500;
-  src: local('Visby Round CF'),
-    url('../../assets/fonts/Visby-Round-www.Dfonts.org/VisbyRoundCF-Medium.otf') format('truetype');
-}
 
 .login {
   width: 100%;
@@ -101,6 +87,10 @@
       .css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
         padding-right: 20px !important;
       }
+      // .css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
+      //   border-radius: 10px !important;
+      //   box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25) !important;
+      // }
     }
     &-form {
       width: 450px;
@@ -108,12 +98,11 @@
       &-title {
         width: 450px;
         text-align: center;
-        font-family: 'Visby Round CF Bold';
+        font-family: 'Visby Round CF';
         font-weight: 700;
         font-size: 40px;
         line-height: 38px;
         margin-bottom: 10px;
-        color: #01162b;
       }
       &-describe {
         width: 100%;
@@ -124,7 +113,6 @@
         font-family: 'GoogleSans';
         font-size: 15px;
         font-weight: 400;
-        opacity: 0.7;
       }
       .form {
         display: flex;
@@ -135,10 +123,9 @@
     label {
       display: block;
       color: #000;
-      font-family: 'Visby Round CF Bold';
+      font-family: 'Visby Round CF';
       font-size: 15px;
       font-weight: 700;
-      margin-bottom: 2%;
     }
     .login__input {
       width: 100%;
@@ -146,6 +133,7 @@
       background: rgba(255, 255, 255, 0.1);
       border-radius: 8px;
       border: 1px dashed rgba(1, 22, 43, 0.2);
+      margin-top: 2%;
       margin-bottom: 5px;
       padding-left: 4%;
       color: #01162b;
@@ -156,11 +144,6 @@
         -webkit-text-fill-color: #01162b;
         -webkit-box-shadow: 0 0 0px 1000px #1a2d40 inset;
       }
-    }
-    .inputContact {
-      width: 69%;
-      margin-top: 0;
-      float: right;
     }
     .input-email input:-webkit-autofill {
       -webkit-text-fill-color: #01162b;
@@ -177,37 +160,25 @@
     .form__other {
       display: flex;
       justify-content: space-between;
-      font-size: 13px;
+      font-size: 12px;
       align-items: center;
-      width: 100%;
-      margin-top: 3%;
-      // &-forgot {
-      //   cursor: pointer;
-      //   p {
-      //     font-family: 'Visby Round CF Medium';
-      //     color: #2a86ff;
-      //     font-style: normal;
-      //     font-weight: 500;
-      //   }
-      // }
+
+      &-forgot {
+        cursor: pointer;
+        p {
+          color: #2a86ff;
+          font-family: 'Visby Round CF';
+          font-size: 13px;
+          font-weight: 500;
+        }
+      }
       &-checkbox {
         display: flex;
-        align-items: start;
+        align-items: center;
         // background-color: #2a86ff;
-        .text-policy {
-          display: flex;
-          .policy {
-            cursor: pointer;
-            text-decoration: underline;
-            color: #2a86ff;
-            margin: 0 2px;
-          }
-          p {
-            color: #2a86ff;
-          }
-        }
         p {
-          font-family: 'Visby Round CF Medium';
+          color: #01162b;
+          font-family: 'Visby Round CF';
           font-size: 13px;
           font-weight: 500;
         }
@@ -256,34 +227,12 @@
     }
     .error {
       margin-bottom: 10px;
-      color: #da0000;
+      color: red;
       font-size: 14px;
-      font-family: 'Visby Round CF';
     }
-    .input-password,
-    .input-confirmPassword,
-    .input-contact {
+    .input-password {
       position: relative;
       margin-top: 15px;
-    }
-    .phone {
-      border-radius: 8px;
-      width: 29%;
-      height: 40px;
-      font-family: 'Visby Round CF' !important;
-      background-image: url('../../assets/icon/icon-down.svg') !important;
-      background-repeat: no-repeat !important;
-      background-position: right 20px center !important;
-      font-family: 'Visby Round CF' !important;
-      option {
-        font-weight: 500;
-        color: var(--font-color-para);
-        font-size: 15px;
-        font-family: 'Visby Round CF' !important;
-      }
-      svg {
-        display: none;
-      }
     }
     .icon-eye {
       position: absolute;
@@ -292,11 +241,14 @@
       right: 5%;
       bottom: 17%;
     }
+    #remember {
+      margin-right: 10px;
+    }
   }
   &__banner {
     flex-grow: 1;
   }
-  &__right-content {
+  &__left-content {
     width: 50%;
     background: linear-gradient(180deg, #183a65 0%, #4082d8 100%);
   }
@@ -304,7 +256,4 @@
 .css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
   border-radius: 10px;
   box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
-}
-.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
-  font-size: 15px !important;
 }
