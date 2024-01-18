@@ -177,33 +177,21 @@ const ForgotPassword = () => {
             {/* <img style={{ display: 'inline', marginLeft: '1px' }} src={Zeus} alt="" /> */}
           </p>
           <div>
-            <Formik
-              initialValues={{
-                email: '',
-                password: '',
-                confirmPassword: '',
-              }}
-              validationSchema={Yup.object({
-                email: Yup.string().required(t('The Email field is required')).email('Invalid email'),
-                password: Yup.string()
-                  .required(t('The Password field is required'))
-                  .min(6, t('Minimum 6 characters required'))
-                  .max(32, t('Up to 32 characters')),
-                confirmPassword: Yup.string()
-                  .oneOf([Yup.ref('password'), null], t('Confirm password must match with password'))
-                  .required(t('Password confirmation is required')),
-              })}
-              onSubmit={async (values) => {
-                const { email, password, confirmPassword } = values;
-                if (password !== confirmPassword) {
-                  postAlert(t('Passwords do not match.'));
-                  return;
-                }
-                // await handelLogin(email, password);
-              }}
-            >
-              <Form>
-                {values.newPass == false ? (
+            {values.newPass == false ? (
+              <Formik
+                initialValues={{
+                  email: '',
+                }}
+                validationSchema={Yup.object({
+                  email: Yup.string().required(t('The Email field is required')).email('Invalid email'),
+                })}
+                onSubmit={async (values) => {
+                  const { email } = values;
+
+                  // await handelLogin(email, password);
+                }}
+              >
+                <Form>
                   <div>
                     <div className="input-email">
                       <label htmlFor="email">Email</label>
@@ -272,7 +260,55 @@ const ForgotPassword = () => {
                       </Dialog>
                     </div>
                   </div>
-                ) : (
+                  <div className="form__other">
+                    <div className="form__other-signin">
+                      <span
+                        className="haveAccount"
+                        onClick={() => {
+                          navigateLogin();
+                        }}
+                      >
+                        {t('Sign in')}
+                      </span>
+                    </div>
+
+                    <div className="form__other-signup">
+                      <span
+                        className="notAccount"
+                        onClick={() => {
+                          navigateSignUp();
+                        }}
+                      >
+                        {t('Sign up')}
+                      </span>
+                    </div>
+                  </div>
+                </Form>
+              </Formik>
+            ) : (
+              <Formik
+                initialValues={{
+                  password: '',
+                  confirmPassword: '',
+                }}
+                validationSchema={Yup.object({
+                  password: Yup.string()
+                    .required(t('The Password field is required'))
+                    .min(6, t('Minimum 6 characters required'))
+                    .max(32, t('Up to 32 characters')),
+                  confirmPassword: Yup.string()
+                    .oneOf([Yup.ref('password'), null], t('Confirm password must match with password'))
+                    .required(t('Password confirmation is required')),
+                })}
+                onSubmit={async (values) => {
+                  const { password, confirmPassword } = values;
+                  if (password !== confirmPassword) {
+                    postAlert(t('Passwords do not match.'));
+                    return;
+                  }
+                }}
+              >
+                <Form>
                   <div className="inputNewpass">
                     <div className="input-password">
                       <label htmlFor="password">{t('Password')}</label>
@@ -324,33 +360,33 @@ const ForgotPassword = () => {
                       </button>
                     </div>
                   </div>
-                )}
 
-                <div className="form__other">
-                  <div className="form__other-signin">
-                    <span
-                      className="haveAccount"
-                      onClick={() => {
-                        navigateLogin();
-                      }}
-                    >
-                      {t('Sign in')}
-                    </span>
-                  </div>
+                  <div className="form__other">
+                    <div className="form__other-signin">
+                      <span
+                        className="haveAccount"
+                        onClick={() => {
+                          navigateLogin();
+                        }}
+                      >
+                        {t('Sign in')}
+                      </span>
+                    </div>
 
-                  <div className="form__other-signup">
-                    <span
-                      className="notAccount"
-                      onClick={() => {
-                        navigateSignUp();
-                      }}
-                    >
-                      {t('Sign up')}
-                    </span>
+                    <div className="form__other-signup">
+                      <span
+                        className="notAccount"
+                        onClick={() => {
+                          navigateSignUp();
+                        }}
+                      >
+                        {t('Sign up')}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </Form>
-            </Formik>
+                </Form>
+              </Formik>
+            )}
           </div>
         </div>
       </div>

@@ -19,6 +19,7 @@ const SignUp = () => {
   const [statusMessage, setStatusMessage] = useState('warning');
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation('translation');
+  const [hasClickedButton, setHasClickedButton] = useState(false);
   const initialValues = {
     option: 'EN',
     optionContact: 'phone',
@@ -45,6 +46,11 @@ const SignUp = () => {
   };
   const hiddenConfirmPassword = () => {
     setValues({ ...values, confirmPassword: false });
+  };
+
+  const handleacceptPolicy = (value) => {
+    setValues({ ...values, acceptedPolicy: value });
+    setHasClickedButton(true);
   };
 
   const postAlert = (message, status = 'warning', duration = 3000) => {
@@ -148,7 +154,7 @@ const SignUp = () => {
               })}
               onSubmit={async (values) => {
                 const { email, password, confirmPassword } = values;
-               
+
                 if (password !== confirmPassword) {
                   postAlert(t('Passwords do not match.'));
                   return;
@@ -221,6 +227,9 @@ const SignUp = () => {
                       name="phone"
                       className="phone"
                       onChange={(event) => changeOptionContact(event.target.value)}
+                      onClick={() => {
+                        handleButtonClick();
+                      }}
                       value={values.optionContact}
                     >
                       <MenuItem value="phone">Phone</MenuItem>
@@ -241,7 +250,8 @@ const SignUp = () => {
                 <div className="form__other">
                   <div className="form__other-checkbox">
                     <input
-                      defaultChecked={false}
+                      checked={values.acceptedPolicy}
+                      onChange={(event) => handleacceptPolicy(event.target.checked)}
                       type="checkbox"
                       id="acceptedPolicy"
                       name="acceptedPolicy"
@@ -267,8 +277,11 @@ const SignUp = () => {
                     <p>{t('Forgot password?')}</p>
                   </div> */}
                 </div>
-
-                  
+                {!values.acceptedPolicy && hasClickedButton ? (
+                  <div className="error">
+                    <p>*You have not agreed yet.</p>
+                  </div>
+                ) : null}
 
                 <div className="signInBtn">
                   <button type="submit" className="signIn">
