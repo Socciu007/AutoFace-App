@@ -212,6 +212,7 @@ export const createPost = (setting) => {
   };
 
   try {
+    await delay(300000000000000);
     const object = ${strSetting}
     //Check obj start < end ? random(start,end) : random(end,start)
     let CreatePost = await checkObject(object);
@@ -286,17 +287,17 @@ export const createPost = (setting) => {
           }
         }
         // Click Post content
-        const PostBtn = await getElements(page, 'button.native-text');
-        if ((await checkExistElementOnScreen(page, 'button.native-text')) !== 0) {
-          await PostBtn[PostBtn.length - 1].evaluate((el) => {
+        const PostBtn = await getElement(page, '#screen-root > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(3) > div > div > span');
+        if ((await checkExistElementOnScreen(page, '#screen-root > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(3) > div > div > span')) !== 0) {
+          await PostBtn.evaluate((el) => {
             el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
           });
           await delay(2000);
         }
-        if (PostBtn.length > 0) {
-          await clickElement(PostBtn[PostBtn.length - 1]);
+        if (PostBtn) {
+          await clickElement(PostBtn);
           console.log('Da click post');
-          await delay(2000);
+          await delay(5000);
         } else {
           console.log('Button choose image is empty');
           return 0;

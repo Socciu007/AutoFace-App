@@ -246,6 +246,7 @@
           min-height: 100%;
           float: left;
           font-family: 'GoogleSans';
+          -webkit-text-fill-color: #333;
         }
 
         .editor #codeArea,
@@ -265,6 +266,7 @@
           left: 0px;
           color: #cccccc;
           text-align: right;
+          opacity: 0.5 !important;
           width: 6%;
           font-weight: 100;
         }

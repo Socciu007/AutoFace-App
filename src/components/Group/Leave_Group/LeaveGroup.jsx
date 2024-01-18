@@ -39,7 +39,7 @@ const LeaveGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
 
   useEffect(() => {
     if (textContent.length) {
-      setValues({ ...values, UIDGroup: textContent.split('\n') });
+      setValues({ ...values, text: textContent.split('\n') });
     }
   }, [textContent]);
 

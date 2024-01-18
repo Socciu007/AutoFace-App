@@ -8,6 +8,8 @@ import SettingsPage from './pages/SettingsPage/SettingsPage.jsx';
 import ProfilesPage from './pages/ProfilesPage/ProfilesPage.jsx';
 import Login from './pages/Login/Login.jsx';
 import Edit from './pages/Edit/index.jsx';
+import SignUp from './pages/SignUp/SignUp.jsx';
+import ForgotPassword from './pages/ForgotPassword/ForgotPassword.jsx';
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
         <Route path="/settings" element={<SettingsPage></SettingsPage>} />
         <Route path="/" element={<ProfilesPage></ProfilesPage>} />
         <Route path="/login" element={<Login></Login>} />
+        <Route path="/signup" element={<SignUp></SignUp>} />
+        <Route path="/forgotPassword" element={<ForgotPassword></ForgotPassword>} />
         <Route path="/edit" element={<Edit></Edit>} />
       </Routes>
     </>

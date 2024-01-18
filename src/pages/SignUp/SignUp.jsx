@@ -17,20 +17,36 @@ const SignUp = () => {
   const navigate = useNavigate();
   const [message, setMessage] = useState('');
   const [statusMessage, setStatusMessage] = useState('warning');
-  const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation('translation');
-
+  const initialValues = {
+    option: 'EN',
+    optionContact: 'phone',
+    showPass: false,
+    confirmPassword: false,
+    acceptedPolicy: false,
+  };
+  const [values, setValues] = useState(initialValues);
   const navigateHome = () => {
     navigate('/');
   };
-
+  const navigateLogin = () => {
+    navigate('/login');
+  };
   const showPassword = () => {
-    setShowPass(true);
+    setValues({ ...values, showPass: true });
   };
   const hiddenPassword = () => {
-    setShowPass(false);
+    setValues({ ...values, showPass: false });
   };
+
+  const showConfirmPassword = () => {
+    setValues({ ...values, confirmPassword: true });
+  };
+  const hiddenConfirmPassword = () => {
+    setValues({ ...values, confirmPassword: false });
+  };
+
   const postAlert = (message, status = 'warning', duration = 3000) => {
     setStatusMessage(status);
     setMessage(message);
@@ -39,32 +55,34 @@ const SignUp = () => {
       setStatusMessage('warning');
     }, duration);
   };
-  const handelLogin = async (email, password) => {
-    try {
-      if (password.length >= 6 && password.length <= 32) {
-        setLoading(true);
-        const res = await login(email, password);
+  // const handelLogin = async (email, password) => {
+  //   try {
+  //     if (password.length >= 6 && password.length <= 32) {
+  //       setLoading(true);
+  //       const res = await login(email, password);
 
-        if (res && res.code == 1) {
-          navigateHome();
-        } else if (res.errors.includes('email does not exist')) {
-          postAlert(t('Email does not exist. Please sign up'));
-        } else {
-          postAlert(t('Invalid email or password'));
-        }
-      }
-      setLoading(false);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  // const initialValues = {
-  //   option: 'EN',
+  //       if (res && res.code == 1) {
+  //         navigateHome();
+  //       } else if (res.errors.includes('email does not exist')) {
+  //         postAlert(t('Email does not exist. Please sign up'));
+  //       } else {
+  //         postAlert(t('Invalid email or password'));
+  //       }
+  //     }
+  //     setLoading(false);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
   // };
-  const [values, setValues] = useState({ option: 'EN' });
+
   const changeOption = (value) => {
     setValues({ ...values, option: value });
   };
+
+  const changeOptionContact = (value) => {
+    setValues({ ...values, optionContact: value });
+  };
+
   const languageSelect = {
     fontFamily: 'GoogleSans !important',
     padding: '5px 15px',
@@ -79,11 +97,11 @@ const SignUp = () => {
   };
 
   return (
-    <div className="login">
-      <div className="login__content">
-        <div className="login__content-header">
+    <div className="signup">
+      <div className="signup__content">
+        <div className="signup__content-header">
           <p className="tool-name">AUTOFACE</p>
-          <div className="login__content_switch-language">
+          <div className="signup__content_switch-language">
             <Select
               name="languageOption"
               className="LanguageType"
@@ -105,10 +123,10 @@ const SignUp = () => {
             </Select>
           </div>
         </div>
-        <div className="login__content-form">
-          <h1 className="login__content-form-title">{t('Welcome back')}!</h1>
-          <p className="login__content-form-describe">
-            {t('Sign in to continue using Facebook automation')}
+        <div className="signup__content-form">
+          <h1 className="signup__content-form-title">{t('Sign up')}</h1>
+          <p className="signup__content-form-describe">
+            {t('Let’s create a new account to log in to Autoface')}
             {/* <img style={{ display: 'inline', marginLeft: '1px' }} src={Zeus} alt="" /> */}
           </p>
           <div>
@@ -116,6 +134,7 @@ const SignUp = () => {
               initialValues={{
                 email: '',
                 password: '',
+                confirmPassword: '',
               }}
               validationSchema={Yup.object({
                 email: Yup.string().required(t('The Email field is required')).email('Invalid email'),
@@ -123,10 +142,17 @@ const SignUp = () => {
                   .required(t('The Password field is required'))
                   .min(6, t('Minimum 6 characters required'))
                   .max(32, t('Up to 32 characters')),
+                confirmPassword: Yup.string()
+                  .oneOf([Yup.ref('password'), null], t('Confirm password must match with password'))
+                  .required(t('Password confirmation is required')),
               })}
               onSubmit={async (values) => {
-                const { email, password } = values;
-                await handelLogin(email, password);
+                const { email, password, confirmPassword } = values;
+               
+                if (password !== confirmPassword) {
+                  postAlert(t('Passwords do not match.'));
+                  return;
+                }
               }}
             >
               <Form>
@@ -137,51 +163,128 @@ const SignUp = () => {
                     id="email"
                     name="email"
                     placeholder={t('Enter your email')}
-                    className="login__input"
+                    className="signup__input"
                   />
                   <div className="error">
                     <ErrorMessage name="email"></ErrorMessage>
                   </div>
                 </div>
+
                 <div className="input-password">
                   <label htmlFor="password">{t('Password')}</label>
                   <Field
-                    type={showPass ? 'text' : 'password'}
+                    type={values.showPass ? 'text' : 'password'}
                     id="password"
                     name="password"
-                    placeholder={t('Enter your password')}
-                    className="login__input "
+                    placeholder={t('Enter password here')}
+                    className="signup__input "
                   />
                   <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
-                    {showPass ? (
+                    {values.showPass ? (
                       <IconEye className="icon-eye" onClick={hiddenPassword}></IconEye>
                     ) : (
                       <IconEyeSlash className="icon-eye" onClick={showPassword}></IconEyeSlash>
                     )}
                   </div>
                 </div>
+
                 <div className="error">
                   <ErrorMessage name="password"></ErrorMessage>
                 </div>
-                <div className="form__other">
-                  <div className="form__other-checkbox">
-                    <input defaultChecked={true} type="checkbox" id="remember" name="remember" />
-                    <p>{t('Remember me')}</p>
-                  </div>
-                  <div className="form__other-forgot" onClick={() => {}}>
-                    <p>{t('Forgot password?')}</p>
+
+                <div className="input-confirmPassword">
+                  <label htmlFor="confirmPassword">{t('Confirm password')}</label>
+                  <Field
+                    type={values.confirmPassword ? 'text' : 'password'}
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    placeholder={t('Enter password here')}
+                    className="signup__input "
+                  />
+                  <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
+                    {values.confirmPassword ? (
+                      <IconEye className="icon-eye" onClick={hiddenConfirmPassword}></IconEye>
+                    ) : (
+                      <IconEyeSlash className="icon-eye" onClick={showConfirmPassword}></IconEyeSlash>
+                    )}
                   </div>
                 </div>
+
+                <div className="error">
+                  <ErrorMessage name="confirmPassword"></ErrorMessage>
+                </div>
+
+                <div className="input-contact">
+                  <label htmlFor="contact">{t('Contact')}</label>
+                  <div>
+                    <Select
+                      name="phone"
+                      className="phone"
+                      onChange={(event) => changeOptionContact(event.target.value)}
+                      value={values.optionContact}
+                    >
+                      <MenuItem value="phone">Phone</MenuItem>
+                    </Select>
+                    {/* <Field as="select" name="phone" className="phone">
+                      <option value="phone">Phone</option>
+                    </Field> */}
+                    <Field
+                      type={Number}
+                      id="contact"
+                      name="contact"
+                      placeholder={t('Enter here')}
+                      className="signup__input inputContact "
+                    />
+                  </div>
+                </div>
+
+                <div className="form__other">
+                  <div className="form__other-checkbox">
+                    <input
+                      defaultChecked={false}
+                      type="checkbox"
+                      id="acceptedPolicy"
+                      name="acceptedPolicy"
+                      style={{ marginTop: '1%' }}
+                    />
+                    <div>
+                      <p>{t('By clicking here, I state that I have read and understood the ')}</p>
+                      <div className="text-policy">
+                        <p className="policy" onClick={() => {}}>
+                          {t('Terms of Service, ')}
+                        </p>
+                        <p className="policy" onClick={() => {}}>
+                          {t(' Privacy Policy ')}
+                        </p>
+                        <p>{t(' and ')}</p>
+                        <p className="policy" onClick={() => {}}>
+                          {t(' Refund Policy. ')}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  {/* <div className="form__other-forgot" onClick={() => {}}>
+                    <p>{t('Forgot password?')}</p>
+                  </div> */}
+                </div>
+
+                  
+
                 <div className="signInBtn">
                   <button type="submit" className="signIn">
                     {loading ? <Loading></Loading> : null}
-                    {t('Sign in')}
+                    {t('Sign up')}
                   </button>
                 </div>
                 <div className="register">
-                  <span>{t('Don’t have an account?')}</span>
-                  <span className="notAccount" onClick={() => {}}>
-                    {t('Register here')}
+                  <span>{t('Already have an account?')}</span>
+                  <span
+                    className="haveAccount"
+                    onClick={() => {
+                      navigateLogin();
+                    }}
+                  >
+                    {t('Sign in')}
                   </span>
                 </div>
               </Form>
@@ -189,7 +292,7 @@ const SignUp = () => {
           </div>
         </div>
       </div>
-      <div className="login__left-content"></div>
+      <div className="signup__right-content"></div>
       {/* <div className="login__banner">
         <LoginBanner></LoginBanner>
       </div> */}

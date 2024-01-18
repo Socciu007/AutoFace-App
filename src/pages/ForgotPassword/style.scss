@@ -52,11 +52,9 @@
   src: local('Visby Round CF'),
     url('../../assets/fonts/Visby-Round-www.Dfonts.org/VisbyRoundCF-Medium.otf') format('truetype');
 }
-
-.signup {
+.forgotPass {
   width: 100%;
   min-height: 100vh;
-  max-height: 100vh;
   display: flex;
   color: #01162b;
   &__content {
@@ -69,7 +67,8 @@
     background: #fff;
     padding: 30px 40px;
     &-header {
-      margin-bottom: 7%;
+      height: 5%;
+      // margin-bottom: 80px;
       display: flex;
       justify-content: space-between;
       width: 100%;
@@ -104,8 +103,12 @@
       }
     }
     &-form {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      // align-items: center;
       width: 450px;
-
+      height: 100%;
       &-title {
         width: 450px;
         text-align: center;
@@ -114,7 +117,6 @@
         font-size: 40px;
         line-height: 38px;
         margin-bottom: 10px;
-        color: #01162b;
       }
       &-describe {
         width: 100%;
@@ -125,7 +127,6 @@
         font-family: 'GoogleSans';
         font-size: 15px;
         font-weight: 400;
-        opacity: 0.7;
       }
       .form {
         display: flex;
@@ -136,17 +137,17 @@
     label {
       display: block;
       color: #000;
-      font-family: 'Visby Round CF Bold';
+      font-family: 'Visby Round CF';
       font-size: 15px;
       font-weight: 700;
-      margin-bottom: 2%;
     }
-    .signup__input {
+    .forgotPass__input {
       width: 100%;
       height: 40px;
       background: rgba(255, 255, 255, 0.1);
       border-radius: 8px;
       border: 1px dashed rgba(1, 22, 43, 0.2);
+      margin-top: 2%;
       margin-bottom: 5px;
       padding-left: 4%;
       color: #01162b;
@@ -158,11 +159,6 @@
         -webkit-box-shadow: 0 0 0px 1000px #1a2d40 inset;
       }
     }
-    .inputContact {
-      width: 69%;
-      margin-top: 0;
-      float: right;
-    }
     .input-email input:-webkit-autofill {
       -webkit-text-fill-color: #01162b;
       -webkit-box-shadow: 0 0 0px 1000px #1a2d40 inset !important;
@@ -171,55 +167,35 @@
       -webkit-text-fill-color: #01162b;
       -webkit-box-shadow: 0 0 0px 1000px #1a2d40 inset !important;
     }
-    .signup__loading {
+
+    .forgotPass__loading {
       width: 25px;
       height: 25px;
     }
     .form__other {
       display: flex;
       justify-content: space-between;
-      font-size: 13px;
+      font-size: 12px;
       align-items: center;
-      width: 100%;
-      margin-top: 3%;
-      // &-forgot {
-      //   cursor: pointer;
-      //   p {
-      //     font-family: 'Visby Round CF Medium';
-      //     color: #2a86ff;
-      //     font-style: normal;
-      //     font-weight: 500;
-      //   }
-      // }
-      &-checkbox {
-        display: flex;
-        align-items: start;
-        // background-color: #2a86ff;
-        .text-policy {
-          display: flex;
-          .policy {
-            cursor: pointer;
-            text-decoration: underline;
-            color: #2a86ff;
-            margin: 0 2px;
-          }
-          p {
-            color: #2a86ff;
-          }
-        }
-        p {
-          font-family: 'Visby Round CF Medium';
+
+      &-signup,
+      &-signin {
+        cursor: pointer;
+        span {
+          color: #2a86ff;
+          font-family: 'Visby Round CF';
           font-size: 13px;
           font-weight: 500;
+          text-decoration: underline;
         }
       }
     }
-    .signInBtn {
+    .confirmBtn {
       border-radius: 10px;
       box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
       background: #2a86ff;
       width: 100%;
-      .signIn {
+      .confirm {
         padding-top: 10px;
         padding-bottom: 10px;
         width: 100%;
@@ -239,52 +215,15 @@
         font-size: 18px;
       }
     }
-    .register {
-      text-align: center;
-      color: #01162b;
-      font-family: 'Visby Round CF';
-      font-size: 13px;
-      font-weight: 500;
-      .haveAccount {
-        margin-left: 8px;
-        cursor: pointer;
-        color: #2a86ff;
-        font-family: 'Visby Round CF';
-        font-size: 13px;
-        font-weight: 500;
-        text-decoration-line: underline;
-      }
-    }
     .error {
       margin-bottom: 10px;
-      color: #da0000;
+      color: red;
       font-size: 14px;
-      font-family: 'Visby Round CF';
     }
     .input-password,
-    .input-confirmPassword,
-    .input-contact {
+    .input-confirmPassword {
       position: relative;
       margin-top: 15px;
-    }
-    .phone {
-      border-radius: 8px;
-      width: 29%;
-      height: 40px;
-      font-family: 'Visby Round CF' !important;
-      background-image: url('../../assets/icon/icon-down.svg') !important;
-      background-repeat: no-repeat !important;
-      background-position: right 20px center !important;
-      font-family: 'Visby Round CF' !important;
-      option {
-        font-weight: 500;
-        color: var(--font-color-para);
-        font-size: 15px;
-        font-family: 'Visby Round CF' !important;
-      }
-      svg {
-        display: none;
-      }
     }
     .icon-eye {
       position: absolute;
@@ -293,19 +232,90 @@
       right: 5%;
       bottom: 17%;
     }
+    #remember {
+      margin-right: 10px;
+    }
   }
   &__banner {
     flex-grow: 1;
   }
-  &__right-content {
+  &__left-content {
     width: 50%;
     background: linear-gradient(180deg, #183a65 0%, #4082d8 100%);
+  }
+}
+.confirmEmail {
+  &__top {
+    display: flex;
+    justify-content: space-between;
+    p {
+      color: #01162b;
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 200%;
+      width: 95%;
+    }
+    .close {
+      background-color: #f5f5f5;
+      padding: 10px;
+      border-radius: 50%;
+      cursor: pointer;
+      width: 30px;
+      height: 30px;
+      img {
+        width: 10px;
+        height: 10px;
+        max-width: 10px;
+        line-height: 10px;
+      }
+    }
+  }
+  &__bottom {
+    display: flex;
+  }
+  &__resendCodeCoundown,
+  &__descript {
+    margin: 2% 0;
+    color: #01162b;
+    font-family: 'GoogleSans';
+    font-size: 15px;
+    font-weight: 400;
+    span {
+      color: #2a86ff;
+    }
+  }
+  &__descript {
+    opacity: 0.5;
+    margin-top: 0;
+  }
+  &__resendCode {
+    margin: 2% 0;
+    color: #2a86ff;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  input {
+    border-radius: 8px;
+    border: 1px dashed rgba(1, 22, 43, 0.2);
+    background: #f5f5f5;
+    width: 80%;
+    height: 40px;
+    padding: 15px;
+  }
+  button {
+    font-size: 15px;
+    border-radius: 25px;
+    padding: 10px 30px 10px 30px;
+    border: none;
+    font-weight: 700;
+    background-color: #2a86ff;
+    color: #fff;
+    margin-left: 13px;
+    cursor: pointer;
   }
 }
 .css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
   border-radius: 10px;
   box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
-}
-.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
-  font-size: 15px !important;
 }

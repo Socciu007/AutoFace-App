@@ -131,7 +131,8 @@ const returnPost = async (page, id, fbid) => {
             }
             await delay(2000);
           }
-      
+          let randomDelay = getRandomIntBetween(post.delayTimeStart * 1000, post.delayTimeEnd * 1000);
+          await delay(randomDelay);
           const endTime = Date.now();
           randomViewTime -= endTime - startTime;
           logger('randomViewTime ' + randomViewTime);

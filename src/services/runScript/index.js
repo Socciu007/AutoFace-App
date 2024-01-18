@@ -458,12 +458,25 @@ export const runScript = async (profileSelected, scriptDesign) => {
               ]
             });
   
-            const page = await browser.newPage();
-            await page.setBypassCSP(true);
-            await page.setCacheEnabled(false);
-            const session = await page.target().createCDPSession();
-            await session.send("Page.enable");
-            await session.send("Page.setWebLifecycleState", { state: "active" });
+            const pages = await browser.pages();
+            for(let i=1;i<pages.length;i++){
+              await pages[i].close();
+            }
+            const page = pages[0];
+            // await page.setBypassCSP(true);
+            // await page.setCacheEnabled(false);
+            // const session = await page.target().createCDPSession();
+            // await session.send("Page.enable");
+            // await session.send("Page.setWebLifecycleState", { state: "active" });
+            let interval;
+            interval = setInterval(async()=>{
+                 const checkPage = await checkIsLive(page);
+                  if (!checkPage){
+                  if(interval)
+                  clearInterval(interval);
+                  return false;
+              }
+            },2000);
 
             const proxy = ${
               proxyConvert && proxyConvert.host

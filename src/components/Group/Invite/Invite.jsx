@@ -40,7 +40,7 @@ const Invite = ({ onGoBackClick, id, updateDesignScript, currentSetup, component
 
   useEffect(() => {
     if (textContent.length) {
-      setValues({ ...values, UIDGroup: textContent.split('\n'), lineCount: textContent.split('\n').length });
+      setValues({ ...values, text: textContent.split('\n'), lineCount: textContent.split('\n').length });
     }
   }, [textContent]);
 
