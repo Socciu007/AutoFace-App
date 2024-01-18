@@ -144,8 +144,10 @@ const Login = () => {
                 confirmPassword: Yup.string()
                   .oneOf([Yup.ref('password'), null], t('Confirm password must match with password'))
                   .required(t('Password confirmation is required')),
-                // policy: Yup.boolean().oneOf([true], t('*You have not agreed yet.')),
-                policy: Yup.boolean(t('*You have not agreed yet.')).oneOf([true]),
+                // policy: Yup.boolean()
+                //   .oneOf([true], t('*You have not agreed yet.'))
+                //   .required(t('*You have not agreed yet.')),
+                policy: Yup.boolean().required('*You have not agreed yet.'),
               })}
               onSubmit={async (values) => {
                 const { email, password, confirmPassword, policy } = values;
@@ -247,8 +249,8 @@ const Login = () => {
                     <input
                       // defaultChecked={values.policy}
                       checked={values.policy}
-                      onChange={(event) => {
-                        setValues({ ...values, policy: event.target.checked });
+                      onChange={() => {
+                        setValues({ ...values, policy: !values.policy });
                       }}
                       type="checkbox"
                       id="policy"
