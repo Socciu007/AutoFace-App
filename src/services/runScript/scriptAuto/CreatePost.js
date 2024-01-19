@@ -21,14 +21,28 @@ export const createPost = (setting) => {
   const tagFriendsRandomly = async (page, numberFriendTag) => {
     try {
       let count = 0;
-  
+      let selector = "div.m.bg-s3[data-action-id]";
+      // Kiểm tra danh sách bạn bè
+      const listFriend = await getElements(page, selector, 3);
+      if (listFriend.length < 1) {
+        selector = "div.m.bg-s4[data-action-id]";
+        listFriend = await getElements(page, selector, 3);
+        if (listFriend.length < 1){
+          logger('Khong co ban be de tag');
+          return false;
+        } 
+      }
+      let temp = [];
       while (count < numberFriendTag) {
-        // Kiểm tra danh sách bạn bè
-        const listFriend = await getElements(page, 'div.m.bg-s3[data-action-id]', 3);
-        logger('list friend length ' + listFriend.length);
-        if (listFriend.length > 0) {
+          console.log("list friend length " + listFriend.length);
           // Chọn một bạn bè ngẫu nhiên từ danh sách và click vào
-          const randomFriend = getRandomIntBetween(0, listFriend.length);
+          let randomFriend = getRandomIntBetween(0, listFriend.length);
+          let index = temp.indexOf(randomFriend);
+          if (index !== -1) {
+            temp.push(randomFriend);
+          } else {
+            continue;
+          }
           if (!(await isElementVisible(page, listFriend[randomFriend]))) {
             await listFriend[randomFriend].evaluate((el) => {
               el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
@@ -39,11 +53,6 @@ export const createPost = (setting) => {
           logger('Clicked friend tag');
           await delay(3000);
           count++;
-        } else {
-          // Nếu danh sách bạn bè rỗng, thoát khỏi vòng lặp
-          logger('Khong co ban be de tag');
-          break;
-        }
         await delay(5000);
       }
     } catch (err) {
@@ -126,7 +135,7 @@ export const createPost = (setting) => {
           ? CreatePost.photos.length
           : getRandomIntBetween(CreatePost.photoStart, CreatePost.photoEnd);
   
-      if (CreatePost.photos.length > 0) {
+      if (CreatePost.photos.length > 0 && numberPhoto > 0) {
         if (
           (await checkExistElementOnScreen(
             page,
@@ -153,7 +162,7 @@ export const createPost = (setting) => {
           return false;
         }
       } else {
-        logger('Khong co anh duoc nhap vao');
+        logger('So anh random khong hop le');
         return false;
       }
       return true;
@@ -213,7 +222,6 @@ export const createPost = (setting) => {
   };
 
   try {
-    await delay(300000000000000);
     const object = ${strSetting}
     //Check obj start < end ? random(start,end) : random(end,start)
     let CreatePost = await checkObject(object);
@@ -254,6 +262,7 @@ export const createPost = (setting) => {
             logger('Upload image successful');
           } else {
             logger("Can't upload image");
+            return 0;
           }
           await delay(5000);
           // TAG

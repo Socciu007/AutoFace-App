@@ -142,6 +142,20 @@ const PopupDisplaySetting = ({
                   <input
                     onChange={(event) => {
                       const checked = event.target.checked;
+                      const newSettings = { ...settings, twoFA: checked };
+                      setSettings(newSettings);
+                    }}
+                    checked={settings.twoFA}
+                    type="checkbox"
+                  ></input>
+                </span>
+                <p>2FA</p>
+              </li>
+              <li>
+                <span>
+                  <input
+                    onChange={(event) => {
+                      const checked = event.target.checked;
                       const newSettings = { ...settings, email: checked };
                       setSettings(newSettings);
                     }}

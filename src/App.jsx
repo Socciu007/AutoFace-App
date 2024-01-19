@@ -10,6 +10,7 @@ import Login from './pages/Login/Login.jsx';
 import Edit from './pages/Edit/index.jsx';
 import SignUp from './pages/SignUp/SignUp.jsx';
 import ForgotPassword from './pages/ForgotPassword/ForgotPassword.jsx';
+import ScriptManager2 from './pages/Script-Manager-2/index.jsx';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/signup" element={<SignUp></SignUp>} />
         <Route path="/forgotPassword" element={<ForgotPassword></ForgotPassword>} />
         <Route path="/edit" element={<Edit></Edit>} />
+        <Route path="/scripManager2" element={<ScriptManager2></ScriptManager2>} />
       </Routes>
     </>
   );

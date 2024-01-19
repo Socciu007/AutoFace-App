@@ -25,7 +25,27 @@
   font-weight: 700;
   src: local('GoogleSans'), url('./assets/fonts/GoogleSansTTF/GoogleSans-Bold.ttf') format('truetype');
 }
-
+@font-face {
+  font-family: 'Visby Round CF';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Visby Round CF'),
+    url('../../assets/fonts/Visby-Round-www.Dfonts.org/VisbyRoundCF-Regular.otf') format('truetype');
+}
+@font-face {
+  font-family: 'Visby Round CF Bold';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Visby Round CF'),
+    url('../../assets/fonts/Visby-Round-www.Dfonts.org/VisbyRoundCF-Bold.otf') format('truetype');
+}
+@font-face {
+  font-family: 'Visby Round CF Medium';
+  font-style: normal;
+  font-weight: 500;
+  src: local('Visby Round CF'),
+    url('../../assets/fonts/Visby-Round-www.Dfonts.org/VisbyRoundCF-Medium.otf') format('truetype');
+}
 *,
 *::before,
 *::after {

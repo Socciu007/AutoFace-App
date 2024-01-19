@@ -8,6 +8,7 @@
   "password": true,
   "email": true,
   "emailPass": true,
+  "twoFA": true,
   "status": true,
   "proxy": true,
   "tag": true
