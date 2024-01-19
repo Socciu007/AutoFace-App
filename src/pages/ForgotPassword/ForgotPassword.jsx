@@ -9,23 +9,23 @@ import IconEye from '../../assets/icons/icons-form/IconEye';
 import IconEyeSlash from '../../assets/icons/icons-form/IconEyeSlash';
 import { useTranslation } from 'react-i18next';
 import Loading from '../../components/loading/Loading';
-import { login } from '../../sender';
 import SnackbarApp from '../../components/Alert';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Dialog from '@mui/material/Dialog';
-import Button from '@mui/material/Button';
 import close from '../../assets/icon/icon-close.svg';
+import { apiChangePass, apiCheckCode, apiSendCode } from '../../services/api_helper';
 const ForgotPassword = () => {
   const navigate = useNavigate();
   const [message, setMessage] = useState('');
   const [statusMessage, setStatusMessage] = useState('warning');
+  const [emailUser, setEmail] = useState('');
+  const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
+
   const { t } = useTranslation('translation');
-  const [seconds, setSeconds] = useState(20);
-  const navigateHome = () => {
-    navigate('/');
-  };
+  const [seconds, setSeconds] = useState(30);
+
   const navigateSignUp = () => {
     navigate('/signup');
   };
@@ -46,8 +46,19 @@ const ForgotPassword = () => {
   const handleCloseDialog = () => {
     setValues({ ...values, confirmEmail: false });
   };
-  const handleClickConfirmCode = () => {
-    setValues({ ...values, newPass: true });
+  const handleClickConfirmCode = async () => {
+    const reg = new RegExp('^[0-9]+$');
+    if (code.length !== 6 || !reg.test(code)) {
+      return postAlert(t('Wrong code!'));
+    }
+    setLoading(true);
+    const res = await apiCheckCode(emailUser, code);
+    if (res && res.success) {
+      setValues({ ...values, newPass: true });
+    } else {
+      return postAlert(t('Wrong code!'));
+    }
+    setLoading(false);
   };
 
   const showPassword = () => {
@@ -76,7 +87,8 @@ const ForgotPassword = () => {
     };
   }, [seconds]);
   const handleResendClick = () => {
-    setSeconds(20);
+    setSeconds(30);
+    sendCodeToEmail(emailUser);
   };
 
   const changeOption = (value) => {
@@ -91,25 +103,35 @@ const ForgotPassword = () => {
       setStatusMessage('warning');
     }, duration);
   };
-  // const handelLogin = async (email, password) => {
-  //   try {
-  //     if (password.length >= 6 && password.length <= 32) {
-  //       setLoading(true);
-  //       const res = await login(email, password);
 
-  //       if (res && res.code == 1) {
-  //         navigateHome();
-  //       } else if (res.errors.includes('email does not exist')) {
-  //         postAlert(t('Email does not exist. Please sign up'));
-  //       } else {
-  //         postAlert(t('Invalid email or password'));
-  //       }
-  //     }
-  //     setLoading(false);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
+  const sendCodeToEmail = async (email) => {
+    setEmail(email);
+    setLoading(true);
+    const res = await apiSendCode(email);
+    if (res && res.success) {
+      handleConfirmClick();
+      setSeconds(30);
+    } else if (res.errors.includes('email does not exist')) {
+      postAlert(t('Email does not exists'));
+    } else {
+      postAlert(t('Sending code via email failed!'));
+    }
+    setLoading(false);
+  };
+
+  const changePassword = async (password) => {
+    setLoading(true);
+    const res = await apiChangePass(emailUser, code, password);
+    if (res && res.success) {
+      postAlert(t('Change password successfully. Please Sign In again!'), 'success');
+      setTimeout(() => {
+        navigateLogin();
+      }, 2000);
+    } else {
+      postAlert(t('Change password failed. Please try again!'));
+    }
+    setLoading(false);
+  };
 
   const languageSelect = {
     fontFamily: 'GoogleSans !important',
@@ -188,7 +210,7 @@ const ForgotPassword = () => {
                 onSubmit={async (values) => {
                   const { email } = values;
 
-                  // await handelLogin(email, password);
+                  await sendCodeToEmail(email);
                 }}
               >
                 <Form>
@@ -208,7 +230,8 @@ const ForgotPassword = () => {
                     </div>
 
                     <div className="confirmBtn">
-                      <button type="submit" className="confirm" onClick={() => handleConfirmClick()}>
+                      <button type="submit" className="confirm">
+                        {loading ? <Loading></Loading> : null}
                         {t('Confirm')}
                       </button>
 
@@ -234,16 +257,16 @@ const ForgotPassword = () => {
                           </p>
                           <div className="confirmEmail__bottom">
                             <input
-                              onChange={(event) => setNameCoppy(event.target.value)}
+                              onChange={(event) => setCode(event.target.value)}
                               type="text"
                               placeholder="Enter the code here..."
                             />
                             <button
-                              onClick={() => {
-                                handleClickConfirmCode();
+                              onClick={async () => {
+                                await handleClickConfirmCode();
                               }}
                             >
-                              Confirm
+                              {loading ? <Loading></Loading> : 'Confirm'}
                             </button>
                           </div>
 
@@ -252,7 +275,12 @@ const ForgotPassword = () => {
                               Resend the code in <span>{seconds}s</span>
                             </p>
                           ) : (
-                            <p onClick={() => handleResendClick()} className="confirmEmail__resendCode">
+                            <p
+                              onClick={async () => {
+                                await handleResendClick();
+                              }}
+                              className="confirmEmail__resendCode"
+                            >
                               Resend the code
                             </p>
                           )}
@@ -291,6 +319,7 @@ const ForgotPassword = () => {
                   password: '',
                   confirmPassword: '',
                 }}
+                enableReinitialize={true}
                 validationSchema={Yup.object({
                   password: Yup.string()
                     .required(t('The Password field is required'))
@@ -306,6 +335,7 @@ const ForgotPassword = () => {
                     postAlert(t('Passwords do not match.'));
                     return;
                   }
+                  await changePassword(password);
                 }}
               >
                 <Form>
@@ -356,6 +386,7 @@ const ForgotPassword = () => {
 
                     <div className="confirmBtn">
                       <button type="submit" className="confirm">
+                        {loading ? <Loading></Loading> : null}
                         {t('Change password')}
                       </button>
                     </div>
@@ -392,9 +423,6 @@ const ForgotPassword = () => {
       </div>
 
       <div className="forgotPass__left-content"></div>
-      {/* <div className="login__banner">
-        <LoginBanner></LoginBanner>
-      </div> */}
 
       <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
     </div>

@@ -1,4 +1,5 @@
 export const accessToken = 'accessToken';
+export const masterKey = 'yCSlkdIMtN72ChLACFTowyo44QyrxqiY';
 export const lang = 'language';
 export const storageScripts = 'minitool_facebook_scripts';
 export const storageProfiles = 'minitool_facebook_profiles';

@@ -9,10 +9,10 @@ import IconEye from '../../assets/icons/icons-form/IconEye';
 import IconEyeSlash from '../../assets/icons/icons-form/IconEyeSlash';
 import { useTranslation } from 'react-i18next';
 import Loading from '../../components/loading/Loading';
-import { login } from '../../sender';
 import SnackbarApp from '../../components/Alert';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import { apiCreateAccount } from '../../services/api_helper';
 const SignUp = () => {
   const navigate = useNavigate();
   const [message, setMessage] = useState('');
@@ -61,25 +61,38 @@ const SignUp = () => {
       setStatusMessage('warning');
     }, duration);
   };
-  // const handelLogin = async (email, password) => {
-  //   try {
-  //     if (password.length >= 6 && password.length <= 32) {
-  //       setLoading(true);
-  //       const res = await login(email, password);
 
-  //       if (res && res.code == 1) {
-  //         navigateHome();
-  //       } else if (res.errors.includes('email does not exist')) {
-  //         postAlert(t('Email does not exist. Please sign up'));
-  //       } else {
-  //         postAlert(t('Invalid email or password'));
-  //       }
-  //     }
-  //     setLoading(false);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
+  const register = async (email, password, confirmPassword, phone) => {
+    try {
+      if (!values.acceptedPolicy) {
+        return setHasClickedButton(true);
+      }
+      if (password !== confirmPassword) {
+        return postAlert(t('Passwords does not match.'));
+      }
+      if (password.length >= 6 && password.length <= 32) {
+        setLoading(true);
+        const res = await apiCreateAccount(email, password, phone);
+        console.log(res);
+        if (res.success) {
+          postAlert(t('Account created successfully. Sign in to use AutoFace!'), 'success');
+          setTimeout(() => {
+            navigateLogin();
+          }, 2000);
+        } else {
+          if (res.errors.includes('email already exists')) {
+            postAlert(t('Email already exists'));
+          } else {
+            console.log(res.errors);
+          }
+        }
+      }
+
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const changeOption = (value) => {
     setValues({ ...values, option: value });
@@ -158,11 +171,7 @@ const SignUp = () => {
               })}
               onSubmit={async (values) => {
                 const { email, password, confirmPassword, contact } = values;
-
-                if (password !== confirmPassword) {
-                  postAlert(t('Passwords do not match.'));
-                  return;
-                }
+                await register(email, password, confirmPassword, contact);
               }}
             >
               <Form>
@@ -242,7 +251,6 @@ const SignUp = () => {
                       <option value="phone">Phone</option>
                     </Field> */}
                     <Field
-                      type={Number}
                       id="contact"
                       name="contact"
                       placeholder={t('Enter here')}

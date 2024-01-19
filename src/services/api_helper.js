@@ -1,33 +1,36 @@
-// import HttpService from './http-service';
-// import { APP_ID, AUTO_CONNECT, FOLDERS, PROFILES, PROXIES, START_PROFILE, STOP_PROFILE } from '../common/const.api';
+import { CODE, EMAIL, FORGOT, USERS } from '../common/const.api';
+import HttpService from './http-service';
 
-// const http = new HttpService();
+const http = new HttpService();
 
-// export const apiGetProfiles = async () => {
-//   return await http.get(PROFILES);
-// };
+export const apiCreateAccount = async (email, password, phone) => {
+  const body = {
+    email,
+    password,
+    phone,
+  };
+  return await http.post(USERS, { body });
+};
+export const apiSendCode = async (email) => {
+  const body = {
+    email,
+  };
+  return await http.post(EMAIL, { body });
+};
 
-// export const apiStartProfiles = async (id, body = {}) => {
-//   return await http.post(`${START_PROFILE}${id}`, { body });
-// };
+export const apiCheckCode = async (email, code) => {
+  const body = {
+    email,
+    code,
+  };
+  return await http.post(CODE, { body });
+};
 
-// export const apiStopProfiles = async (id) => {
-//   return await http.post(`${STOP_PROFILE}${id}`);
-// };
-
-// export const apiGetFolder = async () => {
-//   return await http.get(FOLDERS);
-// };
-
-// export const apiUpdateProfiles = async (id, proxy, browserSource) => {
-//   const body = { proxy: JSON.stringify(proxy), browserSource };
-//   return await http.put(`${PROFILES}/${id}`, { body });
-// };
-
-// export const apiGetProxies = async () => {
-//   return await http.get(PROXIES);
-// };
-
-// export const apiGetPortSocket = async () => {
-//   return await http.post(`${AUTO_CONNECT}${APP_ID}`);
-// };
+export const apiChangePass = async (email, code, newPassword) => {
+  const body = {
+    email,
+    code,
+    newPassword,
+  };
+  return await http.post(FORGOT, { body });
+};
