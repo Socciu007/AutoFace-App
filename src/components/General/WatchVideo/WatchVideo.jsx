@@ -255,7 +255,7 @@ const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                   name="randomLike"
                   checked={values.isLiked}
                   onChange={(event) => {
-                    changeLike(event.target.value);
+                    changeLike(event.target.checked);
                   }}
                 />
                 <p>

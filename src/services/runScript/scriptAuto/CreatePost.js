@@ -44,6 +44,7 @@ export const createPost = (setting) => {
           logger('Khong co ban be de tag');
           break;
         }
+        await delay(5000);
       }
     } catch (err) {
       logger(err);
@@ -103,7 +104,7 @@ export const createPost = (setting) => {
             5,
           );
           await clickElement(doneBtn);
-          await delay(2000);
+          await delay(6000);
           return true;
         } else {
           logger("Can't find done tag");
@@ -143,7 +144,7 @@ export const createPost = (setting) => {
             await delay(3000);
             // Accept multiple files
             await fileChooser.accept(CreatePost.photos);
-            await delay(6000);
+            await delay(8000);
           } else {
             return false;
           }
@@ -179,7 +180,7 @@ export const createPost = (setting) => {
           logger('Clicked input content');
           await InputTextContent.type(CreatePost.text[randomTextIndex], { delay: 100 });
           logger('Hoan tat nhap content');
-          await delay(2000);
+          await delay(5000);
           return true;
         } else {
           logger('Text is empty');
@@ -254,6 +255,7 @@ export const createPost = (setting) => {
           } else {
             logger("Can't upload image");
           }
+          await delay(5000);
           // TAG
           if (CreatePost.isTag) {
             await tagFriend(page, CreatePost);

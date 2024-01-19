@@ -141,6 +141,7 @@ const SignUp = () => {
                 email: '',
                 password: '',
                 confirmPassword: '',
+                contact: '',
               }}
               validationSchema={Yup.object({
                 email: Yup.string().required(t('The Email field is required')).email('Invalid email'),
@@ -151,9 +152,12 @@ const SignUp = () => {
                 confirmPassword: Yup.string()
                   .oneOf([Yup.ref('password'), null], t('Confirm password must match with password'))
                   .required(t('Password confirmation is required')),
+                contact: Yup.string()
+                  .matches(/^[0-9]+$/, 'Contact contain only numbers')
+                  .required('Contact is required'),
               })}
               onSubmit={async (values) => {
-                const { email, password, confirmPassword } = values;
+                const { email, password, confirmPassword, contact } = values;
 
                 if (password !== confirmPassword) {
                   postAlert(t('Passwords do not match.'));
@@ -245,6 +249,10 @@ const SignUp = () => {
                       className="signup__input inputContact "
                     />
                   </div>
+                </div>
+                <p style={{ height: '10px', width: '100%' }}></p>
+                <div className="error">
+                  <ErrorMessage name="contact"></ErrorMessage>
                 </div>
 
                 <div className="form__other">
