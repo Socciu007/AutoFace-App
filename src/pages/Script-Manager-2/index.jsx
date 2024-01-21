@@ -16,6 +16,8 @@ import pin from '../../assets/pictures/icon-pin.svg';
 import plus from '../../assets/pictures/icon-plus.png';
 import yourScriptBlue from '../../assets/icon/icon-yourScriptsBlue.svg';
 import systemScript from '../../assets/icon/icon-systemScript.svg';
+import iconCheck from '../../assets/icon/icon-checkBlue.svg';
+import running from '../../assets/icon/icon-running.svg';
 import defaultSettings from '../../resources/defaultSettings.json';
 import defaultDisplayManager from '../../resources/defaultDisplayScriptManager.json';
 import { EditableCell, EditableRow } from '../../components/EditableTable/EditableTable';
@@ -27,6 +29,11 @@ import PopupScript from '../../components/PopupHome/PopupScript/PopupScript';
 import { accessToken, storageDisplaySettings, storageProfiles, storageSettings } from '../../common/const.config';
 import { dbGetLocally, dbSetLocally, deleteProfile, getProfilesMarco, runProfile } from '../../sender';
 import PopupDisplaySettingScript from '../../components/ScriptManager/PopupDisplaySettingScript/PopupDisplaySettingScript';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Dialog from '@mui/material/Dialog';
+import { storageScripts } from '../../common/const.config';
+import { v4 as uuidv4 } from 'uuid';
 
 const ScriptManager2 = () => {
   let rowID;
@@ -45,6 +52,148 @@ const ScriptManager2 = () => {
   const [openAddProxy, setOpenAddProxy] = useState(false);
   const [openDeleteProfile, setOpenDeleteProfile] = useState(false);
   const [openProxyManage, setOpenProxyManage] = useState(false);
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [indexMenu, setIndexMenu] = useState(-1);
+  const [contentArray, setContentArray] = useState([]);
+  const [listScript, setListScript] = useState([]);
+  const [itemSelect, setItemSelect] = useState(null);
+  const [makeCopyDialogOpen, setMakeCopyDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [nameCoppy, setNameCoppy] = useState('');
+  const [isSystem, setIsSystem] = useState(false);
+  // for style menu materials UI
+  const menuStyle = {
+    boxShadow:
+      '0px 5px 5px -3px rgb(233 232 232 / 20%), 0px 8px 10px 1px rgb(255 255 255 / 14%), 0px 3px 14px 2px rgb(241 232 232 / 12%)',
+  };
+  const liStyle = {
+    fontFamily: 'Googlesans',
+  };
+  const makeCopy = {
+    position: 'fixed',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    borderRadius: '15px',
+    background: '#fff',
+    boxShadow: '0px 4px 10px 0px rgba(8, 35, 106, 0.25)',
+    width: '636px',
+    maxWidth: '636px',
+    flexShrink: '0',
+    padding: '25px',
+    zIndex: '99999',
+    margin: '0',
+  };
+  const dialog_delete = {
+    position: 'fixed',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    borderRadius: '15px',
+    background: '#fff',
+    boxShadow: '0px 4px 10px 0px rgba(8, 35, 106, 0.25)',
+    width: '636px',
+    maxWidth: '636px',
+    flexShrink: '0',
+    margin: '0',
+    padding: '25px 25px 35px 25px',
+  };
+
+  const overlay = {
+    background: 'rgba(255,255,255,0.9)',
+  };
+  const reloadListScript = () => {
+    let newList = [];
+    if (listScript.length) {
+      newList = contentArray.filter((e) => {
+        const check = listScript.find((o) => o.id == e.id);
+        if (check) return true;
+        return false;
+      });
+    } else {
+      newList = contentArray;
+    }
+    newList = newList.sort((x, y) => Number(y.isPin) - Number(x.isPin));
+    setListScript(newList);
+  };
+  const handleTogglePin = async (scriptId) => {
+    const index = contentArray.findIndex((e) => e.id == scriptId);
+    if (index >= 0) {
+      const newArr = contentArray;
+      newArr[index].isPin = !newArr[index].isPin;
+      setContentArray(newArr);
+      await dbSetLocally(storageScripts, JSON.stringify(newArr));
+      reloadListScript();
+    }
+    setIndexMenu(-1);
+  };
+  // Handle the button edit
+  const handleEditClick = () => {
+    navigate('/create', {
+      state: itemSelect,
+    });
+  };
+  const handleCloseDialog = (className) => {
+    if (className === 'makeCopy') {
+      setMakeCopyDialogOpen(false);
+    } else if (className === 'delete') {
+      setDeleteDialogOpen(false);
+    }
+  };
+
+  const handleOptionClick = (className) => {
+    if (className === 'makeCopy') {
+      setMakeCopyDialogOpen(true);
+    } else if (className === 'delete') {
+      setDeleteDialogOpen(true);
+    }
+    handleClose();
+  };
+
+  const coppyScript = async (id, name) => {
+    const script = contentArray.find((e) => e.id == id);
+    if (script) {
+      const newList = [...contentArray];
+      const newListScript = [...listScript];
+      const newItem = { ...script, name, id: uuidv4(), isPin: false };
+      newListScript.push(newItem);
+      setListScript(newListScript);
+      newList.push(newItem);
+      setContentArray(newList);
+      await dbSetLocally(storageScripts, JSON.stringify(newList));
+    }
+  };
+  const deleteScript = async (id) => {
+    const newList = contentArray.filter((e) => e.id !== id);
+    const newListScript = listScript.filter((e) => e.id !== id);
+    setListScript(newListScript);
+    setContentArray(newList);
+    await dbSetLocally(storageScripts, JSON.stringify(newList));
+  };
+  // Handle category button
+  const handleButtonClick = () => {
+    let newList = contentArray.filter((e) => {
+      if (!e.isSystem && isSystem) return true;
+      return false;
+    });
+    newList = newList.sort((x, y) => Number(y.isPin) - Number(x.isPin));
+    setIsSystem(!isSystem);
+    setListScript(newList);
+  };
+  // Handle each script div
+  const handleScriptClick = (item) => {
+    setItemSelect(item);
+  };
+  // Handle toggle menu
+  const open = Boolean(anchorEl);
+  const handleClick = (event, index) => {
+    setAnchorEl(event.currentTarget);
+    setIndexMenu(index);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const navigate = useNavigate();
 
@@ -126,10 +275,19 @@ const ScriptManager2 = () => {
       settingsColumns.push({
         title: 'Status',
         dataIndex: 'status',
-        width: 100,
+        width: 150,
         render: (status) => {
           if (status === 'running') {
-            return <div className="-status-profiles">{status.charAt(0).toUpperCase() + status.slice(1)}</div>;
+            return (
+              <div className="-status-profiles">
+                <img src={running} alt="icon running" />
+                <p>
+                  <span>23 </span>
+                  <span>/34 profiles</span>
+                </p>
+                {/* {status.charAt(0).toUpperCase() + status.slice(1)} */}
+              </div>
+            );
           } else if (status === 'ready') {
             return (
               <div className="-status-profiles -status-profiles-ready">
@@ -199,17 +357,147 @@ const ScriptManager2 = () => {
           }
         };
         return (
-          <div
-            className="-expand-icon"
-            onClick={() => {
-              rowID = profile.id;
-              renderColumns();
-            }}
-          >
+          // <div
+          //   className="-expand-icon"
+          //   onClick={() => {
+          //     rowID = profile.id;
+          //     renderColumns();
+          //   }}
+          // >
+          <div>
             <p className="runScript">Run</p>
             {/* <p className="stopScript">Stop</p> */}
             <img src={options} alt="image-option"></img>
-            <Popover
+            {listScript.map((item, index) => (
+              // <div
+              //   className="-expand-icon"
+              //   onClick={() => {
+              //     rowID = item.id;
+              //     renderColumns();
+              //   }}
+              // >
+              <div
+                className={itemSelect && itemSelect.id === item.id ? 'script selected' : 'script'}
+                onClick={() => handleScriptClick(item)}
+                key={item.id}
+              >
+                <p className={itemSelect && itemSelect.id === item.id ? 'inputSelected' : ''}>{item.name}</p>
+                <div>
+                  {/* pin */}
+                  {item.isPin ? <img src={pin} alt="Pin" className={'show'} /> : null}
+                  {/* more */}
+                  <div
+                    className="more"
+                    id={`basic-menu-${item.id}`}
+                    aria-controls={open ? `basic-menu-${item.id}` : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? 'true' : undefined}
+                    onClick={(event) => {
+                      handleClick(event, index);
+                    }}
+                  >
+                    <p className="runScript">Run</p>
+                    <img src={options} alt="image-option"></img>
+                  </div>
+                  {indexMenu == index ? (
+                    <Menu
+                      id={`basic-menu-${item.id}`}
+                      anchorEl={anchorEl}
+                      open={open}
+                      onClose={handleClose}
+                      MenuListProps={{
+                        'aria-labelledby': 'basic-button',
+                      }}
+                      sx={{
+                        '& .MuiPaper-root': menuStyle,
+                        '& .MuiButtonBase-root': liStyle,
+                      }}
+                    >
+                      <MenuItem id={item.id} onClick={() => handleTogglePin(item.id)}>
+                        {item.isPin ? 'Unpin' : 'Pin'}
+                      </MenuItem>
+                      <MenuItem onClick={handleEditClick}>Edit</MenuItem>
+                      <MenuItem onClick={() => handleOptionClick('makeCopy')}>Make a copy</MenuItem>
+                      <MenuItem onClick={handleClose}>Rename</MenuItem>
+                      <MenuItem onClick={() => handleOptionClick('delete')}>Delete</MenuItem>
+                    </Menu>
+                  ) : null}
+                </div>
+              </div>
+              // </div>
+            ))}
+
+            <Dialog
+              sx={{
+                '& .MuiPaper-root': makeCopy,
+                '& .MuiBackdrop-root': overlay,
+              }}
+              open={makeCopyDialogOpen}
+              onPlay={() => setNameCoppy('')}
+              onClose={() => handleCloseDialog('makeCopy')}
+              aria-labelledby="scroll-dialog-title"
+              aria-describedby="scroll-dialog-description"
+            >
+              <div className="makeCopy">
+                <div className="makeCopy__top">
+                  <p>MAKE A COPY</p>
+                  <button className="close" onClick={() => handleCloseDialog('makeCopy')}>
+                    <img src={close} alt="Close" />
+                  </button>
+                </div>
+                <div className="makeCopy__bottom">
+                  <input
+                    onChange={(event) => setNameCoppy(event.target.value)}
+                    type="text"
+                    placeholder="Enter name here..."
+                  />
+                  <button
+                    onClick={async () => {
+                      if (nameCoppy == '') {
+                        postAlert('Enter name script');
+                      } else {
+                        coppyScript(itemSelect.id, nameCoppy);
+                        handleCloseDialog('makeCopy');
+                        postAlert('Coppy script success', 'success');
+                      }
+                    }}
+                  >
+                    Create
+                  </button>
+                </div>
+              </div>
+            </Dialog>
+
+            <Dialog
+              open={deleteDialogOpen}
+              onClose={() => handleCloseDialog('delete')}
+              aria-labelledby="scroll-dialog-title"
+              aria-describedby="scroll-dialog-description"
+              sx={{
+                '& .MuiPaper-root': dialog_delete,
+                '& .MuiBackdrop-root': overlay,
+              }}
+            >
+              <div className="dialog_delete">
+                <h1>DELETE</h1>
+                <p>Are you sure to delete this script?</p>
+                <div>
+                  <button onClick={() => handleCloseDialog('delete')}>Cancel</button>
+                  <button
+                    onClick={() => {
+                      deleteScript(itemSelect.id);
+                      handleCloseDialog('delete');
+                      postAlert('Delete script success', 'success');
+                    }}
+                    className="deleteBtn"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </Dialog>
+
+            {/* <Popover
               open={rowID == profile.id}
               trigger="click"
               onClose={handleCloseAction}
@@ -237,7 +525,8 @@ const ScriptManager2 = () => {
                   </div>
                 </div>
               }
-            ></Popover>
+            ></Popover> */}
+            {/* </div> */}
           </div>
         );
       },
@@ -309,24 +598,24 @@ const ScriptManager2 = () => {
     }
   };
 
-  const generateProxyStr = (proxy) => {
-    let proxyStr = `${proxy.host}:${proxy.port}${proxy.username && proxy.username != '' ? ':' + proxy.username : ''}${
-      proxy.password ? ':' + proxy.password : ''
-    }`;
+  // const generateProxyStr = (proxy) => {
+  //   let proxyStr = `${proxy.host}:${proxy.port}${proxy.username && proxy.username != '' ? ':' + proxy.username : ''}${
+  //     proxy.password ? ':' + proxy.password : ''
+  //   }`;
 
-    if (proxyStr.length > 30) {
-      proxyStr = `${proxy.host}:${proxy.port}...`;
-    }
-    return proxyStr;
-  };
+  //   if (proxyStr.length > 30) {
+  //     proxyStr = `${proxy.host}:${proxy.port}...`;
+  //   }
+  //   return proxyStr;
+  // };
 
-  const pinProfile = async (id) => {
-    const index = dataProfiles.findIndex((e) => e.id == id);
-    let newDataProfile = [...dataProfiles];
-    newDataProfile[index].isPin = !newDataProfile[index].isPin;
-    setDataProfiles(newDataProfile);
-    await dbSetLocally(storageProfiles, newDataProfile);
-  };
+  // const pinProfile = async (id) => {
+  //   const index = dataProfiles.findIndex((e) => e.id == id);
+  //   let newDataProfile = [...dataProfiles];
+  //   newDataProfile[index].isPin = !newDataProfile[index].isPin;
+  //   setDataProfiles(newDataProfile);
+  //   await dbSetLocally(storageProfiles, newDataProfile);
+  // };
   const removeProfile = async (id) => {
     await deleteProfile(id);
 
@@ -340,10 +629,10 @@ const ScriptManager2 = () => {
 
   //Pin and remove
 
-  const handleCloseAction = () => {
-    rowID = null;
-    renderColumns();
-  };
+  // const handleCloseAction = () => {
+  //   rowID = null;
+  //   renderColumns();
+  // };
 
   const postAlert = (message, status = 'warning', duration = 3000) => {
     setStatusMessage(status);
@@ -625,19 +914,22 @@ const ScriptManager2 = () => {
           </div>
         </div>
         <div className="-nav-bar">
-          <div className="-nav-bar__scriptManager">
+          <div className="scriptManager">
             <img src={yourScript} alt="Your script icon" />
             <p>SCRIPT MANAGER</p>
           </div>
-          <div className="-nav-bar__createScript">
-            <img src={plus} alt="plus icon" />
+          <div className="createScript">
+            <span>
+              <img src={plus} alt="plus icon" />
+            </span>
             <p>Create a new script</p>
           </div>
-          <div className="-nav-bar__yourScript">
+          <div className={!isSystem ? 'yourScript active' : 'yourScript'} onClick={handleButtonClick}>
             <img src={yourScriptBlue} alt="icon your script blue" />
             <p>Your Scripts</p>
+            <img src={iconCheck} alt="icon check" />
           </div>
-          <div className="-nav-bar__systemScript">
+          <div className={!isSystem ? 'systemScript active' : 'systemScript'} onClick={handleButtonClick}>
             <img src={systemScript} alt="icon system scripts" />
             <p>System’s Scripts</p>
           </div>
