@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import up from '../../../assets/pictures/icon-Increase.svg';
 import down from '../../../assets/pictures/icon-Descrease.svg';
 import back from '../../../assets/icon/icon-back.svg';
@@ -7,13 +7,19 @@ import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import { Select } from 'antd';
-const SeedingFollower = ({ onGoBackClick }) => {
-  const [followers, setFollowers] = useState({
-    delayTimeStart: 3,
-    delayTimeEnd: 5,
-    selectTypeFollow: 'Profile',
-    UIDList: '',
-  });
+import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
+
+const SeedingFollower = ({ onGoBackClick, id, currentSetup, component, updateDesignScript }) => {
+  const [followers, setFollowers] = useState(DefaultSciptSettings['follower']);
+  useEffect(() => {
+    if (currentSetup) {
+      setFollowers(currentSetup);
+    }
+  }, [currentSetup]);
+  useEffect(() => {
+    updateDesignScript(followers, component, id);
+  }, [followers]);
+
   const hightlightWithLineNumbers = (input, language) =>
     highlight(input, language)
       .split('\n')
@@ -78,13 +84,27 @@ const SeedingFollower = ({ onGoBackClick }) => {
       UIDList: value,
     });
   };
+  //like
+  const handleChangeLike = (value) => {
+    setFollowers({ ...followers, isLike: value });
+  };
+  //follower
+  const handleChangeFollower = (value) => {
+    setFollowers({ ...followers, isFollow: value });
+  };
   return (
     <div className="-layout-component">
       <div className="-seeding-like">
         <div className="scrollable-container">
           <div className="-seeding-wrapper-like">
             <div className="-back-home">
-              <img src={back} alt="Back button" onClick={() => onGoBackClick(true)} />
+              <img
+                src={back}
+                alt="Back button"
+                onClick={() => {
+                  onGoBackClick();
+                }}
+              />
               <p>Boost followers</p>
             </div>
             <div className="-option-boost-like">
@@ -186,13 +206,23 @@ const SeedingFollower = ({ onGoBackClick }) => {
 
             <div className="-option-boost-like">
               <div className="-option-boost-like__header">
-                <input type="checkbox" name="like" onChange />
+                <input
+                  type="checkbox"
+                  name="like"
+                  checked={followers.isLike}
+                  onChange={(event) => handleChangeLike(event.target.checked)}
+                />
                 <p>Like page</p>
               </div>
             </div>
             <div className="-option-boost-like">
               <div className="-option-boost-like__header">
-                <input type="checkbox" name="share" onChange />
+                <input
+                  type="checkbox"
+                  name="share"
+                  checked={followers.isFollow}
+                  onChange={(event) => handleChangeFollower(event.target.checked)}
+                />
                 <p>Follow page</p>
               </div>
             </div>

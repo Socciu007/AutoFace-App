@@ -139,6 +139,13 @@
   "inviteGroup": null,
   "createPostGroup": null,
   "likeComment": null,
-  "follower": null,
+  "follower": {
+    "delayTimeStart": 3,
+    "delayTimeEnd": 5,
+    "selectTypeFollow": "Profile",
+    "UIDList": [],
+    "isLike": false,
+    "isFollow": true
+  },
   "viewVideo": null
 }

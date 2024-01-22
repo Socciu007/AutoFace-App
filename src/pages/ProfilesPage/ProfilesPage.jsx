@@ -70,10 +70,9 @@ const ProfilesPage = () => {
       display = defaultDisplaySettings;
     }
     setDisplaySettings(display);
-    renderColumns(display);
   };
 
-  const renderColumns = async (settings) => {
+  const renderColumns = async (settings, data) => {
     if (!settings) settings = await dbGetLocally(storageDisplaySettings);
 
     const settingsColumns = [
@@ -107,7 +106,14 @@ const ProfilesPage = () => {
     if (settings.uid) {
       settingsColumns.push({
         title: 'UID',
-        dataIndex: 'uid',
+        render: (profile) => {
+          return (
+            <div className="-text-profile">
+              <span>{profile.uid}</span>
+              {profile.isPin && <img src={pin} alt="icon-pin"></img>}
+            </div>
+          );
+        },
         width: 200,
         sorter: (a, b) => a.uid - b.uid,
       });
@@ -317,7 +323,7 @@ const ProfilesPage = () => {
                 <div className="-popover-options" onMouseLeave={handleCloseAction}>
                   <div
                     onClick={() => {
-                      pinProfile(profile.id);
+                      pinProfile(profile.id, data ? data : dataProfiles);
                       handleCloseAction();
                     }}
                     className="-popover-options__attribute border-bottom"
@@ -378,6 +384,9 @@ const ProfilesPage = () => {
         }),
       );
     }
+    if (dataProfiles && displaySettings) {
+      renderColumns(displaySettings, dataProfiles);
+    }
   }, [dataProfiles]);
 
   const getProfiles = async () => {
@@ -419,16 +428,20 @@ const ProfilesPage = () => {
     return proxyStr;
   };
 
-  const pinProfile = async (id) => {
-    const index = dataProfiles.findIndex((e) => e.id == id);
-    let newDataProfile = [...dataProfiles];
+  const pinProfile = async (id, data) => {
+    console.log(id);
+    const index = data.findIndex((e) => e.id == id);
+    console.log(data);
+    console.log(index);
+    let newDataProfile = [...data];
+    if (index < 0) return;
+
     newDataProfile[index].isPin = !newDataProfile[index].isPin;
     setDataProfiles(newDataProfile);
     await dbSetLocally(storageProfiles, newDataProfile);
   };
   const removeProfile = async (id) => {
     await deleteProfile(id);
-
     const newData = dataProfiles.filter((e) => e.id !== id);
     setDataProfiles(newData);
     await dbSetLocally(storageProfiles, newData);

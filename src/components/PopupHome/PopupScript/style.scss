@@ -51,6 +51,20 @@
           cursor: pointer;
         }
       }
+      .-wrapper-option-profiles {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        .-option-profiles {
+          width: 40px;
+          height: 40px;
+          background-color: #f5f5f5;
+          border-radius: 50%;
+          display: grid;
+          place-items: center;
+          cursor: pointer;
+        }
+      }
     }
     .-container-scripts {
       display: flex;
@@ -154,14 +168,14 @@
       }
       &__right {
         width: 882px;
+        height: 100%;
         flex-shrink: 0;
         border-radius: 15px;
         background: #fff;
         box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
         &__main {
-          margin-top: 19px;
-          margin-left: 29px;
-          height: 80%;
+          padding: 19px 29px;
+          height: 100%;
           &__search {
             display: flex;
             justify-content: space-between;
@@ -173,7 +187,26 @@
               line-height: normal;
             }
             .-search-profiles {
-              margin-right: 31px;
+              gap: 10px;
+              height: 40px;
+              // max-width: 239px;
+              margin-left: 17px;
+              display: inline-flex;
+              align-items: center;
+              border-radius: 8px;
+              background: #f5f5f5;
+              span {
+                margin-left: 6px;
+              }
+              input {
+                height: 19px;
+                border: none;
+                background-color: transparent;
+                font-size: 15px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: normal;
+              }
             }
           }
           &__content {
@@ -228,7 +261,6 @@
           }
           .ant-table-wrapper {
             margin-top: 7px;
-            padding-right: 30px;
           }
           .ant-spin-container {
             display: flex;
@@ -255,18 +287,20 @@
                     background: #f2f8ff;
 
                     // opacity: 0.3;
-
+                    th.ant-table-cell {
+                      background: #f2f8ff;
+                    }
                     td.ant-table-cell {
                       font-size: 15px;
                       font-weight: 700;
                       line-height: normal;
-                      // background: #f2f8ff;
+                      background: #f2f8ff;
                       border-bottom: 1px solid #e0e0e0;
                       color: rgba(1, 22, 43, 0.6);
                       font-family: GoogleSans;
                       min-height: 50px;
-                      // padding-bottom: 10px;
-                      // padding-top: 10px;
+                      padding-bottom: 10px;
+                      padding-top: 10px;
                       vertical-align: middle;
                       .ant-table-column-sorters {
                         display: inline;

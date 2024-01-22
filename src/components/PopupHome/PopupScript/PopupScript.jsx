@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import PopupComponent from '../PopupComponent/PopupComponent';
 import closePopup from '../../../assets/pictures/icon-x.svg';
 import settings from '../../../assets/pictures/icon-settings.png';
-import yourScript from '../../../assets/pictures/icon-yourScripts.svg';
 import search from '../../../assets/pictures/icon-search.svg';
 import { Table } from 'antd';
 import './style.scss';
@@ -92,6 +91,7 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
     {
       title: 'Scripts',
       dataIndex: 'name',
+      width: 300,
     },
     {
       title: 'Notes',
@@ -122,9 +122,6 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
                 <span className="-option-profiles" onClick={handleSettings}>
                   <img src={settings} alt="image-settings"></img>
                 </span>
-                {/* <span className="-option-profiles" onClick={handleOpenScripts}>
-                  <img src={yourScript} alt="icon-yourscripts"></img>
-                </span> */}
                 <div>
                   <button
                     onClick={async () => {

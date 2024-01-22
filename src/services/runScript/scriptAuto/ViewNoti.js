@@ -68,14 +68,17 @@ export const viewNoti = (setting) => {
       logger('Error navigating to URL:'+ error.message);
     }
   };
-  const returnPages = async page => {
+
+  const returnPages = async (page, browser, lengthPage) => {
     try {
+      const pages = await browser.pages();
       const isHaveUrlGroup = await checkUrlPage(page, "m.facebook.com/groups");
       const isHaveUrlStory = await checkUrlPage(page, "m.facebook.com/story");
-      const isHaveUrlEvent = await checkUrlPage(page, "m.facebook.com/events");
-      const isHaveUrlFriend = await checkUrlPage(page, "m.facebook.com/friends");
       const isHaveUrlPost = await checkUrlPage(page, "/posts");
-      if (isHaveUrlGroup || isHaveUrlStory || isHaveUrlPost || isHaveUrlEvent) {
+      if (pages.length > lengthPage) {
+        await pages[pages.length].close();
+        await delay(getRandomIntBetween(3000, 5000));
+      } else if (isHaveUrlGroup || isHaveUrlStory || isHaveUrlPost) {
         const JSSelector = await page.$(
           "div.m > div.m > div.fl.ac > div.native-text > span.f3"
         );
@@ -87,17 +90,9 @@ export const viewNoti = (setting) => {
           await delay(getRandomIntBetween(3000, 5000));
           await navigateToUrl(page, "https://m.facebook.com/notifications/");
         }
-        console.log("return prev page");
+        logger("return prev page");
         return true;
-      } else if (isHaveUrlFriend) {
-        const isGoToNoti = await clickElementRandom(
-          page,
-          'data-comp-id="6"',
-          0,
-          "https://m.facebook.com/notifications/"
-        );
-      }
-       else {
+      } else {
         const JSSelectors = await page.$$(
           "div.m > div.m > div.native-text > span.f2"
         );
@@ -109,11 +104,11 @@ export const viewNoti = (setting) => {
           await delay(getRandomIntBetween(3000, 5000));
           await navigateToUrl(page, "https://m.facebook.com/notifications/");
         }
-        console.log("return prev page");
+        logger("return prev page");
         return true;
       }
     } catch (error) {
-      console.log(error.message);
+      logger(error.message);
       return false;
     }
   };
@@ -124,9 +119,6 @@ export const viewNoti = (setting) => {
       const isLive = await checkIsLive(page);
       if (isLive) {
         await delay(getRandomIntBetween(3000, 5000));
-        // const element0 = await page.$$(
-        //   "div.m > div.m > div.m > img.img.contain.rounded.gray-border"
-        // );
         const notiSelectors = await page.$$('div.m > div.m > div.m > img.rounded.gray-border');
         const notiSelectors1 = await page.$$('div.m > div.m > div.m > div.native-text > span.f2');
   
@@ -135,12 +127,14 @@ export const viewNoti = (setting) => {
           await scrollSmoothIfNotExistOnScreens(notiSelectors[index]);
           await delay(getRandomIntBetween(3000, 5000));
           await notiSelectors[index].evaluate((b) => b.click());
+          logger("Da doc thong bao");
           return true;
         } else if (notiSelectors1.length > 0) {
           const index = getRandomInt(notiSelectors1.length);
           await scrollSmoothIfNotExistOnScreens(notiSelectors1[index]);
           await delay(getRandomIntBetween(3000, 5000));
           await notiSelectors1[index].evaluate((b) => b.click());
+          logger("Da doc thong bao");
           return true;
         } else {
           return false;
@@ -162,7 +156,7 @@ export const viewNoti = (setting) => {
         const selectors = await page.$$(element);
   
         if (selectors.length > 0) {
-          const x = index ? index : getRandomInt(selectors.length);
+          const x = index !== undefined ? index : getRandomInt(selectors.length);
           await scrollSmoothIfNotExistOnScreens(selectors[x]);
           await delay(getRandomIntBetween(3000, 5000));
           await selectors[x].evaluate((b) => b.click());
@@ -222,12 +216,15 @@ export const viewNoti = (setting) => {
           await delay(waitTime);
 
           if (isGoToNoti) {
+            const pages = await browser.pages();
+            const lengthPage = pages.length;
+            logger(lengthPage)
             await delay(getRandomIntBetween(3000, 5000));
             await goToNotificationDetail(page);
             await delay(getRandomIntBetween(10000, 15000));
             // if (notiObj.option === "randomly") {
             // }
-            await returnPages(page);
+            await returnPages(page, browser, lengthPage);
             await delay(getRandomIntBetween(3000, 5000));
             // const isNavigateHome = await clickElementRandom(
             //   page,

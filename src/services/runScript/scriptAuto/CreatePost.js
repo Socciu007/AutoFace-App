@@ -38,7 +38,7 @@ export const createPost = (setting) => {
           // Chọn một bạn bè ngẫu nhiên từ danh sách và click vào
           let randomFriend = getRandomIntBetween(0, listFriend.length);
           let index = temp.indexOf(randomFriend);
-          if (index !== -1) {
+          if (index == -1) {
             temp.push(randomFriend);
           } else {
             continue;
