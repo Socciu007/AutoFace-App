@@ -179,7 +179,29 @@
     "UID": [],
     "UIDGroup": []
   },
-  "likeComment": null,
+  "likeComment": {
+    "viewTimeStart": 5,
+    "viewTimeEnd": 3,
+    "delayTimeStart": 5,
+    "delayTimeEnd": 8,
+    "isLike": false,
+    "likeStart": 2,
+    "likeEnd": 5,
+    "isShare": false,
+    "shareToFeedStart": 0,
+    "shareToFeedEnd": 5,
+    "postQuantityStart": 0,
+    "postQuantityEnd": 0,
+    "postID": [],
+    "isComment": false,
+    "photoVideoQuantityStart": 1,
+    "photoVideoQuantityEnd": 2,
+    "file": [],
+    "isTag": false,
+    "tagFriendStart": 1,
+    "tagFriendEnd": 3,
+    "textComment": []
+  },
   "follower": {
     "delayTimeStart": 3,
     "delayTimeEnd": 5,
@@ -188,5 +210,5 @@
     "isLike": false,
     "isFollow": true
   },
-  "viewVideo": null
+  "viewVideo": { "viewTimeStart": 30, "viewTimeEnd": 50, "videoID": [] }
 }

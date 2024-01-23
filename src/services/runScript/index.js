@@ -12,6 +12,12 @@ import { addFriend } from './scriptAuto/AddFriend';
 import { watchVideo } from './scriptAuto/WatchVideo';
 import Promise from 'bluebird';
 import { createPostGroup } from './scriptAuto/CreatePostGroup';
+import { boostLikeComment } from './scriptAuto/BoostLikeComment';
+import { boostFollower } from './scriptAuto/BoostFollower';
+import { boostView } from './scriptAuto/BoostView';
+import { inviteGroup } from './scriptAuto/inviteGroup';
+import { joinGroup } from './scriptAuto/joinGroup';
+import { leftGroup } from './scriptAuto/leaveGroup';
 
 window.electron.ipcRenderer.on('ipc-logger', (...params) => {
   console.log(params[0]);
@@ -576,7 +582,31 @@ const convertToFunc = (script) => {
       return `{
           ${createPostGroup(script)}
         }`;
-    case 'createPostGroup':
+    case 'inviteGroup':
+      return `{
+              ${inviteGroup(script)}
+            }`;
+    case 'joinGroup':
+      return `{
+          ${joinGroup(script)}
+        }`;
+    case 'leftGroup':
+      return `{
+          ${leftGroup(script)}
+        }`;
+
+    case 'likeComment':
+      return `{
+                  ${boostLikeComment(script)}
+                }`;
+    case 'follower':
+      return `{
+                  ${boostFollower(script)}
+                }`;
+    case 'viewVideo':
+      return `{
+                  ${boostView(script)}
+                }`;
 
     default:
       return `logger("Can't find func");`;

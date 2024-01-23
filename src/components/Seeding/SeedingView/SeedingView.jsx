@@ -6,14 +6,33 @@ import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
+import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
 
-const SeedingView = ({ onGoBackClick }) => {
-  const [videoView, setVideoView] = useState({
-    viewTimeStart: 30,
-    viewTimeEnd: 50,
-    videoID: '',
-  });
+const SeedingView = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
+  const [videoView, setVideoView] = useState(DefaultSciptSettings['viewVideo']);
+  const [UIDContent, setUIDContent] = useState('');
   const [line, setLine] = useState(0);
+
+  useEffect(() => {
+    if (currentSetup) {
+      if (currentSetup.videoID && currentSetup.videoID.length) {
+        setUIDContent(currentSetup.videoID.join('\n'));
+      }
+
+      setVideoView(currentSetup);
+    }
+  }, [currentSetup]);
+
+  useEffect(() => {
+    updateDesignScript(videoView, component, id);
+  }, [videoView]);
+
+  useEffect(() => {
+    if (UIDContent.length) {
+      setVideoView({ ...videoView, videoID: UIDContent.split('\n') });
+    }
+  }, [UIDContent]);
+
   const hightlightWithLineNumbers = (input, language) =>
     highlight(input, language)
       .split('\n')
@@ -69,10 +88,7 @@ const SeedingView = ({ onGoBackClick }) => {
     setLine(lines.length);
   };
   const handleOnchangeVideoID = (value) => {
-    setVideoView({
-      ...videoView,
-      videoID: value,
-    });
+    setUIDContent(value);
   };
 
   return (
@@ -81,7 +97,7 @@ const SeedingView = ({ onGoBackClick }) => {
         <div className="scrollable-container">
           <div className="-seeding-wrapper-like">
             <div className="-back-home">
-              <img src={back} alt="Back Button" onClick={() => onGoBackClick(true)} />
+              <img src={back} alt="Back Button" onClick={() => onGoBackClick(videoView, component, id)} />
               <p>Boost video view</p>
             </div>
             <div className="-option-boost-like">
@@ -129,10 +145,10 @@ const SeedingView = ({ onGoBackClick }) => {
               <div className="-option-boost-comment__wrapper">
                 <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
                   <Editor
-                    value={videoView.videoID}
+                    value={UIDContent}
                     onValueChange={handleOnchangeVideoID}
                     onChange={onChangeLine}
-                    highlight={(textContent) => hightlightWithLineNumbers(textContent, languages.js)}
+                    highlight={(textContent) => hightlightWithLineNumbers(textContent, languages.js, UIDContent)}
                     padding={15}
                     className="editor"
                     textareaId="videoID"
@@ -145,7 +161,7 @@ const SeedingView = ({ onGoBackClick }) => {
                 <div
                   className="-option-boost-comment__wrapper__content"
                   onClick={handleClickText}
-                  style={{ display: videoView.videoID ? 'none' : 'inline' }}
+                  style={{ display: UIDContent ? 'none' : 'inline' }}
                 >
                   <p>
                     <span>1</span>

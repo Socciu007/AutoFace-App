@@ -9,34 +9,44 @@ import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import './style.scss';
+import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
 
-const SeedingLikeComment = ({ onGoBackClick }) => {
-  const [likeComment, setLikeComment] = useState({
-    viewTimeStart: 3,
-    viewTimeEnd: 3,
-    delayTimeStart: 5,
-    delayTimeEnd: 5,
-    likeStart: 0,
-    likeEnd: 5,
-    shareToFeedStart: 0,
-    shareToFeedEnd: 5,
-    postQuantityStart: 0,
-    postQuantityEnd: 0,
-    postID: '',
-    photoVideoQuantityStart: 0,
-    photoVideoQuantityEnd: 0,
-    file: '',
-    tagFriendStart: 0,
-    tagFriendEnd: 0,
-    textComment: '',
-  });
-  const [openTextCmt, setOpenTextCmt] = useState(false);
-  const [like, setLike] = useState(false);
-  const [shareToFeed, setShareToFeed] = useState(false);
-  const [openTagFriend, setOpenTagFriend] = useState(false);
+const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, updateDesignScript }) => {
+  const [likeComment, setLikeComment] = useState(DefaultSciptSettings['likeComment']);
+  const [textComment, setTextComment] = useState('');
+  const [UIDPost, setUIDPost] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const [isFileSelected, setIsFileSelected] = useState(false);
   const [line, setLine] = useState(0);
+
+  useEffect(() => {
+    if (currentSetup) {
+      if (currentSetup.postID && currentSetup.postID.length) {
+        setUIDPost(currentSetup.postID.join('\n'));
+      }
+      if (currentSetup.textComment && currentSetup.textComment.length) {
+        setTextComment(currentSetup.textComment.join('\n'));
+      }
+      setLikeComment(currentSetup);
+    }
+  }, [currentSetup]);
+
+  useEffect(() => {
+    updateDesignScript(likeComment, component, id);
+  }, [likeComment]);
+
+  useEffect(() => {
+    if (textComment.length) {
+      setLikeComment({ ...likeComment, textComment: textComment.split('\n') });
+    }
+  }, [textComment]);
+
+  useEffect(() => {
+    if (UIDPost.length) {
+      setLikeComment({ ...likeComment, postID: UIDPost.split('\n') });
+    }
+  }, [UIDPost]);
+
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -71,22 +81,20 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
     setLine(lines.length);
   };
   const handleOnchangePostID = (value) => {
-    setLikeComment({
-      ...likeComment,
-      postID: value,
-    });
+    setUIDPost(value);
   };
   //Text comment
   const handleWriteText = () => {
     document.getElementById('textComment').focus();
   };
   const handleOnchangeText = (value) => {
-    setLikeComment({
-      ...likeComment,
-      textComment: value,
-    });
+    setTextComment(value);
   };
   //like
+  const changeLike = (value) => {
+    setLikeComment({ ...likeComment, isLike: value });
+  };
+
   const handleLikeStart = (type) => {
     if (type === 'increase') {
       setLikeComment({
@@ -129,6 +137,10 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
     }
   };
   //share to feed
+  const changeShare = (value) => {
+    setLikeComment({ ...likeComment, isShare: value });
+  };
+
   const handleShareToFeedStart = (type) => {
     if (type === 'increase') {
       setLikeComment({
@@ -297,6 +309,9 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
   };
 
   //post quantity
+  const changeComment = (value) => {
+    setLikeComment({ ...likeComment, isComment: value });
+  };
   const handlePhotoVideoStart = (type) => {
     if (type === 'increase') {
       setLikeComment({
@@ -340,6 +355,9 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
   };
 
   //tag friend
+  const changeTag = (value) => {
+    setLikeComment({ ...likeComment, isTag: value });
+  };
   const handleTagFriendStart = (type) => {
     if (type === 'increase') {
       setLikeComment({
@@ -387,7 +405,7 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
         <div className="scrollable-container">
           <div className="-seeding-wrapper-like">
             <div className="-back-home">
-              <img src={back} alt="Back button" onClick={() => onGoBackClick(true)} />
+              <img src={back} alt="Back button" onClick={() => onGoBackClick(likeComment, component, id)} />
               <p>Boost like, comment</p>
             </div>
             <div className="-option-boost-like">
@@ -506,12 +524,10 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
               <div className="-option-boost-comment__wrapper">
                 <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
                   <Editor
-                    value={likeComment.postID}
+                    value={UIDPost}
                     onValueChange={handleOnchangePostID}
                     onChange={onChangeLine}
-                    highlight={(textContent) =>
-                      hightlightWithLineNumbers(textContent, languages.js, likeComment.postID)
-                    }
+                    highlight={(textContent) => hightlightWithLineNumbers(textContent, languages.js, UIDPost)}
                     padding={15}
                     className="editor"
                     textareaId="postID"
@@ -524,7 +540,7 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
                 <div
                   className="-option-boost-comment__wrapper__content"
                   onClick={handleWritePostID}
-                  style={{ display: likeComment.postID ? 'none' : 'inline' }}
+                  style={{ display: UIDPost ? 'none' : 'inline' }}
                 >
                   <p>
                     <span>1</span>
@@ -539,10 +555,18 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
             </div>
             <div className="-option-boost-like">
               <div className="-option-boost-like__header">
-                <input type="checkbox" name="like" onChange={() => setLike((o) => !o)} />
+                <input
+                  type="checkbox"
+                  name="isLike"
+                  checked={likeComment.isLike}
+                  onChange={(event) => changeLike(event.target.checked)}
+                />
                 <p>Like</p>
               </div>
-              <div className="-option-boost-like__header__content" style={{ display: like ? 'flex' : 'none' }}>
+              <div
+                className="-option-boost-like__header__content"
+                style={{ display: likeComment.isLike ? 'flex' : 'none' }}
+              >
                 <div className="-option-boost-like__number">
                   <div className="-option-boost-like__number__icon">
                     <div style={{ marginBottom: '2px' }} onClick={() => handleLikeStart('increase')}>
@@ -570,10 +594,18 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
             </div>
             <div className="-option-boost-like">
               <div className="-option-boost-like__header">
-                <input type="checkbox" name="share" onChange={() => setShareToFeed((o) => !o)} />
+                <input
+                  type="checkbox"
+                  name="isShare"
+                  checked={likeComment.isShare}
+                  onChange={(event) => changeShare(event.target.checked)}
+                />
                 <p>Share to Feed</p>
               </div>
-              <div className="-option-boost-like__header__content" style={{ display: shareToFeed ? 'flex' : 'none' }}>
+              <div
+                className="-option-boost-like__header__content"
+                style={{ display: likeComment.isShare ? 'flex' : 'none' }}
+              >
                 <div className="-option-boost-like__number">
                   <div className="-option-boost-like__number__icon">
                     <div style={{ marginBottom: '2px' }} onClick={() => handleShareToFeedStart('increase')}>
@@ -611,23 +643,26 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
             </div>
             <div className="-option-boost-like">
               <div className="-option-boost-like__header">
-                <input type="checkbox" name="comment" onChange={() => setOpenTextCmt((o) => !o)} />
+                <input
+                  type="checkbox"
+                  name="isComment"
+                  checked={likeComment.isComment}
+                  onChange={(event) => changeComment(event.target.checked)}
+                />
                 <p>Comment</p>
               </div>
             </div>
             <div
               className="-option-boost-like -option-boost-comment"
-              style={{ display: openTextCmt ? 'block' : 'none' }}
+              style={{ display: likeComment.isComment ? 'block' : 'none' }}
             >
               <p>Text</p>
               <div className="-option-boost-comment__wrapper">
                 <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
                   <Editor
-                    value={likeComment.textComment}
+                    value={textComment}
                     onValueChange={handleOnchangeText}
-                    highlight={(textContent) =>
-                      hightlightWithLineNumbers(textContent, languages.js, likeComment.textComment)
-                    }
+                    highlight={(textContent) => hightlightWithLineNumbers(textContent, languages.js, textComment)}
                     padding={15}
                     className="editor"
                     textareaId="textComment"
@@ -640,7 +675,7 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
                 <div
                   className="-option-boost-comment__wrapper__content"
                   onClick={handleWriteText}
-                  style={{ display: likeComment.textComment ? 'none' : 'inline' }}
+                  style={{ display: textComment ? 'none' : 'inline' }}
                 >
                   <p>
                     <span>1</span>
@@ -716,10 +751,15 @@ const SeedingLikeComment = ({ onGoBackClick }) => {
 
             <div className="-option-boost-like -option-photo-video">
               <div className="-option-photo-video__checkbox">
-                <input type="checkbox" name="tagFriend" onChange={() => setOpenTagFriend((o) => !o)} />
+                <input
+                  type="checkbox"
+                  name="isTag"
+                  checked={likeComment.isTag}
+                  onChange={(event) => changeTag(event.target.checked)}
+                />
                 <h1>Tag friends</h1>
               </div>
-              <div className="-option-boost-like" style={{ display: openTagFriend ? 'flex' : 'none' }}>
+              <div className="-option-boost-like" style={{ display: likeComment.isTag ? 'flex' : 'none' }}>
                 <p>Number of friends:</p>
                 <div className="-option-boost-like__number">
                   <div className="-option-boost-like__number__icon">

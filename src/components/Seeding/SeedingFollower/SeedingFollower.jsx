@@ -11,14 +11,25 @@ import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
 
 const SeedingFollower = ({ onGoBackClick, id, currentSetup, component, updateDesignScript }) => {
   const [followers, setFollowers] = useState(DefaultSciptSettings['follower']);
+  const [UIDContent, setUIDContent] = useState('');
+
   useEffect(() => {
     if (currentSetup) {
+      if (currentSetup.UIDList && currentSetup.UIDList.length) {
+        setUIDContent(currentSetup.UIDList.join('\n'));
+      }
       setFollowers(currentSetup);
     }
   }, [currentSetup]);
   useEffect(() => {
     updateDesignScript(followers, component, id);
   }, [followers]);
+
+  useEffect(() => {
+    if (UIDContent.length) {
+      setFollowers({ ...followers, UIDList: UIDContent.split('\n') });
+    }
+  }, [UIDContent]);
 
   const hightlightWithLineNumbers = (input, language) =>
     highlight(input, language)
@@ -79,10 +90,7 @@ const SeedingFollower = ({ onGoBackClick, id, currentSetup, component, updateDes
     document.getElementById('UIDList').focus();
   };
   const handleOnchangeUIDList = (value) => {
-    setFollowers({
-      ...followers,
-      UIDList: value,
-    });
+    setUIDContent(value);
   };
   //like
   const handleChangeLike = (value) => {
@@ -102,7 +110,7 @@ const SeedingFollower = ({ onGoBackClick, id, currentSetup, component, updateDes
                 src={back}
                 alt="Back button"
                 onClick={() => {
-                  onGoBackClick();
+                  onGoBackClick(followers, component, id);
                 }}
               />
               <p>Boost followers</p>
@@ -175,9 +183,9 @@ const SeedingFollower = ({ onGoBackClick, id, currentSetup, component, updateDes
               <div className="-option-boost-comment__wrapper">
                 <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
                   <Editor
-                    value={followers.UIDList}
+                    value={UIDContent}
                     onValueChange={handleOnchangeUIDList}
-                    highlight={(textContent) => hightlightWithLineNumbers(textContent, languages.js)}
+                    highlight={(textContent) => hightlightWithLineNumbers(textContent, languages.js, UIDContent)}
                     padding={15}
                     className="editor"
                     textareaId="UIDList"
@@ -190,7 +198,7 @@ const SeedingFollower = ({ onGoBackClick, id, currentSetup, component, updateDes
                 <div
                   className="-option-boost-comment__wrapper__content"
                   onClick={handleUIDList}
-                  style={{ display: followers.UIDList ? 'none' : 'inline' }}
+                  style={{ display: UIDContent ? 'none' : 'inline' }}
                 >
                   <p>
                     <span>1</span>

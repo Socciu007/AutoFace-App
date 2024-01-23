@@ -111,7 +111,6 @@ const ScriptManager = () => {
     background: 'rgba(255,255,255,0.9)',
   };
 
-  const [idSelect, setIdSelect] = useState('');
   const [isSystem, setIsSystem] = useState(false);
   const [contentArray, setContentArray] = useState([]);
   const [message, setMessage] = useState('');
@@ -119,7 +118,6 @@ const ScriptManager = () => {
   const [listScript, setListScript] = useState([]);
   const [indexMenu, setIndexMenu] = useState(-1);
   const [anchorEl, setAnchorEl] = useState(null);
-  // const [idSelect, setIdSelect] = useState(null);
   const [itemSelect, setItemSelect] = useState(null);
   const [nameCoppy, setNameCoppy] = useState('');
   useEffect(() => {
@@ -145,10 +143,10 @@ const ScriptManager = () => {
     newList = newList.sort((x, y) => Number(y.isPin) - Number(x.isPin));
     setListScript(newList);
   };
-
+  let item;
   useEffect(() => {
     if (!itemSelect) return;
-    const item = listScript.find((e) => e.id == itemSelect.id);
+    item = listScript.find((e) => e.id == itemSelect.id);
     if (!item) setItemSelect(null);
   }, [listScript]);
 
@@ -284,10 +282,10 @@ const ScriptManager = () => {
 
   // Handle toggle menu
   const open = Boolean(anchorEl);
-  const handleClick = (event, index) => {
+  const handleClick = (event, script, index) => {
     setAnchorEl(event.currentTarget);
     setIndexMenu(index);
-    setIdSelect(index);
+    setItemSelect(script);
   };
   const handleClose = () => {
     setAnchorEl(null);
@@ -303,6 +301,14 @@ const ScriptManager = () => {
       title: 'Name',
       dataIndex: 'name',
       width: 150,
+      // render: (profile) => {
+      //   return (
+      //     <div className="pin">
+      //       <span>{profile.name}</span>
+      //       {profile.isPin && <img src={pin} alt="icon-pin"></img>}
+      //     </div>
+      //   );
+      // },
     },
     {
       title: 'Note',
@@ -325,10 +331,9 @@ const ScriptManager = () => {
       width: 150,
     },
     {
-      width: 80,
+      width: 60,
       fixed: 'right',
-      dataIndex: 'index',
-      render: (index) => {
+      render: (script) => {
         return (
           <div>
             <div className="-expand-icon">
@@ -337,36 +342,62 @@ const ScriptManager = () => {
               <img
                 src={option}
                 alt="image-option"
+                id={`basic-menu-${script.id}`}
                 onClick={(event) => {
-                  handleClick(event, index);
+                  handleClick(event, script, 0);
                 }}
+                aria-expanded={open ? 'true' : undefined}
+                aria-controls={open ? `basic-menu-${script.id}` : undefined}
+                aria-haspopup="true"
+                // id={`basic-menu-${item.id}`}
+                // aria-controls={open ? `basic-menu-${item.id}` : undefined}
+                // aria-haspopup="true"
+                // aria-expanded={open ? 'true' : undefined}
+                // onClick={(event) => {
+                //   handleClick(event, index);
+                // }}
               ></img>
               {listScript.map((item, index) => {
-                if (indexMenu == index) {
-                  return (
-                    <Menu
-                      id={`basic-menu-${item?.id}`}
-                      anchorEl={anchorEl}
-                      open={open}
-                      onClose={handleClose}
-                      MenuListProps={{
-                        'aria-labelledby': 'basic-button',
-                      }}
-                      sx={{
-                        '& .MuiPaper-root': menuStyle,
-                        '& .MuiButtonBase-root': liStyle,
-                      }}
-                    >
-                      <MenuItem id={item?.id} onClick={() => handleTogglePin(item?.id)}>
-                        {item?.isPin ? 'Unpin' : 'Pin'}
-                      </MenuItem>
-                      <MenuItem onClick={handleEditClick}>Edit</MenuItem>
-                      <MenuItem onClick={() => handleOptionClick('makeCopy')}>Make a copy</MenuItem>
-                      <MenuItem onClick={handleClose}>Rename</MenuItem>
-                      <MenuItem onClick={() => handleOptionClick('delete')}>Delete</MenuItem>
-                    </Menu>
-                  );
-                }
+                // if (indexMenu == index) {
+                return (
+                  <div
+                    className={itemSelect && itemSelect.id === item.id ? 'script selected' : 'script'}
+                    onClick={() => handleScriptClick(item)}
+                    key={item.id}
+                  >
+                    <p className={itemSelect && itemSelect.id === item.id ? 'inputSelected' : ''}>{item.name}</p>
+                    <div>
+                      {/* pin */}
+                      {item.isPin ? <img src={pin} alt="Pin" className={'show'} /> : null}
+                      {/* more */}
+
+                      {indexMenu == index ? (
+                        <Menu
+                          id={`basic-menu-${item.id}`}
+                          anchorEl={anchorEl}
+                          open={open}
+                          onClose={handleClose}
+                          MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                          }}
+                          sx={{
+                            '& .MuiPaper-root': menuStyle,
+                            '& .MuiButtonBase-root': liStyle,
+                          }}
+                        >
+                          <MenuItem id={item.id} onClick={() => handleTogglePin(item.id)}>
+                            {item.isPin ? 'Unpin' : 'Pin'}
+                          </MenuItem>
+                          <MenuItem onClick={handleEditClick}>Edit</MenuItem>
+                          <MenuItem onClick={() => handleOptionClick('makeCopy')}>Make a copy</MenuItem>
+                          <MenuItem onClick={handleClose}>Rename</MenuItem>
+                          <MenuItem onClick={() => handleOptionClick('delete')}>Delete</MenuItem>
+                        </Menu>
+                      ) : null}
+                    </div>
+                  </div>
+                );
+                // }
               })}
             </div>
           </div>
@@ -390,7 +421,7 @@ const ScriptManager = () => {
                 <img src={yourScript} alt="Your script icon" />
                 <p>SCRIPT MANAGER</p>
               </div>
-              <div className="createScript">
+              <div className="createScript" onClick={handleAddClick}>
                 <span>
                   <img src={plus} alt="plus icon" />
                 </span>
