@@ -17,7 +17,6 @@ import SettingAdvenced from '../../SettingsComponent/SettingAdvanced/SettingAdve
 import SettingProxy from '../../SettingsComponent/SettingProxy/SettingProxy';
 
 const PopupSetting = ({ openSettings, handleCloseSettings }) => {
-  const navigate = useNavigate();
   const [editProxy, setEditProxy] = useState(false);
   const [keyList, setKeyList] = useState('');
   const [openProxyManage, setOpenProxyManage] = useState(false);

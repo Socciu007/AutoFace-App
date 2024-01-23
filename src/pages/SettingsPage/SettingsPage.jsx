@@ -8,6 +8,7 @@ import { storageSettings } from '../../common/const.config';
 import SnackbarApp from '../../components/Alert';
 import { v4 as uuidv4 } from 'uuid';
 import { dbGetLocally, dbSetLocally } from '../../sender';
+import DefaultSettings from '../../resources/defaultSettings.json';
 
 const SettingsPage = () => {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ const SettingsPage = () => {
   const [keyList, setKeyList] = useState('');
   const [openProxyManage, setOpenProxyManage] = useState(false);
 
-  const [settings, setSettings] = useState({});
+  const [settings, setSettings] = useState(DefaultSettings);
   const [message, setMessage] = useState('');
   const [statusMessage, setStatusMessage] = useState('warning');
 
@@ -205,10 +206,10 @@ const SettingsPage = () => {
     }
   };
 
-  const handleOnChangeTypeProfile = (value) => {
+  const handleOnChangeTypeProfile = (event) => {
     setSettings({
       ...settings,
-      runningType: value,
+      runningType: event.target.value,
     });
   };
   const handleOnChangeMuteaudio = (value) => {

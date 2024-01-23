@@ -29,15 +29,15 @@ const SettingProxy = ({
   handleDeleteProxy,
   handleAddProxyFromManager,
 }) => {
-  const [proxyType, setProxyTpye] = useState('http');
+  const [proxyType, setProxyType] = useState('http');
   const [proxyString, setProxyString] = useState('');
   const [listProxy, setListProxy] = useState([]);
 
   useEffect(() => {
     setListProxy(data);
   }, [data]);
-  const onChangeProxyType = (type) => {
-    setProxyTpye(type);
+  const onChangeProxyType = (event) => {
+    setProxyType(event.target.value);
   };
 
   const handleOpenWriteText = () => {
@@ -145,7 +145,7 @@ const SettingProxy = ({
                   <Select
                     name="url"
                     className="-type-proxys__nav__details"
-                    onChange={() => onChangeProxyType()}
+                    onChange={onChangeProxyType}
                     value={proxyType}
                   >
                     <MenuItem value="http">HTTP</MenuItem>

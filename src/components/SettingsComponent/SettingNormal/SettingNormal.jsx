@@ -82,13 +82,12 @@ const SettingNormal = ({
             <Select
               id="typeProfile"
               bordered={false}
-              name="typeProfile"
               className="-options-sub-settings__select -options-sub-settings__details"
-              onChange={() => handleOnChangeTypeProfile()}
+              onChange={handleOnChangeTypeProfile}
               value={settings.runningType}
             >
-              <MenuItem value="random">Random</MenuItem>
-              <MenuItem value="topdown">Topdown</MenuItem>
+              <MenuItem value="Random">Random</MenuItem>
+              <MenuItem value="Topdown">Topdown</MenuItem>
             </Select>
           </div>
         </div>

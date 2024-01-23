@@ -302,7 +302,7 @@ export const createPost = (setting) => {
         if ((await checkExistElementOnScreen(page, '#screen-root > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(3) > div > div > span')) !== 0) {
           await PostBtn.evaluate((el) => {
             el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
-          });
+          },PostBtn);
           await delay(2000);
         }
         if (PostBtn) {
