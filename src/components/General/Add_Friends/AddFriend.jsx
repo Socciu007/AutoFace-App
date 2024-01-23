@@ -114,6 +114,9 @@ const AddFriend = ({ onGoBackClick, id, currentSetup, component, updateDesignScr
   const handleChangeInteract = (value) => {
     setValues({ ...values, isInteract: value });
   };
+  const handleChangeAutoDelete = (value) => {
+    setValues({ ...values, isAutoDelete: value });
+  };
   const handleChangeLiked = (value) => {
     setValues({ ...values, isLiked: value });
   };
@@ -313,7 +316,13 @@ const AddFriend = ({ onGoBackClick, id, currentSetup, component, updateDesignScr
                 {values.option === 'UIDList' && (
                   <div>
                     <div className="component-item autoDelete">
-                      <input type="checkbox" name="autoDelete" id="autoDelete" />
+                      <input
+                        type="checkbox"
+                        name="autoDelete"
+                        id="autoDelete"
+                        checked={values.isAutoDelete}
+                        onChange={(event) => handleChangeAutoDelete(event.target.checked)}
+                      />
                       <p>Automatically delete the UID that sent the friend request</p>
                     </div>
 

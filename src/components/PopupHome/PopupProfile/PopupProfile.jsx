@@ -244,10 +244,6 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
                 </div>
               </div>
               <div className="chooseOption">
-                <div className="chooseOption__item facebookAcc">
-                  <input type="checkbox" name="facebookAcc" />
-                  <p>Run and log in Facebook accounts right after add new profiles</p>
-                </div>
                 <div className="chooseOption__item tag">
                   <div className="checkbox">
                     <input

@@ -11,6 +11,7 @@ import { watchStory } from './scriptAuto/WatchStory';
 import { addFriend } from './scriptAuto/AddFriend';
 import { watchVideo } from './scriptAuto/WatchVideo';
 import Promise from 'bluebird';
+import { createPostGroup } from './scriptAuto/CreatePostGroup';
 
 window.electron.ipcRenderer.on('ipc-logger', (...params) => {
   console.log(params[0]);
@@ -226,7 +227,7 @@ export const runScript = async (profileSelected, scriptDesign) => {
         try {
           setTimeout(() => {
             resolve(true);
-          }, 1000);
+          }, 3000);
           await element.click();
         } catch (err) {
           logger(err);
@@ -571,6 +572,12 @@ const convertToFunc = (script) => {
       return `{
           ${watchVideo(script)}
         }`;
+    case 'createPostGroup':
+      return `{
+          ${createPostGroup(script)}
+        }`;
+    case 'createPostGroup':
+
     default:
       return `logger("Can't find func");`;
   }

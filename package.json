@@ -34,7 +34,7 @@
     "react-nice-avatar": "^1.4.1",
     "react-notifications-component": "^4.0.1",
     "react-router": "^6.12.1",
-    "react-router-dom": "^6.20.1",
+    "react-router-dom": "^6.21.3",
     "react-simple-code-editor": "^0.13.1",
     "reactflow": "^11.10.1",
     "reactjs-popup": "^2.0.6",

@@ -26,6 +26,11 @@
       position: relative;
       height: 100%;
       overflow: hidden;
+      .pinned-row {
+        .ant-table-cell {
+          background-color: #fffbea;
+        }
+      }
       .ant-table.ant-table-fixed-column {
         width: 100%;
         .ant-table-content {
@@ -37,17 +42,16 @@
             z-index: 1;
           }
           table > colgroup {
-            background: #f2f8ff;
+            // background: #f2f8ff;
             opacity: 0.3;
           }
 
           table > thead.ant-table-thead {
-            background: #f2f8ff;
+            // background: #f2f8ff;
             z-index: 99 !important;
             position: sticky;
             top: 0px;
             tr {
-              background: #f2f8ff;
               // opacity: 0.3;
               th.ant-table-cell,
               td.ant-table-cell {
@@ -320,29 +324,6 @@
       line-height: normal;
     }
   }
-  //css popover options
-  .ant-popover.ant-popover-placement-leftTop {
-    .-popover-options {
-      width: 100px;
-      &__attribute {
-        display: flex;
-        gap: 10px;
-        padding: 7px 0;
-        cursor: pointer;
-        p {
-          font-size: 15px;
-          font-weight: 400;
-          line-height: normal;
-        }
-      }
-      .border-bottom {
-        border-bottom: 1px solid #f5f5f5;
-      }
-    }
-    .ant-popover-arrow {
-      display: none;
-    }
-  }
 
   .-text-profile {
     display: flex;
@@ -351,6 +332,30 @@
     img {
       cursor: pointer;
     }
+  }
+}
+//css popover options
+.ant-popover.ant-popover-placement-leftTop {
+  .-popover-options {
+    width: 100px;
+    &__attribute {
+      display: flex;
+      gap: 10px;
+      padding: 7px 0;
+      cursor: pointer;
+      p {
+        font-size: 15px;
+        font-weight: 400;
+        line-height: normal;
+      }
+    }
+
+    .border-bottom {
+      border-bottom: 1px solid #f5f5f5;
+    }
+  }
+  .ant-popover-arrow {
+    display: none;
   }
 }
 // :where(.css-dev-only-do-not-override-p7e5j5).ant-table-wrapper
@@ -375,7 +380,6 @@
 // :where(.css-dev-only-do-not-override-p7e5j5).ant-table-wrapper .ant-table-column-sorter-down {
 //   font-size: 10px;
 // }
-
 .ant-table-wrapper .ant-table-tbody .ant-table-row.ant-table-row-selected > .ant-table-cell {
   background-color: #f2f8ff;
 }
@@ -395,9 +399,3 @@
 .ant-table-wrapper .ant-table-column-sorter-down {
   font-size: 10px;
 }
-
-// .ant-table-cell {
-//   .ant-tooltip-open {
-//     display: none !important;
-//   }
-// }

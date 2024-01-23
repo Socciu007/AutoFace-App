@@ -116,6 +116,7 @@
     "delayTimeInteractStart": 3,
     "delayTimeInteractEnd": 5,
     "isOnlyAddFriend": true,
+    "isAutoDelete": false,
     "isLiked": true,
     "isInteract": true,
     "isComment": true,
@@ -134,10 +135,50 @@
     "requestsStart": 3,
     "requestsEnd": 4
   },
-  "joinGroup": null,
-  "leftGroup": null,
-  "inviteGroup": null,
-  "createPostGroup": null,
+  "joinGroup": {
+    "delayTimeEnd": 5,
+    "delayTimeStart": 3,
+    "groupEnd": 5,
+    "groupStart": 3,
+    "isAutoAnswer": false,
+    "option": "suggestions",
+    "answer": [],
+    "text": []
+  },
+  "leftGroup": {
+    "groupEnd": 5,
+    "groupStart": 3,
+    "delayTimeEnd": 5,
+    "delayTimeStart": 3,
+    "member": 5,
+    "text": [],
+    "option": "random"
+  },
+  "inviteGroup": {
+    "groupFriendsStart": 3,
+    "groupFriendsEnd": 5,
+    "delayTimeStart": 3,
+    "delayTimeEnd": 5,
+    "option": "suggestions",
+    "text": []
+  },
+  "createPostGroup": {
+    "postStart": 1,
+    "postEnd": 2,
+    "delayTimeStart": 5,
+    "delayTimeEnd": 10,
+    "option": "text/photo",
+    "text": [],
+    "photos": [],
+    "photoStart": 1,
+    "photoEnd": 2,
+    "isTag": false,
+    "typeTag": "random",
+    "numberFriendTagStart": 1,
+    "numberFriendTagEnd": 2,
+    "UID": [],
+    "UIDGroup": []
+  },
   "likeComment": null,
   "follower": {
     "delayTimeStart": 3,

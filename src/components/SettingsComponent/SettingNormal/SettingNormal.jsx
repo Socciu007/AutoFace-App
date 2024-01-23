@@ -1,9 +1,9 @@
-import { Switch, Select } from 'antd';
+import { Switch } from 'antd';
 import './style.scss';
 import up from '../../../assets/pictures/icon-Increase.svg';
 import down from '../../../assets/pictures/icon-Descrease.svg';
 import React from 'react';
-// import { MenuItem, Select } from '@mui/material';
+import { MenuItem, Select } from '@mui/material';
 
 const SettingNormal = ({
   settings,
@@ -62,7 +62,7 @@ const SettingNormal = ({
         <div className="-sub-settings">
           <p>Profile running type</p>
           <div className="-options-sub-settings">
-            <Select
+            {/* <Select
               id="typeProfile"
               className="-options-sub-settings__select -options-sub-settings__details"
               value={settings.runningType}
@@ -78,7 +78,18 @@ const SettingNormal = ({
                   label: 'Topdown',
                 },
               ]}
-            />
+            /> */}
+            <Select
+              id="typeProfile"
+              bordered={false}
+              name="typeProfile"
+              className="-options-sub-settings__select -options-sub-settings__details"
+              onChange={() => handleOnChangeTypeProfile()}
+              value={settings.runningType}
+            >
+              <MenuItem value="random">Random</MenuItem>
+              <MenuItem value="topdown">Topdown</MenuItem>
+            </Select>
           </div>
         </div>
         {/* <div className="-sub-settings">

@@ -130,11 +130,32 @@ const ProfilesPage = () => {
         ),
       });
     }
-    if (settings.bird) {
+    if (settings.status) {
       settingsColumns.push({
-        title: 'Date of birth',
-        dataIndex: 'birth',
-        width: 200,
+        title: 'Status',
+        dataIndex: 'status',
+        width: 100,
+        render: (status) => {
+          if (status === 'running') {
+            return <div className="-status-profiles">{status.charAt(0).toUpperCase() + status.slice(1)}</div>;
+          } else if (status === 'ready') {
+            return (
+              <div className="-status-profiles -status-profiles-ready">
+                {status.charAt(0).toUpperCase() + status.slice(1)}
+              </div>
+            );
+          } else {
+            return (
+              <>
+                {status ? (
+                  <div className="-status-profiles -status-profiles-used">
+                    {status.charAt(0).toUpperCase() + status.slice(1)}
+                  </div>
+                ) : null}
+              </>
+            );
+          }
+        },
       });
     }
     if (settings.twoFA) {
@@ -180,6 +201,13 @@ const ProfilesPage = () => {
         title: 'Sex',
         dataIndex: 'sex',
         width: 150,
+      });
+    }
+    if (settings.bird) {
+      settingsColumns.push({
+        title: 'Date of birth',
+        dataIndex: 'birth',
+        width: 200,
       });
     }
     if (settings.password) {
@@ -229,34 +257,6 @@ const ProfilesPage = () => {
       });
     }
 
-    if (settings.status) {
-      settingsColumns.push({
-        title: 'Status',
-        dataIndex: 'status',
-        width: 100,
-        render: (status) => {
-          if (status === 'running') {
-            return <div className="-status-profiles">{status.charAt(0).toUpperCase() + status.slice(1)}</div>;
-          } else if (status === 'ready') {
-            return (
-              <div className="-status-profiles -status-profiles-ready">
-                {status.charAt(0).toUpperCase() + status.slice(1)}
-              </div>
-            );
-          } else {
-            return (
-              <>
-                {status ? (
-                  <div className="-status-profiles -status-profiles-used">
-                    {status.charAt(0).toUpperCase() + status.slice(1)}
-                  </div>
-                ) : null}
-              </>
-            );
-          }
-        },
-      });
-    }
     if (settings.proxy) {
       settingsColumns.push({
         title: 'Proxy',
@@ -270,12 +270,9 @@ const ProfilesPage = () => {
             {proxy}
           </Tooltip>;
           return (
-            <>
-              <div className="-proxy-profiles">
-                {/* <img src={usaProxy}></img> */}
-                {proxy.host && proxy.host !== '' ? <span>{generateProxyStr(proxy)}</span> : <span>none</span>}
-              </div>
-            </>
+            <div className="-proxy-profiles">
+              {proxy.host && proxy.host !== '' ? <span>{generateProxyStr(proxy)}</span> : <span>none</span>}
+            </div>
           );
         },
         sorter: (a, b) => a.proxy.length - b.proxy.length,
@@ -756,7 +753,8 @@ const ProfilesPage = () => {
           }}
           components={components}
           showSorterTooltip={false}
-          rowClassName={'editable-row'}
+          // rowClassName={'editable-row'}
+          rowClassName={(profile) => (profile.isPin ? 'editable-row pinned-row' : 'editable-row')}
           columns={columns}
           dataSource={dataSearch.sort((x, y) => {
             return x.isPin === y.isPin ? 0 : x ? -1 : 1;

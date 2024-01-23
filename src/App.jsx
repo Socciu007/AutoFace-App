@@ -11,7 +11,6 @@ import Edit from './pages/Edit/index.jsx';
 import SignUp from './pages/SignUp/SignUp.jsx';
 import ForgotPassword from './pages/ForgotPassword/ForgotPassword.jsx';
 import ScriptManager2 from './pages/Script-Manager-2/index.jsx';
-
 function App() {
   return (
     <>

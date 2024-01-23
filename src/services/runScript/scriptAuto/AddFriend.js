@@ -24,9 +24,15 @@ export const addFriend = (setting) => {
     try {
       let randomDelay = getRandomIntBetween(addFriendObject.delayTimeStart * 1000, addFriendObject.delayTimeEnd * 1000);
       // check mutual
-      const mutualSelector = '#screen-root > div > div:nth-child(2) > div> div.m.bg-s3 > div:nth-child(3)';
-      const mutualElement = await getElements(page, mutualSelector, 10);
+    let mutualSelector =
+      "#screen-root > div > div:nth-child(2) > div> div.m.bg-s3 > div:nth-child(3)";
+    let mutualElement = await getElements(page, mutualSelector, 10);
+    if (mutualElement.length < 1) {
+      mutualSelector =
+        "#screen-root > div > div:nth-child(2) > div> div.m.bg-s4 > div:nth-child(3)";
+      mutualElement = await getElements(page, mutualSelector, 10);
       if (mutualElement.length < 1) return false;
+    }
       let isAddMutual = false;
       for (let i = 0; i < mutualElement.length; i++) {
         let randomIndex = getRandomInt(mutualElement.length);
@@ -252,9 +258,15 @@ export const addFriend = (setting) => {
         await clickElement(postBtn);
         await delay(2000);
         // return home
-        const returnSelector = '#screen-root > div > div > div > div > div.m.bg-s3 > div:nth-child(1)';
-        const returnBtn = await getElement(page, returnSelector, 10);
-        if (!returnBtn) continue;
+        let returnSelector =
+        "#screen-root > div > div > div > div > div.m.bg-s3 > div:nth-child(1)";
+        let returnBtn = await getElement(page, returnSelector, 10);
+        if (!returnBtn) {
+          returnSelector =
+            "#screen-root > div > div > div > div > div.m.bg-s4 > div:nth-child(1)";
+         returnBtn = await getElement(page, returnSelector, 10);
+          if (!returnBtn) continue;
+        }
         await delay(1000);
         await clickElement(returnBtn);
         await delay(randomDelay);
@@ -474,8 +486,8 @@ export const addFriend = (setting) => {
     await clickElement(fofBtn);
     await delay(randomDelay);
     const rs = await clickAddBtn(page);
+    await delay(3000)
     if (!rs) {
-      await clickReturn(page);
       return false;
     }
     return true;
@@ -502,6 +514,7 @@ export const addFriend = (setting) => {
       let isBtnAdd1 = await checkExistElement(page, addFriendIcon1, 5);
       let isBtnAdd2 = await checkExistElement(page, addFriendIcon2, 5);
       if (isBtnAdd1 == 1) {
+        logger("1");
         let Added1 = await getElement(page, addFriendIcon1, 2);
         const isAddIcon1 = await page.evaluate((el) => {
           return el.innerHTML.includes('󱤇');
@@ -514,6 +527,7 @@ export const addFriend = (setting) => {
           return false;
         }
       } else if (isBtnAdd2 == 1) {
+        logger("2");
         let Added2 = await getElement(page, addFriendIcon2, 2);
         const isAddIcon2 = await page.evaluate((el) => {
           return el.innerHTML.includes('󱤇');
@@ -526,6 +540,7 @@ export const addFriend = (setting) => {
           return false;
         }
       } else {
+        logger("3");
         const moreBtn = await getElement(page, moreSelector, 3);
         if (!moreBtn) return false;
         await clickElement(moreBtn);
@@ -764,10 +779,36 @@ export const addFriend = (setting) => {
       await scroll(page, addFriendObject);
       for (let i = 0; i < numsAdd * 2; i++) {
         try {
+          const url = await page.url();
+          if (
+            url ===
+              "https://m.facebook.com/friends/?target_pivot_link=friends" ||
+            url.includes(
+              "https://m.facebook.com/friends/?target_pivot_link=friends"
+            )
+          ) {
+            console.log("URL is correct");
+          } else {
+            await page.goto(
+              "https://m.facebook.com/friends/?target_pivot_link=friends",
+              {
+                waitUntil: "networkidle2",
+              }
+            );
+            console.log("Redirect to list friend");
+          }
           // get all friends
-          const friendSelector = '#screen-root > div > div:nth-child(2) > div > div.m.bg-s3';
-          const friendBtns = await getElements(page, friendSelector, 10);
-          if (friendBtns.length < 1) return false;
+          let friendSelector =
+            "#screen-root > div > div:nth-child(2) > div > div.m.bg-s3";
+          let friendBtns = await getElements(page, friendSelector, 10);
+          if (!friendBtns) {
+            friendSelector =
+              "#screen-root > div > div:nth-child(2) > div > div.m.bg-s4";
+            friendBtns = await getElements(page, friendSelector, 10);
+            if (!friendBtns) {
+              return false;
+            }
+          }
           for (let i = 0; i < friendBtns.length; i++) {
             // choose one random friend
             let randomIndex = getRandomInt(friendBtns.length);
@@ -778,7 +819,7 @@ export const addFriend = (setting) => {
             const check = await checkExistElementOnScreen(page, 'div[data-action-id="'+friendId+'"]');
             if (check == 0) {
               const friendBtn = await getElement(page, 'div[data-action-id="'+friendId+'"]', 10);
-              await scrollSmoothIfNotExistOnScreen(page, 'div[data-action-id="'+friendId+'"]', 10);
+              await scrollSmoothIfNotExistOnScreen(page, 'div[data-action-id="'+friendId+'"]');
               await delay(1000);
               await clickElement(friendBtn);
               await delay(3000);
