@@ -366,7 +366,7 @@ const SettingsPage = () => {
           </span>
           <p className="-btn-profiles">Automation settings</p>
         </div>
-        <div className="scroll-settings">
+        <div className="scroll-settings-page">
           <div className="-container-content">
             <div className="-settings-profiles">
               <SettingNormal

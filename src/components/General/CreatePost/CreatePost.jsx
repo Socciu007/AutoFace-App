@@ -252,6 +252,8 @@ const CreatePost = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                     className="PostType"
                     onChange={(event) => changeOption(event.target.value)}
                     value={values.option}
+                    bordered={false}
+                    MuiButtonBase-root
                   >
                     <MenuItem value="background">Using background</MenuItem>
                     <MenuItem value="text/photo">Text, Photo/video</MenuItem>

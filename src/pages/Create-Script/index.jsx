@@ -157,6 +157,7 @@ const CreateScript = () => {
           note: noteScript,
           id: designScript.id ? designScript.id : uuidv4(),
           isPin: designScript.isPin ? true : false,
+          createdAt: new Date(),
         });
       }
 

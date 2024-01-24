@@ -21,6 +21,7 @@ body {
         line-height: normal;
       }
     }
+
     .-nav-bar {
       display: flex;
       justify-content: space-between;
@@ -70,10 +71,16 @@ body {
           place-items: center;
         }
       }
+      .yourScript,
+      .systemScript {
+        border-radius: 15px;
+        background: #fff;
+        box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.1);
+      }
     }
     &__content {
       display: flex;
-      height: calc(90% - 20px);
+      height: calc(100vh - 188px);
       .scrollable-container {
         width: 440px;
         height: 100%;
@@ -138,6 +145,65 @@ body {
             background: #f5f5f5;
             color: #01162b;
             box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.15);
+          }
+        }
+      }
+
+      .ant-table-wrapper {
+        height: calc(100vh - 186px);
+      }
+      .ant-table-content {
+        height: calc(100vh - 186px);
+        overflow: auto auto !important;
+      }
+      :where(.css-dev-only-do-not-override-p7e5j5).ant-spin-nested-loading,
+      .ant-table-container,
+      :where(.css-dev-only-do-not-override-p7e5j5).ant-table-wrapper .ant-table,
+      .ant-spin-container,
+      .ant-spin-nested-loading.css-dev-only-do-not-override-p7e5j5 {
+        height: 100%;
+      }
+      :where(.css-dev-only-do-not-override-p7e5j5).ant-table-wrapper td.ant-table-column-sort,
+      :where(.css-p7e5j5).ant-table-wrapper td.ant-table-column-sort {
+        background-color: #fff;
+      }
+      .ant-spin-container {
+        .pinned-row {
+          .ant-table-cell {
+            background-color: #fffbea;
+          }
+        }
+      }
+      .ant-table-thead {
+        z-index: 99 !important;
+        position: sticky;
+        top: 0px;
+        tr {
+          // opacity: 0.3;
+          th.ant-table-cell,
+          td.ant-table-cell {
+            font-size: 15px;
+            font-weight: 700;
+            line-height: normal;
+            background: #f2f8ff;
+            border-bottom: 1px solid #e0e0e0;
+            color: rgba(1, 22, 43, 0.6);
+            font-family: GoogleSans;
+            min-height: 50px;
+            // padding-bottom: 10px;
+            // padding-top: 10px;
+            vertical-align: middle;
+            .ant-table-column-sorters {
+              display: inline;
+              span.ant-table-column-title {
+                margin-right: 5px;
+              }
+              span.ant-table-column-sorter-inner {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+              }
+            }
           }
         }
       }

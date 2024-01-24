@@ -13,6 +13,7 @@ import { login } from '../../sender';
 import SnackbarApp from '../../components/Alert';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import loginImg from '../../assets/pictures/FB_ log in@4x 1.png';
 const Login = () => {
   const navigate = useNavigate();
   const [message, setMessage] = useState('');
@@ -201,7 +202,11 @@ const Login = () => {
           </div>
         </div>
       </div>
-      <div className="login__left-content"></div>
+      <div className="login__right-content">
+        <div className="image_login">
+          <img src={loginImg} alt="Login img" />
+        </div>
+      </div>
       {/* <div className="login__banner">
         <LoginBanner></LoginBanner>
       </div> */}

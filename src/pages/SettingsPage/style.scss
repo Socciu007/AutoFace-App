@@ -51,8 +51,8 @@
   }
 }
 
-.scroll-settings {
-  height: 90%;
+.scroll-settings-page {
+  height: calc(100vh - 143px);
   width: 101%;
   margin-top: 18px;
   overflow-y: auto;
@@ -62,16 +62,16 @@
   padding-right: 13px;
   background: #fff;
 }
-.scroll-settings::-webkit-scrollbar {
+.scroll-settings-page::-webkit-scrollbar {
   width: 5px;
 }
-.scroll-settings::-webkit-scrollbar-thumb {
+.scroll-settings-page::-webkit-scrollbar-thumb {
   background-color: rgba(1, 22, 43, 0.5); /* Màu của thanh cuộn */
   border-radius: 20px; /* Bo tròn góc của thanh cuộn */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Bóng mờ */
   padding: 5px;
 }
-.scroll-settings::-webkit-scrollbar-track {
+.scroll-settings-page::-webkit-scrollbar-track {
   background-color: rgba(1, 22, 43, 0.2); /* Màu của phần bên dưới thanh cuộn */
   border-radius: 20px;
 }

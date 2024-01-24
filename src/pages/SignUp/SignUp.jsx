@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import iconFlagUSA from '../../assets/icon/icon-flagUSA.svg';
 import iconFlagVNI from '../../assets/icon/icon-flagVNI.svg';
+import loginImg from '../../assets/pictures/FB_ log in@4x 1.png';
 import IconEye from '../../assets/icons/icons-form/IconEye';
 import IconEyeSlash from '../../assets/icons/icons-form/IconEyeSlash';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +14,7 @@ import SnackbarApp from '../../components/Alert';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import { apiCreateAccount } from '../../services/api_helper';
+
 const SignUp = () => {
   const navigate = useNavigate();
   const [message, setMessage] = useState('');
@@ -321,7 +323,11 @@ const SignUp = () => {
           </div>
         </div>
       </div>
-      <div className="signup__right-content"></div>
+      <div className="signup__right-content">
+        <div className="image_login">
+          <img src={loginImg} alt="Login img" />
+        </div>
+      </div>
       {/* <div className="login__banner">
         <LoginBanner></LoginBanner>
       </div> */}

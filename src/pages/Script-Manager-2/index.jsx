@@ -44,6 +44,7 @@ import SnackbarApp from '../../components/Alert';
 import { v4 as uuidv4 } from 'uuid';
 import { dbGetLocally, dbSetLocally } from '../../sender';
 import { Table } from 'antd';
+import { formatTimeDay } from '../../services/utils';
 const nodeTypes = {
   startingPoint: startingPointNode,
   watchStory: watchStoryNode,
@@ -116,11 +117,9 @@ const ScriptManager = () => {
   const [message, setMessage] = useState('');
   const [statusMessage, setStatusMessage] = useState('warning');
   const [listScript, setListScript] = useState([]);
-  const [indexMenu, setIndexMenu] = useState(-1);
   const [anchorEl, setAnchorEl] = useState(null);
   const [itemSelect, setItemSelect] = useState(null);
   const [nameCoppy, setNameCoppy] = useState('');
-  const [isPin, setIsPin] = useState(false);
   useEffect(() => {
     getScripts();
   }, []);
@@ -156,10 +155,8 @@ const ScriptManager = () => {
     if (scriptStr && scriptStr.length) {
       const script = JSON.parse(scriptStr);
       if (script && script.length) {
-        setItemSelect(script[0]);
         setContentArray(script);
       }
-      console.log(script);
     }
   };
 
@@ -210,10 +207,6 @@ const ScriptManager = () => {
     newList = newList.sort((x, y) => Number(y.isPin) - Number(x.isPin));
     setIsSystem(!isSystem);
     setListScript(newList);
-  };
-  // Handle each script div
-  const handleScriptClick = (item) => {
-    setItemSelect(item);
   };
 
   const openCopy = Boolean(anchorEl);
@@ -270,22 +263,21 @@ const ScriptManager = () => {
   };
 
   const handleTogglePin = async (scriptId) => {
-    const index = contentArray.findIndex((e) => e.id == scriptId);
+    const index = listScripts.findIndex((e) => e.id == scriptId);
     if (index >= 0) {
-      const newArr = contentArray;
+      const newArr = listScripts;
       newArr[index].isPin = !newArr[index].isPin;
       setContentArray(newArr);
+      setListScript(newArr);
       await dbSetLocally(storageScripts, JSON.stringify(newArr));
-      reloadListScript();
     }
-    setIndexMenu(-1);
+    setItemSelect(null);
   };
 
   // Handle toggle menu
-  const open = Boolean(anchorEl);
-  const handleClick = (event, script, index) => {
+  const open = anchorEl ? true : false;
+  const handleClick = (event, script) => {
     setAnchorEl(event.currentTarget);
-    setIndexMenu(index);
     setItemSelect(script);
   };
   const handleClose = () => {
@@ -295,24 +287,17 @@ const ScriptManager = () => {
   const columns = [
     {
       title: '#',
-      dataIndex: 'index',
       width: 50,
-      render: (index) => {
-        return <p>{index + 1}</p>;
-      },
+      render: (text, record, index) => <div>{index + 1}</div>,
     },
     {
       title: 'Name',
-      dataIndex: 'name',
       width: 150,
-      render: (profile) => {
-        console.log('listScript.isPin', isPin);
+      render: (script) => {
         return (
           <div className="pin">
-            <span>{profile}</span>
-            {/* {listScript.isPin && <img src={pin} alt="icon-pin" />} */}
-            {/* {listScript.isPin ? <img src={pin} alt="Pin" className={'show'} /> : null} */}
-            <img src={pin} alt="Pin" className={'show'} />
+            <span>{script.name}</span>
+            {script.isPin ? <img src={pin} alt="Pin" className={'show'} /> : null}
           </div>
         );
       },
@@ -323,18 +308,26 @@ const ScriptManager = () => {
       width: 280,
     },
     {
-      title: 'Create',
-      dataIndex: 'created',
+      title: 'Created',
+      render: (script) => {
+        return (
+          <div className="pin">
+            <span>{script.createdAt ? formatTimeDay(script.createdAt) : ''}</span>
+          </div>
+        );
+      },
       width: 200,
     },
     {
       title: 'Status',
       dataIndex: 'status',
+      sorter: (a, b) => a.status - b.status,
       width: 100,
     },
     {
       title: 'Tag',
       dataIndex: 'tag',
+      sorter: (a, b) => a.tag - b.tag,
       width: 150,
     },
     {
@@ -351,58 +344,40 @@ const ScriptManager = () => {
                 alt="image-option"
                 id={`basic-menu-${script.id}`}
                 onClick={(event) => {
-                  handleClick(event, script, 0);
+                  handleClick(event, script);
                 }}
-                aria-expanded={open ? 'true' : undefined}
+                aria-expanded={open ? 'true' : 'false'}
                 aria-controls={open ? `basic-menu-${script.id}` : undefined}
                 aria-haspopup="true"
-                // id={`basic-menu-${item.id}`}
-                // aria-controls={open ? `basic-menu-${item.id}` : undefined}
-                // aria-haspopup="true"
-                // aria-expanded={open ? 'true' : undefined}
-                // onClick={(event) => {
-                //   handleClick(event, index);
-                // }}
               ></img>
-              {listScript.map((item, index) => {
-                return (
-                  <div
-                    className={itemSelect && itemSelect.id === item.id ? 'script selected' : 'script'}
-                    onClick={() => handleScriptClick(item)}
-                    key={item.id}
-                  >
-                    {/* <p className={itemSelect && itemSelect.id === item.id ? 'inputSelected' : ''}>{item.name}</p>
-                    <div>
-                      {item.isPin ? <img src={pin} alt="Pin" className={'show'} /> : null} */}
+              <div className={itemSelect && itemSelect.id === script.id ? 'script selected' : 'script'}>
+                <Menu
+                  anchorEl={anchorEl}
+                  id={`basic-menu-${script.id}`}
+                  open={itemSelect && itemSelect.id === script.id}
+                  onClose={() => {
+                    setItemSelect(null);
+                  }}
+                  MenuListProps={{
+                    'aria-labelledby': 'basic-button',
+                  }}
+                  sx={{
+                    '& .MuiPaper-root': menuStyle,
+                    '& .MuiButtonBase-root': liStyle,
+                  }}
+                >
+                  <MenuItem id={script.id} onClick={() => handleTogglePin(script.id)}>
+                    {!script.isPin ? <p>Pin</p> : <p>Unpin</p>}
+                    {/* {script.isPin ? 'Unpin' : 'Pin'} */}
+                  </MenuItem>
+                  <MenuItem onClick={handleEditClick}>Edit</MenuItem>
+                  <MenuItem onClick={() => handleOptionClick('makeCopy')}>Make a copy</MenuItem>
+                  <MenuItem onClick={handleClose}>Rename</MenuItem>
+                  <MenuItem onClick={() => handleOptionClick('delete')}>Delete</MenuItem>
+                </Menu>
 
-                    {indexMenu == index ? (
-                      <Menu
-                        id={`basic-menu-${item.id}`}
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={handleClose}
-                        MenuListProps={{
-                          'aria-labelledby': 'basic-button',
-                        }}
-                        sx={{
-                          '& .MuiPaper-root': menuStyle,
-                          '& .MuiButtonBase-root': liStyle,
-                        }}
-                      >
-                        <MenuItem id={item.id} onClick={() => handleTogglePin(item.id)}>
-                          {item.isPin ? 'Unpin' : 'Pin'}
-                        </MenuItem>
-                        <MenuItem onClick={handleEditClick}>Edit</MenuItem>
-                        <MenuItem onClick={() => handleOptionClick('makeCopy')}>Make a copy</MenuItem>
-                        <MenuItem onClick={handleClose}>Rename</MenuItem>
-                        <MenuItem onClick={() => handleOptionClick('delete')}>Delete</MenuItem>
-                      </Menu>
-                    ) : null}
-                    {/* </div> */}
-                  </div>
-                );
-                // }
-              })}
+                {/* </div> */}
+              </div>
             </div>
           </div>
         );
@@ -419,11 +394,11 @@ const ScriptManager = () => {
     <>
       <div className="wrapper">
         <div className="script-manager2">
-          <div className="script-manager__header">
+          <div className="script-manager2__header">
             <h1>FACEBOOK AUTOMATION</h1>
             <div className="-nav-bar">
               <div className="scriptManager">
-                <img src={yourScript} alt="Your script icon" />
+                <img src={yourScript} alt="script manager(your script black) icon" />
                 <p>SCRIPT MANAGER</p>
               </div>
               <div className="createScript" onClick={handleAddClick}>
@@ -435,17 +410,24 @@ const ScriptManager = () => {
               <div className={!isSystem ? 'yourScript active' : 'yourScript'} onClick={handleButtonClick}>
                 <img src={yourScriptBlue} alt="icon your script blue" />
                 <p>Your Scripts</p>
-                <img src={iconCheck} alt="icon check" />
+                {!isSystem ? <img src={iconCheck} alt="icon check" /> : ''}
               </div>
-              <div className={!isSystem ? 'systemScript active' : 'systemScript'} onClick={handleButtonClick}>
+              <div className={!isSystem ? 'systemScript ' : 'systemScript active'} onClick={handleButtonClick}>
                 <img src={systemScript} alt="icon system scripts" />
                 <p>System’s Scripts</p>
-                <img src={iconCheck} alt="icon check" />
+                {isSystem ? <img src={iconCheck} alt="icon check" /> : ''}
               </div>
             </div>
           </div>
-          <div className="script-manager__content">
-            <Table columns={columns} pagination={false} dataSource={listScripts} scroll={{ x: 1600 }} />
+          <div className="script-manager2__content">
+            <Table
+              columns={columns}
+              showSorterTooltip={false}
+              pagination={false}
+              dataSource={listScripts}
+              scroll={{ x: 1600 }}
+              rowClassName={(profile) => (profile.isPin ? 'pinned-row' : '')}
+            />
           </div>
           <Dialog
             sx={{

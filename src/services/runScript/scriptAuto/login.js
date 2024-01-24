@@ -11,7 +11,7 @@ export const loginFacebook = (account) => {
 
   return `
   try {
-    const account = ${accountStr}
+    const account = ${accountStr};
     const checkPageIsLive = await checkIsLive(page);
     if (!checkPageIsLive) {
       logger("Page null!");
@@ -21,8 +21,51 @@ export const loginFacebook = (account) => {
     await delay(2000);
     const { isLogin } = await checkLogin(page);
     if (!isLogin) {
-     
-      if (account.uid && account.uid.length && account.password && account.password.length) {
+      if (account.cookies && account.cookies.length) {
+        const cookies = [];
+        account.cookies.split(";").forEach((acc) => {
+          if (
+            acc.split("=")[0] &&
+            acc.split("=")[0].length &&
+            acc.split("=")[1] &&
+            acc.split("=")[0] !== "m_page_voice" &&
+            acc.split("=")[0] !== "locale" &&
+            acc.split("=")[0] !== "useragent" &&
+            acc.split("=")[0] !== "_uafec"
+          ) {
+            cookies.push({
+              name: acc.split("=")[0].trim(),
+              value: acc.split("=")[1],
+              domain: ".facebook.com",
+              expires:
+                acc.split("=")[0].trim() == "presence"
+                  ? -1
+                  : moment().add(180, "days").unix(),
+            });
+          }
+        });
+        logger(cookies);
+        const client = await page.target().createCDPSession();
+        await client.send("Network.clearBrowserCookies");
+        await client.send("Network.clearBrowserCache");
+        await page.setCookie(...cookies);
+        await delay(3000);
+        await page.goto("https://m.facebook.com/", {
+          waitUntil: "networkidle2",
+          timeout: 60000,
+        });
+        await delay(3000);
+        const { isLogin, error } = await checkLogin(page);
+        if (!isLogin) {
+          return { isLogin, error };
+        }
+      } else if (
+        (account.twoFA && account.twoFA.length > 5) ||
+        (account.uid &&
+          account.uid.length &&
+          account.password &&
+          account.password.length)
+      ) {
         await returnHomePage(page);
         const email = await getElementEmail(page);
         const password = await getElementPassword(page);
@@ -79,47 +122,11 @@ export const loginFacebook = (account) => {
         if (!isLogin) {
           return { isLogin, error };
         }
-      } else if (account.cookies && account.cookies.length) {
-        const cookies = [];
-        account.cookies.split(";").forEach((acc) => {
-          if (
-            acc.split("=")[0] &&
-            acc.split("=")[0].length &&
-            acc.split("=")[1] && acc.split("=")[0] !== 'm_page_voice'
-            && acc.split("=")[0] !== 'locale'
-            && acc.split("=")[0] !== 'useragent'
-            && acc.split("=")[0] !== '_uafec'
-          ) {
-            cookies.push({
-              name: acc.split("=")[0].trim(),
-              value: acc.split("=")[1],
-              domain: ".facebook.com",
-              expires:
-                acc.split("=")[0].trim() == "presence"
-                  ? -1
-                  : moment().add(180, "days").unix(),
-            });
-          }
-        });
-        logger(cookies);
-        const client = await page.target().createCDPSession();
-        await client.send("Network.clearBrowserCookies");
-        await client.send("Network.clearBrowserCache");
-        await page.setCookie(...cookies);
-        await delay(3000);
-        await page.goto("https://m.facebook.com/", {
-          waitUntil: "networkidle2",
-          timeout: 60000,
-        });
-        await delay(3000);
-        const { isLogin, error } = await checkLogin(page);
-        if (!isLogin) {
-          return { isLogin, error };
-        }
       } else return { isLogin: false, error: "2FA and Cookies not found!" };
     }
   } catch (err) {
     logger(err);
     return false;
-  }`;
+  }
+  `;
 };

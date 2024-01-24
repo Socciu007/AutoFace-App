@@ -42,7 +42,7 @@ const ProfilesPage = () => {
   const [openAddProxy, setOpenAddProxy] = useState(false);
   const [openDeleteProfile, setOpenDeleteProfile] = useState(false);
   const [openProxyManage, setOpenProxyManage] = useState(false);
-
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -78,8 +78,9 @@ const ProfilesPage = () => {
     const settingsColumns = [
       {
         title: '#',
-        dataIndex: 'key',
+        // dataIndex: 'key',
         width: 50,
+        render: (text, record, index) => <div>{index + 1}</div>,
       },
     ];
 
@@ -266,12 +267,11 @@ const ProfilesPage = () => {
           showTitle: false,
         },
         render: (proxy) => {
-          <Tooltip placement="topLeft" title={proxy}>
-            {proxy}
-          </Tooltip>;
           return (
             <div className="-proxy-profiles">
-              {proxy.host && proxy.host !== '' ? <span>{generateProxyStr(proxy)}</span> : <span>none</span>}
+              <Tooltip placement="topLeft" title={generateProxyStr(proxy, false)}>
+                {generateProxyStr(proxy)}
+              </Tooltip>
             </div>
           );
         },
@@ -282,7 +282,7 @@ const ProfilesPage = () => {
       settingsColumns.push({
         title: 'Tag',
         dataIndex: 'tag',
-        width: 150,
+        width: 200,
         editable: true,
         render: (tag) => {
           return <Input name="tag" value={tag} className="-tag-profiles" onChange={(e) => e.target.value}></Input>;
@@ -355,7 +355,7 @@ const ProfilesPage = () => {
           editable: col.editable,
           dataIndex: col.dataIndex,
           title: col.title,
-          // handleSaveTag,
+          handleSave: handleSaveTag,
         }),
       };
     });
@@ -390,7 +390,6 @@ const ProfilesPage = () => {
     if (!loading) {
       loading = true;
       const profilesFromServer = await getProfilesMarco();
-      console.log(profilesFromServer);
       if (profilesFromServer && profilesFromServer.code) {
         let profiles = await dbGetLocally(storageProfiles);
         profiles = profiles.filter((e) => {
@@ -414,22 +413,23 @@ const ProfilesPage = () => {
     }
   };
 
-  const generateProxyStr = (proxy) => {
-    let proxyStr = `${proxy.host}:${proxy.port}${proxy.username && proxy.username != '' ? ':' + proxy.username : ''}${
-      proxy.password ? ':' + proxy.password : ''
-    }`;
+  const generateProxyStr = (proxy, shot = true) => {
+    let proxyStr =
+      proxy.host && proxy.host.length
+        ? `${proxy.host}:${proxy.port}${proxy.username && proxy.username != '' ? ':' + proxy.username : ''}${
+            proxy.password ? ':' + proxy.password : ''
+          }`
+        : 'none';
 
-    if (proxyStr.length > 30) {
+    if (proxyStr.length > 30 && shot) {
       proxyStr = `${proxy.host}:${proxy.port}...`;
     }
     return proxyStr;
   };
 
   const pinProfile = async (id, data) => {
-    console.log(id);
     const index = data.findIndex((e) => e.id == id);
-    console.log(data);
-    console.log(index);
+
     let newDataProfile = [...data];
     if (index < 0) return;
 
@@ -444,6 +444,8 @@ const ProfilesPage = () => {
     await dbSetLocally(storageProfiles, newData);
     postAlert('Removed account', 'success');
     setOpenDeleteProfile(false);
+    setProfilesSelected([]);
+    setSelectedRowKeys([]);
     setIdSelect(null);
   };
 
@@ -463,16 +465,22 @@ const ProfilesPage = () => {
     }, duration);
   };
 
-  // const handleSaveTag = (row) => {
-  //   const newData = [...dataProfiles];
-  //   const index = newData.findIndex((profile) => row.id === profile.id);
-  //   const profile = newData[index];
-  //   newData.splice(index, 1, {
-  //     ...profile,
-  //     ...row,
-  //   });
-  //   setDataProfiles(newData);
-  // };
+  const handleSaveTag = async (row) => {
+    const newData = [...dataProfiles];
+    const index = newData.findIndex((profile) => row.id === profile.id);
+    const profile = newData[index];
+    profile.tag = row.tag.split(',').map((e) => {
+      if (!e.startsWith('#')) {
+        return '#' + e;
+      }
+      return e;
+    });
+    newData.splice(index, 1, {
+      ...profile,
+    });
+    setDataProfiles(newData);
+    await dbSetLocally(storageProfiles, newData);
+  };
   const components = {
     body: {
       row: EditableRow,
@@ -481,7 +489,9 @@ const ProfilesPage = () => {
   };
 
   const rowSelection = {
+    selectedRowKeys,
     onChange: (selectedRowKeys, selectedRows) => {
+      setSelectedRowKeys(selectedRowKeys);
       if (selectedRows && selectedRows.length) setProfilesSelected(selectedRows);
       else setProfilesSelected([]);
     },
@@ -594,6 +604,8 @@ const ProfilesPage = () => {
         return { ...e, key: index + 1 };
       }),
     );
+    setProfilesSelected([]);
+    setSelectedRowKeys([]);
     await dbSetLocally(storageProfiles, newData);
     postAlert('Removed account', 'success');
     handleCloseDelete();
@@ -753,7 +765,6 @@ const ProfilesPage = () => {
           }}
           components={components}
           showSorterTooltip={false}
-          // rowClassName={'editable-row'}
           rowClassName={(profile) => (profile.isPin ? 'editable-row pinned-row' : 'editable-row')}
           columns={columns}
           dataSource={dataSearch.sort((x, y) => {

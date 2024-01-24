@@ -14,6 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Dialog from '@mui/material/Dialog';
 import close from '../../assets/icon/icon-close.svg';
+import loginImg from '../../assets/pictures/FB_ log in@4x 1.png';
 import { apiChangePass, apiCheckCode, apiSendCode } from '../../services/api_helper';
 const ForgotPassword = () => {
   const navigate = useNavigate();
@@ -422,7 +423,11 @@ const ForgotPassword = () => {
         </div>
       </div>
 
-      <div className="forgotPass__left-content"></div>
+      <div className="forgotPass__right-content">
+        <div className="image_login">
+          <img src={loginImg} alt="Login img" />
+        </div>
+      </div>
 
       <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
     </div>

@@ -34,6 +34,7 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
   const [listScript, setListScript] = useState([]);
   const [message, setMessage] = useState('');
   const [statusMessage, setStatusMessage] = useState('warning');
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const handleNavigateSettings = () => {
     setOpenSetting(true);
   };
@@ -111,17 +112,23 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
   ];
 
   const rowSelection = {
+    selectedRowKeys,
     onChange: (selectedRowKeys, selectedRows) => {
+      console.log(selectedRowKeys);
+      setSelectedRowKeys(selectedRowKeys);
       if (selectedRows.length) {
         setScriptSelected(selectedRows[0]);
       }
     },
   };
-  const makeCopy = {
+  const makeCopyChooseScript = {
     position: 'fixed',
+    maxWidth: '100% !important',
+    width: '1163px',
+    height: '679px',
     top: '50%',
     left: '50%',
-    transform: 'translate(-50%, -50%)',
+    transform: ' translate(-50%, -50%)',
     borderRadius: '15px',
     background: '#fff',
     boxShadow: '0px 4px 10px 0px rgba(8, 35, 106, 0.25)',
@@ -134,12 +141,15 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
   const overlay = {
     background: 'rgba(255,255,255,0.9)',
   };
-  const MuiDialogPaper = {
+  const MuiDialogPaperChooseScript = {
     width: '1163px',
     height: '679px',
     maxHeight: '679px !important',
     minWidth: '1163px !important',
     color: '#01162b !important',
+  };
+  const MuiDialogContainerChooseScript = {
+    display: 'block',
   };
   return (
     <Dialog
@@ -147,9 +157,10 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
       onClose={handleCloseScripts}
       style={{ margin: 'auto' }}
       sx={{
-        '& .MuiPaper-root': makeCopy,
+        '& .MuiPaper-root': makeCopyChooseScript,
         '& .MuiBackdrop-root': overlay,
-        '& .css-1t1j96h-MuiPaper-root-MuiDialog-paper': MuiDialogPaper,
+        '& .css-1t1j96h-MuiPaper-root-MuiDialog-paper': MuiDialogPaperChooseScript,
+        '& .MuiDialog-container': MuiDialogContainerChooseScript,
       }}
     >
       <div className="-layout-choose-scripts">
@@ -224,6 +235,16 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
                     ...rowSelection,
                     type: 'radio',
                   }}
+                  onRow={(record, rowIndex) => {
+                    return {
+                      onClick: () => {
+                        const rowKeys = [];
+                        rowKeys.push(rowIndex);
+                        setSelectedRowKeys(rowKeys);
+                        setScriptSelected(rowIndex);
+                      },
+                    };
+                  }}
                   columns={columnsScripts}
                   dataSource={listScript
                     .map((e, index) => {
@@ -248,105 +269,6 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
       </div>
       <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
     </Dialog>
-
-    // <PopupComponent open={openScripts} onClose={handleCloseScripts} style={{ margin: 'auto' }}>
-    //   {
-    //     <div className="-layout-choose-scripts">
-    //       <div className="-layout-choose-scripts__container">
-    //         <div className="-nav-scripts">
-    //           <div className="-nav-scripts__header">
-    //             <div className="-nav-scripts__header__close" onClick={handleCloseScripts}>
-    //               <img src={closePopup} alt="icon-x"></img>
-    //             </div>
-    //             <h1>CHOOSE SCRIPT</h1>
-    //           </div>
-    //           <div className="-wrapper-option-profiles -nav-scripts__btn">
-    //             <span className="-option-profiles" onClick={handleNavigateSettings}>
-    //               <img src={settings} alt="image-settings"></img>
-    //             </span>
-    //             <PopupSetting openSettings={openSetting} handleCloseSettings={handleCloseSettings}></PopupSetting>
-    //             <div>
-    //               <button
-    //                 onClick={async () => {
-    //                   await runScriptAuto();
-    //                   handleCloseScripts();
-    //                 }}
-    //               >
-    //                 Run
-    //               </button>
-    //             </div>
-    //           </div>
-    //         </div>
-    //         <div className="-container-scripts">
-    //           <div className="-container-scripts__left">
-    //             <div className="-container-scripts__left__options">
-    //               <div className="-container-scripts__left__options__type">
-    //                 <ul className="-container-scripts__left__options__list">
-    //                   {typeScript.map((script, index) => {
-    //                     return (
-    //                       <li
-    //                         key={index}
-    //                         className={`-option-item ${type == script.value && 'active'}`}
-    //                         onClick={() => {
-    //                           handleTypeScript(script.value);
-    //                         }}
-    //                       >
-    //                         <div className="-option-item__row">
-    //                           {/* {type == script.value ? (
-    //                             <div className="li-dot" style={{ background: '#E84314' }}></div>
-    //                           ) : null} */}
-
-    //                           <p className="li-name">{script.title}</p>
-    //                         </div>
-    //                       </li>
-    //                     );
-    //                   })}
-    //                 </ul>
-    //               </div>
-    //             </div>
-    //           </div>
-    //           <div className="-container-scripts__right">
-    //             <div className="-container-scripts__right__main">
-    //               <div className="-container-scripts__right__main__search">
-    //                 <h1>SCRIPTS</h1>
-    //                 <div className="-search-profiles">
-    //                   <span>
-    //                     <img src={search} alt="search" style={{ marginLeft: '11px' }}></img>
-    //                   </span>
-    //                   <input onChange={(event) => searchScript(event.target.value)} placeholder="Search..."></input>
-    //                 </div>
-    //               </div>
-    //               {/* <div className="-container-scripts__right__main__content">
-    //                 <div className="-container-scripts__right__main__content__table"> */}
-    //               <Table
-    //                 rowSelection={{
-    //                   ...rowSelection,
-    //                   type: 'radio',
-    //                 }}
-    //                 columns={columnsScripts}
-    //                 dataSource={listScript
-    //                   .map((e, index) => {
-    //                     return { ...e, key: index };
-    //                   })
-    //                   .filter((e) => {
-    //                     if (type == 'all') return true;
-    //                     else if (type == 'system') {
-    //                       return e.isSystem;
-    //                     } else {
-    //                       return !e.isSystem;
-    //                     }
-    //                   })}
-    //                 pagination={false}
-    //               ></Table>
-    //               {/* </div>
-    //               </div> */}
-    //             </div>
-    //           </div>
-    //         </div>
-    //       </div>
-    //     </div>
-    //   }
-    // </PopupComponent>
   );
 };
 

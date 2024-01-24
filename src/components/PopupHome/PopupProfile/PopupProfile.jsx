@@ -61,7 +61,15 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
           cookies,
           twoFA,
           status: 'ready',
-          tag: values.isTag && values.tag.split(',')[index] ? values.tag.split(',')[index] : '',
+          tag:
+            values.isTag && values.tag.split(',').length
+              ? values.tag.split(',').map((e) => {
+                  if (!e.startsWith('#')) {
+                    return '#' + e;
+                  }
+                  return e;
+                })
+              : [],
         });
       }
     });
@@ -160,11 +168,14 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
   const handleChangeProxy = (value) => {
     setValues({ ...values, isProxy: value });
   };
-  const makeCopy = {
+  const makeCopyProfile = {
     position: 'fixed',
+    maxWidth: '100%',
+    width: '1163px',
+    height: '679px',
     top: '50%',
     left: '50%',
-    transform: 'translate(-50%, -50%)',
+    transform: ' translate(-50%, -50%)',
     borderRadius: '15px',
     background: '#fff',
     boxShadow: '0px 4px 10px 0px rgba(8, 35, 106, 0.25)',
@@ -177,21 +188,25 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
   const overlay = {
     background: 'rgba(255,255,255,0.9)',
   };
-  const MuiDialogPaper = {
+  const MuiDialogPaperProfile = {
     width: '1163px',
     height: '679px',
     maxHeight: '679px !important',
     minWidth: '1163px !important',
     color: '#01162b !important',
   };
+  const MuiDialogContainerProfile = {
+    display: 'block',
+  };
   return (
     <Dialog
       open={openProfiles}
       onClose={handleCloseProfiles}
       sx={{
-        '& .MuiPaper-root': makeCopy,
+        '& .MuiPaper-root': makeCopyProfile,
         '& .MuiBackdrop-root': overlay,
-        '& .css-1t1j96h-MuiPaper-root-MuiDialog-paper': MuiDialogPaper,
+        '& .css-1t1j96h-MuiPaper-root-MuiDialog-paper': MuiDialogPaperProfile,
+        '& .MuiDialog-container': MuiDialogContainerProfile,
       }}
     >
       <div className="-layout-choose-profile">

@@ -239,9 +239,26 @@
   &__banner {
     flex-grow: 1;
   }
-  &__left-content {
+  &__right-content {
     width: 50%;
-    background: linear-gradient(180deg, #183a65 0%, #4082d8 100%);
+    display: inline-flex;
+    align-items: center;
+    .image_login {
+      margin: 0 auto;
+      width: 533px;
+      height: 588px;
+      border-radius: 49px;
+      border: 2px solid #2a86ff;
+      display: flex;
+      justify-self: center;
+      align-items: center;
+      img {
+        width: 488.225px;
+        height: 550px;
+        border-radius: 36px;
+        margin: 0 auto;
+      }
+    }
   }
 }
 .confirmEmail {
