@@ -120,6 +120,7 @@ const ScriptManager = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [itemSelect, setItemSelect] = useState(null);
   const [nameCoppy, setNameCoppy] = useState('');
+  const [isPin, setIsPin] = useState(false);
   useEffect(() => {
     getScripts();
   }, []);
@@ -294,21 +295,27 @@ const ScriptManager = () => {
   const columns = [
     {
       title: '#',
-      dataIndex: 'key',
+      dataIndex: 'index',
       width: 50,
+      render: (index) => {
+        return <p>{index + 1}</p>;
+      },
     },
     {
       title: 'Name',
       dataIndex: 'name',
       width: 150,
-      // render: (profile) => {
-      //   return (
-      //     <div className="pin">
-      //       <span>{profile.name}</span>
-      //       {profile.isPin && <img src={pin} alt="icon-pin"></img>}
-      //     </div>
-      //   );
-      // },
+      render: (profile) => {
+        console.log('listScript.isPin', isPin);
+        return (
+          <div className="pin">
+            <span>{profile}</span>
+            {/* {listScript.isPin && <img src={pin} alt="icon-pin" />} */}
+            {/* {listScript.isPin ? <img src={pin} alt="Pin" className={'show'} /> : null} */}
+            <img src={pin} alt="Pin" className={'show'} />
+          </div>
+        );
+      },
     },
     {
       title: 'Note',
@@ -358,43 +365,40 @@ const ScriptManager = () => {
                 // }}
               ></img>
               {listScript.map((item, index) => {
-                // if (indexMenu == index) {
                 return (
                   <div
                     className={itemSelect && itemSelect.id === item.id ? 'script selected' : 'script'}
                     onClick={() => handleScriptClick(item)}
                     key={item.id}
                   >
-                    <p className={itemSelect && itemSelect.id === item.id ? 'inputSelected' : ''}>{item.name}</p>
+                    {/* <p className={itemSelect && itemSelect.id === item.id ? 'inputSelected' : ''}>{item.name}</p>
                     <div>
-                      {/* pin */}
-                      {item.isPin ? <img src={pin} alt="Pin" className={'show'} /> : null}
-                      {/* more */}
+                      {item.isPin ? <img src={pin} alt="Pin" className={'show'} /> : null} */}
 
-                      {indexMenu == index ? (
-                        <Menu
-                          id={`basic-menu-${item.id}`}
-                          anchorEl={anchorEl}
-                          open={open}
-                          onClose={handleClose}
-                          MenuListProps={{
-                            'aria-labelledby': 'basic-button',
-                          }}
-                          sx={{
-                            '& .MuiPaper-root': menuStyle,
-                            '& .MuiButtonBase-root': liStyle,
-                          }}
-                        >
-                          <MenuItem id={item.id} onClick={() => handleTogglePin(item.id)}>
-                            {item.isPin ? 'Unpin' : 'Pin'}
-                          </MenuItem>
-                          <MenuItem onClick={handleEditClick}>Edit</MenuItem>
-                          <MenuItem onClick={() => handleOptionClick('makeCopy')}>Make a copy</MenuItem>
-                          <MenuItem onClick={handleClose}>Rename</MenuItem>
-                          <MenuItem onClick={() => handleOptionClick('delete')}>Delete</MenuItem>
-                        </Menu>
-                      ) : null}
-                    </div>
+                    {indexMenu == index ? (
+                      <Menu
+                        id={`basic-menu-${item.id}`}
+                        anchorEl={anchorEl}
+                        open={open}
+                        onClose={handleClose}
+                        MenuListProps={{
+                          'aria-labelledby': 'basic-button',
+                        }}
+                        sx={{
+                          '& .MuiPaper-root': menuStyle,
+                          '& .MuiButtonBase-root': liStyle,
+                        }}
+                      >
+                        <MenuItem id={item.id} onClick={() => handleTogglePin(item.id)}>
+                          {item.isPin ? 'Unpin' : 'Pin'}
+                        </MenuItem>
+                        <MenuItem onClick={handleEditClick}>Edit</MenuItem>
+                        <MenuItem onClick={() => handleOptionClick('makeCopy')}>Make a copy</MenuItem>
+                        <MenuItem onClick={handleClose}>Rename</MenuItem>
+                        <MenuItem onClick={() => handleOptionClick('delete')}>Delete</MenuItem>
+                      </Menu>
+                    ) : null}
+                    {/* </div> */}
                   </div>
                 );
                 // }
@@ -405,6 +409,7 @@ const ScriptManager = () => {
       },
     },
   ];
+
   const listScripts = listScript.map((item, index) => {
     item.index = index;
     return item;
