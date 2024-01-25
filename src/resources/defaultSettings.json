@@ -1,7 +1,7 @@
 {
   "countProfile": 5,
   "countLoop": 1,
-  "runningType": "Random",
+  "runningType": "random",
   "URL": "https://mbasic.facebook.com",
   "muteAudio": false,
   "showImage": false,

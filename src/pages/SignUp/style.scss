@@ -182,19 +182,9 @@
       align-items: center;
       width: 100%;
       margin-top: 3%;
-      // &-forgot {
-      //   cursor: pointer;
-      //   p {
-      //     font-family: 'Visby Round CF Medium';
-      //     color: #2a86ff;
-      //     font-style: normal;
-      //     font-weight: 500;
-      //   }
-      // }
       &-checkbox {
         display: flex;
         align-items: start;
-        // background-color: #2a86ff;
         .text-policy {
           display: flex;
           .policy {
@@ -202,9 +192,6 @@
             text-decoration: underline;
             color: #2a86ff;
             margin: 0 2px;
-          }
-          p {
-            color: #2a86ff;
           }
         }
         p {

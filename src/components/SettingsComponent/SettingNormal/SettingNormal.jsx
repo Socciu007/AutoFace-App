@@ -67,7 +67,6 @@ const SettingNormal = ({
               className="-options-sub-settings__select -options-sub-settings__details"
               onChange={handleOnChangeTypeProfile}
               value={settings.runningType}
-              defaultValue={settings.runningType}
             >
               <MenuItem value="random">Random</MenuItem>
               <MenuItem value="topdown">Topdown</MenuItem>

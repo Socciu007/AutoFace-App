@@ -10,7 +10,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { dbGetLocally, dbSetLocally } from '../../sender';
 import DefaultSettings from '../../resources/defaultSettings.json';
 
-const SettingsPage = ({ component }) => {
+const SettingsPage = ({ component, handleCloseSettings }) => {
+  console.log('component', component);
   const navigate = useNavigate();
   const [editProxy, setEditProxy] = useState(false);
   const [keyList, setKeyList] = useState(null);
@@ -389,11 +390,25 @@ const SettingsPage = ({ component }) => {
   };
 
   return (
-    <div className="layout-settings" style={{ opacity: openProxyManage ? 0.3 : 1 }}>
+    <div
+      className={`layout-settings ${!component ? 'layout-settings-Page' : 'layout-settings-Dialog'}`}
+      style={{ opacity: openProxyManage ? 0.3 : 1 }}
+    >
       <div className="-layout-page">
         <h1 className="-title-profiles">FACEBOOK AUTOMATION</h1>
         <div className="-return-profiles">
-          <span onClick={() => navigate('/')}>
+          <span
+            //   onClick={
+            //     () => navigate('/')
+            // }
+            onClick={() => {
+              if (!component) {
+                navigate('/');
+              } else {
+                handleCloseSettings();
+              }
+            }}
+          >
             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
               <circle cx="15" cy="15" r="15" fill="#F5F5F5" />
               <path
@@ -407,7 +422,7 @@ const SettingsPage = ({ component }) => {
           </span>
           <p className="-btn-profiles">Automation settings</p>
         </div>
-        <div className="scroll-settings-page">
+        <div className={`scroll-settings ${!component ? 'Page' : 'Dialog'}`}>
           <div className="-container-content">
             <div className="-settings-profiles">
               <SettingNormal

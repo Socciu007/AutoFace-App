@@ -38,8 +38,11 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
 
   const addProfiles = async () => {
     if (loading) return;
-    if (textContent == '' || proxyContent == '') {
+    if (textContent == '') {
       return postAlert('The Account field is required');
+    }
+    if (values.isTag && (!values.tag || values.tag.length == 0)) {
+      return postAlert('The Tag field is required');
     }
 
     let newProfiles = [];
@@ -88,6 +91,11 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
         });
       }
     });
+
+    if (accounts.length > proxies.length) {
+      return postAlert('The Proxy field is required');
+    }
+
     if (accounts.length) {
       setLoading(true);
       const users = await dbGetLocally(storageProfiles);

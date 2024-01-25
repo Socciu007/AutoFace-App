@@ -59,7 +59,7 @@ const PopupSetting = ({ openSettings, handleCloseSettings }) => {
         '& .MuiDialog-container': MuiDialogContainerSetting,
       }}
     >
-      <SettingsPage component={true}></SettingsPage>
+      <SettingsPage component={true} handleCloseSettings={handleCloseSettings}></SettingsPage>
     </Dialog>
   );
 };
