@@ -61,6 +61,7 @@ body {
         border-radius: 15px;
         border: 1px dashed #01162b;
         display: flex;
+        margin: 0 10px;
         align-items: center;
         span {
           width: 40px;
@@ -70,6 +71,9 @@ body {
           display: grid;
           place-items: center;
         }
+      }
+      .yourScript {
+        margin-right: 10px;
       }
       .yourScript,
       .systemScript {
@@ -149,6 +153,33 @@ body {
         }
       }
 
+      .ant-table-content::-webkit-scrollbar {
+        height: 5px;
+        width: 5px;
+      }
+      .ant-table-content::-webkit-scrollbar-thumb {
+        background-color: rgba(1, 22, 43, 0.5); /* Màu của thanh cuộn */
+        border-radius: 5px; /* Bo tròn góc của thanh cuộn */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Bóng mờ */
+      }
+      .ant-table-content::-webkit-scrollbar-track {
+        background-color: rgba(1, 22, 43, 0.2); /* Màu của phần bên dưới thanh cuộn */
+        border-radius: 5px;
+      }
+      :where(.css-dev-only-do-not-override-17sses9).ant-table-wrapper
+        .ant-table-thead
+        > tr
+        > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not(
+          [colspan]
+        )::before,
+      :where(.css-dev-only-do-not-override-17sses9).ant-table-wrapper
+        .ant-table-thead
+        > tr
+        > td:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not(
+          [colspan]
+        )::before {
+        display: none !important;
+      }
       .ant-table-wrapper {
         height: calc(100vh - 186px);
       }
