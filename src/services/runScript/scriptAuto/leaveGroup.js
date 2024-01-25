@@ -159,7 +159,6 @@ const clickReturn = async (page) => {
     return false;
   }
 };
-
 // click group and go to group page
 const joinGroup = async (page) => {
   try {
@@ -167,38 +166,50 @@ const joinGroup = async (page) => {
     let temp = getRandomIntBetween(2, 4);
     logger("số lần scroll " + temp);
     while (temp > 0) {
+      let positionBeforeScroll = await page.evaluate(() => window.scrollY);
       await scrollByWheel(page, getRandomIntBetween(200, 250));
-      await delay(1000);
+      await delay(2000);
+      let positionAfterScroll = await page.evaluate(() => window.scrollY);
+      if (positionBeforeScroll === positionAfterScroll) {
+        logger("Đã scroll xuống cuối trang.");
+        break;
+      }
       temp--;
     }
     let nameSelector =
       "#screen-root > div > div:nth-child(2) > div:nth-child(10) > div> div:nth-child(2) > div";
     let nameGroup = await getElements(page, nameSelector, 10);
-    if (!nameGroup){
-     nameSelector = "#screen-root > div > div:nth-child(2) > div:nth-child(9) >  div> div:nth-child(2) > div";
-     nameGroup = await getElements(page, nameSelector, 10);
-     if (!nameGroup) return false;
-    };
+    if (nameGroup.length <= 1) return false;
     let isJoin = false;
+    let arr = [];
+    let newIndex = -1;
     for (let i = 1; i < nameGroup.length; i++) {
-      let randomIndex = getRandomInt(nameGroup.length);
+      if (newIndex > i) continue;
+      nameGroup = await getElements(page, nameSelector, 10);
       const groupId = await page.evaluate((el) => {
         return el.parentNode.parentNode.getAttribute("data-action-id");
-      }, nameGroup[randomIndex]);
+      }, nameGroup[i]);
       if (!groupId) continue;
       // click group on the screen
-      const groupSelector = 'div[data-action-id="' + groupId + '"]';
-      const groupBtn = await getElement(page, groupSelector, 10);
-      if (!groupBtn) continue;
+      const groupSelector = 'div[data-action-id="' +  groupId + '"]';
       const isOnScreen = await checkExistElementOnScreen(page, groupSelector);
       if (isOnScreen == 0) {
-        await delay(1000);
-        await clickElement(groupBtn);
-        isJoin = true;
-        await delay(2000);
-        break;
+        if (arr.length == 3) {
+          newIndex = i;
+          break;
+        }
+        const groupBtn = await getElement(page, groupSelector, 10);
+        if (!groupBtn) continue;
+        arr.push(groupBtn);
+        logger("push to array");
       }
     }
+    if (arr.length == 0) return false;
+    let randomIndex = getRandomInt(arr.length);
+    await delay(1000);
+    await clickElement(arr[randomIndex]);
+    isJoin = true;
+    await delay(2000);
     return isJoin;
   } catch (error) {
     logger(error);
@@ -262,7 +273,7 @@ const GotoGroup = async (page) => {
     });
     logger("Go to group");
   }
-};  
+};
 const leaveGroupObj = ${strSetting};
 
   //Check obj start < end ? random(start,end) : random(end,start)
@@ -290,32 +301,29 @@ const leaveGroupObj = ${strSetting};
   );
   if (!moreIcon) return false;
   await clickElement(moreIcon);
-  await delay(3000);
-  const groupIconSelector = 'img[src="https://static.xx.fbcdn.net/rsrc.php/v3/yn/r/lH756t0xaFS.png"]';
+  await delay(2000);
+  const groupIconSelector =
+    'img[src="https://static.xx.fbcdn.net/rsrc.php/v3/yn/r/lH756t0xaFS.png"]';
   const groupIcon = await getElement(page, groupIconSelector, 10);
   if (!groupIcon) return false;
   const groupId = await page.evaluate((el) => {
     return el.parentNode.parentNode.getAttribute("data-action-id");
   }, groupIcon);
   if (!groupId) return false;
+  logger(groupId);
   const groupElement = await getElement(
     page,
-    'div[data-action-id="' + groupId + '"]',
+    'div[data-action-id="' +  groupId + '"]',
     10
   );
   if (!groupElement) return false;
   await clickElement(groupElement);
   await delay(randomDelay);
   // click your group
-  let yourGroupSelector =
+  const yourGroupSelector =
     "#screen-root > div > div:nth-child(2) > div:nth-child(4) > div > div > div:nth-child(2)";
-  let yourGroupBtn = await getElement(page, yourGroupSelector, 10);
-  if (!yourGroupBtn){
-   yourGroupSelector = "#screen-root > div > div:nth-child(2) > div:nth-child(3) > div > div > div:nth-child(2)";
-   yourGroupBtn = await getElement(page, yourGroupSelector, 10);
-   if (!yourGroupBtn) return false;
-  };
-  
+  const yourGroupBtn = await getElement(page, yourGroupSelector, 10);
+  if (!yourGroupBtn) return false;
   await clickElement(yourGroupBtn);
   await delay(randomDelay);
   logger("Cần rời " + numGroup + " group");

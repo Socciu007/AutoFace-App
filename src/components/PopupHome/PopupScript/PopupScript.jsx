@@ -3,7 +3,7 @@ import PopupComponent from '../PopupComponent/PopupComponent';
 import closePopup from '../../../assets/pictures/icon-x.svg';
 import settings from '../../../assets/pictures/icon-settings.png';
 import search from '../../../assets/pictures/icon-search.svg';
-import { Table } from 'antd';
+import { Table, Tooltip } from 'antd';
 import './style.scss';
 import { storageScripts } from '../../../common/const.config';
 import { runScript } from '../../../services/runScript';
@@ -98,6 +98,15 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
     newScripts = newScripts.sort((x, y) => Number(y.isPin) - Number(x.isPin));
     setListScript(newScripts);
   };
+  const generateNoteStr = (note, shot = true) => {
+    let noteStr = note && note.length ? `${note}` : '';
+
+    if (noteStr.length > 100 && shot) {
+      noteStr = `${note.slice(0, 100)}...`;
+      console.log(noteStr);
+    }
+    return noteStr;
+  };
 
   const columnsScripts = [
     {
@@ -108,6 +117,12 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
     {
       title: 'Notes',
       dataIndex: 'note',
+
+      render: (note) => (
+        <Tooltip placement="topLeft" title={generateNoteStr(note, false)}>
+          {generateNoteStr(note)}
+        </Tooltip>
+      ),
     },
   ];
 

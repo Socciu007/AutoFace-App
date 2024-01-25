@@ -208,7 +208,7 @@
     "selectTypeFollow": "Profile",
     "UIDList": [],
     "isLike": false,
-    "isFollow": true
+    "isFollow": false
   },
   "viewVideo": { "viewTimeStart": 30, "viewTimeEnd": 50, "videoID": [] }
 }

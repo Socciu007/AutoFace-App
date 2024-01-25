@@ -14,6 +14,11 @@ import option from '../../assets/icon/icon-options.svg';
 import newNote from '../../assets/icon/icon-newNote.svg';
 import edit from '../../assets/icon/icon-editWhite.svg';
 import close from '../../assets/icon/icon-close.svg';
+import yourScript from '../../assets/pictures/icon-yourScripts.svg';
+import yourScriptBlue from '../../assets/icon/icon-yourScriptsBlue.svg';
+import plus from '../../assets/pictures/icon-plus.png';
+import iconCheck from '../../assets/icon/icon-checkBlue.svg';
+import systemScript from '../../assets/icon/icon-systemScript.svg';
 import { storageScripts } from '../../common/const.config';
 import ReactFlow, { ReactFlowProvider } from 'reactflow';
 import startingPointNode from '../../components/nodes/startingPoint';
@@ -38,6 +43,8 @@ import createPostGroupNode from '../../components/nodes/createPostGroup';
 import SnackbarApp from '../../components/Alert';
 import { v4 as uuidv4 } from 'uuid';
 import { dbGetLocally, dbSetLocally } from '../../sender';
+import { Table, Tooltip } from 'antd';
+import { formatTimeDay } from '../../services/utils';
 const nodeTypes = {
   startingPoint: startingPointNode,
   watchStory: watchStoryNode,
@@ -110,7 +117,6 @@ const ScriptManager = () => {
   const [message, setMessage] = useState('');
   const [statusMessage, setStatusMessage] = useState('warning');
   const [listScript, setListScript] = useState([]);
-  const [indexMenu, setIndexMenu] = useState(-1);
   const [anchorEl, setAnchorEl] = useState(null);
   const [itemSelect, setItemSelect] = useState(null);
   const [nameCoppy, setNameCoppy] = useState('');
@@ -137,10 +143,10 @@ const ScriptManager = () => {
     newList = newList.sort((x, y) => Number(y.isPin) - Number(x.isPin));
     setListScript(newList);
   };
-
+  let item;
   useEffect(() => {
     if (!itemSelect) return;
-    const item = listScript.find((e) => e.id == itemSelect.id);
+    item = listScript.find((e) => e.id == itemSelect.id);
     if (!item) setItemSelect(null);
   }, [listScript]);
 
@@ -149,7 +155,6 @@ const ScriptManager = () => {
     if (scriptStr && scriptStr.length) {
       const script = JSON.parse(scriptStr);
       if (script && script.length) {
-        setItemSelect(script[0]);
         setContentArray(script);
       }
     }
@@ -202,10 +207,6 @@ const ScriptManager = () => {
     newList = newList.sort((x, y) => Number(y.isPin) - Number(x.isPin));
     setIsSystem(!isSystem);
     setListScript(newList);
-  };
-  // Handle each script div
-  const handleScriptClick = (item) => {
-    setItemSelect(item);
   };
 
   const openCopy = Boolean(anchorEl);
@@ -262,26 +263,147 @@ const ScriptManager = () => {
   };
 
   const handleTogglePin = async (scriptId) => {
-    const index = contentArray.findIndex((e) => e.id == scriptId);
+    const index = listScripts.findIndex((e) => e.id == scriptId);
     if (index >= 0) {
-      const newArr = contentArray;
+      const newArr = listScripts;
       newArr[index].isPin = !newArr[index].isPin;
       setContentArray(newArr);
+      setListScript(newArr);
       await dbSetLocally(storageScripts, JSON.stringify(newArr));
-      reloadListScript();
     }
-    setIndexMenu(-1);
+    setItemSelect(null);
   };
 
   // Handle toggle menu
-  const open = Boolean(anchorEl);
-  const handleClick = (event, index) => {
+  const open = anchorEl ? true : false;
+  const handleClick = (event, script) => {
     setAnchorEl(event.currentTarget);
-    setIndexMenu(index);
+    setItemSelect(script);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const generateNoteStr = (note, shot = true) => {
+    let noteStr = note && note.length ? `${note}` : '';
+
+    if (noteStr.length > 100 && shot) {
+      noteStr = `${note.slice(0, 100)}...`;
+    }
+    return noteStr;
+  };
+  const columns = [
+    {
+      title: '#',
+      width: 50,
+      render: (text, record, index) => <div>{index + 1}</div>,
+    },
+    {
+      title: 'Name',
+      width: 150,
+      render: (script) => {
+        return (
+          <div className="pin">
+            <span>{script.name}</span>
+            {script.isPin ? <img src={pin} alt="Pin" className={'show'} /> : null}
+          </div>
+        );
+      },
+    },
+    {
+      title: 'Note',
+      dataIndex: 'note',
+      width: 280,
+      // ellipsis: {
+      //   showTitle: false,
+      // },
+      render: (note) => (
+        <Tooltip placement="topLeft" title={generateNoteStr(note, false)}>
+          {generateNoteStr(note)}
+        </Tooltip>
+      ),
+    },
+    {
+      title: 'Created',
+      render: (script) => {
+        return (
+          <div className="pin">
+            <span>{script.createdAt ? formatTimeDay(script.createdAt) : ''}</span>
+          </div>
+        );
+      },
+      width: 200,
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      sorter: (a, b) => a.status - b.status,
+      width: 100,
+    },
+    {
+      title: 'Tag',
+      dataIndex: 'tag',
+      sorter: (a, b) => a.tag - b.tag,
+      width: 150,
+    },
+    {
+      width: 60,
+      fixed: 'right',
+      render: (script) => {
+        return (
+          <div>
+            <div className="-expand-icon">
+              <p className="runScript">Run</p>
+              {/* <p className="stopScript">Stop</p> */}
+              <img
+                src={option}
+                alt="image-option"
+                id={`basic-menu-${script.id}`}
+                onClick={(event) => {
+                  handleClick(event, script);
+                }}
+                aria-expanded={open ? 'true' : 'false'}
+                aria-controls={open ? `basic-menu-${script.id}` : undefined}
+                aria-haspopup="true"
+              ></img>
+              <div className={itemSelect && itemSelect.id === script.id ? 'script selected' : 'script'}>
+                <Menu
+                  anchorEl={anchorEl}
+                  id={`basic-menu-${script.id}`}
+                  open={itemSelect && itemSelect.id === script.id}
+                  onClose={() => {
+                    setItemSelect(null);
+                  }}
+                  MenuListProps={{
+                    'aria-labelledby': 'basic-button',
+                  }}
+                  sx={{
+                    '& .MuiPaper-root': menuStyle,
+                    '& .MuiButtonBase-root': liStyle,
+                  }}
+                >
+                  <MenuItem id={script.id} onClick={() => handleTogglePin(script.id)}>
+                    {!script.isPin ? <p>Pin</p> : <p>Unpin</p>}
+                    {/* {script.isPin ? 'Unpin' : 'Pin'} */}
+                  </MenuItem>
+                  <MenuItem onClick={handleEditClick}>Edit</MenuItem>
+                  <MenuItem onClick={() => handleOptionClick('makeCopy')}>Make a copy</MenuItem>
+                  <MenuItem onClick={handleClose}>Rename</MenuItem>
+                  <MenuItem onClick={() => handleOptionClick('delete')}>Delete</MenuItem>
+                </Menu>
+
+                {/* </div> */}
+              </div>
+            </div>
+          </div>
+        );
+      },
+    },
+  ];
+
+  const listScripts = listScript.map((item, index) => {
+    item.index = index;
+    return item;
+  });
 
   return (
     <>
@@ -295,128 +417,38 @@ const ScriptManager = () => {
               </button>
               <p>Script Manager</p>
             </div>
+            <div className="-nav-bar">
+              <div className="scriptManager">
+                <img src={yourScript} alt="script manager(your script black) icon" />
+                <p>SCRIPT MANAGER</p>
+              </div>
+              <div className="createScript" onClick={handleAddClick}>
+                <span>
+                  <img src={plus} alt="plus icon" />
+                </span>
+                <p>Create a new script</p>
+              </div>
+              <div className={!isSystem ? 'yourScript active' : 'yourScript'} onClick={handleButtonClick}>
+                <img src={yourScriptBlue} alt="icon your script blue" />
+                <p>Your Scripts</p>
+                {!isSystem ? <img src={iconCheck} alt="icon check" /> : ''}
+              </div>
+              <div className={!isSystem ? 'systemScript ' : 'systemScript active'} onClick={handleButtonClick}>
+                <img src={systemScript} alt="icon system scripts" />
+                <p>System’s Scripts</p>
+                {isSystem ? <img src={iconCheck} alt="icon check" /> : ''}
+              </div>
+            </div>
           </div>
           <div className="script-manager__content">
-            <div className="scrollable-container">
-              <div className="left-content">
-                <div className="left-content__top">
-                  <div className="search">
-                    <img src={search} alt="Icon-search" />
-                    <input
-                      onChange={(event) => searchScript(event.target.value)}
-                      className="inputSearch"
-                      placeholder="Search..."
-                    ></input>
-                  </div>
-                  <button
-                    onClick={async () => {
-                      await getScripts();
-                      postAlert('Reloaded Scripts!', 'success');
-                    }}
-                    className="reload"
-                  >
-                    <img src={reload} alt="Reload" />
-                  </button>
-                  <button className="add" onClick={handleAddClick}>
-                    <img src={add} alt="Add" />
-                  </button>
-                </div>
-                <div className="left-content__category">
-                  <button className={!isSystem ? 'category-left' : 'category-right'} onClick={handleButtonClick}>
-                    System's Scripts
-                  </button>
-                  <button className={!isSystem ? 'category-right' : 'category-left'} onClick={handleButtonClick}>
-                    Your Scripts
-                  </button>
-                </div>
-                <div className="left-content__content">
-                  {listScript.map((item, index) => (
-                    <div
-                      className={itemSelect && itemSelect.id === item.id ? 'script selected' : 'script'}
-                      onClick={() => handleScriptClick(item)}
-                      key={item.id}
-                    >
-                      <p className={itemSelect && itemSelect.id === item.id ? 'inputSelected' : ''}>{item.name}</p>
-                      <div>
-                        {/* pin */}
-                        {item.isPin ? <img src={pin} alt="Pin" className={'show'} /> : null}
-                        {/* more */}
-                        <div
-                          className="more"
-                          id={`basic-menu-${item.id}`}
-                          aria-controls={open ? `basic-menu-${item.id}` : undefined}
-                          aria-haspopup="true"
-                          aria-expanded={open ? 'true' : undefined}
-                          onClick={(event) => {
-                            handleClick(event, index);
-                          }}
-                        >
-                          <img src={option} alt="More" />
-                        </div>
-                        {indexMenu == index ? (
-                          <Menu
-                            id={`basic-menu-${item.id}`}
-                            anchorEl={anchorEl}
-                            open={open}
-                            onClose={handleClose}
-                            MenuListProps={{
-                              'aria-labelledby': 'basic-button',
-                            }}
-                            sx={{
-                              '& .MuiPaper-root': menuStyle,
-                              '& .MuiButtonBase-root': liStyle,
-                            }}
-                          >
-                            <MenuItem id={item.id} onClick={() => handleTogglePin(item.id)}>
-                              {item.isPin ? 'Unpin' : 'Pin'}
-                            </MenuItem>
-                            <MenuItem onClick={handleEditClick}>Edit</MenuItem>
-                            <MenuItem onClick={() => handleOptionClick('makeCopy')}>Make a copy</MenuItem>
-                            <MenuItem onClick={handleClose}>Rename</MenuItem>
-                            <MenuItem onClick={() => handleOptionClick('delete')}>Delete</MenuItem>
-                          </Menu>
-                        ) : null}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <div className="right-content">
-              <div className="right-content__edit">
-                <h3>SCRIPT OVERVIEW</h3>
-                <div className="edit-input">
-                  <img src={newNote} alt="New note" />
-
-                  <input
-                    // disabled="disabled"
-                    type="text"
-                    value={itemSelect ? itemSelect.note : ''}
-                    placeholder="New note"
-                  />
-                </div>
-                <button className="editBtn" onClick={handleEditClick}>
-                  <img src={edit} alt="Edit" />
-                  EDIT
-                </button>
-              </div>
-              <div className="right-content__container">
-                {itemSelect && itemSelect.design ? (
-                  <div className="dndflow">
-                    <ReactFlowProvider>
-                      <div className="reactflow-wrapper">
-                        <ReactFlow
-                          defaultViewport={itemSelect.design.viewport}
-                          nodeTypes={nodeTypes}
-                          nodes={itemSelect.design.nodes}
-                          edges={itemSelect.design.edges}
-                        ></ReactFlow>
-                      </div>
-                    </ReactFlowProvider>
-                  </div>
-                ) : null}
-              </div>
-            </div>
+            <Table
+              columns={columns}
+              showSorterTooltip={false}
+              pagination={false}
+              dataSource={listScripts}
+              scroll={{ x: 1600 }}
+              rowClassName={(profile) => (profile.isPin ? 'pinned-row' : '')}
+            />
           </div>
           <Dialog
             sx={{

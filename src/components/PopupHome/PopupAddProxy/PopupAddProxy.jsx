@@ -91,9 +91,12 @@ const PopupAddProxy = ({
   };
   const makeCopy = {
     position: 'fixed',
+    maxWidth: '100% !important',
+    width: '1163px',
+    height: '679px',
     top: '50%',
     left: '50%',
-    transform: 'translate(-50%, -50%)',
+    transform: ' translate(-50%, -50%)',
     borderRadius: '15px',
     background: '#fff',
     boxShadow: '0px 4px 10px 0px rgba(8, 35, 106, 0.25)',
@@ -113,6 +116,9 @@ const PopupAddProxy = ({
     minWidth: '1163px !important',
     color: '#01162b !important',
   };
+  const MuiDialogContainerProxy = {
+    display: 'block',
+  };
   return (
     <Dialog
       open={openAddProxy}
@@ -121,6 +127,7 @@ const PopupAddProxy = ({
         '& .MuiPaper-root': makeCopy,
         '& .MuiBackdrop-root': overlay,
         '& .css-1t1j96h-MuiPaper-root-MuiDialog-paper': MuiDialogPaper,
+        '& .MuiDialog-container': MuiDialogContainerProxy,
       }}
     >
       <div className="modal">

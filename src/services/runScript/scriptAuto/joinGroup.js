@@ -26,61 +26,59 @@ const scrollAndJoin = async (page, selector, randomDelay, joinGroupObject) => {
     if (joinBtns.length < 1) return false;
     let isJoin = false;
     let arr = [];
+    let newIndex = -1;
+    // thêm những nút join ở màn hình vào mảng
     for (let i = 0; i < joinBtns.length; i++) {
+      if (newIndex > i) continue;
       // get length after scroll
       joinBtns = await getElements(page, selector, 10);
-      let randomIndex = getRandomInt(joinBtns.length);
-      await delay(1000);
-      let index = arr.indexOf(randomIndex);
-      if (index == -1) {
-        arr.push(randomIndex);
-      } else {
-        continue;
-      }
       const joinId = await page.evaluate((el) => {
         return el.parentNode.getAttribute("data-action-id");
-      }, joinBtns[randomIndex]);
-      await delay(2000);
-      if (!joinId) {
-        logger("không có id");
-        continue;
-      }
-      logger("ID group: " + joinId);
+      }, joinBtns[i]);
+      if (!joinId) continue;
       // click join button on the screen
       const joinGroupSelector = 'div[data-action-id="' + joinId + '"]';
-      const joinBtn = await getElement(page, joinGroupSelector, 10);
-      if (!joinBtn) continue;
       const isOnScreen = await checkExistElementOnScreen(
         page,
         joinGroupSelector
       );
       if (isOnScreen == 0) {
-        await delay(1000);
-        await clickElement(joinBtn);
-        await delay(randomDelay);
-        //   check if group have to answer question before join
-        let submitSelector =
-          "#screen-root > div > div.m.fixed-container.bottom > div > div> div";
-        let submitBtn = await getElement(page, submitSelector, 2);
-        //   if form answer does not appear => join successfull
-        if (!submitBtn) {
-          isJoin = true;
+        if (arr.length == 3) {
+          newIndex = i;
           break;
         }
-        if (joinGroupObject.isAutoAnswer == true) {
-          const rs = await answerGroupQuestion(page, joinGroupObject);
-          if (!rs) break;
-          isJoin = true;
-          break;
-        } else {
-          const rs = await joinWithoutAnswer(page);
-          if (!rs) break;
-          isJoin = true;
-          break;
-        }
+        const joinBtn = await getElement(page, joinGroupSelector, 10);
+        if (!joinBtn) continue;
+        arr.push(joinBtn);
+        logger("Thêm vào mảng");
       }
     }
-    return isJoin;
+    // random nút có trên màn hình để click
+    if (arr.length == 0) return false;
+    let randomIndex = getRandomInt(arr.length);
+    await delay(1000);
+    await clickElement(arr[randomIndex]);
+    await delay(randomDelay);
+    //   check if group have to answer question before join
+    let submitSelector =
+      "#screen-root > div > div.m.fixed-container.bottom > div > div> div";
+    let submitBtn = await getElement(page, submitSelector, 2);
+    //   if form answer does not appear => join successfull
+    if (!submitBtn) {
+      isJoin = true;
+      return isJoin;
+    }
+    if (joinGroupObject.isAutoAnswer == true) {
+      const rs = await answerGroupQuestion(page, joinGroupObject);
+      if (!rs) return false;
+      isJoin = true;
+      return isJoin;
+    } else {
+      const rs = await joinWithoutAnswer(page);
+      if (!rs) return false;
+      isJoin = true;
+      return isJoin;
+    }
   } catch (error) {
     logger(error);
     return false;
@@ -121,7 +119,7 @@ const answerGroupQuestion = async (page, joinGroupObject) => {
         );
       }, textarea[i]);
       if (!textAreaId) break;
-      let areaSelector = 'div[data-keyboard-shown-visible-component-id="' + textAreaId +'"]';
+      let areaSelector = 'div[data-keyboard-shown-visible-component-id="' +  textAreaId + '"]';
       let area = await getElement(page, areaSelector, 10);
       if (!area) break;
       await scrollSmoothIfNotExistOnScreen(page, areaSelector);
@@ -210,8 +208,9 @@ const joinGroupByUID = async (page, joinGroupObject) => {
       logger("Go to group");
     }
     await page.goto(
-      'https://m.facebook.com/groups/' + 
-        joinGroupObject.text[getRandomInt(joinGroupObject.text.length)],
+      'https://m.facebook.com/groups/' +
+        joinGroupObject.text[getRandomInt(joinGroupObject.text.length)]
+      ,
       {
         waitUntil: "networkidle2",
       }
@@ -219,10 +218,9 @@ const joinGroupByUID = async (page, joinGroupObject) => {
     await delay(randomDelay);
     // check joined group before
     const checkSelector =
-      "#screen-root > div > div:nth-child(2) > div:nth-child(4) > div.m.bg-s3";
-    const check = await getElement(page, checkSelector, 10);
-    if (check) {
-      logger("Đã vào nhóm từ trước");
+      " #screen-root > div > div:nth-child(2) > div:nth-child(4) > div > div:nth-child(2)";
+    const check = await getElements(page, checkSelector, 10);
+    if (!check || check.length >= 2) {
       return false;
     }
     const joinSelector =
@@ -230,14 +228,6 @@ const joinGroupByUID = async (page, joinGroupObject) => {
     const joinBtn = await getElement(page, joinSelector, 10);
     if (!joinBtn) return false;
     await delay(2000);
-    // if pending request then return false
-    const text = await page.evaluate((el) => {
-      return el.firstChild.getAttribute("class").includes("native-text");
-    }, joinBtn);
-    if (text) {
-      logger("Đang chờ vào nhóm");
-      return false;
-    }
     // if not pending , click join
     await clickElement(joinBtn);
     await delay(randomDelay);
@@ -261,6 +251,7 @@ const joinGroupByUID = async (page, joinGroupObject) => {
     return false;
   }
 };
+
   const joinGroupObj = ${strSetting};
   //Check obj start < end ? random(start,end) : random(end,start)
   let joinGroupObject = await checkObject(joinGroupObj);
@@ -287,8 +278,9 @@ const joinGroupByUID = async (page, joinGroupObject) => {
   );
   if (!moreIcon) return false;
   await clickElement(moreIcon);
-  await delay(3000);
-  const groupIconSelector = 'img[src="https://static.xx.fbcdn.net/rsrc.php/v3/yn/r/lH756t0xaFS.png"]';
+  await delay(2000);
+  const groupIconSelector =
+    'img[src="https://static.xx.fbcdn.net/rsrc.php/v3/yn/r/lH756t0xaFS.png"]';
   const groupIcon = await getElement(page, groupIconSelector, 10);
   if (!groupIcon) return false;
   const groupId = await page.evaluate((el) => {
@@ -310,23 +302,24 @@ const joinGroupByUID = async (page, joinGroupObject) => {
     let discoverSelector =
       "#screen-root > div > div:nth-child(2) > div:nth-child(4) > div > div > div:nth-child(3)";
     let discoverBtn = await getElement(page, discoverSelector, 10);
-    if (!discoverBtn){
-      discoverSelector =  "#screen-root > div > div:nth-child(2) > div:nth-child(3) > div > div > div:nth-child(3)";
+    if (!discoverBtn) {
+      discoverSelector =
+        "#screen-root > div > div:nth-child(2) > div:nth-child(3) > div > div > div:nth-child(3)";
       discoverBtn = await getElement(page, discoverSelector, 10);
       if (!discoverBtn) return false;
-    };
+    }
     await clickElement(discoverBtn);
     await delay(3000);
     // click see all group suggestions
     let seeAllSelector =
       "#screen-root > div > div:nth-child(2) > div:nth-child(6) > div:nth-child(1) > div:nth-child(3)";
     let seeAllBtn = await getElement(page, seeAllSelector, 10);
-    if (!seeAllBtn){
-    seeAllSelector =
-      "#screen-root > div > div:nth-child(2) > div:nth-child(5) > div:nth-child(1) > div:nth-child(3)";
+    if (!seeAllBtn) {
+      seeAllSelector =
+        "#screen-root > div > div:nth-child(2) > div:nth-child(5) > div:nth-child(1) > div:nth-child(3)";
       seeAllBtn = await getElement(page, seeAllSelector, 10);
-       if (!seeAllBtn) return false;
-    };
+      if (!seeAllBtn) return false;
+    }
     await clickElement(seeAllBtn);
     await delay(randomDelay);
     for (let i = 0; i < numGroup * 2; i++) {

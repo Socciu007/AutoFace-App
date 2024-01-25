@@ -315,7 +315,7 @@ const ProfilesPage = () => {
               open={rowID == profile.id}
               trigger="click"
               onClose={handleCloseAction}
-              placement="leftTop"
+              placement="rightTop"
               content={
                 <div className="-popover-options" onMouseLeave={handleCloseAction}>
                   <div

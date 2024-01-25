@@ -38,7 +38,7 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
 
   const addProfiles = async () => {
     if (loading) return;
-    if (textContent == '') {
+    if (textContent == '' || proxyContent == '') {
       return postAlert('The Account field is required');
     }
 
