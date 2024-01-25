@@ -116,7 +116,7 @@ const ProfilesPage = () => {
           );
         },
         width: 200,
-        sorter: (a, b) => a.uid - b.uid,
+        sorter: (a, b) => !a.isPin && !b.isPin && a.uid - b.uid,
       });
     }
     if (settings.name) {
@@ -234,7 +234,7 @@ const ProfilesPage = () => {
         ellipsis: {
           showTitle: false,
         },
-        sorter: (a, b) => a.recoveryEmail.length - b.recoveryEmail.length,
+        sorter: (a, b) => !a.isPin && !b.isPin && a.recoveryEmail.length - b.recoveryEmail.length,
         render: (recoveryEmail) => (
           <Tooltip placement="topLeft" title={recoveryEmail}>
             {recoveryEmail}
@@ -275,7 +275,7 @@ const ProfilesPage = () => {
             </div>
           );
         },
-        sorter: (a, b) => a.proxy.length - b.proxy.length,
+        sorter: (a, b) => !a.isPin && !b.isPin && a.proxy.length - b.proxy.length,
       });
     }
     if (settings.tag) {
@@ -287,7 +287,7 @@ const ProfilesPage = () => {
         render: (tag) => {
           return <Input name="tag" value={tag} className="-tag-profiles" onChange={(e) => e.target.value}></Input>;
         },
-        sorter: (a, b) => a.tag.length - b.tag.length,
+        sorter: (a, b) => !a.isPin && !b.isPin && a.tag.length - b.tag.length,
       });
     }
     settingsColumns.push({
@@ -470,7 +470,7 @@ const ProfilesPage = () => {
     const index = newData.findIndex((profile) => row.id === profile.id);
     const profile = newData[index];
     profile.tag = row.tag.split(',').map((e) => {
-      if (!e.startsWith('#')) {
+      if (e && e.length && !e.startsWith('#')) {
         return '#' + e;
       }
       return e;

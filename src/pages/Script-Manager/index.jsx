@@ -72,6 +72,7 @@ const ScriptManager = () => {
 
   // for style menu materials UI
   const menuStyle = {
+    // left: '1120px !important',
     boxShadow:
       '0px 5px 5px -3px rgb(233 232 232 / 20%), 0px 8px 10px 1px rgb(255 255 255 / 14%), 0px 3px 14px 2px rgb(241 232 232 / 12%)',
   };
@@ -110,6 +111,9 @@ const ScriptManager = () => {
 
   const overlay = {
     background: 'rgba(255,255,255,0.9)',
+  };
+  const MuiBackdropRoot = {
+    padding: '30px 30px 10px 30px',
   };
 
   const [isSystem, setIsSystem] = useState(false);
@@ -337,13 +341,13 @@ const ScriptManager = () => {
     {
       title: 'Status',
       dataIndex: 'status',
-      sorter: (a, b) => a.status - b.status,
+      sorter: (a, b) => !a.isPin && !b.isPin && a.status - b.status,
       width: 100,
     },
     {
       title: 'Tag',
       dataIndex: 'tag',
-      sorter: (a, b) => a.tag - b.tag,
+      sorter: (a, b) => !a.isPin && !b.isPin && a.tag - b.tag,
       width: 150,
     },
     {
@@ -380,6 +384,10 @@ const ScriptManager = () => {
                   sx={{
                     '& .MuiPaper-root': menuStyle,
                     '& .MuiButtonBase-root': liStyle,
+                  }}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
                   }}
                 >
                   <MenuItem id={script.id} onClick={() => handleTogglePin(script.id)}>

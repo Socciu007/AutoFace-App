@@ -9,7 +9,7 @@ import { aesDecrypt } from '../../../services/crypto-js';
 import SnackbarApp from '../../Alert';
 import { storageProfiles } from '../../../common/const.config';
 import { dbSetLocally } from '../../../sender';
-
+import { Store } from 'react-notifications-component';
 const PopupProxyManage = ({
   openProxyManage,
   handleCloseProxyManage,
@@ -115,7 +115,19 @@ const PopupProxyManage = ({
       getProfiles();
       handleCloseProxyManage();
       setTimeout(() => {
-        postAlert(`Add proxy to profiles success!`, 'success', 4000);
+        Store.addNotification({
+          type: 'success',
+          message: 'The Account field is required',
+          insert: 'top',
+          container: 'top-right',
+          animationIn: ['animate__animated animate__fadeIn'],
+          animationOut: ['animate__animated animate__fadeOut'],
+          dismiss: {
+            duration: 2000,
+            onScreen: true,
+          },
+        });
+        // postAlert(`Add proxy to profiles success!`, 'success', 4000);
       }, 500);
     }
   };

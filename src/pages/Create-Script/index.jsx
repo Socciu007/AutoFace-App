@@ -50,7 +50,7 @@ import { storageScripts } from '../../common/const.config.js';
 import SnackbarApp from '../../components/Alert/index.jsx';
 import DefaultSciptSettings from '../../resources/defaultSciptSettings.json';
 import { dbGetLocally, dbSetLocally } from '../../sender';
-
+import { Store } from 'react-notifications-component';
 const CreateScript = () => {
   const DnDFlowRef = useRef();
   const { state } = useLocation();
@@ -71,7 +71,18 @@ const CreateScript = () => {
   const [currentSetup, setCurrentSetup] = useState(null);
   const [activeCategory, setActiveCategory] = useState(1);
   const navigate = useNavigate();
-
+  const notification = {
+    title: '',
+    message: '',
+    insert: 'top',
+    container: 'top-right',
+    animationIn: ['animate__animated animate__fadeIn'],
+    animationOut: ['animate__animated animate__fadeOut'],
+    dismiss: {
+      duration: 2000,
+      onScreen: true,
+    },
+  };
   useEffect(() => {
     setDefaultScript();
   }, [state]);
@@ -164,13 +175,31 @@ const CreateScript = () => {
       const res = await dbSetLocally(storageScripts, JSON.stringify(arrScript));
 
       if (res) {
-        postAlert('Save script done!', 'success');
+        Store.addNotification({
+          ...notification,
+          type: 'success',
+          title: 'Success',
+          message: 'Save script done!',
+        });
+        // postAlert('Save script done!', 'success');
         handleReturnClick();
       } else {
-        postAlert('Save script fail!', 'error');
+        Store.addNotification({
+          ...notification,
+          type: 'error',
+          title: 'Error',
+          message: 'Save script fail!',
+        });
+        // postAlert('Save script fail!', 'error');
       }
     } else {
-      postAlert('Enter name script!');
+      Store.addNotification({
+        ...notification,
+        type: 'error',
+        title: 'Error',
+        message: 'Enter name script!',
+      });
+      // postAlert('Enter name script!');
     }
   };
 

@@ -79,6 +79,7 @@ const PopupAddProxy = ({
         getProfiles();
         handleCloseAdd();
         setTimeout(() => {
+          
           postAlert(`Add proxy to profiles success!`, 'success', 4000);
         }, 500);
       }

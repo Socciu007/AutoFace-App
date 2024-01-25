@@ -56,7 +56,7 @@ export const runScript = async (profileSelected, scriptDesign) => {
     let node = nodes.find((node) => node.id == edges[0].target);
     while (node) {
       const script = scripts.find((e) => e.id == node.id);
-      arrfunction.push(script);
+      if (script) arrfunction.push(script);
       const edge = edges.find((e) => e.source == node.id);
       if (edge) {
         node = nodes.find((node) => node.id == edge.target);

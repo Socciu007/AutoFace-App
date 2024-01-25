@@ -256,7 +256,7 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
                         const rowKeys = [];
                         rowKeys.push(rowIndex);
                         setSelectedRowKeys(rowKeys);
-                        setScriptSelected(rowIndex);
+                        setScriptSelected(record);
                       },
                     };
                   }}

@@ -7,7 +7,7 @@ export default function SnackbarApp(props) {
   return (
     <Snackbar
       open={text.length != 0 ? true : false}
-      autoHideDuration={autoHideDuration ? autoHideDuration : 2000}
+      autoHideDuration={autoHideDuration ? autoHideDuration : 360000}
       onClose={onClose}
       anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
     >
@@ -16,7 +16,7 @@ export default function SnackbarApp(props) {
           icon={
             <img
               src={status == 'success' ? faceSuccess : status == 'warning' ? faceWarning : faceErr}
-              style={{ width: '17px', height: '17px' }}
+              style={{ width: '17px', height: '17px', zIndex: '999999999999999999' }}
             />
           }
           className="rounded py-1"
