@@ -503,9 +503,6 @@ const ProfilesPage = () => {
   const handleScript = () => {
     navigate('/scripManager');
   };
-  const handleScript2 = () => {
-    navigate('/scripManager2');
-  };
 
   const handleReloadPage = async () => {
     await getProfiles();
@@ -658,9 +655,6 @@ const ProfilesPage = () => {
               </span>
               <span className="-option-profiles" onClick={handleOpenProfiles}>
                 <img src={plus} alt="image-plus"></img>
-              </span>
-              <span className="-option-profiles" onClick={handleScript2} style={{ background: '#01162B' }}>
-                <img src={yourScript} alt="icon-yourscripts"></img>
               </span>
               <PopupProfile
                 openProfiles={openProfiles}
