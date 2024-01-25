@@ -10,10 +10,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { dbGetLocally, dbSetLocally } from '../../sender';
 import DefaultSettings from '../../resources/defaultSettings.json';
 
-const SettingsPage = () => {
+const SettingsPage = ({ component }) => {
   const navigate = useNavigate();
   const [editProxy, setEditProxy] = useState(false);
-  const [keyList, setKeyList] = useState('');
+  const [keyList, setKeyList] = useState(null);
   const [openProxyManage, setOpenProxyManage] = useState(false);
 
   const [settings, setSettings] = useState(DefaultSettings);
@@ -242,8 +242,8 @@ const SettingsPage = () => {
     setKeyList(key);
     setEditProxy(true);
   };
-  const handleCloseEdit = (key) => {
-    setKeyList(key);
+  const handleCloseEdit = () => {
+    setKeyList(null);
     setEditProxy(false);
   };
   const handleOpenWriteText = (o) => {
@@ -267,9 +267,9 @@ const SettingsPage = () => {
   };
 
   const handleAddProxy = (proxyString, type) => {
-    if (proxyString !== '') {
-      const listProxy = [];
+    if (keyList) {
       const listProxyString = proxyString.split('\n');
+      const listProxy = [];
       listProxyString.forEach((proxy) => {
         if (proxy.includes(':')) {
           const host = proxy.split(':')[0];
@@ -286,6 +286,7 @@ const SettingsPage = () => {
           });
         }
       });
+
       if (listProxy.length == 0) {
         setMessage('Malformed proxies!');
         setTimeout(() => {
@@ -293,22 +294,62 @@ const SettingsPage = () => {
         }, 2000);
       } else {
         const proxies = settings.proxies;
-        listProxy.forEach((proxy) => {
-          proxies.push(proxy);
-        });
-        setSettings({ ...settings, proxies });
-        setStatusMessage('success');
-        setMessage('Import proxies success!');
-        setTimeout(() => {
-          setMessage('');
-          setStatusMessage('warning');
-        }, 2000);
+        const index = proxies.findIndex((e) => e.id == keyList);
+        if (index >= 0) {
+          proxies[index] = listProxy[0];
+          setSettings({ ...settings, proxies });
+          setStatusMessage('success');
+          setMessage('Change proxies success!');
+          setTimeout(() => {
+            setMessage('');
+            setStatusMessage('warning');
+          }, 2000);
+        }
       }
     } else {
-      setMessage('Please type proxies!');
-      setTimeout(() => {
-        setMessage('');
-      }, 2000);
+      if (proxyString !== '') {
+        const listProxy = [];
+        const listProxyString = proxyString.split('\n');
+        listProxyString.forEach((proxy) => {
+          if (proxy.includes(':')) {
+            const host = proxy.split(':')[0];
+            const port = proxy.split(':')[1];
+            const username = proxy.split(':')[2] ? proxy.split(':')[2] : '';
+            const password = proxy.split(':')[3] ? proxy.split(':')[3] : '';
+            listProxy.push({
+              host,
+              port,
+              username,
+              password,
+              mode: type,
+              id: uuidv4(),
+            });
+          }
+        });
+        if (listProxy.length == 0) {
+          setMessage('Malformed proxies!');
+          setTimeout(() => {
+            setMessage('');
+          }, 2000);
+        } else {
+          const proxies = settings.proxies;
+          listProxy.forEach((proxy) => {
+            proxies.push(proxy);
+          });
+          setSettings({ ...settings, proxies });
+          setStatusMessage('success');
+          setMessage('Import proxies success!');
+          setTimeout(() => {
+            setMessage('');
+            setStatusMessage('warning');
+          }, 2000);
+        }
+      } else {
+        setMessage('Please type proxies!');
+        setTimeout(() => {
+          setMessage('');
+        }, 2000);
+      }
     }
   };
 

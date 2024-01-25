@@ -282,6 +282,7 @@ const ScriptManager = () => {
   };
   const handleClose = () => {
     setAnchorEl(null);
+    setItemSelect(null);
   };
   const generateNoteStr = (note, shot = true) => {
     let noteStr = note && note.length ? `${note}` : '';

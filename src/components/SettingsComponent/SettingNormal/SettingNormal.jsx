@@ -62,32 +62,15 @@ const SettingNormal = ({
         <div className="-sub-settings">
           <p>Profile running type</p>
           <div className="-options-sub-settings">
-            {/* <Select
-              id="typeProfile"
-              className="-options-sub-settings__select -options-sub-settings__details"
-              value={settings.runningType}
-              onChange={handleOnChangeTypeProfile}
-              bordered={false}
-              options={[
-                {
-                  value: 'random',
-                  label: 'Random',
-                },
-                {
-                  value: 'topdown',
-                  label: 'Topdown',
-                },
-              ]}
-            /> */}
             <Select
               id="typeProfile"
-              bordered={false}
               className="-options-sub-settings__select -options-sub-settings__details"
               onChange={handleOnChangeTypeProfile}
               value={settings.runningType}
+              defaultValue={settings.runningType}
             >
-              <MenuItem value="Random">Random</MenuItem>
-              <MenuItem value="Topdown">Topdown</MenuItem>
+              <MenuItem value="random">Random</MenuItem>
+              <MenuItem value="topdown">Topdown</MenuItem>
             </Select>
           </div>
         </div>

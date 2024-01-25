@@ -5,7 +5,6 @@ import edit from '../../../assets/pictures/icon-edit.png';
 import deleted from '../../../assets/pictures/icon-delete.svg';
 import question from '../../../assets/pictures/icon-question.svg';
 import x from '../../../assets/pictures/icon-x.svg';
-import PopupProxyManage from '../../PopupHome/PopupProxyManage/PopupProxyManage';
 import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
@@ -16,18 +15,12 @@ const SettingProxy = ({
   data,
   keyList,
   editProxy,
-  openProxyManage,
   handleOpenEdit,
   handleCloseEdit,
-  handleOpenProxyManage,
-  handleCloseProxyManage,
   handleAddProxy,
   onChangeAssignProxy,
-  onChangeAPIProxy,
   settings,
-  onChangeProxy,
   handleDeleteProxy,
-  handleAddProxyFromManager,
 }) => {
   const [proxyType, setProxyType] = useState('http');
   const [proxyString, setProxyString] = useState('');
@@ -76,15 +69,9 @@ const SettingProxy = ({
                         </div>
                         {proxy.id === keyList && editProxy ? (
                           <div className="-action-proxys -action-proxys-active">
-                            <input
-                              onChange={(event) => {
-                                onChangeProxy(event.target.value, proxy.id);
-                              }}
-                              defaultValue={generateProxyStr(proxy)}
-                              type="text"
-                            />
+                            <span>{generateProxyStr(proxy)}</span>
                             <div className="-action-icon-proxys">
-                              <div className="-action-icon" onClick={() => handleCloseEdit(proxy.id)}>
+                              <div className="-action-icon" onClick={() => handleCloseEdit()}>
                                 <img src={x} alt="icon-x"></img>
                               </div>
                             </div>
@@ -93,7 +80,14 @@ const SettingProxy = ({
                           <div className="-action-proxys">
                             <span>{generateProxyStr(proxy)}</span>
                             <div className="-action-icon-proxys">
-                              <div className="-action-icon" onClick={() => handleOpenEdit(proxy.id)}>
+                              <div
+                                className="-action-icon"
+                                onClick={() => {
+                                  handleOpenEdit(proxy.id);
+                                  setProxyString(generateProxyStr(proxy));
+                                  setProxyType(proxy.mode);
+                                }}
+                              >
                                 <img src={edit} alt="icon-edit"></img>
                               </div>
                               <div onClick={() => handleDeleteProxy(proxy.id)} className="-action-icon">
@@ -209,8 +203,15 @@ const SettingProxy = ({
                   </div>
                 </div>
 
-                <button className="-add" onClick={() => handleAddProxy(proxyString, proxyType)}>
-                  ADD
+                <button
+                  className="-add"
+                  onClick={() => {
+                    handleAddProxy(proxyString, proxyType);
+                    setProxyType('http');
+                    setProxyString('');
+                  }}
+                >
+                  {keyList ? 'CHANGE' : 'ADD'}
                 </button>
                 <div className="-setting-proxys">
                   <Switch checked={settings.assignProxy} onChange={onChangeAssignProxy} width={32} height={20} />
@@ -223,19 +224,6 @@ const SettingProxy = ({
                     </div>
                   </div>
                 </div>
-                {/* <div className="-setting-proxys baseline">
-                  <Switch checked={settings.apiChange} onChange={onChangeAPIProxy} width={32} height={20} />
-
-                  <p>
-                    API change: Do not assign a proxy to the next profile if the IP address does not change
-                    <div className="-hover-question">
-                      <img src={question} alt="question"></img>
-                      <div className="-hover-question__hide">
-                        <p>Assign proxy here to all selected profiles</p>
-                      </div>
-                    </div>
-                  </p>
-                </div> */}
               </div>
             </div>
           </div>
