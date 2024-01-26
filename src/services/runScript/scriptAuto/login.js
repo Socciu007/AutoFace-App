@@ -12,6 +12,7 @@ export const loginFacebook = (account) => {
   return `
   try {
     const account = ${accountStr};
+  
     const checkPageIsLive = await checkIsLive(page);
     if (!checkPageIsLive) {
       logger("Page null!");
@@ -99,7 +100,7 @@ export const loginFacebook = (account) => {
                 const buttonCheckpoint = await getElement(
                   page,
                   '[id="checkpointSubmitButton"]',
-                  40
+                  30
                 );
                 if (buttonCheckpoint) {
                   await buttonCheckpoint.click();
@@ -111,7 +112,58 @@ export const loginFacebook = (account) => {
                 return { isLogin: false, error: "Dont get 2FA code" };
               }
             } else {
-              return { isLogin: false, error: "Dont find 2FA code element" };
+              const confirmButton = await getElement(
+                page,
+                '[id="checkpointSubmitButton-actual-button"]',
+                15
+              );
+              if (confirmButton) {
+                await delay(1000);
+                await confirmButton.click();
+                const inputCodeMail = await getElement(
+                  page,
+                  '[name="captcha_response"]',
+                  30
+                );
+                if (inputCodeMail) {
+                  const codeMail = await getCodeMail(
+                    account.recoveryEmail,
+                    account.recoveryPassword
+                  );
+  
+                  if (codeMail && codeMail.length == 8) {
+                    await inputCodeMail.type(codeMail, { delay: 100 });
+                    await delay(1000);
+                    const submitCodeMail = await getElement(
+                      page,
+                      '[id="checkpointSubmitButton-actual-button"]',
+                      5
+                    );
+                    if (submitCodeMail) {
+                      await submitCodeMail.click();
+                      await delay(5000);
+                    } else {
+                      return { isLogin: false, error: "Login Fail" };
+                    }
+                  } else {
+                    return {
+                      isLogin: false,
+                      error: "Get code from Email fail!",
+                    };
+                  }
+                } else {
+                  return {
+                    isLogin: false,
+                    error: "Dont find confirm email button",
+                  };
+                }
+              } else {
+                return {
+                  isLogin: false,
+                  error: "Dont find confirm email button",
+                };
+              }
+             
             }
           }
         } else {

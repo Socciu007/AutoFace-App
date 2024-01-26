@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './style.scss';
 import { Input, Popover, Table, Tooltip } from 'antd';
-import SnackbarApp from '../../components/Alert';
 import display from '../../assets/pictures/icon-display-setting.png';
 import search from '../../assets/pictures/icon-search.svg';
 import refresh from '../../assets/pictures/icon-refresh.png';
@@ -13,6 +12,11 @@ import addProxy from '../../assets/pictures/icon-addProxy.png';
 import deleted from '../../assets/pictures/icon-delete.svg';
 import yourScript from '../../assets/pictures/icon-yourScripts.svg';
 import pin from '../../assets/pictures/icon-pin.svg';
+import avatar from '../../assets/icon/icon-avatar.svg';
+import activeProfile from '../../assets/icon/icon-profileTotal.svg';
+import myProfile from '../../assets/icon/icon-myProfile.svg';
+import payment from '../../assets/icon/icon-Payment.svg';
+import logout from '../../assets/icon/icon-logOut.svg';
 import defaultSettings from '../../resources/defaultSettings.json';
 import defaultDisplaySettings from '../../resources/defaultDisplaySettings.json';
 import { EditableCell, EditableRow } from '../../components/EditableTable/EditableTable';
@@ -24,12 +28,12 @@ import PopupScript from '../../components/PopupHome/PopupScript/PopupScript';
 import { accessToken, storageDisplaySettings, storageProfiles, storageSettings } from '../../common/const.config';
 import PopupDisplaySetting from '../../components/PopupHome/PopupDisplaySetting/PopupDisplaySetting';
 import { dbGetLocally, dbSetLocally, deleteProfile, getProfilesMarco, runProfile } from '../../sender';
-
+import { Store } from 'react-notifications-component';
+import notification from '../../resources/notification.json';
+import { Menu } from '@mui/material';
 const ProfilesPage = () => {
   let rowID;
   let loading = false;
-  const [message, setMessage] = useState('');
-  const [statusMessage, setStatusMessage] = useState('warning');
   const [columns, setColumns] = useState([]);
   const [idSelect, setIdSelect] = useState(null);
   const [displaySettings, setDisplaySettings] = useState(null);
@@ -299,7 +303,11 @@ const ProfilesPage = () => {
             setIdSelect(profile.id);
             setOpenDeleteProfile(true);
           } else {
-            postAlert('Please select profile!');
+            Store.addNotification({
+              ...notification,
+              type: 'warning',
+              message: 'Please select profile!',
+            });
           }
         };
         return (
@@ -442,27 +450,20 @@ const ProfilesPage = () => {
     const newData = dataProfiles.filter((e) => e.id !== id);
     setDataProfiles(newData);
     await dbSetLocally(storageProfiles, newData);
-    postAlert('Removed account', 'success');
+    Store.addNotification({
+      ...notification,
+      type: 'success',
+      message: 'Removed account',
+    });
     setOpenDeleteProfile(false);
     setProfilesSelected([]);
     setSelectedRowKeys([]);
     setIdSelect(null);
   };
 
-  //Pin and remove
-
   const handleCloseAction = () => {
     rowID = null;
     renderColumns();
-  };
-
-  const postAlert = (message, status = 'warning', duration = 3000) => {
-    setStatusMessage(status);
-    setMessage(message);
-    setTimeout(() => {
-      setMessage('');
-      setStatusMessage('warning');
-    }, duration);
   };
 
   const handleSaveTag = async (row) => {
@@ -506,7 +507,11 @@ const ProfilesPage = () => {
 
   const handleReloadPage = async () => {
     await getProfiles();
-    postAlert('Reloaded Profiles', 'success');
+    Store.addNotification({
+      ...notification,
+      type: 'success',
+      message: 'Reloaded Profiles',
+    });
   };
   //scripts
   const handleOpenScripts = () => {
@@ -515,10 +520,18 @@ const ProfilesPage = () => {
       if (!check) {
         setOpenScripts(true);
       } else {
-        postAlert(`Profile ${check.profile} is ${check.status}!`);
+        Store.addNotification({
+          ...notification,
+          type: 'success',
+          message: `Profile ${check.profile} is ${check.status}!`,
+        });
       }
     } else {
-      postAlert('Please select profile!');
+      Store.addNotification({
+        ...notification,
+        type: 'warning',
+        message: 'Please select profile!',
+      });
     }
   };
   const handleCloseScripts = () => {
@@ -604,9 +617,22 @@ const ProfilesPage = () => {
     setProfilesSelected([]);
     setSelectedRowKeys([]);
     await dbSetLocally(storageProfiles, newData);
-    postAlert('Removed account', 'success');
+    Store.addNotification({
+      ...notification,
+      type: 'success',
+      message: 'Removed account',
+    });
     handleCloseDelete();
     getProfiles();
+  };
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
   return (
@@ -620,7 +646,79 @@ const ProfilesPage = () => {
       }}
     >
       <div className="-container-profiles">
-        <h1 className="-title-profiles">FACEBOOK AUTOMATION</h1>
+        <div className="profiles_header">
+          <h1 className="-title-profiles">FACEBOOK AUTOMATION</h1>
+          <div className="user">
+            <p className="user_noti">
+              Your subscription will be expired in <strong>3 days</strong>. <span>Pay now!</span>
+            </p>
+            <img
+              src={avatar}
+              alt="avatar"
+              aria-controls={open ? 'basic-menu' : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? 'true' : undefined}
+              onClick={handleClick}
+            />
+            <div>
+              <Menu
+                className="userMenu"
+                MenuListProps={{
+                  'aria-labelledby': 'basic-button',
+                }}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
+                }}
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+              >
+                <div className="userPopup MuiBox-root css-0">
+                  <div className="email">email@gmail.com</div>
+                  <div className="profileStatus">
+                    <img src={activeProfile} alt="icon active profile" />
+                    <span>99</span>
+                    <span>/100 profiles</span>
+                  </div>
+                  <div className="plan">
+                    <div className="textPlan">
+                      <p>Free trial</p>
+                      <p>Exp: 10/2/2024</p>
+                    </div>
+                    <div style={{ lineHeight: '45px' }}>
+                      <button className="btnUpgrade">Upgrade</button>
+                    </div>
+                  </div>
+                  {/* <div className="myProfile">
+                    <div className="img-user">
+                      <img src={myProfile} alt="icon my profile" />
+                    </div>
+                    <p>My profile</p>
+                  </div>
+                  <div className="payment">
+                    <div className="img-user">
+                      <img src={payment} alt="icon Payment history" />
+                    </div>
+                    <p>Payment history</p>
+                  </div> */}
+                  <div
+                    className="logout"
+                    onClick={async () => {
+                      await dbSetLocally(accessToken, null);
+                      return navigate('/login');
+                    }}
+                  >
+                    <div className="img-user">
+                      <img src={logout} alt="icon Log out" />
+                    </div>
+                    <p>Log out</p>
+                  </div>
+                </div>
+              </Menu>
+            </div>
+          </div>
+        </div>
         <div className="-nav-profiles">
           <div className="-subnav-profiles">
             <div className="-search-profiles">
@@ -663,16 +761,6 @@ const ProfilesPage = () => {
                   getProfiles();
                 }}
               ></PopupProfile>
-
-              <span
-                className="-option-profiles"
-                onClick={async () => {
-                  await dbSetLocally(accessToken, null);
-                  return navigate('/login');
-                }}
-              >
-                <img src={refresh} alt="image-refresh"></img>
-              </span>
             </div>
           </div>
           <div className="-btn-profiles">
@@ -683,7 +771,11 @@ const ProfilesPage = () => {
                   if (profilesSelected.length > 0) {
                     setOpenAddProxy((o) => !o);
                   } else {
-                    postAlert('Please select profile!');
+                    Store.addNotification({
+                      ...notification,
+                      type: 'warning',
+                      message: 'Please select profile!',
+                    });
                   }
                 }}
               >
@@ -696,7 +788,6 @@ const ProfilesPage = () => {
             <PopupAddProxy
               profilesSelected={profilesSelected}
               getProfiles={getProfiles}
-              postAlert={postAlert}
               dataProfiles={dataProfiles}
               openAddProxy={openAddProxy}
               handleCloseAdd={handleCloseAdd}
@@ -706,7 +797,6 @@ const ProfilesPage = () => {
               startScreen={'Home'}
               profilesSelected={profilesSelected}
               getProfiles={getProfiles}
-              postAlert={postAlert}
               dataProfiles={dataProfiles}
               openProxyManage={openProxyManage}
               handleCloseProxyManage={handleCloseProxyManage}
@@ -718,7 +808,11 @@ const ProfilesPage = () => {
                   if (profilesSelected.length > 0) {
                     setOpenDeleteProfile((o) => !o);
                   } else {
-                    postAlert('Please select profile!');
+                    Store.addNotification({
+                      ...notification,
+                      type: 'warning',
+                      message: 'Please select profile!',
+                    });
                   }
                 }}
               >
@@ -761,14 +855,11 @@ const ProfilesPage = () => {
           showSorterTooltip={false}
           rowClassName={(profile) => (profile.isPin ? 'editable-row pinned-row' : 'editable-row')}
           columns={columns}
-          dataSource={dataSearch.sort((x, y) => {
-            return x.isPin === y.isPin ? 0 : x ? -1 : 1;
-          })}
+          dataSource={dataSearch}
           scroll={{ x: 1000 }}
           pagination={false}
         />
       </div>
-      <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
     </div>
   );
 };

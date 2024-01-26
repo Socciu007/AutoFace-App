@@ -5,21 +5,18 @@ import SettingNormal from '../../components/SettingsComponent/SettingNormal/Sett
 import SettingAdvenced from '../../components/SettingsComponent/SettingAdvanced/SettingAdvenced';
 import SettingProxy from '../../components/SettingsComponent/SettingProxy/SettingProxy';
 import { storageSettings } from '../../common/const.config';
-import SnackbarApp from '../../components/Alert';
 import { v4 as uuidv4 } from 'uuid';
 import { dbGetLocally, dbSetLocally } from '../../sender';
 import DefaultSettings from '../../resources/defaultSettings.json';
-
+import { Store } from 'react-notifications-component';
+import notification from '../../resources/notification.json';
 const SettingsPage = ({ component, handleCloseSettings }) => {
-  console.log('component', component);
   const navigate = useNavigate();
   const [editProxy, setEditProxy] = useState(false);
   const [keyList, setKeyList] = useState(null);
   const [openProxyManage, setOpenProxyManage] = useState(false);
 
   const [settings, setSettings] = useState(DefaultSettings);
-  const [message, setMessage] = useState('');
-  const [statusMessage, setStatusMessage] = useState('warning');
 
   useEffect(() => {
     configSettings();
@@ -259,11 +256,12 @@ const SettingsPage = ({ component, handleCloseSettings }) => {
       });
       setSettings({ ...settings, proxies });
       setStatusMessage('success');
-      setMessage('Import proxies success!');
-      setTimeout(() => {
-        setMessage('');
-        setStatusMessage('warning');
-      }, 2000);
+
+      Store.addNotification({
+        ...notification,
+        type: 'success',
+        message: 'Import proxies success!',
+      });
     }
   };
 
@@ -289,22 +287,22 @@ const SettingsPage = ({ component, handleCloseSettings }) => {
       });
 
       if (listProxy.length == 0) {
-        setMessage('Malformed proxies!');
-        setTimeout(() => {
-          setMessage('');
-        }, 2000);
+        Store.addNotification({
+          ...notification,
+          type: 'warning',
+          message: 'Malformed proxies!',
+        });
       } else {
         const proxies = settings.proxies;
         const index = proxies.findIndex((e) => e.id == keyList);
         if (index >= 0) {
           proxies[index] = listProxy[0];
           setSettings({ ...settings, proxies });
-          setStatusMessage('success');
-          setMessage('Change proxies success!');
-          setTimeout(() => {
-            setMessage('');
-            setStatusMessage('warning');
-          }, 2000);
+          Store.addNotification({
+            ...notification,
+            type: 'success',
+            message: 'Change proxies success!',
+          });
         }
       }
     } else {
@@ -328,28 +326,29 @@ const SettingsPage = ({ component, handleCloseSettings }) => {
           }
         });
         if (listProxy.length == 0) {
-          setMessage('Malformed proxies!');
-          setTimeout(() => {
-            setMessage('');
-          }, 2000);
+          Store.addNotification({
+            ...notification,
+            type: 'warning',
+            message: 'Malformed proxies!',
+          });
         } else {
           const proxies = settings.proxies;
           listProxy.forEach((proxy) => {
             proxies.push(proxy);
           });
           setSettings({ ...settings, proxies });
-          setStatusMessage('success');
-          setMessage('Import proxies success!');
-          setTimeout(() => {
-            setMessage('');
-            setStatusMessage('warning');
-          }, 2000);
+          Store.addNotification({
+            ...notification,
+            type: 'success',
+            message: 'Import proxies success!',
+          });
         }
       } else {
-        setMessage('Please type proxies!');
-        setTimeout(() => {
-          setMessage('');
-        }, 2000);
+        Store.addNotification({
+          ...notification,
+          type: 'warning',
+          message: 'Please type proxies!',
+        });
       }
     }
   };
@@ -357,12 +356,11 @@ const SettingsPage = ({ component, handleCloseSettings }) => {
   const handleDeleteProxy = (id) => {
     const newProxies = settings.proxies.filter((e) => e.id !== id);
     setSettings({ ...settings, proxies: newProxies });
-    setStatusMessage('success');
-    setMessage('Delete proxies success!');
-    setTimeout(() => {
-      setMessage('');
-      setStatusMessage('warning');
-    }, 2000);
+    Store.addNotification({
+      ...notification,
+      type: 'success',
+      message: 'Delete proxies success!',
+    });
   };
 
   const onChangeProxy = (proxy, id) => {
@@ -470,7 +468,6 @@ const SettingsPage = ({ component, handleCloseSettings }) => {
           </div>
         </div>
       </div>
-      <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
     </div>
   );
 };

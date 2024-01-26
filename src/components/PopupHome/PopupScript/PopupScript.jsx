@@ -10,7 +10,8 @@ import { runScript } from '../../../services/runScript';
 import { dbGetLocally } from '../../../sender';
 import PopupSetting from '../PopupSetting/PopupSetting';
 import Dialog from '@mui/material/Dialog';
-import SnackbarApp from '../../Alert';
+import { Store } from 'react-notifications-component';
+import notification from '../../../resources/notification.json';
 const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOpenScripts, profilesSelected }) => {
   const typeScript = [
     {
@@ -32,8 +33,6 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
   const [contentArray, setContentArray] = useState([]);
   const [scriptSelected, setScriptSelected] = useState();
   const [listScript, setListScript] = useState([]);
-  const [message, setMessage] = useState('');
-  const [statusMessage, setStatusMessage] = useState('warning');
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const handleNavigateSettings = () => {
     setOpenSetting(true);
@@ -79,9 +78,14 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
   };
 
   const runScriptAuto = async () => {
-    if (scriptSelected) {
-      await runScript(profilesSelected, scriptSelected);
+    if (!scriptSelected) {
+      Store.addNotification({
+        ...notification,
+        type: 'warning',
+        message: 'Please choose script',
+      });
     }
+    await runScript(profilesSelected, scriptSelected);
   };
 
   const searchScript = (text) => {
@@ -103,7 +107,6 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
 
     if (noteStr.length > 100 && shot) {
       noteStr = `${note.slice(0, 100)}...`;
-      console.log(noteStr);
     }
     return noteStr;
   };
@@ -129,7 +132,6 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
   const rowSelection = {
     selectedRowKeys,
     onChange: (selectedRowKeys, selectedRows) => {
-      console.log(selectedRowKeys);
       setSelectedRowKeys(selectedRowKeys);
       if (selectedRows.length) {
         setScriptSelected(selectedRows[0]);
@@ -243,8 +245,7 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
                     <input onChange={(event) => searchScript(event.target.value)} placeholder="Search..."></input>
                   </div>
                 </div>
-                {/* <div className="-container-scripts__right__main__content">
-                    <div className="-container-scripts__right__main__content__table"> */}
+
                 <Table
                   rowSelection={{
                     ...rowSelection,
@@ -275,14 +276,11 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
                     })}
                   pagination={false}
                 ></Table>
-                {/* </div>
-                  </div> */}
               </div>
             </div>
           </div>
         </div>
       </div>
-      <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
     </Dialog>
   );
 };

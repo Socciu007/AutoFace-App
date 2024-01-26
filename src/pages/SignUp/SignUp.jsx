@@ -10,15 +10,13 @@ import IconEye from '../../assets/icons/icons-form/IconEye';
 import IconEyeSlash from '../../assets/icons/icons-form/IconEyeSlash';
 import { useTranslation } from 'react-i18next';
 import Loading from '../../components/loading/Loading';
-import SnackbarApp from '../../components/Alert';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import { apiCreateAccount } from '../../services/api_helper';
-
+import { Store } from 'react-notifications-component';
+import notification from '../../resources/notification.json';
 const SignUp = () => {
   const navigate = useNavigate();
-  const [message, setMessage] = useState('');
-  const [statusMessage, setStatusMessage] = useState('warning');
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation('translation');
   const [hasClickedButton, setHasClickedButton] = useState(false);
@@ -55,35 +53,38 @@ const SignUp = () => {
     setHasClickedButton(true);
   };
 
-  const postAlert = (message, status = 'warning', duration = 3000) => {
-    setStatusMessage(status);
-    setMessage(message);
-    setTimeout(() => {
-      setMessage('');
-      setStatusMessage('warning');
-    }, duration);
-  };
-
   const register = async (email, password, confirmPassword, phone) => {
     try {
       if (!values.acceptedPolicy) {
         return setHasClickedButton(true);
       }
       if (password !== confirmPassword) {
-        return postAlert(t('Passwords does not match.'));
+        Store.addNotification({
+          ...notification,
+          type: 'warning',
+          message: 'Passwords does not match.',
+        });
       }
       if (password.length >= 6 && password.length <= 32) {
         setLoading(true);
         const res = await apiCreateAccount(email, password, phone);
         console.log(res);
         if (res.success) {
-          postAlert(t('Account created successfully. Sign in to use AutoFace!'), 'success');
+          Store.addNotification({
+            ...notification,
+            type: 'success',
+            message: 'Account created successfully. Sign in to use AutoFace!',
+          });
           setTimeout(() => {
             navigateLogin();
           }, 2000);
         } else {
           if (res.errors.includes('email already exists')) {
-            postAlert(t('Email already exists'));
+            Store.addNotification({
+              ...notification,
+              type: 'warning',
+              message: 'Email already exists',
+            });
           } else {
             console.log(res.errors);
           }
@@ -331,7 +332,6 @@ const SignUp = () => {
       {/* <div className="login__banner">
         <LoginBanner></LoginBanner>
       </div> */}
-      <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
     </div>
   );
 };

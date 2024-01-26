@@ -47,15 +47,13 @@ import follower from '../../assets/icon/icon-follower.svg';
 import viewVideo from '../../assets/icon/icon-viewVideo.svg';
 import CreatePostGroup from '../../components/Group/Create_Post/CreatePost.jsx';
 import { storageScripts } from '../../common/const.config.js';
-import SnackbarApp from '../../components/Alert/index.jsx';
 import DefaultSciptSettings from '../../resources/defaultSciptSettings.json';
 import { dbGetLocally, dbSetLocally } from '../../sender';
 import { Store } from 'react-notifications-component';
+import notification from '../../resources/notification.json';
 const CreateScript = () => {
   const DnDFlowRef = useRef();
   const { state } = useLocation();
-  const [message, setMessage] = useState('');
-  const [statusMessage, setStatusMessage] = useState('warning');
   const [component, setComponent] = useState('default');
   const [nameScript, setNameScript] = useState('');
   const [noteScript, setNoteScript] = useState('');
@@ -71,18 +69,6 @@ const CreateScript = () => {
   const [currentSetup, setCurrentSetup] = useState(null);
   const [activeCategory, setActiveCategory] = useState(1);
   const navigate = useNavigate();
-  const notification = {
-    title: '',
-    message: '',
-    insert: 'top',
-    container: 'top-right',
-    animationIn: ['animate__animated animate__fadeIn'],
-    animationOut: ['animate__animated animate__fadeOut'],
-    dismiss: {
-      duration: 2000,
-      onScreen: true,
-    },
-  };
   useEffect(() => {
     setDefaultScript();
   }, [state]);
@@ -104,15 +90,6 @@ const CreateScript = () => {
     }
     setCurrentComponent(id);
     setComponent(component);
-  };
-
-  const postAlert = (message, status = 'warning', duration = 3000) => {
-    setStatusMessage(status);
-    setMessage(message);
-    setTimeout(() => {
-      setMessage('');
-      setStatusMessage('warning');
-    }, duration);
   };
 
   const handleDeleteNode = (id) => {
@@ -178,28 +155,22 @@ const CreateScript = () => {
         Store.addNotification({
           ...notification,
           type: 'success',
-          title: 'Success',
           message: 'Save script done!',
         });
-        // postAlert('Save script done!', 'success');
         handleReturnClick();
       } else {
         Store.addNotification({
           ...notification,
-          type: 'error',
-          title: 'Error',
+          type: 'danger',
           message: 'Save script fail!',
         });
-        // postAlert('Save script fail!', 'error');
       }
     } else {
       Store.addNotification({
         ...notification,
-        type: 'error',
-        title: 'Error',
+        type: 'warning',
         message: 'Enter name script!',
       });
-      // postAlert('Enter name script!');
     }
   };
 
@@ -604,7 +575,6 @@ const CreateScript = () => {
             </div>
           </div>
         </div>
-        <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
       </div>
     </>
   );

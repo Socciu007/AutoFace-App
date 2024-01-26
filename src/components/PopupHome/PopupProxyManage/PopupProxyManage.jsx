@@ -6,10 +6,10 @@ import refresh from '../../../assets/pictures/icon-refresh.png';
 import { Table } from 'antd';
 import { formatTimeDay } from '../../../services/utils';
 import { aesDecrypt } from '../../../services/crypto-js';
-import SnackbarApp from '../../Alert';
 import { storageProfiles } from '../../../common/const.config';
 import { dbSetLocally } from '../../../sender';
 import { Store } from 'react-notifications-component';
+import notification from '../../../resources/notification.json';
 const PopupProxyManage = ({
   openProxyManage,
   handleCloseProxyManage,
@@ -19,14 +19,11 @@ const PopupProxyManage = ({
   profilesSelected,
   getProfiles,
   dataProfiles,
-  postAlert,
 }) => {
   const [proxies, setProxies] = useState([]);
   const [dataSearch, setDataSearch] = useState([]);
   const [textSearch, setTextSearch] = useState('');
   const [selectedProxy, setSelectedProxy] = useState([]);
-  const [message, setMessage] = useState('');
-  const [statusMessage, setStatusMessage] = useState('warning');
 
   const generateProxyStr = (proxy) => {
     let proxyStr = `${proxy.host}:${proxy.port}${proxy.username && proxy.username != '' ? ':' + proxy.username : ''}${
@@ -97,10 +94,11 @@ const PopupProxyManage = ({
   const changeProxy = async () => {
     const listProxy = selectedProxy;
     if (listProxy.length < profilesSelected.length) {
-      setMessage(`Please select ${profilesSelected.length} proxy!`);
-      setTimeout(() => {
-        setMessage('');
-      }, 2000);
+      Store.addNotification({
+        ...notification,
+        type: 'warning',
+        message: `Please select ${profilesSelected.length} proxy!`,
+      });
     } else {
       for (let i = 0; i < profilesSelected.length; i++) {
         const res = await apiUpdateProfiles(profilesSelected[i].id, listProxy[i], profilesSelected[i].browserSource);
@@ -116,18 +114,10 @@ const PopupProxyManage = ({
       handleCloseProxyManage();
       setTimeout(() => {
         Store.addNotification({
-          type: 'success',
+          ...notification,
+          type: 'warning',
           message: 'The Account field is required',
-          insert: 'top',
-          container: 'top-right',
-          animationIn: ['animate__animated animate__fadeIn'],
-          animationOut: ['animate__animated animate__fadeOut'],
-          dismiss: {
-            duration: 2000,
-            onScreen: true,
-          },
         });
-        // postAlert(`Add proxy to profiles success!`, 'success', 4000);
       }, 500);
     }
   };
@@ -216,10 +206,11 @@ const PopupProxyManage = ({
                 <button
                   onClick={() => {
                     if (selectedProxy.length == 0) {
-                      setMessage('Please select proxies!');
-                      setTimeout(() => {
-                        setMessage('');
-                      }, 2000);
+                      Store.addNotification({
+                        ...notification,
+                        type: 'warning',
+                        message: 'Please select proxies!',
+                      });
                     } else if (!startScreen) {
                       handleAddProxyFromManager(selectedProxy);
                       handleCloseProxyManage();
@@ -276,7 +267,6 @@ const PopupProxyManage = ({
               </div>
             </div>
           </div>
-          <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
         </div>
       }
     </PopupComponent>

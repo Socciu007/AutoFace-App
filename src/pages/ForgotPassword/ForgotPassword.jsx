@@ -9,17 +9,16 @@ import IconEye from '../../assets/icons/icons-form/IconEye';
 import IconEyeSlash from '../../assets/icons/icons-form/IconEyeSlash';
 import { useTranslation } from 'react-i18next';
 import Loading from '../../components/loading/Loading';
-import SnackbarApp from '../../components/Alert';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Dialog from '@mui/material/Dialog';
 import close from '../../assets/icon/icon-close.svg';
 import loginImg from '../../assets/pictures/FB_ log in@4x 1.png';
 import { apiChangePass, apiCheckCode, apiSendCode } from '../../services/api_helper';
+import { Store } from 'react-notifications-component';
+import notification from '../../resources/notification.json';
 const ForgotPassword = () => {
   const navigate = useNavigate();
-  const [message, setMessage] = useState('');
-  const [statusMessage, setStatusMessage] = useState('warning');
   const [emailUser, setEmail] = useState('');
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
@@ -50,14 +49,22 @@ const ForgotPassword = () => {
   const handleClickConfirmCode = async () => {
     const reg = new RegExp('^[0-9]+$');
     if (code.length !== 6 || !reg.test(code)) {
-      return postAlert(t('Wrong code!'));
+      Store.addNotification({
+        ...notification,
+        type: 'warning',
+        message: 'Wrong code!',
+      });
     }
     setLoading(true);
     const res = await apiCheckCode(emailUser, code);
     if (res && res.success) {
       setValues({ ...values, newPass: true });
     } else {
-      return postAlert(t('Wrong code!'));
+      Store.addNotification({
+        ...notification,
+        type: 'warning',
+        message: 'Wrong code!',
+      });
     }
     setLoading(false);
   };
@@ -96,15 +103,6 @@ const ForgotPassword = () => {
     setValues({ ...values, option: value });
   };
 
-  const postAlert = (message, status = 'warning', duration = 3000) => {
-    setStatusMessage(status);
-    setMessage(message);
-    setTimeout(() => {
-      setMessage('');
-      setStatusMessage('warning');
-    }, duration);
-  };
-
   const sendCodeToEmail = async (email) => {
     setEmail(email);
     setLoading(true);
@@ -113,9 +111,17 @@ const ForgotPassword = () => {
       handleConfirmClick();
       setSeconds(30);
     } else if (res.errors.includes('email does not exist')) {
-      postAlert(t('Email does not exists'));
+      Store.addNotification({
+        ...notification,
+        type: 'warning',
+        message: 'Email does not exists',
+      });
     } else {
-      postAlert(t('Sending code via email failed!'));
+      Store.addNotification({
+        ...notification,
+        type: 'warning',
+        message: 'Sending code via email failed!',
+      });
     }
     setLoading(false);
   };
@@ -124,12 +130,20 @@ const ForgotPassword = () => {
     setLoading(true);
     const res = await apiChangePass(emailUser, code, password);
     if (res && res.success) {
-      postAlert(t('Change password successfully. Please Sign In again!'), 'success');
+      Store.addNotification({
+        ...notification,
+        type: 'success',
+        message: 'Change password successfully. Please Sign In again!',
+      });
       setTimeout(() => {
         navigateLogin();
       }, 2000);
     } else {
-      postAlert(t('Change password failed. Please try again!'));
+      Store.addNotification({
+        ...notification,
+        type: 'danger',
+        message: 'Change password failed. Please try again!',
+      });
     }
     setLoading(false);
   };
@@ -333,7 +347,11 @@ const ForgotPassword = () => {
                 onSubmit={async (values) => {
                   const { password, confirmPassword } = values;
                   if (password !== confirmPassword) {
-                    postAlert(t('Passwords do not match.'));
+                    Store.addNotification({
+                      ...notification,
+                      type: 'warning',
+                      message: 'Passwords do not match.',
+                    });
                     return;
                   }
                   await changePassword(password);
@@ -428,8 +446,6 @@ const ForgotPassword = () => {
           <img src={loginImg} alt="Login img" />
         </div>
       </div>
-
-      <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
     </div>
   );
 };

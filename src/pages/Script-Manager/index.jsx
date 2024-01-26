@@ -40,11 +40,13 @@ import likeCommentNode from '../../components/nodes/likeComment';
 import followerNode from '../../components/nodes/follower';
 import viewVideoNode from '../../components/nodes/viewVideo';
 import createPostGroupNode from '../../components/nodes/createPostGroup';
-import SnackbarApp from '../../components/Alert';
 import { v4 as uuidv4 } from 'uuid';
 import { dbGetLocally, dbSetLocally } from '../../sender';
 import { Table, Tooltip } from 'antd';
+import Button from '@mui/material/Button';
 import { formatTimeDay } from '../../services/utils';
+import { Store } from 'react-notifications-component';
+import notification from '../../resources/notification.json';
 const nodeTypes = {
   startingPoint: startingPointNode,
   watchStory: watchStoryNode,
@@ -72,7 +74,6 @@ const ScriptManager = () => {
 
   // for style menu materials UI
   const menuStyle = {
-    // left: '1120px !important',
     boxShadow:
       '0px 5px 5px -3px rgb(233 232 232 / 20%), 0px 8px 10px 1px rgb(255 255 255 / 14%), 0px 3px 14px 2px rgb(241 232 232 / 12%)',
   };
@@ -112,14 +113,8 @@ const ScriptManager = () => {
   const overlay = {
     background: 'rgba(255,255,255,0.9)',
   };
-  const MuiBackdropRoot = {
-    padding: '30px 30px 10px 30px',
-  };
-
   const [isSystem, setIsSystem] = useState(false);
   const [contentArray, setContentArray] = useState([]);
-  const [message, setMessage] = useState('');
-  const [statusMessage, setStatusMessage] = useState('warning');
   const [listScript, setListScript] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
   const [itemSelect, setItemSelect] = useState(null);
@@ -164,15 +159,6 @@ const ScriptManager = () => {
     }
   };
 
-  const postAlert = (message, status = 'warning', duration = 3000) => {
-    setStatusMessage(status);
-    setMessage(message);
-    setTimeout(() => {
-      setMessage('');
-      setStatusMessage('warning');
-    }, duration);
-  };
-
   const searchScript = (text) => {
     let newScripts = [];
     if (text == '') {
@@ -203,7 +189,7 @@ const ScriptManager = () => {
     });
   };
   // Handle category button
-  const handleButtonClick = () => {
+  const handleButtonClick = (isSystem) => {
     let newList = contentArray.filter((e) => {
       if (!e.isSystem && isSystem) return true;
       return false;
@@ -296,6 +282,7 @@ const ScriptManager = () => {
     }
     return noteStr;
   };
+
   const columns = [
     {
       title: '#',
@@ -351,13 +338,13 @@ const ScriptManager = () => {
       width: 150,
     },
     {
-      width: 60,
+      width: 40,
       fixed: 'right',
       render: (script) => {
         return (
           <div>
             <div className="-expand-icon">
-              <p className="runScript">Run</p>
+              {/* <p className="runScript">Run</p> */}
               {/* <p className="stopScript">Stop</p> */}
               <img
                 src={option}
@@ -378,6 +365,7 @@ const ScriptManager = () => {
                   onClose={() => {
                     setItemSelect(null);
                   }}
+                  className="MenuScript"
                   MenuListProps={{
                     'aria-labelledby': 'basic-button',
                   }}
@@ -390,17 +378,28 @@ const ScriptManager = () => {
                     horizontal: 'left',
                   }}
                 >
-                  <MenuItem id={script.id} onClick={() => handleTogglePin(script.id)}>
+                  <div className="d-flex MuiBox-root css-0">
+                    <div className="dropList">
+                      <ul>
+                        <li id={script.id} onClick={() => handleTogglePin(script.id)}>
+                          {!script.isPin ? <p>Pin</p> : <p>Unpin</p>}
+                        </li>
+                        <li onClick={handleEditClick}>Edit</li>
+                        <li onClick={() => handleOptionClick('makeCopy')}>Duplicate</li>
+                        <li onClick={handleClose}>Rename</li>
+                        <li onClick={() => handleOptionClick('delete')}>Delete</li>
+                      </ul>
+                    </div>
+                    <div style={{ width: '60px', background: 'tranparent !important', display: 'inherit' }}></div>
+                  </div>
+                  {/* <MenuItem id={script.id} onClick={() => handleTogglePin(script.id)}>
                     {!script.isPin ? <p>Pin</p> : <p>Unpin</p>}
-                    {/* {script.isPin ? 'Unpin' : 'Pin'} */}
                   </MenuItem>
                   <MenuItem onClick={handleEditClick}>Edit</MenuItem>
-                  <MenuItem onClick={() => handleOptionClick('makeCopy')}>Make a copy</MenuItem>
+                  <MenuItem onClick={() => handleOptionClick('makeCopy')}>Duplicate</MenuItem>
                   <MenuItem onClick={handleClose}>Rename</MenuItem>
-                  <MenuItem onClick={() => handleOptionClick('delete')}>Delete</MenuItem>
+                  <MenuItem onClick={() => handleOptionClick('delete')}>Delete</MenuItem> */}
                 </Menu>
-
-                {/* </div> */}
               </div>
             </div>
           </div>
@@ -437,12 +436,22 @@ const ScriptManager = () => {
                 </span>
                 <p>Create a new script</p>
               </div>
-              <div className={!isSystem ? 'yourScript active' : 'yourScript'} onClick={handleButtonClick}>
+              <div
+                className={!isSystem ? 'yourScript active' : 'yourScript'}
+                onClick={() => {
+                  handleButtonClick(true);
+                }}
+              >
                 <img src={yourScriptBlue} alt="icon your script blue" />
                 <p>Your Scripts</p>
                 {!isSystem ? <img src={iconCheck} alt="icon check" /> : ''}
               </div>
-              <div className={!isSystem ? 'systemScript ' : 'systemScript active'} onClick={handleButtonClick}>
+              <div
+                className={!isSystem ? 'systemScript ' : 'systemScript active'}
+                onClick={() => {
+                  handleButtonClick(false);
+                }}
+              >
                 <img src={systemScript} alt="icon system scripts" />
                 <p>System’s Scripts</p>
                 {isSystem ? <img src={iconCheck} alt="icon check" /> : ''}
@@ -486,11 +495,19 @@ const ScriptManager = () => {
                 <button
                   onClick={async () => {
                     if (nameCoppy == '') {
-                      postAlert('Enter name script');
+                      Store.addNotification({
+                        ...notification,
+                        type: 'warning',
+                        message: 'Enter name script',
+                      });
                     } else {
                       coppyScript(itemSelect.id, nameCoppy);
                       handleCloseDialog('makeCopy');
-                      postAlert('Coppy script success', 'success');
+                      Store.addNotification({
+                        ...notification,
+                        type: 'success',
+                        message: 'Coppy script success',
+                      });
                     }
                   }}
                 >
@@ -519,7 +536,11 @@ const ScriptManager = () => {
                   onClick={() => {
                     deleteScript(itemSelect.id);
                     handleCloseDialog('delete');
-                    postAlert('Delete script success', 'success');
+                    Store.addNotification({
+                      ...notification,
+                      type: 'success',
+                      message: 'Delete script success',
+                    });
                   }}
                   className="deleteBtn"
                 >
@@ -529,7 +550,6 @@ const ScriptManager = () => {
             </div>
           </Dialog>
         </div>
-        <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
       </div>
     </>
   );

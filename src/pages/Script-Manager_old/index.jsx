@@ -35,7 +35,8 @@ import likeCommentNode from '../../components/nodes/likeComment';
 import followerNode from '../../components/nodes/follower';
 import viewVideoNode from '../../components/nodes/viewVideo';
 import createPostGroupNode from '../../components/nodes/createPostGroup';
-import SnackbarApp from '../../components/Alert';
+import { Store } from 'react-notifications-component';
+import notification from '../../../resources/notification.json';
 import { v4 as uuidv4 } from 'uuid';
 import { dbGetLocally, dbSetLocally } from '../../sender';
 const nodeTypes = {
@@ -107,8 +108,6 @@ const ScriptManagerOld = () => {
 
   const [isSystem, setIsSystem] = useState(false);
   const [contentArray, setContentArray] = useState([]);
-  const [message, setMessage] = useState('');
-  const [statusMessage, setStatusMessage] = useState('warning');
   const [listScript, setListScript] = useState([]);
   const [indexMenu, setIndexMenu] = useState(-1);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -153,15 +152,6 @@ const ScriptManagerOld = () => {
         setContentArray(script);
       }
     }
-  };
-
-  const postAlert = (message, status = 'warning', duration = 3000) => {
-    setStatusMessage(status);
-    setMessage(message);
-    setTimeout(() => {
-      setMessage('');
-      setStatusMessage('warning');
-    }, duration);
   };
 
   const searchScript = (text) => {
@@ -311,7 +301,11 @@ const ScriptManagerOld = () => {
                   <button
                     onClick={async () => {
                       await getScripts();
-                      postAlert('Reloaded Scripts!', 'success');
+                      Store.addNotification({
+                        ...notification,
+                        type: 'success',
+                        message: 'Reloaded Scripts!',
+                      });
                     }}
                     className="reload"
                   >
@@ -445,11 +439,19 @@ const ScriptManagerOld = () => {
                 <button
                   onClick={async () => {
                     if (nameCoppy == '') {
-                      postAlert('Enter name script');
+                      Store.addNotification({
+                        ...notification,
+                        type: 'warning',
+                        message: 'Enter name script',
+                      });
                     } else {
                       coppyScript(itemSelect.id, nameCoppy);
                       handleCloseDialog('makeCopy');
-                      postAlert('Coppy script success', 'success');
+                      Store.addNotification({
+                        ...notification,
+                        type: 'success',
+                        message: 'Coppy script success',
+                      });
                     }
                   }}
                 >
@@ -478,7 +480,11 @@ const ScriptManagerOld = () => {
                   onClick={() => {
                     deleteScript(itemSelect.id);
                     handleCloseDialog('delete');
-                    postAlert('Delete script success', 'success');
+                    Store.addNotification({
+                      ...notification,
+                      type: 'success',
+                      message: 'Delete script success',
+                    });
                   }}
                   className="deleteBtn"
                 >
@@ -488,7 +494,6 @@ const ScriptManagerOld = () => {
             </div>
           </Dialog>
         </div>
-        <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
       </div>
     </>
   );

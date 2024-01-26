@@ -298,12 +298,13 @@ export const createPost = (setting) => {
           }
         }
         // Click Post content
-        const PostBtn = await getElement(page, '#screen-root > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(3) > div > div > span');
-        if ((await checkExistElementOnScreen(page, '#screen-root > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(3) > div > div > span')) !== 0) {
-          await PostBtn.evaluate((el) => {
-            el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
-          },PostBtn);
-          await delay(2000);
+        let PostBtnSelector = '#screen-root > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(3) > div > div > span';
+        let PostBtn = await getElement(page, PostBtnSelector);
+                                              
+        if ((await checkExistElementOnScreen(page, PostBtnSelector)) !== 0) {
+          PostBtnSelector = '#screen-root > div > div >div:nth-child(1) > div:nth-child(3) > div > div > span  ';
+          PostBtn = await getElement(page, PostBtnSelector);
+          if(!PostBtn) return 0;
         }
         if (PostBtn) {
           await clickElement(PostBtn);

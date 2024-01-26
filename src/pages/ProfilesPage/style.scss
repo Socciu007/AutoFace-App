@@ -112,29 +112,43 @@
           background-color: rgba(1, 22, 43, 0.2); /* Màu của phần bên dưới thanh cuộn */
           border-radius: 5px;
         }
-        // @media (min-height: 719px) {
-        //   .ant-table-content {
-        //     min-height: 514px !important;
-        //   }
-        // }
-        // @media (min-height: 800px) {
-        //   .ant-table-content {
-        //     height: 670px;
-        //   }
-        // }
       }
       .ant-table-content > table {
         width: 100vw !important;
       }
     }
   }
-  .-title-profiles {
-    color: #01162b;
-    font-size: 25px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
+  .profiles_header {
+    display: flex;
+    justify-content: space-between;
+    .-title-profiles {
+      color: #01162b;
+      font-size: 25px;
+      font-weight: 700;
+    }
+    .user {
+      display: flex;
+      align-items: center;
+      .user_noti {
+        margin-right: 30px;
+        color: #01162b;
+        font-family: 'GoogleSans';
+        font-size: 15px;
+        font-weight: 400;
+        span {
+          color: #2a86ff;
+          font-family: 'GoogleSans';
+          font-size: 15px;
+          font-weight: 700;
+          cursor: pointer;
+        }
+      }
+      img {
+        filter: drop-shadow(0px 2px 5px rgba(1, 22, 43, 0.15));
+      }
+    }
   }
+
   .-nav-profiles {
     display: flex;
     justify-content: space-between;
@@ -189,7 +203,7 @@
     background-color: #f2f8ff;
   }
   .ant-table-wrapper {
-    height: calc(100vh - 170px);
+    height: calc(100vh - 190px);
   }
   .ant-spin-nested-loading,
   .ant-table-wrapper .ant-table-container {
@@ -293,6 +307,95 @@
     align-items: center;
     img {
       cursor: pointer;
+    }
+  }
+}
+.userMenu {
+  ul {
+    padding: 0 !important;
+  }
+  .userPopup {
+    width: 260px;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
+    padding: 12px;
+    .email,
+    .profileStatus {
+      text-align: center;
+    }
+    .profileStatus {
+      display: flex;
+      justify-content: center;
+      gap: 3px;
+      color: #000;
+      font-family: 'Visby Round CF';
+      font-size: 12px;
+      span:first-child {
+        font-weight: 500;
+      }
+      span:last-child {
+        opacity: 0.5;
+      }
+    }
+    .plan {
+      border-radius: 7px;
+      background: #f2f5fc;
+      height: 53px;
+      display: flex;
+      justify-content: space-between;
+      padding: 5px 20px;
+      margin: 5px 0;
+      .textPlan {
+        color: #000;
+        font-family: 'Visby Round CF';
+        p:first-child {
+          font-size: 15px;
+          font-weight: 700;
+        }
+        p:last-child {
+          font-size: 12px;
+          font-weight: 500;
+          opacity: 0.5;
+        }
+      }
+      .btnUpgrade {
+        border-radius: 15.5px;
+        background: #2a86ff;
+        box-shadow: 0px 3px 4.8px 0px rgba(1, 22, 43, 0.1);
+        display: inline-flex;
+        padding: 5px 12px;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        font-family: 'Visby Round CF';
+        font-size: 12px;
+        font-weight: 700;
+        border: 0;
+        cursor: pointer;
+      }
+    }
+    .myProfile,
+    .payment,
+    .logout {
+      display: flex;
+      margin: 15px 0;
+      gap: 15px;
+      .img-user {
+        width: 20px;
+        height: 20px;
+        border-radius: 5px;
+        background: #f2f5fc;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      p {
+        color: #000;
+        font-family: 'Visby Round CF';
+        font-size: 15px;
+        font-weight: 500;
+      }
     }
   }
 }

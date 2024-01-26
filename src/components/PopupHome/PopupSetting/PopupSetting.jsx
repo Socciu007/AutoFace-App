@@ -1,20 +1,8 @@
-import React, { useEffect, useState } from 'react';
-// import { useHistory } from 'react-router-dom';
-import closePopup from '../../../assets/pictures/icon-x.svg';
+import React from 'react';
 import './style.scss';
-import { storageProfiles, storageSettings } from '../../../common/const.config';
-import SnackbarApp from '../../Alert';
-import Editor from 'react-simple-code-editor';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
 import Dialog from '@mui/material/Dialog';
-import { createProfile, dbGetLocally, dbSetLocally } from '../../../sender';
-import { useNavigate } from 'react-router';
-import SettingNormal from '../../SettingsComponent/SettingNormal/SettingNormal';
-import SettingAdvenced from '../../SettingsComponent/SettingAdvanced/SettingAdvenced';
-import SettingProxy from '../../SettingsComponent/SettingProxy/SettingProxy';
 import SettingsPage from '../../../pages/SettingsPage/SettingsPage';
 
 const PopupSetting = ({ openSettings, handleCloseSettings }) => {

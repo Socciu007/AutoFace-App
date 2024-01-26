@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import closePopup from '../../../assets/pictures/icon-x.svg';
 import PopupComponent from '../PopupComponent/PopupComponent';
 import './style.scss';
-import SnackbarApp from '../../Alert';
 import { storageProfiles } from '../../../common/const.config';
 import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
@@ -11,6 +10,8 @@ import 'prismjs/components/prism-javascript';
 import { MenuItem, Select } from '@mui/material';
 import { dbSetLocally, updateProfile } from '../../../sender';
 import Dialog from '@mui/material/Dialog';
+import { Store } from 'react-notifications-component';
+import notification from '../../../resources/notification.json';
 const PopupAddProxy = ({
   profilesSelected,
   openAddProxy,
@@ -18,12 +19,9 @@ const PopupAddProxy = ({
   handleOpenProxyManage,
   dataProfiles,
   getProfiles,
-  postAlert,
 }) => {
   const [proxyType, setProxyType] = useState('http');
   const [proxyString, setProxyString] = useState('');
-  const [message, setMessage] = useState('');
-  const [statusMessage, setStatusMessage] = useState('warning');
   const handleWriteText = () => {
     document.getElementById('proxyString').focus();
   };
@@ -61,10 +59,11 @@ const PopupAddProxy = ({
         }
       });
       if (listProxy.length < profilesSelected.length) {
-        setMessage(`Enter all ${profilesSelected.length} proxies!`);
-        setTimeout(() => {
-          setMessage('');
-        }, 2000);
+        Store.addNotification({
+          ...notification,
+          type: 'warning',
+          message: `Enter all ${profilesSelected.length} proxies!`,
+        });
       } else {
         for (let i = 0; i < profilesSelected.length; i++) {
           const res = await updateProfile(profilesSelected[i].id, listProxy[i]);
@@ -79,18 +78,23 @@ const PopupAddProxy = ({
         getProfiles();
         handleCloseAdd();
         setTimeout(() => {
-          
-          postAlert(`Add proxy to profiles success!`, 'success', 4000);
+          Store.addNotification({
+            ...notification,
+            type: 'success',
+            message: 'Add proxy to profiles success!',
+          });
         }, 500);
       }
     } else {
-      setMessage('Please type proxies!');
-      setTimeout(() => {
-        setMessage('');
-      }, 2000);
+      Store.addNotification({
+        ...notification,
+        type: 'warning',
+        message: 'Please type proxies!',
+      });
     }
   };
   const makeCopy = {
+    background: '#fff',
     position: 'fixed',
     maxWidth: '100% !important',
     width: '1163px',
@@ -99,7 +103,6 @@ const PopupAddProxy = ({
     left: '50%',
     transform: ' translate(-50%, -50%)',
     borderRadius: '15px',
-    background: '#fff',
     boxShadow: '0px 4px 10px 0px rgba(8, 35, 106, 0.25)',
     flexShrink: '0',
     zIndex: '99999',
@@ -204,9 +207,7 @@ const PopupAddProxy = ({
             </div>
           </div>
         </div>
-        <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
       </div>
-      <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
     </Dialog>
   );
 };

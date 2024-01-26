@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import closePopup from '../../../assets/pictures/icon-x.svg';
 import './style.scss';
 import { storageProfiles } from '../../../common/const.config';
-import SnackbarApp from '../../Alert';
 import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
@@ -14,21 +13,8 @@ import Dialog from '@mui/material/Dialog';
 import { createProfile, dbGetLocally, dbSetLocally } from '../../../sender';
 import Loading from '../../loading/Loading';
 import { Store } from 'react-notifications-component';
-
+import notification from '../../../resources/notification.json';
 const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
-  const notification = {
-    title: 'Error!',
-    message: '',
-    type: 'danger',
-    insert: 'top',
-    container: 'top-right',
-    animationIn: ['animate__animated animate__fadeIn'],
-    animationOut: ['animate__animated animate__fadeOut'],
-    dismiss: {
-      duration: 2000,
-      onScreen: true,
-    },
-  };
   const initialValues = {
     text: [],
     option: 'http',
@@ -37,8 +23,7 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
     isTag: false,
     isProxy: false,
   };
-  // const [message, setMessage] = useState('');
-  // const [statusMessage, setStatusMessage] = useState('warning');
+
   const [loading, setLoading] = useState(false);
   const [values, setValues] = useState(initialValues);
   const [textContent, setTextContent] = useState('');
@@ -55,16 +40,16 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
     if (textContent == '') {
       Store.addNotification({
         ...notification,
+        type: 'warning',
         message: 'The Account field is required',
       });
-      // return postAlert('The Account field is required');
     }
     if (values.isTag && (!values.tag || values.tag.length == 0)) {
       Store.addNotification({
         ...notification,
+        type: 'warning',
         message: 'The Tag field is required',
       });
-      // return postAlert('The Tag field is required');
     }
 
     let newProfiles = [];
@@ -117,9 +102,9 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
     if (accounts.length > proxies.length && values.isProxy) {
       Store.addNotification({
         ...notification,
+        type: 'warning',
         message: 'The Proxy field is required',
       });
-      // return postAlert('The Proxy field is required');
     }
 
     if (accounts.length) {
@@ -158,20 +143,11 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
     } else {
       Store.addNotification({
         ...notification,
+        type: 'warning',
         message: 'The Account field is required',
       });
-      // return postAlert('The Account field is required');
     }
   };
-
-  // const postAlert = (message, status = 'warning', duration = 360000) => {
-  //   setStatusMessage(status);
-  //   setMessage(message);
-  //   setTimeout(() => {
-  //     setMessage('');
-  //     setStatusMessage('warning');
-  //   }, duration);
-  // };
 
   const hightlightWithLineNumbers = (input, language, content) =>
     highlight(input, language)
@@ -382,7 +358,6 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
           </div>
         </div>
       </Dialog>
-      {/* <SnackbarApp autoHideDuration={360000} text={message} status={statusMessage}></SnackbarApp> */}
     </>
   );
 };

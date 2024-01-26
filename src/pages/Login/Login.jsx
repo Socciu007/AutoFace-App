@@ -10,14 +10,14 @@ import IconEyeSlash from '../../assets/icons/icons-form/IconEyeSlash';
 import { useTranslation } from 'react-i18next';
 import Loading from '../../components/loading/Loading';
 import { login } from '../../sender';
-import SnackbarApp from '../../components/Alert';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import loginImg from '../../assets/pictures/FB_ log in@4x 1.png';
+import { Store } from 'react-notifications-component';
+import notification from '../../resources/notification.json';
 const Login = () => {
   const navigate = useNavigate();
-  const [message, setMessage] = useState('');
-  const [statusMessage, setStatusMessage] = useState('warning');
+
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation('translation');
@@ -37,14 +37,7 @@ const Login = () => {
   const hiddenPassword = () => {
     setShowPass(false);
   };
-  const postAlert = (message, status = 'warning', duration = 3000) => {
-    setStatusMessage(status);
-    setMessage(message);
-    setTimeout(() => {
-      setMessage('');
-      setStatusMessage('warning');
-    }, duration);
-  };
+
   const handelLogin = async (email, password) => {
     try {
       if (password.length >= 6 && password.length <= 32) {
@@ -54,9 +47,17 @@ const Login = () => {
         if (res && res.code == 1) {
           navigateHome();
         } else if (res.errors.includes('email does not exist')) {
-          postAlert(t('Email does not exist. Please sign up'));
+          Store.addNotification({
+            ...notification,
+            type: 'warning',
+            message: 'Email does not exist. Please sign up',
+          });
         } else {
-          postAlert(t('Invalid email or password'));
+          Store.addNotification({
+            ...notification,
+            type: 'warning',
+            message: 'Invalid email or password',
+          });
         }
       }
       setLoading(false);
@@ -210,7 +211,6 @@ const Login = () => {
       {/* <div className="login__banner">
         <LoginBanner></LoginBanner>
       </div> */}
-      <SnackbarApp autoHideDuration={2000} text={message} status={statusMessage}></SnackbarApp>
     </div>
   );
 };

@@ -6,7 +6,7 @@ body {
 .wrapper {
   height: 100vh;
   .script-manager {
-    min-width: 1280px ;
+    min-width: 1280px;
     height: 100vh;
     border: 1px;
     padding: 30px 30px 10px 30px;
@@ -108,7 +108,7 @@ body {
         border-radius: 15px;
         background: #fff;
         box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
-        scrollbar-width: thin ;
+        scrollbar-width: thin;
       }
       .scrollable-container::-webkit-scrollbar {
         width: 5px;
@@ -266,7 +266,6 @@ body {
       img {
         padding: 0 10px;
       }
-      // float: right;
       .runScript {
         border-radius: 5px;
         background: #34c38f;
@@ -294,6 +293,12 @@ body {
         cursor: pointer;
       }
     }
+    // .menuItem {
+    //   margin-right: 20px;
+    //   max-width: 250px;
+    //   min-width: 120px;
+    //   padding: 20px;
+    // }
 
     .hide {
       display: none;
@@ -303,7 +308,33 @@ body {
     }
   }
 }
-
+.d-flex {
+  display: flex !important;
+}
+.MenuScript {
+  .css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
+    background-color: transparent;
+  }
+  .dropList {
+    max-width: 250px;
+    min-width: 150px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 3px 8px rgb(8 35 104 / 20%);
+    ul {
+      padding: 5px 12px;
+    }
+    ul > li {
+      list-style: none;
+      padding: 8px 8px;
+      border-bottom: 1px solid rgba(1, 22, 43, 0.1);
+      cursor: pointer;
+    }
+    ul > li:last-child {
+      border-bottom: 0;
+    }
+  }
+}
 .dndflow {
   flex-direction: column;
   display: flex;
