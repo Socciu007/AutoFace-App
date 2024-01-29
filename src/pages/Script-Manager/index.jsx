@@ -265,7 +265,7 @@ const ScriptManager = () => {
   };
 
   // Handle toggle menu
-  const open = anchorEl ? true : false;
+  // const open = anchorEl ? true : false;
   const handleClick = (event, script) => {
     setAnchorEl(event.currentTarget);
     setItemSelect(script);
@@ -454,7 +454,6 @@ const ScriptManager = () => {
               showSorterTooltip={false}
               pagination={false}
               dataSource={listScripts}
-              scroll={{ x: 1600 }}
               rowClassName={(profile) => (profile.isPin ? 'pinned-row' : '')}
             />
           </div>
@@ -491,6 +490,7 @@ const ScriptManager = () => {
                         message: 'Enter name script',
                       });
                     } else {
+                      console.log(itemSelect);
                       coppyScript(itemSelect.id, nameCoppy);
                       handleCloseDialog('makeCopy');
                       Store.addNotification({
@@ -524,6 +524,7 @@ const ScriptManager = () => {
                 <button onClick={() => handleCloseDialog('delete')}>Cancel</button>
                 <button
                   onClick={() => {
+                    console.log(listScripts);
                     deleteScript(itemSelect.id);
                     handleCloseDialog('delete');
                     Store.addNotification({

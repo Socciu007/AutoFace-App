@@ -306,6 +306,7 @@ export const createPost = (setting) => {
           PostBtn = await getElement(page, PostBtnSelector);
           if(!PostBtn) return 0;
         }
+        await delay(5000);
         if (PostBtn) {
           await clickElement(PostBtn);
           console.log('Da click post');

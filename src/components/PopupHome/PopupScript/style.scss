@@ -262,6 +262,7 @@
               cursor: pointer;
             }
           }
+
           .ant-table-wrapper {
             margin-top: 7px;
           }
@@ -288,8 +289,6 @@
                   top: 0px;
                   tr {
                     background: #f2f8ff;
-
-                    // opacity: 0.3;
                     th.ant-table-cell {
                       background: #f2f8ff;
                     }
@@ -300,7 +299,7 @@
                       background: #f2f8ff;
 
                       color: rgba(1, 22, 43, 0.6);
-                      font-family: GoogleSans;
+                      font-family: 'GoogleSans';
                       min-height: 50px;
                       padding-bottom: 10px;
                       padding-top: 10px;
@@ -324,10 +323,8 @@
                   td.ant-table-cell {
                     font-size: 15px;
                     line-height: normal;
-                    font-family: GoogleSans;
+                    font-family: 'GoogleSans';
                     min-height: 50px;
-                    // padding-bottom: 10px;
-                    // padding-top: 10px;
                     vertical-align: middle;
                   }
                   tr.ant-table-row-selected {
@@ -339,6 +336,12 @@
                   tr.ant-table-row.ant-table-row-level-0:hover {
                     background: #f2f8ff !important;
                   }
+                  .pinned-row {
+                    background-color: #fffbea;
+                  }
+                }
+                .ant-table-tbody .ant-table-row.ant-table-row-selected > .ant-table-cell-row-hover {
+                  background: #f2f8ff !important;
                 }
               }
               .ant-table-content::-webkit-scrollbar {

@@ -60,11 +60,11 @@ const Post_Interaction = ({ onGoBackClick, id, updateDesignScript, currentSetup,
   };
 
   const changePostPerUserStart = (post) => {
-    setValues({ ...values, postPerUserStart: parseToNumber(post) });
+    setValues({ ...values, postStart: parseToNumber(post) });
   };
 
   const changePostPerUserEnd = (post) => {
-    setValues({ ...values, postPerUserEnd: parseToNumber(post) });
+    setValues({ ...values, postEnd: parseToNumber(post) });
   };
 
   const changeLike = (value) => {
@@ -156,7 +156,7 @@ const Post_Interaction = ({ onGoBackClick, id, updateDesignScript, currentSetup,
                     <span>1</span>Enter the content here
                   </p>
                   <p>
-                    <span>2</span>Each content/line
+                    <span>2</span>Each UID | Post UID list per line
                   </p>
                 </div>
               </div>
@@ -273,28 +273,28 @@ const Post_Interaction = ({ onGoBackClick, id, updateDesignScript, currentSetup,
             </div>
 
             <div className="component-item numberPostOrUser">
-              <p className="component-item__header">Number of posts/user:</p>
+              <p className="component-item__header">Number of posts:</p>
               <div className="component-item__number">
                 <div className="component-item__number__icon">
                   <img
                     src={iconIncrease}
                     alt="Increase icon"
                     onClick={() => {
-                      changePostPerUserStart(values.postPerUserStart + 1);
+                      changePostPerUserStart(values.postStart + 1);
                     }}
                   />
                   <img
                     src={iconDecrease}
                     alt="Decrease icon"
                     onClick={() => {
-                      changePostPerUserStart(values.postPerUserStart - 1);
+                      changePostPerUserStart(values.postStart - 1);
                     }}
                   />
                 </div>
                 <input
                   type="text"
                   name="Start"
-                  value={values.postPerUserStart}
+                  value={values.postStart}
                   onChange={(event) => changePostPerUserStart(event.target.value)}
                 />
               </div>
@@ -305,21 +305,21 @@ const Post_Interaction = ({ onGoBackClick, id, updateDesignScript, currentSetup,
                     src={iconIncrease}
                     alt="Increase icon"
                     onClick={() => {
-                      changePostPerUserEnd(values.postPerUserEnd + 1);
+                      changePostPerUserEnd(values.postEnd + 1);
                     }}
                   />
                   <img
                     src={iconDecrease}
                     alt="Decrease icon"
                     onClick={() => {
-                      changePostPerUserEnd(values.postPerUserEnd - 1);
+                      changePostPerUserEnd(values.postEnd - 1);
                     }}
                   />
                 </div>
                 <input
                   type="text"
                   name="End"
-                  value={values.postPerUserEnd}
+                  value={values.postEnd}
                   onChange={(event) => changePostPerUserEnd(event.target.value)}
                 />
               </div>

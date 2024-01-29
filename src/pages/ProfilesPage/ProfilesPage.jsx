@@ -318,14 +318,15 @@ const ProfilesPage = () => {
               renderColumns();
             }}
           >
-            <img src={options} alt="image-option"></img>
+            {/* <img src={options} alt="image-option"></img> */}
             <Popover
               open={rowID == profile.id}
               trigger="click"
+              onOpenChange={handleCloseAction}
               onClose={handleCloseAction}
               placement="rightTop"
               content={
-                <div className="-popover-options" onMouseLeave={handleCloseAction}>
+                <div className="-popover-options">
                   <div
                     onClick={() => {
                       pinProfile(profile.id, data ? data : dataProfiles);
@@ -347,7 +348,9 @@ const ProfilesPage = () => {
                   </div>
                 </div>
               }
-            ></Popover>
+            >
+              <img src={options} alt="image-option"></img>
+            </Popover>
           </div>
         );
       },

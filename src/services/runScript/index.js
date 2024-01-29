@@ -56,7 +56,7 @@ export const runScript = async (profileSelected, scriptDesign) => {
     let node = nodes.find((node) => node.id == edges[0].target);
     while (node) {
       const script = scripts.find((e) => e.id == node.id);
-      if (script) arrfunction.push(script);
+      arrfunction.push(script);
       const edge = edges.find((e) => e.source == node.id);
       if (edge) {
         node = nodes.find((node) => node.id == edge.target);
@@ -71,9 +71,7 @@ export const runScript = async (profileSelected, scriptDesign) => {
       await new Promise.map(
         results[j],
         async (profile, index) => {
-          setTimeout(() => {
-            return false;
-          }, settings.maxTime * 1000);
+          await delay(settings.delayThread && settings.delayThread > 0 ? index * settings.delayThread * 1000 : 1000);
           let proxyStr = '';
           let proxy;
           let proxyConvert;
@@ -262,6 +260,7 @@ export const runScript = async (profileSelected, scriptDesign) => {
         }
         return false;
       } catch (error) {
+        logger(error);
         return false;
       }
     };
@@ -437,75 +436,85 @@ export const runScript = async (profileSelected, scriptDesign) => {
         return "";
       }
     };
-    try {
+ 
 
-      setTimeout(() => {
-        return false;
-      }, ${settings.maxTime} * 1000);
+      return new Promise(async (resolve) => {
+        try {
+      
+        setTimeout(async () => {
+          if(browser){
+            await browser.close();
+        }
+          resolve('Time out');
+        }, ${settings.maxTime} * 1000);
+       
 
-     browser = await puppeteer.launch({
-              executablePath: "${browserData.executablePath}",
-              devtools: false,
-              dumpio: true,
-              headless: false,
-              defaultViewport: null,
-              ignoreDefaultArgs: ${settings.muteAudio ? `["--mute-audio"]` : `""`},
-              args: [
-                "--user-data-dir=${browserData.pathProfile}",
-                ${proxyStr && proxyStr.length ? proxyStr : ''}
-                ${settings.showImage ? `"--blink-settings=imagesEnabled=false",` : ''}
-                "--hidemyacc-data=${browserData.data}",
-                "--disable-encryption",
-                "--restore-last-session",
-                "--donut-pie=undefined",
-                "--proxy-bypass-list=https://static.xx.fbcdn.net",
-                "--flag-switches-begin",
-                "--flag-switches-end",
-                "--window-size=360,640"
-              ]
-            });
-  
-            const pages = await browser.pages();
-            for(let i=1;i<pages.length;i++){
-              logger('Close page ' + i);
-              await pages[i].close();
-            }
-            const page = pages[0];
-            // await page.setBypassCSP(true);
-            // await page.setCacheEnabled(false);
-            // const session = await page.target().createCDPSession();
-            // await session.send("Page.enable");
-            // await session.send("Page.setWebLifecycleState", { state: "active" });
-            // let interval;
-            // interval = setInterval(async()=>{
-            //      const checkPage = await checkIsLive(page);
-            //       if (!checkPage){
-            //       if(interval)
-            //       clearInterval(interval);
-            //       return false;
-            //   }
-            // },2000);
+        browser = await puppeteer.launch({
+          executablePath: "${browserData.executablePath}",
+          devtools: false,
+          dumpio: true,
+          headless: false,
+          defaultViewport: null,
+          ignoreDefaultArgs: ${settings.muteAudio ? `["--mute-audio"]` : `""`},
+          args: [
+            "--user-data-dir=${browserData.pathProfile}",
+            ${proxyStr && proxyStr.length ? proxyStr : ''}
+            ${settings.showImage ? `"--blink-settings=imagesEnabled=false",` : ''}
+            "--hidemyacc-data=${browserData.data}",
+            "--disable-encryption",
+            "--restore-last-session",
+            "--donut-pie=undefined",
+            "--proxy-bypass-list=https://static.xx.fbcdn.net",
+            "--flag-switches-begin",
+            "--flag-switches-end",
+            "--window-size=360,640"
+          ]
+        });
 
-            const proxy = ${
-              proxyConvert && proxyConvert.host
-                ? `{
-              host:${JSON.stringify(proxyConvert.host)},
-              port:${proxyConvert.port} 
-            };`
-                : 'null'
-            } 
+        const pages = await browser.pages();
+        for(let i=1;i<pages.length;i++){
+          logger('Close page ' + i);
+          await pages[i].close();
+        }
+        let page = pages[0];
+        await page.setBypassCSP(true);
+        await page.setCacheEnabled(false);
+        const session = await page.target().createCDPSession();
+        await session.send("Page.enable");
+        await session.send("Page.setWebLifecycleState", { state: "active" });
+        let interval;
+        const proxy = ${
+          proxyConvert && proxyConvert.host
+            ? `{
+          host:${JSON.stringify(proxyConvert.host)},
+          port:${proxyConvert.port}
+        };`
+            : 'null'
+        } 
 
-            {${loginFacebook(profile)}}
-            ${getAllFunc(arrfunction)}
-           
-          } catch (error) {
-              logger(error);
-            } finally {
-              if(browser){
-                  await browser.close();
-              }
-            }
-            return true;
+        interval = setInterval(async()=>{
+          const checkPage = await checkIsLive(page);
+           if (!checkPage){
+           if(interval)
+           clearInterval(interval);
+           resolve('Page is close');
+       }
+     },2000);
+
+        {${loginFacebook(profile)}}
+        ${getAllFunc(arrfunction)}
+       
+      } catch (error) {
+          logger(error);
+        } finally {
+          if(browser){
+              await browser.close();
+          }
+        }
+        resolve('Done');
+      });
+
+     
       `;
 
               const result = await runProfile(strCode, profile.id);

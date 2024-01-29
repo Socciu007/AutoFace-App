@@ -115,10 +115,8 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
   const columnsScripts = [
     {
       title: 'Scripts',
-      // dataIndex: 'name',
       width: 300,
       render: (script) => {
-        console.log('script', script);
         return (
           <div className="pin">
             <span>{script.name}</span>
@@ -261,6 +259,7 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
                     ...rowSelection,
                     type: 'radio',
                   }}
+                  rowClassName={(script) => (script.isPin ? 'pinned-row' : '')}
                   onRow={(record, rowIndex) => {
                     return {
                       onClick: () => {

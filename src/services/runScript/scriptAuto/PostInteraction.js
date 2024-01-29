@@ -1,13 +1,12 @@
 export const postInteract = (setting) => {
-  console.log(setting);
   const strSetting = `{
       UID: ${JSON.stringify(setting.UID)},
       viewTimeStart: ${setting.viewTimeStart},
       viewTimeEnd: ${setting.viewTimeEnd},
       delayTimeStart: ${setting.delayTimeStart},
       delayTimeEnd: ${setting.delayTimeEnd},
-      postPerUserStart: ${setting.postPerUserStart},
-      postPerUserEnd: ${setting.postPerUserEnd},
+      postPerUserStart: ${setting.postStart},
+      postPerUserEnd: ${setting.postEnd},
       isLiked: ${setting.isLiked},
       likeStart: ${setting.likeStart},
       likeEnd: ${setting.likeEnd},
@@ -21,6 +20,7 @@ export const postInteract = (setting) => {
       text: ${JSON.stringify(setting.text)},
       lineCount: ${setting.lineCount},
     }`;
+  console.log(setting);
   return `
   const randomLike = async (page) => {
     try {
@@ -170,7 +170,9 @@ export const postInteract = (setting) => {
         logger('Đã chọn vùng comment');
         // comment
         let content = PostInteract.text;
+        logger('content ' + content);
         let randomString = content[getRandomIntBetween(1, content.length)];
+        logger('randomString ' + randomString);
         await delay(1000);
         await page.keyboard.type(randomString, { delay: 100 });
         await delay(1000);
@@ -193,43 +195,16 @@ export const postInteract = (setting) => {
     }
     return isClick;
   };
-  const scroll = async (page, PostInteract) => {
-    let randomScrollTime = getRandomIntBetween(8 * 1000, 12 * 1000);
-  
-    try {
-      while (randomScrollTime > 0) {
-        let scrollAmount = getRandomIntBetween(200, 400);
-        let randomDelay = getRandomIntBetween(PostInteract.delayTimeStart * 1000, PostInteract.delayTimeEnd * 1000);
-        // Lưu lại vị trí cuối cùng trước khi scroll
-        const positionBeforeScroll = await page.evaluate(() => window.scrollY);
-        await delay(2000);
-        await scrollByWheel(page, scrollAmount);
-        // Lưu lại vị trí cuối cùng sau khi scroll
-        await delay(2000);
-        const positionAfterScroll = await page.evaluate(() => window.scrollY);
-        await delay(randomDelay);
-        randomScrollTime = randomScrollTime - randomDelay;
-        // So sánh vị trí cuối cùng trước và sau scroll
-        if (positionBeforeScroll === positionAfterScroll) {
-          logger('Đã scroll xuống cuối trang.');
-          return false;
-        } else {
-          logger('Còn bài đăng để hiển thị.Tiếp tục scroll');
-        }
-      }
-      logger('Đã scroll xong');
-      return true;
-    } catch (error) {
-      logger(error);
-    }
-  };
-  const returnProfilePage = async (page, id) => {
+  const returnProfilePage = async (page, id, fbid) => {
     const url = await page.url();
-    if (url === 'https://m.facebook.com/profile.php/?id='+id || url.includes('https://m.facebook.com/profile.php/')) {
+    if (
+      url === 'https://m.facebook.com/story.php/?id='+id+'&story_fbid='+fbid' ||
+      url.includes('https://m.facebook.com/story.php/')
+    ) {
       logger('URL is correct');
     } else {
-      logger('Redirect to homepage');
-      await page.goto('https://m.facebook.com/profile.php/?id='+id, {
+      logger('Redirect to homepage profile');
+      await page.goto('https://m.facebook.com/story.php/?id='+id+'&story_fbid='+fbid', {
         waitUntil: 'networkidle2',
       });
     }
@@ -240,128 +215,110 @@ export const postInteract = (setting) => {
     let post = await checkObject(PostInteract);
     // check page is live reutrn -1, return 1, return 0
     const isLive = await checkIsLive(page);
-    logger('Tình trạng trang web:'+ isLive);
+    logger('Tình trạng trang web:', isLive);
     if (!isLive) return -1;
-    await returnHomePage(page);
+    // check is login: get cookie return -1, return 1, return 0
+    const isLoggedIn = await checkLogin(page);
+    logger('Tình trạng đăng nhập:', isLoggedIn);
+    if (!isLoggedIn) return -1;
+
+    let randomPost = getRandomIntBetween(post.postStart, post.postEnd);
+    logger('randomPost ' + randomPost);
+    let randomViewTime = getRandomIntBetween(post.viewTimeStart * 1000, post.viewTimeEnd * 1000);
     await delay(2000);
-  
-    for (let index = 0; index < post.lineCount; index++) {
-      await page.goto('https://m.facebook.com/profile.php/?id='+post.UID[index]);
-  
-      let randomPostPerUser = getRandomIntBetween(post.postPerUserStart, post.postPerUserEnd);
-      logger('randomPostPerUser ' + randomPostPerUser);
-      let randomViewTime = getRandomIntBetween(post.viewTimeStart * 1000, post.viewTimeEnd * 1000);
-      let countUID = 0;
-      await delay(2000);
-      let countPost = 1;
-      while (randomViewTime > 0 && countPost <= randomPostPerUser) {
-        const startTime = Date.now();
-  
-        let isScroll = await scroll(page, post);
-        logger('is scroll ' + isScroll);
-        let isBreak = false;
-        if (!isScroll) break;
-        if (post.isLiked == true) {
-          let count = 0;
-          let numLikes = getRandomIntBetween(post.likeStart, post.likeEnd);
-          logger('Cần like', numLikes, 'bài');
-          for (let i = 0; i < numLikes * 2; i++) {
-            try {
-              await returnProfilePage(page);
-              const result = await randomLike(page);
-              if (result) {
-                countPost++;
-                count++;
-                logger('Đã like được', count, 'bài');
-              } else {
-                logger('Like không thành công');
-              }
-              let isScroll = await scroll(page, post);
-              if (!isScroll) {
-                isBreak = true;
-                break;
-              }
-              if (count == numLikes || countPost > randomPostPerUser) break;
-            } catch (error) {
-              logger(error);
+    let countPost = 1;
+    let index = 0;
+    while (randomViewTime > 0 && countPost <= randomPost && post.lineCount > 0) {
+      const [id, fbid] = post.UID[index].split('|');
+      await page.goto('https://m.facebook.com/story.php/?id=s'+id+'&story_fbid='+fbid');
+
+      const startTime = Date.now();
+
+      if (post.isLiked == true) {
+        let count = 0;
+        let numLikes = getRandomIntBetween(post.likeStart, post.likeEnd);
+        logger('Cần like', numLikes, 'bài');
+        
+          try {
+            await returnProfilePage(page, id, fbid);
+            const result = await randomLike(page);
+            if (result) {
+              countPost++;
+              count++;
+              logger('Đã like được', count, 'bài');
+            } else {
+              logger('Like không thành công');
             }
+
+            if (count == numLikes || countPost > randomPost) break;
+            // await delay(getRandomIntBetween(2, 5) * 1000);
+          } catch (error) {
+            logger(error);
           }
-          if (isBreak) break;
-        }
-        await delay(2000);
-        if (post.isShare == true) {
-          let count = 0;
-          let numShares = getRandomIntBetween(post.shareStart, post.shareEnd);
-          logger('Cần share', numShares, 'bài');
-          for (let i = 0; i < numShares * 2; i++) {
-            try {
-              await returnProfilePage(page);
-  
-              const result = await randomShare(page);
-              if (result) {
-                countPost++;
-                count++;
-                logger('Đã share được', count, ' bài');
-              } else {
-                logger('Share không thành công');
-              }
-              let isScroll = await scroll(page, post);
-              if (!isScroll) {
-                isBreak = true;
-                break;
-              }
-              if (count == numShares || countPost > randomPostPerUser) break;
-            } catch (error) {
-              logger(error);
-            }
-          }
-          if (isBreak) break;
-        }
-        await delay(2000);
-        if (post.isComment == true && post.isText == true) {
-          if (!post.text.length) {
-            logger('Không thể comment với nội dung rỗng!');
-            return 0;
-          }
-          const numComments = getRandomIntBetween(post.commentStart, post.commentEnd);
-          logger('Cần comment', numComments, 'bài');
-          let count = 0;
-          for (let i = 0; i < numComments * 2; i++) {
-            try {
-              await returnProfilePage(page);
-  
-              const result = await randomComment(page, post);
-              if (result) {
-                countPost++;
-                count++;
-                logger('Đã comment được', count, 'bài');
-              } else {
-                logger('Comment không thành công');
-              }
-              let isScroll = await scroll(page, post);
-              if (!isScroll) {
-                isBreak = true;
-                break;
-              }
-              if (count == numComments || countPost > randomPostPerUser) break;
-            } catch (error) {
-              logger(error);
-            }
-          }
-        }
-        if (isBreak) break;
-  
-        const endTime = Date.now();
-        randomViewTime -= endTime - startTime;
-        logger('randomViewTime ' + randomViewTime);
-        logger('Timing running ' + (endTime - startTime));
-        logger('countPost ' + countPost);
+       
+       
       }
-  
-      countUID++;
+      await delay(2000);
+      if (post.isShare == true) {
+        let count = 0;
+        let numShares = getRandomIntBetween(post.shareStart, post.shareEnd);
+        logger('Cần share', numShares, 'bài');
+        
+          try {
+            await returnProfilePage(page, id, fbid);
+
+            const result = await randomShare(page);
+            if (result) {
+              countPost++;
+              count++;
+              logger('Đã share được', count, ' bài');
+            } else {
+              logger('Share không thành công');
+            }
+            if (count == numShares || countPost > randomPost) break;
+            // await delay(5000);
+          } catch (error) {
+            logger(error);
+          }
+        
+      }
+      await delay(2000);
+      if (post.isComment == true && post.isText == true) {
+        if (!post.text.length) {
+          logger('Không thể comment với nội dung rỗng!');
+          return 0;
+        }
+        const numComments = getRandomIntBetween(post.commentStart, post.commentEnd);
+        logger('Cần comment', numComments, 'bài');
+        let count = 0;
+        
+          try {
+            await returnProfilePage(page, id, fbid);
+
+            const result = await randomComment(page, post);
+            if (result) {
+              countPost++;
+              count++;
+              logger('Đã comment được', count, 'bài');
+            } else {
+              logger('Comment không thành công');
+            }
+            if (count == numComments || countPost > randomPost) break;
+            // await delay(1000);
+          } catch (error) {
+            logger(error);
+          }
+      }
+
+      const endTime = Date.now();
+      index++;
+      post.lineCount--;
+      randomViewTime -= endTime - startTime;
       let randomDelay = getRandomIntBetween(post.delayTimeStart * 1000, post.delayTimeEnd * 1000);
       await delay(randomDelay);
-      logger('Scroll het person thu ' + (index + 1));
+      logger('randomViewTime ' + randomViewTime);
+      logger('Timing running ' + (endTime - startTime));
+      logger('countPost ' + countPost);
     }
   } catch (error) {
     logger(error);
