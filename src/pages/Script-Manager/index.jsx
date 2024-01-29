@@ -302,12 +302,21 @@ const ScriptManager = () => {
       },
     },
     {
+      title: 'Status',
+      dataIndex: 'status',
+      sorter: (a, b) => !a.isPin && !b.isPin && a.status - b.status,
+      width: 100,
+    },
+    {
+      title: 'Tag',
+      dataIndex: 'tag',
+      sorter: (a, b) => !a.isPin && !b.isPin && a.tag - b.tag,
+      width: 150,
+    },
+    {
       title: 'Note',
       dataIndex: 'note',
       width: 280,
-      // ellipsis: {
-      //   showTitle: false,
-      // },
       render: (note) => (
         <Tooltip placement="topLeft" title={generateNoteStr(note, false)}>
           {generateNoteStr(note)}
@@ -324,18 +333,6 @@ const ScriptManager = () => {
         );
       },
       width: 200,
-    },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-      sorter: (a, b) => !a.isPin && !b.isPin && a.status - b.status,
-      width: 100,
-    },
-    {
-      title: 'Tag',
-      dataIndex: 'tag',
-      sorter: (a, b) => !a.isPin && !b.isPin && a.tag - b.tag,
-      width: 150,
     },
     {
       width: 40,
@@ -392,13 +389,6 @@ const ScriptManager = () => {
                     </div>
                     <div style={{ width: '60px', background: 'tranparent !important', display: 'inherit' }}></div>
                   </div>
-                  {/* <MenuItem id={script.id} onClick={() => handleTogglePin(script.id)}>
-                    {!script.isPin ? <p>Pin</p> : <p>Unpin</p>}
-                  </MenuItem>
-                  <MenuItem onClick={handleEditClick}>Edit</MenuItem>
-                  <MenuItem onClick={() => handleOptionClick('makeCopy')}>Duplicate</MenuItem>
-                  <MenuItem onClick={handleClose}>Rename</MenuItem>
-                  <MenuItem onClick={() => handleOptionClick('delete')}>Delete</MenuItem> */}
                 </Menu>
               </div>
             </div>

@@ -37,13 +37,13 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
 
   const addProfiles = async () => {
     if (loading) return;
-    if (textContent == '') {
-      Store.addNotification({
-        ...notification,
-        type: 'warning',
-        message: 'The Account field is required',
-      });
-    }
+    // if (textContent == '') {
+    //   Store.addNotification({
+    //     ...notification,
+    //     type: 'warning',
+    //     message: 'The Account field is required',
+    //   });
+    // }
     if (values.isTag && (!values.tag || values.tag.length == 0)) {
       Store.addNotification({
         ...notification,

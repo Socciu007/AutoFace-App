@@ -3,6 +3,7 @@ import PopupComponent from '../PopupComponent/PopupComponent';
 import closePopup from '../../../assets/pictures/icon-x.svg';
 import settings from '../../../assets/pictures/icon-settings.png';
 import search from '../../../assets/pictures/icon-search.svg';
+import pin from '../../../assets/icon/icon-pin.svg';
 import { Table, Tooltip } from 'antd';
 import './style.scss';
 import { storageScripts } from '../../../common/const.config';
@@ -114,8 +115,17 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
   const columnsScripts = [
     {
       title: 'Scripts',
-      dataIndex: 'name',
+      // dataIndex: 'name',
       width: 300,
+      render: (script) => {
+        console.log('script', script);
+        return (
+          <div className="pin">
+            <span>{script.name}</span>
+            {script.isPin ? <img src={pin} alt="Pin" className={'show'} /> : null}
+          </div>
+        );
+      },
     },
     {
       title: 'Notes',

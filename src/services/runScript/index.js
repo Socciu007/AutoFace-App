@@ -490,7 +490,7 @@ export const runScript = async (profileSelected, scriptDesign) => {
               proxyConvert && proxyConvert.host
                 ? `{
               host:${JSON.stringify(proxyConvert.host)},
-              port:${proxyConvert.port}
+              port:${proxyConvert.port} 
             };`
                 : 'null'
             } 

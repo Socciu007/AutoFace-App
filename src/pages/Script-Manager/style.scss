@@ -312,8 +312,8 @@ body {
   display: flex !important;
 }
 .MenuScript {
-  .css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
-    background-color: transparent;
+  .MuiMenu-paper.MuiPopover-paper {
+    background-color: transparent !important;
   }
   .dropList {
     max-width: 250px;
