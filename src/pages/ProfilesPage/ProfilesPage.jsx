@@ -58,7 +58,7 @@ const ProfilesPage = () => {
 
   const config = async () => {
     await checkSettings();
-    await getProfiles();
+    await getProfiles(true);
     await getUser();
   };
 
@@ -411,11 +411,14 @@ const ProfilesPage = () => {
     }
   }, [dataProfiles]);
 
-  const getProfiles = async () => {
+  const getProfiles = async (local = false) => {
     if (!loading) {
       loading = true;
       let profilesFromServer;
-      profilesFromServer = storageService.getSessionObject('profiles');
+      if (local) {
+        profilesFromServer = storageService.getSessionObject('profiles');
+      }
+
       if (!profilesFromServer) profilesFromServer = await getProfilesMarco();
       if (profilesFromServer && profilesFromServer.code) {
         storageService.setSessionObject('profiles', profilesFromServer);
@@ -436,7 +439,7 @@ const ProfilesPage = () => {
           );
         }
       }
-
+      storageService.setSessionObject('user', null);
       loading = false;
     }
   };
@@ -527,6 +530,7 @@ const ProfilesPage = () => {
 
   const handleReloadPage = async () => {
     await getProfiles();
+    await getUser();
     Store.addNotification({
       ...notification,
       type: 'success',
@@ -643,7 +647,8 @@ const ProfilesPage = () => {
       message: 'Removed account',
     });
     handleCloseDelete();
-    getProfiles();
+    await getProfiles();
+    await getUser();
   };
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -779,8 +784,9 @@ const ProfilesPage = () => {
               <PopupProfile
                 openProfiles={openProfiles}
                 handleCloseProfiles={handleCloseProfiles}
-                onAddProfile={() => {
-                  getProfiles();
+                onAddProfile={async () => {
+                  await getProfiles();
+                  await getUser();
                 }}
               ></PopupProfile>
             </div>
