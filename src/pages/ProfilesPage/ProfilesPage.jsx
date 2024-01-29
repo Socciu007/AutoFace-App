@@ -27,10 +27,12 @@ import PopupDeleteProfile from '../../components/PopupHome/PopupDeleteProfile/Po
 import PopupScript from '../../components/PopupHome/PopupScript/PopupScript';
 import { accessToken, storageDisplaySettings, storageProfiles, storageSettings } from '../../common/const.config';
 import PopupDisplaySetting from '../../components/PopupHome/PopupDisplaySetting/PopupDisplaySetting';
-import { dbGetLocally, dbSetLocally, deleteProfile, getProfilesMarco, runProfile } from '../../sender';
+import { dbGetLocally, dbSetLocally, deleteProfile, getMe, getProfilesMarco, runProfile } from '../../sender';
 import { Store } from 'react-notifications-component';
 import notification from '../../resources/notification.json';
 import { Menu } from '@mui/material';
+import storageService from '../../services/storage.service';
+import { formatTimeDay } from '../../services/utils';
 const ProfilesPage = () => {
   let rowID;
   let loading = false;
@@ -47,6 +49,7 @@ const ProfilesPage = () => {
   const [openDeleteProfile, setOpenDeleteProfile] = useState(false);
   const [openProxyManage, setOpenProxyManage] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -56,6 +59,17 @@ const ProfilesPage = () => {
   const config = async () => {
     await checkSettings();
     await getProfiles();
+    await getUser();
+  };
+
+  const getUser = async () => {
+    let userProfile;
+    userProfile = storageService.getSessionObject('user');
+    if (!userProfile) userProfile = await getMe();
+    if (userProfile && userProfile.code == 1) {
+      storageService.setSessionObject('user', userProfile);
+      setUser(userProfile.result);
+    }
   };
 
   const checkSettings = async () => {
@@ -400,8 +414,11 @@ const ProfilesPage = () => {
   const getProfiles = async () => {
     if (!loading) {
       loading = true;
-      const profilesFromServer = await getProfilesMarco();
+      let profilesFromServer;
+      profilesFromServer = storageService.getSessionObject('profiles');
+      if (!profilesFromServer) profilesFromServer = await getProfilesMarco();
       if (profilesFromServer && profilesFromServer.code) {
+        storageService.setSessionObject('profiles', profilesFromServer);
         let profiles = await dbGetLocally(storageProfiles);
         profiles = profiles.filter((e) => {
           const check = profilesFromServer.result.find((o) => o.id == e.id);
@@ -678,16 +695,16 @@ const ProfilesPage = () => {
                 onClose={handleClose}
               >
                 <div className="userPopup MuiBox-root css-0">
-                  <div className="email">email@gmail.com</div>
+                  <div className="email">{user ? user.email : ''}</div>
                   <div className="profileStatus">
                     <img src={activeProfile} alt="icon active profile" />
-                    <span>99</span>
-                    <span>/100 profiles</span>
+                    <span>{user ? user.profiles : ''}</span>
+                    <span>/{user ? user.plan.maxProfiles : ''} profiles</span>
                   </div>
                   <div className="plan">
                     <div className="textPlan">
-                      <p>Free trial</p>
-                      <p>Exp: 10/2/2024</p>
+                      <p>{user ? user.plan.name : ''}</p>
+                      <p>Exp: {user ? formatTimeDay(user.planExpireDate) : ''}</p>
                     </div>
                     <div style={{ lineHeight: '45px' }}>
                       <button className="btnUpgrade">Upgrade</button>
@@ -708,6 +725,8 @@ const ProfilesPage = () => {
                   <div
                     className="logout"
                     onClick={async () => {
+                      storageService.setSessionObject('profiles', null);
+                      storageService.setSessionObject('user', null);
                       await dbSetLocally(accessToken, null);
                       return navigate('/login');
                     }}
