@@ -63,13 +63,13 @@ const ProfilesPage = () => {
     const newData = [...dataSearch];
     profiles.forEach((e) => {
       const index = newData.findIndex((o) => o.id == e.id);
-      if (index >= 0) newData[index].status = e.status;
+      if (index >= 0) newData[index] = { ...newData[index], status: e.status };
     });
 
     const newDataSelected = [...profilesSelected];
     profiles.forEach((e) => {
       const index = newDataSelected.findIndex((o) => o.id == e.id);
-      if (index >= 0) newDataSelected[index].status = e.status;
+      if (index >= 0) newDataSelected[index] = { ...newDataSelected[index], status: e.status };
     });
     setDataSearch(newData);
     setProfilesSelected(newDataSelected);
@@ -420,7 +420,7 @@ const ProfilesPage = () => {
       });
       profiles.forEach((e) => {
         const index = newData.findIndex((o) => o.id == e.id);
-        if (index >= 0) newData[index].status = e.status;
+        if (index >= 0) newData[index] = { ...newData[index], status: e.status };
       });
       newData = newData.map((e) => {
         return { ...e, isPin: e.isPin ? true : false };

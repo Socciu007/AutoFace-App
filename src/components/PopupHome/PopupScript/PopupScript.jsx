@@ -13,7 +13,7 @@ import PopupSetting from '../PopupSetting/PopupSetting';
 import Dialog from '@mui/material/Dialog';
 import { Store } from 'react-notifications-component';
 import notification from '../../../resources/notification.json';
-import {  useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOpenScripts, profilesSelected }) => {
   const dispatch = useDispatch();
   const typeScript = [
@@ -71,7 +71,7 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
     if (scriptStr && scriptStr.length) {
       const script = JSON.parse(scriptStr);
       if (script && script.length) {
-        setContentArray(script);
+        setContentArray(script.reverse());
       }
     }
   };
