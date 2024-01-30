@@ -21,55 +21,13 @@ import iconCheck from '../../assets/icon/icon-checkBlue.svg';
 import systemScript from '../../assets/icon/icon-systemScript.svg';
 import running from '../../assets/icon/icon-running.svg';
 import { storageScripts } from '../../common/const.config';
-import ReactFlow, { ReactFlowProvider } from 'reactflow';
-import startingPointNode from '../../components/nodes/startingPoint';
-import watchStoryNode from '../../components/nodes/watchStory';
-import watchVideoNode from '../../components/nodes/watchVideo';
-import newsFeedNode from '../../components/nodes/newsfeed';
-import createPostNode from '../../components/nodes/createPost';
-import postInteractNode from '../../components/nodes/postInteract';
-import deletePostNode from '../../components/nodes/deletePost';
-import viewNotiNode from '../../components/nodes/viewNoti';
-import sendMsgNode from '../../components/nodes/sendMsg';
-import replyMsgNode from '../../components/nodes/replyMsg';
-import addFriendNode from '../../components/nodes/addFriend';
-import cancelFriendNode from '../../components/nodes/cancelFriend';
-import joinGroupNode from '../../components/nodes/joinGroup';
-import leftGroupNode from '../../components/nodes/leftGroup';
-import inviteGroupNode from '../../components/nodes/invite';
-import likeCommentNode from '../../components/nodes/likeComment';
-import followerNode from '../../components/nodes/follower';
-import viewVideoNode from '../../components/nodes/viewVideo';
-import createPostGroupNode from '../../components/nodes/createPostGroup';
 import { v4 as uuidv4 } from 'uuid';
-import { dbGetLocally, dbSetLocally, runProfile } from '../../sender';
+import { dbGetLocally, dbSetLocally } from '../../sender';
 import { Table, Tooltip } from 'antd';
-import Button from '@mui/material/Button';
 import { formatTimeDay } from '../../services/utils';
 import { Store } from 'react-notifications-component';
 import notification from '../../resources/notification.json';
 import { useSelector } from 'react-redux';
-const nodeTypes = {
-  startingPoint: startingPointNode,
-  watchStory: watchStoryNode,
-  watchVideo: watchVideoNode,
-  newsFeed: newsFeedNode,
-  createPost: createPostNode,
-  postInteract: postInteractNode,
-  deletePost: deletePostNode,
-  viewNoti: viewNotiNode,
-  sendMsg: sendMsgNode,
-  replyMsg: replyMsgNode,
-  addFriend: addFriendNode,
-  cancelFriend: cancelFriendNode,
-  joinGroup: joinGroupNode,
-  leftGroup: leftGroupNode,
-  inviteGroup: inviteGroupNode,
-  createPostGroup: createPostGroupNode,
-  likeComment: likeCommentNode,
-  follower: followerNode,
-  viewVideo: viewVideoNode,
-};
 
 const ScriptManager = () => {
   const navigate = useNavigate();
@@ -182,7 +140,7 @@ const ScriptManager = () => {
     if (scriptStr && scriptStr.length) {
       const script = JSON.parse(scriptStr);
       if (script && script.length) {
-        setContentArray(script);
+        setContentArray(script.reverse());
       }
     }
   };

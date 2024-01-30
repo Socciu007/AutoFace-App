@@ -85,11 +85,19 @@ export const loginFacebook = (account) => {
             await password.type(account.password, { delay: 100 });
             await delay(1000);
           }
+
+          const btnLogin = await getElement(page, '[name="login"]', 5);
+
+          if(btnLogin){
+            await btnLogin.click();
+            await delay(2000);
+          }
+
           await page.keyboard.press("Enter");
           await delay(10000);
           const login = await checkLogin(page);
           if (!login.isLogin) {
-            const inputCode = await getElement(page, '[id="approvals_code"]', 60);
+            const inputCode = await getElement(page, '[id="approvals_code"]', 20);
             if (inputCode) {
               const code = await toOTPCode(account.twoFA, proxy);
               await delay(2000);
@@ -112,10 +120,33 @@ export const loginFacebook = (account) => {
                 return { isLogin: false, error: "Dont get 2FA code" };
               }
             } else {
+
+              const allText = await getAllText(page);
+
+              if(!allText.includes(account.recoveryEmail.split("@")[1]))
+              {
+                const confirmButton = await getElement(page,'[id="checkpointSecondaryButton-actual-button"]', 5);
+                if(confirmButton){
+                  await confirmButton.click();
+
+                  const radioEmailbtn = await getElement(page,'[data-sigil="touchable"]', 5);
+                  if(radioEmailbtn){
+                    await radioEmailbtn.click();
+
+                    const continueBtn = await getElement(page,'[id="checkpointSubmitButton-actual-button"]', 5);
+                    if(continueBtn){
+                      await continueBtn.click();
+                    }
+
+                  }
+
+                }
+
+              }
               const confirmButton = await getElement(
                 page,
                 '[id="checkpointSubmitButton-actual-button"]',
-                15
+                25
               );
               if (confirmButton) {
                 await delay(1000);

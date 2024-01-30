@@ -66,6 +66,7 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
         accounts.push({
           uid,
           password,
+          isPin: false,
           recoveryEmail,
           recoveryPassword,
           cookies,

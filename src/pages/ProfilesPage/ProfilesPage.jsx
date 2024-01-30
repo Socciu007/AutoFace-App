@@ -63,15 +63,16 @@ const ProfilesPage = () => {
     const newData = [...dataSearch];
     profiles.forEach((e) => {
       const index = newData.findIndex((o) => o.id == e.id);
-      if (index >= 0) newData[index] = e;
+      if (index >= 0) newData[index].status = e.status;
     });
+
     const newDataSelected = [...profilesSelected];
     profiles.forEach((e) => {
       const index = newDataSelected.findIndex((o) => o.id == e.id);
-      if (index >= 0) newDataSelected[index] = e;
+      if (index >= 0) newDataSelected[index].status = e.status;
     });
-    setProfilesSelected(newDataSelected);
     setDataSearch(newData);
+    setProfilesSelected(newDataSelected);
   }, [profiles]);
 
   const config = async () => {
@@ -419,10 +420,12 @@ const ProfilesPage = () => {
       });
       profiles.forEach((e) => {
         const index = newData.findIndex((o) => o.id == e.id);
-        if (index >= 0) newData[index] = e;
+        if (index >= 0) newData[index].status = e.status;
+      });
+      newData = newData.map((e) => {
+        return { ...e, isPin: e.isPin ? true : false };
       });
       newData = newData.sort((x, y) => Number(y.isPin) - Number(x.isPin));
-
       setDataSearch(
         newData.map((e, index) => {
           return { ...e, key: index + 1 };
@@ -453,7 +456,6 @@ const ProfilesPage = () => {
         });
 
         if (profiles && profiles.length) {
-          profiles = profiles.sort((x, y) => Number(y.isPin) - Number(x.isPin));
           setDataProfiles(profiles);
           setDataSearch(
             profiles.map((e, index) => {
