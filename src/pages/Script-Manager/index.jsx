@@ -19,6 +19,7 @@ import yourScriptBlue from '../../assets/icon/icon-yourScriptsBlue.svg';
 import plus from '../../assets/pictures/icon-plus.png';
 import iconCheck from '../../assets/icon/icon-checkBlue.svg';
 import systemScript from '../../assets/icon/icon-systemScript.svg';
+import running from '../../assets/icon/icon-running.svg';
 import { storageScripts } from '../../common/const.config';
 import ReactFlow, { ReactFlowProvider } from 'reactflow';
 import startingPointNode from '../../components/nodes/startingPoint';
@@ -41,12 +42,13 @@ import followerNode from '../../components/nodes/follower';
 import viewVideoNode from '../../components/nodes/viewVideo';
 import createPostGroupNode from '../../components/nodes/createPostGroup';
 import { v4 as uuidv4 } from 'uuid';
-import { dbGetLocally, dbSetLocally } from '../../sender';
+import { dbGetLocally, dbSetLocally, runProfile } from '../../sender';
 import { Table, Tooltip } from 'antd';
 import Button from '@mui/material/Button';
 import { formatTimeDay } from '../../services/utils';
 import { Store } from 'react-notifications-component';
 import notification from '../../resources/notification.json';
+import { useSelector } from 'react-redux';
 const nodeTypes = {
   startingPoint: startingPointNode,
   watchStory: watchStoryNode,
@@ -119,10 +121,35 @@ const ScriptManager = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [itemSelect, setItemSelect] = useState(null);
   const [nameCoppy, setNameCoppy] = useState('');
+  const profiles = useSelector((state) => state.profile);
   useEffect(() => {
     getScripts();
   }, []);
 
+  useEffect(() => {
+    setListScript(mapStatus(listScript));
+  }, [profiles]);
+
+  const mapStatus = (newList) => {
+    const newArr = [...newList];
+    contentArray.forEach((e, index) => {
+      const total = profiles.filter((o) => o.script == e.id);
+      const scriptDone = profiles.filter((o) => o.script == e.id && o.status == 'ready');
+      newArr[index].status =
+        total.length > 0 ? (
+          <div className="statusRunning">
+            <img src={running} alt="run profile icon" />
+            <span>
+              <span className="profileRunning">{scriptDone.length}</span>
+              <span className="totalProfile"> / {total.length} profiles</span>
+            </span>
+          </div>
+        ) : (
+          ''
+        );
+    });
+    return newArr;
+  };
   useEffect(() => {
     if (!contentArray.length) return;
     reloadListScript();
@@ -139,6 +166,7 @@ const ScriptManager = () => {
     } else {
       newList = contentArray;
     }
+    newList = mapStatus(newList);
     newList = newList.sort((x, y) => Number(y.isPin) - Number(x.isPin));
     setListScript(newList);
   };
@@ -185,7 +213,7 @@ const ScriptManager = () => {
   // Handle the button edit
   const handleEditClick = () => {
     navigate('/create', {
-      state: itemSelect,
+      state: { ...itemSelect, status: '' },
     });
   };
   // Handle category button
@@ -198,17 +226,6 @@ const ScriptManager = () => {
     setIsSystem(!isSystem);
     setListScript(newList);
   };
-
-  const openCopy = Boolean(anchorEl);
-  const descriptionElementRef = React.useRef(null);
-  useEffect(() => {
-    if (openCopy) {
-      const { current: descriptionElement } = descriptionElementRef;
-      if (descriptionElement !== null) {
-        descriptionElement.focus();
-      }
-    }
-  }, [openCopy]);
 
   const [makeCopyDialogOpen, setMakeCopyDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -243,12 +260,13 @@ const ScriptManager = () => {
     }
   };
 
-  const handleOptionClick = (className) => {
+  const handleOptionClick = (className, script) => {
     if (className === 'makeCopy') {
       setMakeCopyDialogOpen(true);
     } else if (className === 'delete') {
       setDeleteDialogOpen(true);
     }
+    setItemSelect(script);
     handleClose();
   };
 
@@ -262,23 +280,23 @@ const ScriptManager = () => {
       await dbSetLocally(storageScripts, JSON.stringify(newArr));
     }
     setItemSelect(null);
+    handleClose();
   };
 
   // Handle toggle menu
-  // const open = anchorEl ? true : false;
+
   const handleClick = (event, script) => {
     setAnchorEl(event.currentTarget);
     setItemSelect(script);
   };
   const handleClose = () => {
     setAnchorEl(null);
-    setItemSelect(null);
   };
   const generateNoteStr = (note, shot = true) => {
     let noteStr = note && note.length ? `${note}` : '';
 
-    if (noteStr.length > 100 && shot) {
-      noteStr = `${note.slice(0, 100)}...`;
+    if (noteStr.length > 75 && shot) {
+      noteStr = `${note.slice(0, 75)}...`;
     }
     return noteStr;
   };
@@ -291,7 +309,7 @@ const ScriptManager = () => {
     },
     {
       title: 'Name',
-      width: 150,
+      width: 200,
       render: (script) => {
         return (
           <div className="pin">
@@ -304,8 +322,8 @@ const ScriptManager = () => {
     {
       title: 'Status',
       dataIndex: 'status',
-      sorter: (a, b) => !a.isPin && !b.isPin && a.status - b.status,
-      width: 100,
+      sorter: (a, b) => !a.isPin && !b.isPin && a.status.length - b.status.length,
+      width: 250,
     },
     {
       title: 'Tag',
@@ -332,7 +350,7 @@ const ScriptManager = () => {
           </div>
         );
       },
-      width: 200,
+      width: 100,
     },
     {
       width: 40,
@@ -350,15 +368,15 @@ const ScriptManager = () => {
                 onClick={(event) => {
                   handleClick(event, script);
                 }}
-                aria-expanded={open ? 'true' : 'false'}
-                aria-controls={open ? `basic-menu-${script.id}` : undefined}
+                // aria-expanded={open ? 'true' : 'false'}
+                // aria-controls={open ? `basic-menu-${script.id}` : undefined}
                 aria-haspopup="true"
               ></img>
               <div className={itemSelect && itemSelect.id === script.id ? 'script selected' : 'script'}>
                 <Menu
                   anchorEl={anchorEl}
                   id={`basic-menu-${script.id}`}
-                  open={itemSelect && itemSelect.id === script.id}
+                  open={itemSelect && itemSelect.id === script.id && anchorEl ? true : false}
                   onClose={() => {
                     setItemSelect(null);
                   }}
@@ -382,9 +400,9 @@ const ScriptManager = () => {
                           {!script.isPin ? <p>Pin</p> : <p>Unpin</p>}
                         </li>
                         <li onClick={handleEditClick}>Edit</li>
-                        <li onClick={() => handleOptionClick('makeCopy')}>Duplicate</li>
+                        <li onClick={() => handleOptionClick('makeCopy', script)}>Duplicate</li>
                         <li onClick={handleClose}>Rename</li>
-                        <li onClick={() => handleOptionClick('delete')}>Delete</li>
+                        <li onClick={() => handleOptionClick('delete', script)}>Delete</li>
                       </ul>
                     </div>
                     <div style={{ width: '60px', background: 'tranparent !important', display: 'inherit' }}></div>
@@ -524,7 +542,7 @@ const ScriptManager = () => {
                 <button onClick={() => handleCloseDialog('delete')}>Cancel</button>
                 <button
                   onClick={() => {
-                    console.log(listScripts);
+                    console.log(itemSelect);
                     deleteScript(itemSelect.id);
                     handleCloseDialog('delete');
                     Store.addNotification({

@@ -382,8 +382,8 @@
       margin: 15px 0;
       gap: 15px;
       .img-user {
-        width: 20px;
-        height: 20px;
+        width: 22.5px;
+        height: 22.5px;
         border-radius: 5px;
         background: #f2f5fc;
         display: inline-flex;
@@ -396,6 +396,9 @@
         font-size: 15px;
         font-weight: 500;
       }
+    }
+    .logout {
+      cursor: pointer;
     }
   }
 }

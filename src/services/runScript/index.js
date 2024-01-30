@@ -18,7 +18,7 @@ import { boostView } from './scriptAuto/BoostView';
 import { inviteGroup } from './scriptAuto/inviteGroup';
 import { joinGroup } from './scriptAuto/joinGroup';
 import { leftGroup } from './scriptAuto/leaveGroup';
-
+import { updateProfile, updateProfiles } from '../../redux/profileSlice';
 window.electron.ipcRenderer.on('ipc-logger', (...params) => {
   console.log(params[0]);
 });
@@ -32,7 +32,16 @@ const splitToChunks = (array, size) => {
   return results;
 };
 
-export const runScript = async (profileSelected, scriptDesign) => {
+export const runScript = async (profileSelected, scriptDesign, dispatch) => {
+  // set all profiles selected to waiting status
+  let newProfileSelected = profileSelected.map((profile) => {
+    profile.script = scriptDesign.id;
+    profile.status = 'waiting';
+    return profile;
+  });
+  dispatch(updateProfiles(newProfileSelected));
+  // ------
+
   const settings = await dbGetLocally(storageSettings);
   let thread = 1;
   if (!isNaN(settings.countProfile)) {
@@ -71,6 +80,9 @@ export const runScript = async (profileSelected, scriptDesign) => {
       await new Promise.map(
         results[j],
         async (profile, index) => {
+          // set profiledSelected running status
+          dispatch(updateProfile({ ...profile, status: 'running' }));
+          // --------------
           await delay(settings.delayThread && settings.delayThread > 0 ? index * settings.delayThread * 1000 : 1000);
           let proxyStr = '';
           let proxy;
@@ -116,7 +128,7 @@ export const runScript = async (profileSelected, scriptDesign) => {
 
     let browser;
     const logger = (...params) => {
-      event.reply("ipc-logger", ...params);
+      event.reply("ipc-logger",[${profile.uid},...params]);
     };
     
     const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -525,6 +537,7 @@ export const runScript = async (profileSelected, scriptDesign) => {
           } else {
             console.log('Connect proxy Fail!');
           }
+          dispatch(updateProfile({ ...profile, status: 'ready' }));
         },
         { concurrency: lengthThread },
       );

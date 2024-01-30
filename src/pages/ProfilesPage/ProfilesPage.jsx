@@ -33,7 +33,10 @@ import notification from '../../resources/notification.json';
 import { Menu } from '@mui/material';
 import storageService from '../../services/storage.service';
 import { formatTimeDay } from '../../services/utils';
+import { useSelector } from 'react-redux';
 const ProfilesPage = () => {
+  const profiles = useSelector((state) => state.profile);
+
   let rowID;
   let loading = false;
   const [columns, setColumns] = useState([]);
@@ -56,6 +59,21 @@ const ProfilesPage = () => {
     config();
   }, []);
 
+  useEffect(() => {
+    const newData = [...dataSearch];
+    profiles.forEach((e) => {
+      const index = newData.findIndex((o) => o.id == e.id);
+      if (index >= 0) newData[index] = e;
+    });
+    const newDataSelected = [...profilesSelected];
+    profiles.forEach((e) => {
+      const index = newDataSelected.findIndex((o) => o.id == e.id);
+      if (index >= 0) newDataSelected[index] = e;
+    });
+    setProfilesSelected(newDataSelected);
+    setDataSearch(newData);
+  }, [profiles]);
+
   const config = async () => {
     await checkSettings();
     await getProfiles(true);
@@ -65,7 +83,7 @@ const ProfilesPage = () => {
   const getUser = async () => {
     let userProfile;
     userProfile = storageService.getSessionObject('user');
-    if (!userProfile) userProfile = await getMe();
+    if (!userProfile || userProfile.code !== 1) userProfile = await getMe();
     if (userProfile && userProfile.code == 1) {
       storageService.setSessionObject('user', userProfile);
       setUser(userProfile.result);
@@ -399,7 +417,12 @@ const ProfilesPage = () => {
           }
         }
       });
+      profiles.forEach((e) => {
+        const index = newData.findIndex((o) => o.id == e.id);
+        if (index >= 0) newData[index] = e;
+      });
       newData = newData.sort((x, y) => Number(y.isPin) - Number(x.isPin));
+
       setDataSearch(
         newData.map((e, index) => {
           return { ...e, key: index + 1 };
@@ -547,7 +570,7 @@ const ProfilesPage = () => {
         Store.addNotification({
           ...notification,
           type: 'success',
-          message: `Profile ${check.profile} is ${check.status}!`,
+          message: `Profile ${check.uid} is ${check.status}!`,
         });
       }
     } else {
@@ -674,9 +697,9 @@ const ProfilesPage = () => {
         <div className="profiles_header">
           <h1 className="-title-profiles">FACEBOOK AUTOMATION</h1>
           <div className="user">
-            <p className="user_noti">
+            {/* <p className="user_noti">
               Your subscription will be expired in <strong>3 days</strong>. <span>Pay now!</span>
-            </p>
+            </p> */}
             <img
               src={avatar}
               alt="avatar"

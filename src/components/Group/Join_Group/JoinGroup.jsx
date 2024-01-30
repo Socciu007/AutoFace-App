@@ -11,19 +11,9 @@ import 'prismjs/components/prism-javascript';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import { parseToNumber } from '../../../services/utils.js';
+import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
 const JoinGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
-  const initialValues = {
-    groupStart: 5,
-    groupEnd: 10,
-    delayTimeStart: 5,
-    delayTimeEnd: 10,
-    isAutoAnswer: false,
-    option: 'suggestions',
-    text: [],
-    answer: [],
-    lineCount: 0,
-  };
-  const [values, setValues] = useState(initialValues);
+  const [values, setValues] = useState(DefaultSciptSettings['joinGroup']);
   const [answerContent, setAnswerContent] = useState('');
   const [textContent, setTextContent] = useState('');
 

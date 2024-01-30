@@ -132,6 +132,13 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
         const res = await createProfile(accounts[i].uid, proxy);
         if (res && res.code == 1) {
           newProfiles.push({ ...res.result, ...accounts[i] });
+        } else {
+          Store.addNotification({
+            ...notification,
+            type: 'danger',
+            message: 'Add account fail!',
+          });
+          break;
         }
       }
 

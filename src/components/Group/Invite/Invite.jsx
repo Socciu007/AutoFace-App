@@ -10,18 +10,10 @@ import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
 import { parseToNumber } from '../../../services/utils';
 const Invite = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
-  const initialValues = {
-    groupFriendsStart: 5,
-    groupFriendsEnd: 10,
-    delayTimeStart: 5,
-    delayTimeEnd: 10,
-    option: 'random',
-    lineCount: 0,
-    text: [],
-  };
-  const [values, setValues] = useState(initialValues);
+  const [values, setValues] = useState(DefaultSciptSettings['inviteGroup']);
   const [textContent, setTextContent] = useState('');
 
   useEffect(() => {

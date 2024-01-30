@@ -10,18 +10,10 @@ import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
+import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
 import { parseToNumber } from '../../../services/utils';
 const LeaveGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
-  const initialValues = {
-    groupStart: 5,
-    groupEnd: 10,
-    delayTimeStart: 5,
-    delayTimeEnd: 10,
-    member: 5,
-    text: [],
-    option: 'random',
-  };
-  const [values, setValues] = useState(initialValues);
+  const [values, setValues] = useState(DefaultSciptSettings['leftGroup']);
   const [textContent, setTextContent] = useState('');
 
   useEffect(() => {

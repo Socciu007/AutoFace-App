@@ -191,9 +191,8 @@ export const watchStory = (setting) => {
         while (countStory < numsStory) {
           await delay(getRandomIntBetween(7000, 15000));
           await goToStory(page);
-          const isPlayBtn = await checkExistElementOnScreens(
-            "div.inline-video-icon.play"
-          );
+          const playSelector = await page.$("div.inline-video-icon.play")
+          const isPlayBtn = await checkExistElementOnScreens(playSelector);
           if (isPlayBtn) {
             await clickElementRandom(page, "div.inline-video-icon.play", 0);
           } else {

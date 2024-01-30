@@ -242,28 +242,30 @@ body {
             font-size: 15px;
             font-weight: 700;
             line-height: normal;
-            background: #f2f8ff;
+            background: #f2f8ff !important;
             border-bottom: 1px solid #e0e0e0;
             color: rgba(1, 22, 43, 0.6);
-            font-family: GoogleSans;
+            font-family: 'GoogleSans';
             min-height: 50px;
-            // padding-bottom: 10px;
-            // padding-top: 10px;
             vertical-align: middle;
-            .ant-table-column-sorters {
-              display: inline;
-              span.ant-table-column-title {
-                margin-right: 5px;
-              }
-              span.ant-table-column-sorter-inner {
-                position: absolute;
-                top: 50%;
-                transform: translateY(-50%);
-              }
-            }
           }
         }
       }
+    }
+    .ant-table-column-sorters {
+      display: inline;
+      span.ant-table-column-title {
+        margin-right: 5px;
+      }
+      span.ant-table-column-sorter-inner {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
+    .ant-table-wrapper .ant-table-thead th.ant-table-column-has-sorters:focus-visible {
+      color: #333;
+      background-color: #f2f8ff !important;
     }
     .-expand-icon {
       display: flex;
@@ -302,6 +304,20 @@ body {
       align-items: center;
       img {
         cursor: pointer;
+      }
+    }
+    .statusRunning {
+      display: flex;
+      gap: 10px;
+      color: #01162b;
+      font-family: 'Google Sans';
+      font-size: 15px;
+      .profileRunning {
+        font-weight: 700;
+      }
+      .totalProfile {
+        font-weight: 400;
+        opacity: 0.5;
       }
     }
     .hide {

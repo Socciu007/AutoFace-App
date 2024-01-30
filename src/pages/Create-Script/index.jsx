@@ -516,7 +516,6 @@ const CreateScript = () => {
               <button onClick={handleReturnClick}>
                 <img src={back} alt="Return" />
               </button>
-              {/* {state && state.id ? <p>Edit {state.name}</p> : <p>Create a new script</p>} */}
               {state && state.id ? <p>Edit script</p> : <p>Create a new script</p>}
             </div>
           </div>

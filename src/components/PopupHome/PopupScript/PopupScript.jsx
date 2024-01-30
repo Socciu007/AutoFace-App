@@ -13,7 +13,9 @@ import PopupSetting from '../PopupSetting/PopupSetting';
 import Dialog from '@mui/material/Dialog';
 import { Store } from 'react-notifications-component';
 import notification from '../../../resources/notification.json';
+import {  useDispatch } from 'react-redux';
 const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOpenScripts, profilesSelected }) => {
+  const dispatch = useDispatch();
   const typeScript = [
     {
       title: 'All',
@@ -86,7 +88,8 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
         message: 'Please choose script',
       });
     }
-    await runScript(profilesSelected, scriptSelected);
+
+    await runScript(profilesSelected, scriptSelected, dispatch);
   };
 
   const searchScript = (text) => {

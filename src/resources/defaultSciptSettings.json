@@ -86,12 +86,12 @@
     "commentStart": 1,
     "commentEnd": 2,
     "text": [],
-    "lineCount": 3
+    "lineCount": 0
   },
   "deletePost": {
     "delayTimeStart": 5,
     "delayTimeEnd": 10,
-    "lineCount": 2,
+    "lineCount": 0,
     "text": [],
     "viewTimeStart": 60,
     "viewTimeEnd": 120
@@ -136,14 +136,15 @@
     "requestsEnd": 4
   },
   "joinGroup": {
-    "delayTimeEnd": 5,
-    "delayTimeStart": 3,
-    "groupEnd": 5,
-    "groupStart": 3,
+    "groupStart": 5,
+    "groupEnd": 10,
+    "delayTimeStart": 5,
+    "delayTimeEnd": 10,
     "isAutoAnswer": false,
     "option": "suggestions",
+    "text": [],
     "answer": [],
-    "text": []
+    "lineCount": 0
   },
   "leftGroup": {
     "groupEnd": 5,
@@ -160,7 +161,8 @@
     "delayTimeStart": 3,
     "delayTimeEnd": 5,
     "option": "suggestions",
-    "text": []
+    "text": [],
+    "lineCount": 0
   },
   "createPostGroup": {
     "postStart": 1,
@@ -177,7 +179,8 @@
     "numberFriendTagStart": 1,
     "numberFriendTagEnd": 2,
     "UID": [],
-    "UIDGroup": []
+    "UIDGroup": [],
+    "lineCount": 0
   },
   "likeComment": {
     "viewTimeStart": 5,

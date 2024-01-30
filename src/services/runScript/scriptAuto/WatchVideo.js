@@ -216,11 +216,10 @@ export const watchVideo = (setting) => {
   const checkUrlPage = async (page, urlText) => {
     try {
       await delay(getRandomIntBetween(5000, 10000));
-      const url = page.url();
+      const url = await page.url();
       if (url.includes(urlText)) return true;
       return false;
     } catch (error) {
-      logger(error.message);
       return false;
     }
   };

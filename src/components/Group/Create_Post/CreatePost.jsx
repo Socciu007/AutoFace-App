@@ -14,6 +14,7 @@ import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import { useDropzone } from 'react-dropzone';
 import { parseToNumber } from '../../../services/utils';
+import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
 const CreatePostGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
   const initialValues = {
     postStart: 1,
@@ -34,7 +35,7 @@ const CreatePostGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, 
     lineCount: 0,
   };
 
-  const [values, setValues] = useState(initialValues);
+  const [values, setValues] = useState(DefaultSciptSettings['createPostGroup']);
   const [textContent, setTextContent] = useState('');
   const [UIDContent, setUIDContent] = useState('');
   const [UIDGroupContent, setUIDGroupContent] = useState('');

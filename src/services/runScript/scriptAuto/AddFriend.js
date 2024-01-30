@@ -78,7 +78,7 @@ export const addFriend = (setting) => {
     );
     const addFriendSelector =
       "#screen-root > div > div:nth-child(2) > div > div.m.bg-s5 > div > div > div:nth-child(2)";
-    // scroll before click more button
+      // scroll before click more button
     let temp = getRandomIntBetween(3, 5);
     logger("số lần scroll " + temp);
     while (temp > 0) {
@@ -89,37 +89,51 @@ export const addFriend = (setting) => {
     let addBtns = await getElements(page, addFriendSelector, 5);
     if (addBtns.length < 1) return false;
     let isAdd = false;
+     let arr = [];
+    let newIndex = -1;
     for (let i = 0; i < addBtns.length; i++) {
+       if (newIndex > i) continue;
       addBtns = await getElements(page, addFriendSelector, 5);
       let randomIndex = getRandomInt(addBtns.length);
       const addId = await page.evaluate((el) => {
         return el.parentNode.getAttribute("data-action-id");
-      }, addBtns[randomIndex]);
+      }, addBtns[i]);
       if (!addId) continue;
-      logger("ID friend: " + addId);
       const addSelector = 'div[data-action-id="' + addId + '"]';
       const addBtn = await getElement(page, addSelector, 10);
       if (!addBtn) continue;
       const isOnScreen = await checkExistElementOnScreen(page, addSelector);
       if (isOnScreen == 0) {
-        await delay(1000);
-        await clickElement(addBtn);
-        await delay(randomDelay);
-        const rs = await clickAddBtn(page);
-        if (!rs) {
-          await delay(3000);
-          await clickReturn(page);
-          await delay(1000);
-          await scrollByWheel(page, getRandomIntBetween(300, 400));
-          continue;
+        if (arr.length == 3) {
+          newIndex = i;
+          break;
         }
-        await delay(3000);
-        await clickReturn(page);
-        await delay(1000);
-        isAdd = true;
-        break;
+        const addBtn = await getElement(page, addSelector, 10);
+        if (!addBtn) continue;
+        arr.push(addBtns[i]);
+        console.log("push to array");
       }
     }
+     if (arr.length == 0) return false;
+    let randomIndex = getRandomInt(arr.length);
+    await delay(1000);
+    await clickElement(arr[randomIndex]);
+    await delay(randomDelay);
+    const rs = await clickAddBtn(page);
+    if (!rs) {
+      await delay(3000);
+      await clickReturn(page);
+      logger("click return 1")
+
+      await delay(1000);
+      return isAdd;
+    }
+    await delay(3000);
+    await clickReturn(page);
+    logger("click return 2")
+
+    await delay(1000);
+    isAdd = true;
     return isAdd;
   } catch (error) {
     logger(error);
@@ -133,8 +147,15 @@ export const addFriend = (setting) => {
       const mutualElements = await getElements(page, isMutualSelector, 10);
       if (mutualElements.length < 1) return false;
       let isAdd = false;
+    let arr = [];
       for (let i = 0; i < mutualElements.length; i++) {
         let randomIndex = getRandomInt(mutualElements.length);
+              let index = arr.indexOf(randomIndex);
+      if (index == -1) {
+        arr.push(randomIndex);
+      } else {
+        continue;
+      }
         let confirmId = await page.evaluate((el) => {
           return el.parentNode.childNodes[4].getAttribute('data-action-id');
         }, mutualElements[randomIndex]);
@@ -539,6 +560,7 @@ export const addFriend = (setting) => {
         } else {
           return false;
         }
+        
       } else {
         logger("3");
         const moreBtn = await getElement(page, moreSelector, 3);
@@ -560,9 +582,13 @@ export const addFriend = (setting) => {
             logger('Add thành công');
             return true;
           } else {
+            await clickReturn(page);
+            logger("click return 3")
             return false;
           }
         } else {
+          await clickReturn(page);
+          logger("click return 4")
           return false;
         }
       }
@@ -608,7 +634,7 @@ export const addFriend = (setting) => {
     if (!isLive) {
       return -1;
     }
-    
+
     let numsAdd = getRandomIntBetween(addFriendObject.requestsStart, addFriendObject.requestsEnd);
     logger('Cần kết bạn với ' + numsAdd + ' người');
     let randomDelay = getRandomIntBetween(addFriendObject.delayTimeStart * 1000, addFriendObject.delayTimeEnd * 1000);
@@ -621,6 +647,14 @@ export const addFriend = (setting) => {
       if (!friendRequestBtn) return false;
       await clickElement(friendRequestBtn);
       await delay(randomDelay);
+            // scroll before click
+      let temp = getRandomIntBetween(13, 15);
+      while (temp > 0) {
+        await scrollByWheel(page, getRandomIntBetween(600, 700));
+        await delay(1000);
+        temp--;
+      }
+      
       for (let i = 0; i < numsAdd * 2; i++) {
         try {
           await delay(randomDelay);
@@ -688,13 +722,20 @@ export const addFriend = (setting) => {
       const friendRequestBtn = await getElement(page, friendRequestSelector, 10);
       if (!friendRequestBtn) return false;
       await clickElement(friendRequestBtn);
-      await delay(randomDelay);
-      // click see all request
-      const seeAllSelector = '#screen-root > div > div:nth-child(2) > div:nth-child(5) > div:nth-child(2)';
-      const seeAllBtn = await getElement(page, seeAllSelector, 10);
-      if (!seeAllBtn) return false;
-      await clickElement(seeAllBtn);
-      await delay(randomDelay);
+      await delay(3000);
+           await page.goto(
+        "https://m.facebook.com/friends/?target_pivot_link=requests"
+      );
+      await delay(5000);
+      const check = await checkExistElement(
+        page,
+        "#screen-root > div > div:nth-child(2) > div.m.bg-s3 > div > div:nth-child(4)",
+        10
+      );
+      if (check == 1) {
+        return false;
+      }
+      await delay(5000);
       for (let i = 0; i < numsAdd * 2; i++) {
         try {
           const isAddFriend = await addFriendByAcceptRequest(page, addFriendObject);
