@@ -208,7 +208,7 @@
   "follower": {
     "delayTimeStart": 3,
     "delayTimeEnd": 5,
-    "selectTypeFollow": "Profile",
+    "selectTypeFollow": "profile",
     "UIDList": [],
     "isLike": false,
     "isFollow": false

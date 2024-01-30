@@ -244,20 +244,15 @@
     display: inline-flex;
     align-items: center;
     .image_login {
-      margin: 0 auto;
-      width: 533px;
-      height: 588px;
-      border-radius: 49px;
-      border: 2px solid #2a86ff;
+      width: 98%;
+      height: 100%;
       display: flex;
-      justify-self: center;
+      justify-content: center;
       align-items: center;
-      img {
-        width: 488.225px;
-        height: 550px;
-        border-radius: 36px;
-        margin: 0 auto;
-      }
+    }
+    img {
+      border-radius: 36px;
+      margin: 0 auto;
     }
   }
 }

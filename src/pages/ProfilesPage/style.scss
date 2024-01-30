@@ -224,6 +224,8 @@
   }
 
   .-expand-icon {
+    display: flex;
+    justify-content: center;
     cursor: pointer;
   }
   .-proxy-profiles {

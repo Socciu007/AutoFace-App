@@ -211,29 +211,32 @@ const SeedingFollower = ({ onGoBackClick, id, currentSetup, component, updateDes
                 </div>
               </div>
             </div>
-
-            <div className="-option-boost-like">
-              <div className="-option-boost-like__header">
-                <input
-                  type="checkbox"
-                  name="like"
-                  checked={followers.isLike}
-                  onChange={(event) => handleChangeLike(event.target.checked)}
-                />
-                <p>Like page</p>
-              </div>
-            </div>
-            <div className="-option-boost-like">
-              <div className="-option-boost-like__header">
-                <input
-                  type="checkbox"
-                  name="share"
-                  checked={followers.isFollow}
-                  onChange={(event) => handleChangeFollower(event.target.checked)}
-                />
-                <p>Follow page</p>
-              </div>
-            </div>
+            {followers.selectTypeFollow !== 'profile' && (
+              <>
+                <div className="-option-boost-like">
+                  <div className="-option-boost-like__header">
+                    <input
+                      type="checkbox"
+                      name="like"
+                      checked={followers.isLike}
+                      onChange={(event) => handleChangeLike(event.target.checked)}
+                    />
+                    <p>Like page</p>
+                  </div>
+                </div>
+                <div className="-option-boost-like">
+                  <div className="-option-boost-like__header">
+                    <input
+                      type="checkbox"
+                      name="share"
+                      checked={followers.isLike ? followers.isLike : followers.isFollow}
+                      onChange={(event) => handleChangeFollower(event.target.checked)}
+                    />
+                    <p>Follow page</p>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

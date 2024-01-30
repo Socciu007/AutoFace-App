@@ -279,26 +279,26 @@ const CreateScript = () => {
             updateDesignScript={updateDesignScript}
           />
         );
-      case 'sendMsg':
-        return (
-          <Send_Message
-            currentSetup={currentSetup}
-            component={component}
-            id={currentComponent}
-            updateDesignScript={updateDesignScript}
-            onGoBackClick={handleGoBackClick}
-          />
-        );
-      case 'replyMsg':
-        return (
-          <Reply_Message
-            currentSetup={currentSetup}
-            updateDesignScript={updateDesignScript}
-            component={component}
-            id={currentComponent}
-            onGoBackClick={handleGoBackClick}
-          />
-        );
+      // case 'sendMsg':
+      //   return (
+      //     <Send_Message
+      //       currentSetup={currentSetup}
+      //       component={component}
+      //       id={currentComponent}
+      //       updateDesignScript={updateDesignScript}
+      //       onGoBackClick={handleGoBackClick}
+      //     />
+      //   );
+      // case 'replyMsg':
+      //   return (
+      //     <Reply_Message
+      //       currentSetup={currentSetup}
+      //       updateDesignScript={updateDesignScript}
+      //       component={component}
+      //       id={currentComponent}
+      //       onGoBackClick={handleGoBackClick}
+      //     />
+      //   );
       case 'addFriend':
         return (
           <AddFriend
@@ -450,14 +450,14 @@ const CreateScript = () => {
                     <img src={viewNoti} alt="watch newsfeed General" />
                     <p>View notifications</p>
                   </div>
-                  <div className="card" onDragStart={(event) => onDragStart(event, 'sendMsg')} draggable>
+                  {/* <div className="card" onDragStart={(event) => onDragStart(event, 'sendMsg')} draggable>
                     <img src={sendMsg} alt="watch newsfeed General" />
                     <p>Send message</p>
                   </div>
                   <div className="card" onDragStart={(event) => onDragStart(event, 'replyMsg')} draggable>
                     <img src={reply} alt="watch newsfeed General" />
                     <p>Reply message</p>
-                  </div>
+                  </div> */}
                   <div className="card" onDragStart={(event) => onDragStart(event, 'addFriend')} draggable>
                     <img src={addFriend} alt="watch newsfeed General" />
                     <p>Add friend</p>

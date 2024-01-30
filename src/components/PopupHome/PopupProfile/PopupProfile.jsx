@@ -253,6 +253,7 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
               </div>
             </div>
             <div className="scrollable-container">
+              <p style={{ marginLeft: '1%' }}>UID|Password|2FA|Recovery email|Recovery email’s password|Cookie</p>
               <div className="newProfile-content">
                 <div className="Textarea" style={{ position: 'relative' }}>
                   <div style={{ width: '99%', height: 419, overflow: 'auto' }} className="text">

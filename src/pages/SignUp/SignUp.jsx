@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import iconFlagUSA from '../../assets/icon/icon-flagUSA.svg';
 import iconFlagVNI from '../../assets/icon/icon-flagVNI.svg';
-import loginImg from '../../assets/pictures/FB_ log in@4x 1.png';
+import loginImg from '../../assets/icon/Autoface image.png';
 import IconEye from '../../assets/icons/icons-form/IconEye';
 import IconEyeSlash from '../../assets/icons/icons-form/IconEyeSlash';
 import { useTranslation } from 'react-i18next';

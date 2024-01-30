@@ -108,58 +108,36 @@ export const postInteract = (setting) => {
       logger('start share');
       let randomDelay = getRandomIntBetween(3 * 1000, 5 * 1000);
       let shareSelector = '#screen-root > div > div > div> div > div:nth-child(3) > div >button';
-      let shareBtns = await getElements(page, shareSelector, 10);
+      let shareBtns = await findBtn(page, '󰍺 ');
       if (!shareBtns) {
-        shareSelector = '#screen-root > div > div > div > div:nth-child(3) > div >button > span';
-        shareBtns = await getElements(page, shareSelector, 10);
-        if (!shareBtns) {
-          logger('Không tìm thấy nút share');
-          return false;
-        }
+        logger('Không tìm thấy nút share');
+        return false;
       }
       await scrollSmoothIfNotExistOnScreen(page, shareSelector);
       await delay(5000);
       let isClick = false;
-      if (shareBtns.length > 0) {
-        for (let i = 0; i < shareBtns.length * 2; i++) {
-          // check selector in screen
-          let selector = await page.evaluate((el) => {
-            if (!el) return false;
-            if (el.innerHTML.includes('󰍺 ')) {
-              const rect = el.getBoundingClientRect();
-              return (
-                rect.width > 0 &&
-                rect.height > 0 &&
-                rect.top >= 50 &&
-                rect.left >= 0 &&
-                rect.bottom <= (window.innerHeight - 50 || document.documentElement.clientHeight - 50) &&
-                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-              );
-            } else {
-              return false;
-            }
-          }, shareBtns[i]);
-  
-          if (!selector) continue;
-          await shareBtns[i].evaluate((b) => b.click());
-          await delay(3000);
-          const shareOptionBtn = await findBtn(page, '󱤱');
-          if (!shareOptionBtn) continue;
-          await delay(1000);
-          await clickElement(shareOptionBtn);
-          await delay(3000);
-          // click post
-          const postSelector = '#screen-root > div > div:nth-child(2) > div > div:nth-child(3) > div > button';
-          const postBtn = await getElement(page, postSelector, 10);
-          if (!postBtn) continue;
-          await delay(1000);
-          await clickElement(postBtn);
-          await delay(randomDelay);
-          logger('Đã share xong');
-          isClick = true;
-          break;
-        }
+
+      await clickElement(shareBtns);
+      await delay(3000);
+      const shareOptionBtn = await findBtn(page, '󱤱');
+      if (!shareOptionBtn) {
+        isClick = false;
+        return false;
       }
+      await delay(1000);
+      await clickElement(shareOptionBtn);
+      await delay(3000);
+      const postSelector = '#screen-root > div > div:nth-child(2) > div > div:nth-child(3) > div > button';
+      const postBtn = await getElement(page, postSelector, 10);
+      if (!postBtn) {
+        isClick = false;
+        return false;
+      }
+      await delay(1000);
+      await clickElement(postBtn);
+      await delay(randomDelay);
+      logger('Đã share xong');
+      isClick = true;
       return isClick;
     } catch (error) {
       logger(error);
@@ -238,15 +216,17 @@ export const postInteract = (setting) => {
     const isLive = await checkIsLive(page);
     logger('Tình trạng trang web:', isLive);
     if (!isLive) return -1;
-
+    // check is login: get cookie return -1, return 1, return 0
+    const isLoggedIn = await checkLogin(page);
+    logger('Tình trạng đăng nhập:', isLoggedIn);
+    if (!isLoggedIn) return -1;
     let randomPost =
-      getRandomIntBetween(post.postStart, post.postEnd) > post.lineCount
-        ? post.lineCount
+      getRandomIntBetween(post.postStart, post.postEnd) > post.UID.length
+        ? post.UID.length
         : getRandomIntBetween(post.postStart, post.postEnd);
     logger('randomPost ' + randomPost);
     let randomViewTime = getRandomIntBetween(post.viewTimeStart * 1000, post.viewTimeEnd * 1000);
     await delay(2000);
-    let countPost = 0;
     let arrLink = [];
     let numLikes = getRandomIntBetween(post.likeStart, post.likeEnd);
     logger('Cần like', numLikes, 'bài');
@@ -254,32 +234,45 @@ export const postInteract = (setting) => {
     logger('Cần share', numShares, 'bài');
     let numComments = getRandomIntBetween(post.commentStart, post.commentEnd);
     logger('Cần comment', numComments, 'bài');
-    while (randomViewTime > 0 && countPost <= randomPost && post.lineCount > 0) {
-      const randomLink = getRandomIntBetween(0, post.lineCount);
+    while (randomViewTime > 0 && randomPost > 0 && post.UID.length > 0) {
+      let randomLink = getRandomIntBetween(0, post.UID.length);
+      logger('randomLink', randomLink);
+      logger('arrLink', arrLink);
+      logger('arrLink.length', arrLink.length);
+      if (
+        arrLink.length === randomPost ||
+        (await checkExistElementOnScreen(
+          page,
+          '#screen-root > div > div:nth-child(2) > div> div:nth-child(4) > div > div > div > div > span',
+        )) == 0
+      )
+        break;
       if (arrLink.includes(randomLink)) {
-        return 0;
+        logger('Đã hiển thị bài trước đó');
+        continue;
       }
       arrLink.push(randomLink);
       const [id, fbid] = post.UID[randomLink].split('|');
       await page.goto('https://m.facebook.com/story.php/?id='+id+'&story_fbid='+fbid);
+      await delay(2000);
+      randomPost--;
       const startTime = Date.now();
+
       const shouldLike = getRandomInt(3) == 0;
       logger('shouldLike', shouldLike);
-      if (post.isLiked == true && shouldLike == true) {
+      if (post.isLiked == true && shouldLike == true && numLikes > 0) {
         try {
           await returnProfilePage(page, id, fbid);
           const result = await randomLike(page);
           if (result) {
-            countPost++;
             numLikes--;
             logger('Số bài cần like còn lại ', numLikes, ' bài');
           } else {
             logger('Like không thành công');
           }
-
-          if (numLikes <= 0 || countPost > randomPost) {
+          if (numLikes <= 0) {
             logger('Da like du');
-            post.isLiked = false;
+            numLikes = 0;
           }
           await delay(getRandomIntBetween(2, 5) * 1000);
         } catch (error) {
@@ -287,22 +280,22 @@ export const postInteract = (setting) => {
         }
       }
       await delay(getRandomIntBetween(4, 8) * 1000);
-      const shouldShare = getRandomInt(3) == 0;
+
+      const shouldShare = getRandomInt(0) == 0;
       logger('shouldShare', shouldShare);
-      if (post.isShare == true && shouldShare == true) {
+      if (post.isShare == true && shouldShare == true && numShares > 0) {
         try {
           await returnProfilePage(page, id, fbid);
           const result = await randomShare(page);
           if (result) {
-            countPost++;
             numShares--;
             logger('Số bài cần share còn lại ', numShares, ' bài');
           } else {
             logger('Share không thành công');
           }
-          if (numShares <= 0 || countPost > randomPost) {
+          if (numShares <= 0) {
             logger('Da share du');
-            post.isShare == false;
+            numShares = 0;
           }
           await delay(getRandomIntBetween(3, 5) * 1000);
         } catch (error) {
@@ -310,9 +303,10 @@ export const postInteract = (setting) => {
         }
       }
       await delay(getRandomIntBetween(4, 8) * 1000);
+
       const shouldComment = getRandomInt(3) == 0;
       logger('shouldComment', shouldComment);
-      if (post.isComment == true && post.isText == true && shouldComment == true) {
+      if (post.isComment == true && post.isText == true && shouldComment == true && numComments > 0) {
         if (!post.text.length) {
           logger('Không thể comment với nội dung rỗng!');
           return 0;
@@ -321,15 +315,14 @@ export const postInteract = (setting) => {
           await returnProfilePage(page, id, fbid);
           const result = await randomComment(page, post);
           if (result) {
-            countPost++;
             numComments--;
             logger('Số bài comment còn lại ', numComments, ' bài');
           } else {
             logger('Comment không thành công');
           }
-          if (numComments <= 0 || countPost > randomPost) {
+          if (numComments <= 0) {
             logger('Da comment du');
-            post.isComment = false;
+            numComments = 0;
           }
           await delay(getRandomIntBetween(3, 5) * 1000);
         } catch (error) {
@@ -338,13 +331,12 @@ export const postInteract = (setting) => {
       }
 
       const endTime = Date.now();
-      post.lineCount--;
-      randomViewTime -= endTime - startTime;
+      randomViewTime = randomViewTime - (endTime - startTime);
       let randomDelay = getRandomIntBetween(post.delayTimeStart * 1000, post.delayTimeEnd * 1000);
       await delay(randomDelay);
       logger('randomViewTime ' + randomViewTime);
       logger('Timing running ' + (endTime - startTime));
-      logger('countPost ' + countPost);
+      logger('Số post còn lại ' + randomPost);
     }
   } catch (error) {
     logger(error);

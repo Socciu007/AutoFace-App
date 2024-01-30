@@ -10,6 +10,7 @@ import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import './style.scss';
 import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
+import { useDropzone } from 'react-dropzone';
 
 const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, updateDesignScript }) => {
   const [likeComment, setLikeComment] = useState(DefaultSciptSettings['likeComment']);
@@ -18,6 +19,25 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
   const [selectedFile, setSelectedFile] = useState(null);
   const [isFileSelected, setIsFileSelected] = useState(false);
   const [line, setLine] = useState(0);
+
+  const { getRootProps, getInputProps } = useDropzone({
+    maxFiles: 10,
+    noClick: true,
+    accept: {
+      'image/png': ['.png', '.jpg', '.jpeg'],
+    },
+    onDrop: (acceptedFiles) => {
+      const newFiles = acceptedFiles.map((file) => {
+        return file.path;
+      });
+
+      setLikeComment({ ...likeComment, file: [...likeComment.file, ...newFiles] });
+    },
+  });
+
+  const handleDeleteButtonClick = () => {
+    setLikeComment({ ...likeComment, file: [] });
+  };
 
   useEffect(() => {
     if (currentSetup) {
@@ -47,24 +67,12 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
     }
   }, [UIDPost]);
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setSelectedFile(file);
-    }
-  };
-
   useEffect(() => {
     // Kiểm tra xem có file được chọn không và chưa thực hiện hiển thị
     if (selectedFile && !isFileSelected) {
       setIsFileSelected(true);
     }
   }, [selectedFile, isFileSelected]);
-  const handleFile = () => {
-    if (!isFileSelected) {
-      document.getElementById('dragVideoOrPhotoInput').click();
-    }
-  };
 
   const hightlightWithLineNumbers = (input, language, value) =>
     highlight(input, language)
@@ -727,25 +735,23 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
                 </div>
               </div>
             </div>
-            <div className="-option-boost-like dragVideoOrPhoto" onClick={handleFile}>
+            {/* <div className="-option-boost-like dragVideoOrPhoto" onClick={handleFile}> */}
+            <div {...getRootProps({ className: '-option-boost-like dragVideoOrPhoto' })}>
               <img src={drag} alt="icon-drag" />
               <span>Drag the photo/video folder here</span>
-              <input
-                type="file"
-                style={{ display: 'none' }}
-                name="dragVideoOrPhotoInput"
-                id="dragVideoOrPhotoInput"
-                value={likeComment.file}
-                className="dragVideoOrPhotoInput"
-                onChange={handleFileChange}
-              />
+              <input {...getInputProps()} />
             </div>
-            {isFileSelected && (
+            {likeComment.file.length > 0 && (
               <div className="folderPhoto">
                 <p>
-                  <span>Folder:</span> {selectedFile.name}
+                  <span>Folder:</span>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    {likeComment.file.map((filePath, index) => (
+                      <span key={index}>{filePath.replace(/^.*[\\/]/, '')}</span>
+                    ))}
+                  </div>
                 </p>
-                <img src={deleted} alt="icon-delete" onClick={() => setIsFileSelected(false)} />
+                <img src={deleted} alt="icon-delete" onClick={handleDeleteButtonClick} />
               </div>
             )}
 

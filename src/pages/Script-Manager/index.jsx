@@ -262,8 +262,8 @@ const ScriptManager = () => {
   const columns = [
     {
       title: '#',
-      width: 50,
-      render: (text, record, index) => <div>{index + 1}</div>,
+      width: 30,
+      render: (text, record, index) => <div style={{ textAlign: 'center' }}>{index + 1}</div>,
     },
     {
       title: 'Name',
@@ -281,7 +281,7 @@ const ScriptManager = () => {
       title: 'Status',
       dataIndex: 'status',
       sorter: (a, b) => !a.isPin && !b.isPin && a.status.length - b.status.length,
-      width: 250,
+      width: 200,
     },
     {
       title: 'Tag',
@@ -292,7 +292,7 @@ const ScriptManager = () => {
     {
       title: 'Note',
       dataIndex: 'note',
-      width: 280,
+      width: 300,
       render: (note) => (
         <Tooltip placement="topLeft" title={generateNoteStr(note, false)}>
           {generateNoteStr(note)}

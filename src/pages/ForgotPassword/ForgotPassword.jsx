@@ -13,7 +13,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Dialog from '@mui/material/Dialog';
 import close from '../../assets/icon/icon-close.svg';
-import loginImg from '../../assets/pictures/FB_ log in@4x 1.png';
+import loginImg from '../../assets/icon/Autoface image.png';
 import { apiChangePass, apiCheckCode, apiSendCode } from '../../services/api_helper';
 import { Store } from 'react-notifications-component';
 import notification from '../../resources/notification.json';

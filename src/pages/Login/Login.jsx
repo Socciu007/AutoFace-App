@@ -12,7 +12,7 @@ import Loading from '../../components/loading/Loading';
 import { login } from '../../sender';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import loginImg from '../../assets/pictures/FB_ log in@4x 1.png';
+import loginImg from '../../assets/icon/Autoface image.png';
 import { Store } from 'react-notifications-component';
 import notification from '../../resources/notification.json';
 const Login = () => {
