@@ -86,7 +86,7 @@ export const loginFacebook = (account) => {
             await delay(1000);
           }
 
-          const btnLogin = await getElement(page, '[name="login"]', 5);
+          const btnLogin = await getElement(page, '[data-bloks-name="bk.components.ViewTransformsExtension"]', 2);
 
           if(btnLogin){
             await btnLogin.click();
@@ -157,6 +157,7 @@ export const loginFacebook = (account) => {
                   30
                 );
                 if (inputCodeMail) {
+                  await delay(15000);
                   const codeMail = await getCodeMail(
                     account.recoveryEmail,
                     account.recoveryPassword
