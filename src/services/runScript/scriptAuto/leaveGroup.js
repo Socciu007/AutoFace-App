@@ -321,7 +321,7 @@ const leaveGroupObj = ${strSetting};
   await delay(randomDelay);
   // click your group
   const yourGroupSelector =
-    "#screen-root > div > div:nth-child(2) > div:nth-child(4) > div > div > div:nth-child(2)";
+    "#screen-root > div > div:nth-child(2) > div:nth-child(3) > div > div > div:nth-child(2)";
   const yourGroupBtn = await getElement(page, yourGroupSelector, 10);
   if (!yourGroupBtn) return false;
   await clickElement(yourGroupBtn);
