@@ -13,31 +13,83 @@ export const cancelFriend = (setting) => {
     }`;
   console.log(strSetting);
   return `
-  const unfriendByUID = async (page, cancelObj) => {
-    let randomIndex = getRandomInt(cancelObj.UID.length);
-    let randomUID = cancelObj.UID[randomIndex];
-    let randomDelay = getRandomIntBetween(cancelObj.delayTimeStart * 1000, cancelObj.delayTimeEnd * 1000);
-    await page.goto('https://m.facebook.com/profile.php/?id='+randomUID);
-    await delay(randomDelay);
-    const friendSelector = '#screen-root > div > div:nth-child(2) > div:nth-child(5) > div:nth-child(3) > div.m';
-    const friendBtn = await getElement(page, friendSelector, 10);
-    if (!friendBtn) return false;
-    await clickElement(friendBtn);
-    await delay(randomDelay);
-    const unfriendSelector =
-      '#screen-root > div.dialog-screen > div > div > div > div > div > div.m.bg-s3 > div:nth-child(4) > div';
-    const unfriendBtn = await getElement(page, unfriendSelector, 10);
+ const unfriendByUID = async (page, cancelObj) => {
+  let randomDelay = getRandomIntBetween(
+    cancelObj.delayTimeStart * 1000,
+    cancelObj.delayTimeEnd * 1000
+  );
+
+  // check đã add friend hay chưa
+  let addFriendIcon1 =
+    "#screen-root > div > div:nth-child(2) > div:nth-child(5) > div:nth-child(3) > div.m > div > div:nth-child(1) > div > div > span";
+    
+  let Added1 = await getElement(page, addFriendIcon1, 2);
+  if (Added1) {
+    const isAddIcon1 = await page.evaluate((el) => {
+      return el.innerHTML.includes("󱤇");
+    }, Added1);
+    if (isAddIcon1) {
+      logger("Chưa kết bạn 1!");
+      return false;
+    }
+  }
+
+  let addFriendIcon2 =
+    "#screen-root > div > div:nth-child(2) > div:nth-child(5) > div:nth-child(1) > div.m > div > div:nth-child(1) > div > div > span";
+    let Added2 = await getElement(page, addFriendIcon2, 2);
+  if (Added2) {
+    const isAddIcon2 = await page.evaluate((el) => {
+      return el.innerHTML.includes("󱤇");
+    }, Added2);
+    if (isAddIcon2) {
+      logger("Chưa kết bạn 2!");
+      return false;
+    } else {
+      await clickElement(Added2);
+      await delay(randomDelay);
+  let unfriendSelector =
+    "#screen-root > div.dialog-screen > div > div > div > div > div > div.m.bg-s3 > div:nth-child(4) > div";
+  let unfriendBtn = await getElement(page, unfriendSelector, 10);
+  if (!unfriendBtn) {
+    unfriendSelector =
+      "#screen-root > div.dialog-screen > div > div > div > div > div > div.m.bg-s4 > div:nth-child(4) > div";
+    unfriendBtn = await getElement(page, unfriendSelector, 10);
     if (!unfriendBtn) return false;
-    await clickElement(unfriendBtn);
-    await delay(randomDelay);
-    const confirmSelector =
-      '#screen-root > div.m.bg-s1.dialog-screen > div.m.dialog-vscroller > div > div > div.m.nb > div > div:nth-child(4)';
-    const confirmBtn = await getElement(page, confirmSelector, 10);
-    if (!confirmBtn) return false;
-    await clickElement(confirmBtn);
-    return true;
-  };
-  
+  }
+  await clickElement(unfriendBtn);
+  await delay(randomDelay);
+  const confirmSelector =
+    "#screen-root > div.m.bg-s1.dialog-screen > div.m.dialog-vscroller > div > div > div.m.nb > div > div:nth-child(4)";
+  const confirmBtn = await getElement(page, confirmSelector, 10);
+  if (!confirmBtn) return false;
+  await clickElement(confirmBtn);
+  return true;
+    }
+  }
+  const friendSelector =
+    "#screen-root > div > div:nth-child(2) > div:nth-child(5) > div:nth-child(3) > div.m";
+  const friendBtn = await getElement(page, friendSelector, 10);
+  if (!friendBtn) return false;
+  await clickElement(friendBtn);
+  await delay(randomDelay);
+  let unfriendSelector =
+    "#screen-root > div.dialog-screen > div > div > div > div > div > div.m.bg-s3 > div:nth-child(4) > div";
+  let unfriendBtn = await getElement(page, unfriendSelector, 10);
+  if (!unfriendBtn) {
+    unfriendSelector =
+      "#screen-root > div.dialog-screen > div > div > div > div > div > div.m.bg-s4 > div:nth-child(4) > div";
+    unfriendBtn = await getElement(page, unfriendSelector, 10);
+    if (!unfriendBtn) return false;
+  }
+  await clickElement(unfriendBtn);
+  await delay(randomDelay);
+  const confirmSelector =
+    "#screen-root > div.m.bg-s1.dialog-screen > div.m.dialog-vscroller > div > div > div.m.nb > div > div:nth-child(4)";
+  const confirmBtn = await getElement(page, confirmSelector, 10);
+  if (!confirmBtn) return false;
+  await clickElement(confirmBtn);
+  return true;
+};
   const unfriendByRandom = async (page, cancelObj) => {
     try {
       let randomDelay = getRandomIntBetween(cancelObj.delayTimeStart * 1000, cancelObj.delayTimeEnd * 1000);
@@ -94,23 +146,44 @@ export const cancelFriend = (setting) => {
       return false;
     }
   };
-  const cancelFriendOnRequest = async (page, cancelObj) => {
+  const cancelFriendOnRequest = async (page, cancelObj, deleteBtns) => {
     try {
-      let randomDelay = getRandomIntBetween(cancelObj.delayTimeStart * 1000, cancelObj.delayTimeEnd * 1000);
-      // click delete
-      const deleteSelector = '#screen-root > div > div:nth-child(2) > div.m.bg-s48 > div:nth-child(6)';
-      const deleteBtns = await getElements(page, deleteSelector, 10);
-      if (deleteBtns.length < 1) return false;
+          let randomDelay = getRandomIntBetween(
+      cancelObj.delayTimeStart * 1000,
+      cancelObj.delayTimeEnd * 1000
+    );
+
+    let arr = [];
+    let isCancel = false;
+    for (let i = 0; i < deleteBtns.length; i++) {
       let randomIndex = getRandomInt(deleteBtns.length);
+      let index = arr.indexOf(randomIndex);
+      if (index == -1) {
+        arr.push(randomIndex);
+        logger("push");
+      } else {
+        continue;
+      }
       const deleteId = await page.evaluate((el) => {
-        return el.getAttribute('data-action-id');
+        return el.getAttribute("data-action-id");
       }, deleteBtns[randomIndex]);
-      const deleteBtn = await getElement(page, 'div[data-action-id="'+deleteId+'"]', 10);
-      if (!deleteBtn) return false;
-      await scrollSmoothIfNotExistOnScreen(page, 'div[data-action-id="'+deleteId+'"]');
+      const deleteBtn = await getElement(
+        page,
+        'div[data-action-id="' + deleteId + '"]',
+        10
+      );
+      if (!deleteBtn) continue;
+      await scrollSmoothIfNotExistOnScreen(
+        page,
+        'div[data-action-id="' + deleteId + '"]'
+      );
       await delay(randomDelay);
       await clickElement(deleteBtn);
-      return true;
+      isCancel = true;
+      break;
+    }
+
+    return isCancel;
     } catch (error) {
       logger(error);
       return false;
@@ -137,16 +210,28 @@ export const cancelFriend = (setting) => {
     await delay(randomDelay);
     if (cancelObj.optionCancelFriend == 'cancelRequest') {
       let count = 0;
-      // click see all request
-      const seeAllSelector = '#screen-root > div > div:nth-child(2) > div:nth-child(5) > div:nth-child(2)';
-      const seeAllBtn = await getElement(page, seeAllSelector, 3);
-      if (!seeAllBtn) return false;
-      await clickElement(seeAllBtn);
-      await delay(randomDelay);
+      await page.goto("https://m.facebook.com/friends/?target_pivot_link=requests")
+      await delay(5000);
+      const check = await checkExistElement(
+        page,
+        "#screen-root > div > div:nth-child(2) > div.m.bg-s3 > div > div:nth-child(4)",
+        10
+      );
+      if (check == 1) {
+        return false;
+      }
+      await delay(5000);
+      let deleteSelector =
+      "#screen-root > div > div:nth-child(2) > div > div:nth-child(6)";
+    let deleteBtns = await getElements(page, deleteSelector, 10);
+    if (!deleteBtns) return false;
       for (let i = 0; i < numCancel * 2; i++) {
         try {
           await delay(randomDelay);
-          const rs = await cancelFriendOnRequest(page, cancelObj);
+           if (deleteBtns.length < numCancel) {
+          numCancel = deleteBtns.length;
+        }
+          const rs = await cancelFriendOnRequest(page, cancelObj,deleteBtns);
           if (rs) {
             count++;
             logger('Đã hủy kết bạn với' + count + 'người');
@@ -189,25 +274,28 @@ export const cancelFriend = (setting) => {
           }
         }
       }
-      if (cancelObj.optionUnfriend == 'UID') {
-        for (let i = 0; i < numCancel * 2; i++) {
-          try {
-            await delay(randomDelay);
-            const rs = await unfriendByUID(page, cancelObj);
-            if (rs) {
-              count++;
-              logger('Đã hủy kết bạn với' + count + 'người');
-            } else {
-              logger('Hủy kết bạn không thành công');
-            }
-            if (count == numCancel) break;
-            await returnHomePage(page);
-            await delay(5000);
-          } catch (error) {
-            logger(error);
+    if (cancelObj.optionUnfriend == "UID") {
+      for (let i = 0; i < cancelObj.UID.length; i++) {
+        try {
+          let UID = cancelObj.UID[i];
+          await page.goto('https://m.facebook.com/profile.php/?id=' + UID, {
+            waitUntil: "networkidle2",
+          });
+          await delay(randomDelay);
+          const rs = await unfriendByUID(page, cancelObj);
+          if (rs) {
+            count++;
+            logger("Đã hủy kết bạn với " + count + " người");
+          } else {
+            logger("Hủy kết bạn không thành công");
           }
+          if (count == numCancel) break;
+          await delay(5000);
+        } catch (error) {
+          logger(error);
         }
       }
+    }
     }
   } catch (err) {
     logger(err);

@@ -187,8 +187,24 @@ body {
         > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not(
           [colspan]
         )::before,
-      .ant-table-wrapper
+      .ant-table-thead > tr:first-child > th:first-child {
+        text-align: center;
+      }
+      :where(.css-dev-only-do-not-override-p7e5j5).ant-table-wrapper
         .ant-table-thead
+        > tr
+        > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not(
+          [colspan]
+        )::before,
+      :where(.css-dev-only-do-not-override-p7e5j5).ant-table-wrapper
+        .ant-table-thead
+        > tr
+        > td:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not(
+          [colspan]
+        )::before {
+        width: 0px !important;
+      }
+      .ant-table-wrapper.ant-table-thead
         > tr
         > td:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not(
           [colspan]
@@ -204,15 +220,15 @@ body {
         overflow: auto auto !important;
         width: calc(100vw - 60px);
       }
-      :where(.css-dev-only-do-not-override-p7e5j5).ant-spin-nested-loading,
+      .ant-spin-nested-loading,
       .ant-table-container,
-      :where(.css-dev-only-do-not-override-p7e5j5).ant-table-wrapper .ant-table,
+      .ant-table-wrapper .ant-table,
       .ant-spin-container,
       .ant-spin-nested-loading.css-dev-only-do-not-override-p7e5j5 {
         height: 100%;
       }
-      :where(.css-dev-only-do-not-override-p7e5j5).ant-table-wrapper td.ant-table-column-sort,
-      :where(.css-p7e5j5).ant-table-wrapper td.ant-table-column-sort {
+      .ant-table-wrapper td.ant-table-column-sort,
+      .ant-table-wrapper td.ant-table-column-sort {
         background-color: #fff;
       }
       .ant-spin-container {
@@ -230,7 +246,10 @@ body {
       .ant-table-thead > tr > td.ant-table-cell {
         background-color: #f2f8ff !important;
       }
-
+      .ant-table-wrapper .ant-table-column-sorter-up.active,
+      .ant-table-wrapper .ant-table-column-sorter-down.active {
+        color: #ccc;
+      }
       .ant-aaala-thead {
         z-index: 99 !important;
         position: sticky;
@@ -345,10 +364,13 @@ body {
       padding: 5px 12px;
     }
     ul > li {
+      display: flex;
+      gap: 10px;
       list-style: none;
       padding: 8px 8px;
       border-bottom: 1px solid rgba(1, 22, 43, 0.1);
       cursor: pointer;
+      font-size: 14px;
     }
     ul > li:last-child {
       border-bottom: 0;

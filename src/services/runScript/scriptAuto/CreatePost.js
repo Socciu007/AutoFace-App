@@ -187,21 +187,21 @@ export const createPost = (setting) => {
           await clickElement(InputTextContent);
   
           logger('Clicked input content');
-          await InputTextContent.type(CreatePost.text[randomTextIndex], { delay: 100 });
+          await InputTextContent.type(CreatePost.text[randomTextIndex], { delay: 150 });
           logger('Hoan tat nhap content');
           await delay(5000);
-          return true;
+          return randomTextIndex;
         } else {
           logger('Text is empty');
-          return false;
+          return -1;
         }
       } else {
         logger("Can't input content");
-        return false;
+        return -1;
       }
     } catch (error) {
       logger(error);
-      return false;
+      return -1;
     }
   };
   const findBtn = async (page, content) => {
@@ -233,14 +233,22 @@ export const createPost = (setting) => {
     let count = 0;
     const numberOfPost = getRandomIntBetween(CreatePost.postStart, CreatePost.postEnd);
     logger('can create ' + numberOfPost + 'bai');
+    const arrContent = [];
     while (count < numberOfPost) {
       await returnHomePage(page);
+      await delay(3000);
+      await scrollSmoothIfNotExistOnScreen(
+        page,
+        '#screen-root > div > div:nth-child(1) > div > div > div:nth-child(3) > div > div:nth-child(2) > div',
+      );
+      await delay(3000);
       if (
         (await checkExistElementOnScreen(
           page,
           '#screen-root > div > div:nth-child(1) > div > div > div:nth-child(3) > div > div:nth-child(2) > div',
         )) == 0
       ) {
+        await delay(3000);
         const redictCreatePost = await getElement(
           page,
           '#screen-root > div > div:nth-child(1) > div > div > div:nth-child(3) > div > div:nth-child(2) > div',
@@ -272,7 +280,9 @@ export const createPost = (setting) => {
             logger('Khong tag ban be');
           }
         } else {
+
           // Using background
+          
           const background = await getElements(
             page,
             '#screen-root > div > div:nth-child(2) > div.m.hscroller.no-hscroller > div > div:nth-child(2)',
@@ -280,22 +290,34 @@ export const createPost = (setting) => {
           );
   
           await delay(2000);
-          const randomBackground = getRandomIntBetween(1, background.length);
+          const listBackground = [6, 8, 9, 10];
+          let randomBackground = getRandomIntBetween(1, background.length);
+          while (listBackground.includes(randomBackground)) {
+            randomBackground = getRandomIntBetween(1, background.length);
+          }
           if ((await checkExistElementOnScreen(page, background[randomBackground])) !== 0) {
             await background[randomBackground].evaluate((el) => {
               el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
             });
             await delay(2000);
           }
+          logger("randomBackground",randomBackground);
           await clickElement(background[randomBackground]);
           await delay(2000);
           const inputContentResult = await inputContent(page, CreatePost);
-          if (inputContentResult) {
+          if (inputContentResult != -1) {
             logger('Done input content');
           } else {
             logger('Khong the nhap content ');
             return 0;
           }
+          logger('arrContent', arrContent);
+
+          if (inputContentResult === arrContent[0]) {
+            logger('Content giong voi bai dang truoc do');
+            continue;
+          }
+          arrContent.unshift(inputContentResult);
         }
         // Click Post content
         let PostBtnSelector = '#screen-root > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(3) > div > div > span';

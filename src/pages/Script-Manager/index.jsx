@@ -10,6 +10,11 @@ import search from '../../assets/icon/icon-search.svg';
 import reload from '../../assets/icon/icon-reload.svg';
 import add from '../../assets/icon/icon-add.svg';
 import pin from '../../assets/icon/icon-pin.svg';
+import pinBlack from '../../assets/icon/icon-pinBlack.svg';
+import iconEdit from '../../assets/icon/icon-editBlack.svg';
+import iconDuplicate from '../../assets/icon/icon-duplicate.svg';
+import iconDelete from '../../assets/icon/icon-Delete.svg';
+import iconRename from '../../assets/icon/icon-rename.svg';
 import option from '../../assets/icon/icon-options.svg';
 import newNote from '../../assets/icon/icon-newNote.svg';
 import edit from '../../assets/icon/icon-editWhite.svg';
@@ -267,7 +272,7 @@ const ScriptManager = () => {
     },
     {
       title: 'Name',
-      width: 200,
+      width: 230,
       render: (script) => {
         return (
           <div className="pin">
@@ -281,7 +286,7 @@ const ScriptManager = () => {
       title: 'Status',
       dataIndex: 'status',
       sorter: (a, b) => !a.isPin && !b.isPin && a.status.length - b.status.length,
-      width: 200,
+      width: 180,
     },
     {
       title: 'Tag',
@@ -355,12 +360,21 @@ const ScriptManager = () => {
                     <div className="dropList">
                       <ul>
                         <li id={script.id} onClick={() => handleTogglePin(script.id)}>
+                          <img src={pinBlack} alt="icon pin" />
                           {!script.isPin ? <p>Pin</p> : <p>Unpin</p>}
                         </li>
-                        <li onClick={handleEditClick}>Edit</li>
-                        <li onClick={() => handleOptionClick('makeCopy', script)}>Duplicate</li>
-                        <li onClick={handleClose}>Rename</li>
-                        <li onClick={() => handleOptionClick('delete', script)}>Delete</li>
+                        <li onClick={handleEditClick}>
+                          <img src={iconEdit} alt="icon edit" />
+                          Edit
+                        </li>
+                        <li onClick={() => handleOptionClick('makeCopy', script)}>
+                          <img src={iconDuplicate} alt="icon duplicate" />
+                          Duplicate
+                        </li>
+                        <li onClick={() => handleOptionClick('delete', script)}>
+                          <img src={iconDelete} alt="icon delete" />
+                          Delete
+                        </li>
                       </ul>
                     </div>
                     <div style={{ width: '60px', background: 'tranparent !important', display: 'inherit' }}></div>

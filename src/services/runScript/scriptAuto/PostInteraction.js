@@ -190,9 +190,7 @@ export const postInteract = (setting) => {
         logger('Đã chọn vùng comment');
         // comment
         let content = PostInteract.text;
-        logger('content ' + content);
         let randomString = content[getRandomIntBetween(1, content.length)];
-        logger('randomString ' + randomString);
         await delay(1000);
         await page.keyboard.type(randomString, { delay: 100 });
         await delay(1000);
@@ -239,14 +237,6 @@ export const postInteract = (setting) => {
       logger('randomLink', randomLink);
       logger('arrLink', arrLink);
       logger('arrLink.length', arrLink.length);
-      if (
-        arrLink.length === randomPost ||
-        (await checkExistElementOnScreen(
-          page,
-          '#screen-root > div > div:nth-child(2) > div> div:nth-child(4) > div > div > div > div > span',
-        )) == 0
-      )
-        break;
       if (arrLink.includes(randomLink)) {
         logger('Đã hiển thị bài trước đó');
         continue;
@@ -256,8 +246,16 @@ export const postInteract = (setting) => {
       await page.goto('https://m.facebook.com/story.php/?id='+id+'&story_fbid='+fbid);
       await delay(2000);
       randomPost--;
+      if (
+        (await checkExistElementOnScreen(
+          page,
+          '#screen-root > div > div:nth-child(2) > div> div:nth-child(4) > div > div > div > div > span',
+        )) == 0
+      ) {
+        logger('Bài đăng không tồn tại ');
+        continue;
+      }
       const startTime = Date.now();
-
       const shouldLike = getRandomInt(3) == 0;
       logger('shouldLike', shouldLike);
       if (post.isLiked == true && shouldLike == true && numLikes > 0) {
@@ -281,7 +279,7 @@ export const postInteract = (setting) => {
       }
       await delay(getRandomIntBetween(4, 8) * 1000);
 
-      const shouldShare = getRandomInt(0) == 0;
+      const shouldShare = getRandomInt(3) == 0;
       logger('shouldShare', shouldShare);
       if (post.isShare == true && shouldShare == true && numShares > 0) {
         try {

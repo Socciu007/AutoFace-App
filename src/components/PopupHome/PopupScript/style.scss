@@ -328,7 +328,7 @@
                     vertical-align: middle;
                   }
                   tr.ant-table-row-selected {
-                    background: #f2f8ff !important;
+                    background: #f2f8ff;
                   }
                   tr.ant-table-row-selected:focus-within {
                     background: #f2f8ff;
@@ -337,12 +337,24 @@
                     background: #f2f8ff !important;
                   }
                   .pinned-row {
-                    background-color: #fffbea;
+                    background-color: #fffbea !important;
                   }
                 }
+
                 .ant-table-tbody .ant-table-row.ant-table-row-selected > .ant-table-cell-row-hover {
-                  background: #f2f8ff !important;
+                  background: #f2f8ff;
                 }
+              }
+              .ant-spin-container
+                .ant-table
+                .ant-table-content
+                table
+                > tbody.ant-table-tbody
+                tr.ant-table-row-selected {
+                background-color: #fffbea !important;
+              }
+              .ant-table-tbody .ant-table-row.ant-table-row-selected.pinned-row > .ant-table-cell {
+                background-color: #fffbea !important;
               }
               .ant-table-content::-webkit-scrollbar {
                 height: 5px;
@@ -394,20 +406,17 @@
       }
     }
   }
-  :where(.css-dev-only-do-not-override-p7e5j5).ant-table-wrapper
+  .ant-table-wrapper
     .ant-table-thead
     > tr
     > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before,
-  :where(.css-dev-only-do-not-override-p7e5j5).ant-table-wrapper
+  .ant-table-wrapper
     .ant-table-thead
     > tr
     > td:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
-    width: 0;
+    width: 0 !important;
   }
-  :where(.css-dev-only-do-not-override-p7e5j5).ant-table-wrapper
-    .ant-table-tbody
-    .ant-table-row.ant-table-row-selected
-    > .ant-table-cell-row-hover {
+  .ant-table-wrapper .ant-table-tbody .ant-table-row.ant-table-row-selected > .ant-table-cell-row-hover {
     background-color: #f2f8ff !important;
   }
 }

@@ -684,6 +684,9 @@ const ProfilesPage = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const userMenu = {
+    borderRadius: '10px',
+  };
 
   return (
     <div
@@ -715,6 +718,9 @@ const ProfilesPage = () => {
                 className="userMenu"
                 MenuListProps={{
                   'aria-labelledby': 'basic-button',
+                }}
+                sx={{
+                  '& .MuiPaper-root': userMenu,
                 }}
                 anchorOrigin={{
                   vertical: 'bottom',
