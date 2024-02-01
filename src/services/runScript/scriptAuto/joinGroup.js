@@ -12,6 +12,24 @@ export const joinGroup = (setting) => {
       }`;
   console.log(strSetting);
   return `
+
+  const findBtn = async (page, content) => {
+    try {
+      const buttons = await getElements(page, '[class="native-text"]');
+      for (let i = 0; i < buttons.length; i++) {
+        const btn = await page.evaluate((el) => {
+          return el.innerHTML;
+        }, buttons[i]);
+  
+        if (btn.includes(content)) {
+          return buttons[i];
+        }
+      }
+    } catch (err) {
+      logger(err);
+    }
+  };
+
 const scrollAndJoin = async (page, selector, randomDelay, joinGroupObject) => {
   try {
     // scroll before click
@@ -299,17 +317,11 @@ const joinGroupByUID = async (page, joinGroupObject) => {
   if (joinGroupObject.option == "suggestions") {
     let count = 0;
     // click discover group
-    let discoverSelector =
-      "#screen-root > div > div:nth-child(2) > div:nth-child(4) > div > div > div:nth-child(3)";
-    let discoverBtn = await getElement(page, discoverSelector, 10);
-    if (!discoverBtn) {
-      discoverSelector =
-        "#screen-root > div > div:nth-child(2) > div:nth-child(3) > div > div > div:nth-child(3)";
-      discoverBtn = await getElement(page, discoverSelector, 10);
-      if (!discoverBtn) return false;
-    }
-    await clickElement(discoverBtn);
-    await delay(3000);
+  const discoverGroupBtn = await findBtn(page, '󱠀');
+  if (!discoverGroupBtn) return false;
+  await delay(1000);
+  await clickElement(discoverGroupBtn);
+    await delay(2000);
     // click see all group suggestions
     let seeAllSelector =
       "#screen-root > div > div:nth-child(2) > div:nth-child(6) > div:nth-child(1) > div:nth-child(3)";

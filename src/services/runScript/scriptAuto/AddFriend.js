@@ -204,19 +204,15 @@ export const addFriend = (setting) => {
         );
         // Lưu lại vị trí cuối cùng trước khi scroll
         const positionBeforeScroll = await page.evaluate(() => window.scrollY);
-        await delay(2000);
-        await scrollByWheel(page, scrollAmount);
+        await scrollByWheel(page, scrollAmount);await delay(1000)
         // Lưu lại vị trí cuối cùng sau khi scroll
-        await delay(2000);
         const positionAfterScroll = await page.evaluate(() => window.scrollY);
         await delay(randomDelay);
         randomScrollTime = randomScrollTime - randomDelay;
         // So sánh vị trí cuối cùng trước và sau scroll
-        if (positionBeforeScroll === positionAfterScroll) {
+        if (positionBeforeScroll == positionAfterScroll) {
           logger('Đã scroll xuống cuối trang.');
           return false;
-        } else {
-          logger('Còn bài đăng để hiển thị.Tiếp tục scroll');
         }
       }
     } catch (error) {
@@ -297,25 +293,19 @@ export const addFriend = (setting) => {
     }
     return isClick;
   };
-  const randomLike = async (page, addFriendObject) => {
+  const randomLike = async (page, addFriendObject, temp, likeBtns) => {
     try {
       let randomDelay = getRandomIntBetween(
         addFriendObject.delayTimeInteractStart * 1000,
         addFriendObject.delayTimeInteractEnd * 1000,
       );
-      let likeSelector = '#screen-root > div > div > div> div > div:nth-child(1) > div >button > span';
-      let likeBtns = await getElements(page, likeSelector, 10);
-      if (!likeBtns) {
-        likeSelector = '#screen-root > div > div > div > div:nth-child(1) > div > button > span:nth-child(1)';
-        likeBtns = await getElements(page, likeSelector, 10);
-       if (!likeBtns) return false; 
-      }
+      await delay(1000)
+      await scroll(page, addFriendObject);
+      await delay(1000)
       let isClick = false;
-      if (likeBtns.length > 0) {
-        for (let i = 0; i < likeBtns.length; i++) {
+        for (let i = temp; i < likeBtns.length; i++) {
           // check selector in screen
           let selector = await page.evaluate((el) => {
-            if (!el) return false;
             if (el.innerHTML.includes('󰍸')) {
               const rect = el.getBoundingClientRect();
               return (
@@ -326,21 +316,24 @@ export const addFriend = (setting) => {
                 rect.bottom <= (window.innerHeight - 50 || document.documentElement.clientHeight - 50) &&
                 rect.right <= (window.innerWidth || document.documentElement.clientWidth)
               );
-            } else {
-              return false;
             }
           }, likeBtns[i]);
           if (!selector) {
+            temp = i + 1;
             continue;
           }
           await delay(1000);
           await likeBtns[i].evaluate((b) => b.click());
           await delay(randomDelay);
           isClick = true;
+          temp = i;
           break;
         }
-      }
-      return isClick;
+        logger("temp: " +temp)
+      return {
+        isLike: isClick,
+        newIndex: temp
+      };
     } catch (error) {
       logger(error);
       return false;
@@ -356,13 +349,23 @@ export const addFriend = (setting) => {
         if (addFriendObject.isLiked == true) {
           logger('Cần like ' + numPosts + ' bài');
           let count = 0;
+          let temp = 0;
+          let likeSelector = '#screen-root > div > div > div> div > div:nth-child(1) > div >button > span';
+          let likeBtns = await getElements(page, likeSelector, 10);
+          if (!likeBtns) {
+            likeSelector = '#screen-root > div > div > div > div:nth-child(1) > div > button > span:nth-child(1)';
+            likeBtns = await getElements(page, likeSelector, 10);
+            if (!likeBtns){
+              logger("Không có nút like!");
+              return false
+            }; 
+          }
+          logger("Có " + likeBtns.length + " nút like")
+          if(likeBtns.length < numPosts) numPosts = likeBtns.length
           for (let i = 0; i < numPosts * 2; i++) {
             try {
-              await delay(1000)
-              await scroll(page, addFriendObject);
-               await delay(1000)
-              const isLike = await randomLike(page, addFriendObject);
-              if (isLike) {
+              const objLike = await randomLike(page, addFriendObject, temp, likeBtns);
+              if (objLike.isLike) {
                 count++;
                 logger('Đã like được ' + count + ' bài');
               } else {
@@ -373,6 +376,7 @@ export const addFriend = (setting) => {
                 isReactLike = true;
                 break;
               }
+              temp = objLike.newIndex;
               await delay(randomDelay);
             } catch (error) {
               logger(error);
@@ -832,7 +836,10 @@ export const addFriend = (setting) => {
     if (addFriendObject.option == 'UIDList') {
       let count = 0;
       let UIDList = addFriendObject.text;
-      for (let i = 0; i < numsAdd * 2; i++) {
+      if(UIDList.length < numsAdd) { 
+        numsAdd = UIDList.length
+      }
+      for (let i = 0; i < numsAdd; i++) {
         try {
           await returnHomePage(page);
           let UID = UIDList[getRandomInt(UIDList.length)];
@@ -841,12 +848,12 @@ export const addFriend = (setting) => {
           const isAddFriend = await addFriendByUIDList(page, addFriendObject);
           if (isAddFriend) {
             count++;
-            UIDList = UIDList.filter((e) => e !== UID);
             logger('Đã kết bạn với ' + count + ' người bằng UID');
           } else {
             logger('Kết bạn không thành công');
           }
           if (count == numsAdd) break;
+           UIDList = UIDList.filter((e) => e !== UID);
           await delay(3000);
         } catch (error) {
           logger(error);

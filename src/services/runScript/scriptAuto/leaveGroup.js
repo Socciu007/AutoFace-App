@@ -142,6 +142,23 @@ const leaveGroupByConditional = async (page, leaveGroupObject) => {
     return false;
   }
 };
+  const findBtn = async (page, content) => {
+    try {
+      const buttons = await getElements(page, '[class="native-text"]');
+      for (let i = 0; i < buttons.length; i++) {
+        const btn = await page.evaluate((el) => {
+          return el.innerHTML;
+        }, buttons[i]);
+  
+        if (btn.includes(content)) {
+          return buttons[i];
+        }
+      }
+    } catch (err) {
+      logger(err);
+    }
+  };
+
 const clickReturn = async (page) => {
   try {
     // return your group list
@@ -177,9 +194,10 @@ const joinGroup = async (page) => {
       temp--;
     }
     let nameSelector =
-      "#screen-root > div > div:nth-child(2) > div:nth-child(10) > div> div:nth-child(2) > div";
+      "#screen-root > div > div:nth-child(2) > div > div> div:nth-child(2) > div.native-text";
+   
     let nameGroup = await getElements(page, nameSelector, 10);
-    if (nameGroup.length <= 1) return false;
+    if (!nameGroup) return false;
     let isJoin = false;
     let arr = [];
     let newIndex = -1;
@@ -320,10 +338,9 @@ const leaveGroupObj = ${strSetting};
   await clickElement(groupElement);
   await delay(randomDelay);
   // click your group
-  const yourGroupSelector =
-    "#screen-root > div > div:nth-child(2) > div:nth-child(4) > div > div > div:nth-child(2)";
-  const yourGroupBtn = await getElement(page, yourGroupSelector, 10);
+  const yourGroupBtn = await findBtn(page, '󱟶');
   if (!yourGroupBtn) return false;
+  await delay(1000);
   await clickElement(yourGroupBtn);
   await delay(randomDelay);
   logger("Cần rời " + numGroup + " group");

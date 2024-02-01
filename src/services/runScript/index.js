@@ -16,8 +16,8 @@ import { boostLikeComment } from './scriptAuto/BoostLikeComment';
 import { boostFollower } from './scriptAuto/BoostFollower';
 import { boostView } from './scriptAuto/BoostView';
 import { inviteGroup } from './scriptAuto/inviteGroup';
-import { joinGroup } from './scriptAuto/joinGroup';
-import { leftGroup } from './scriptAuto/leaveGroup';
+import { joinGroup } from './scriptAuto/JoinGroup';
+import { leftGroup } from './scriptAuto/LeaveGroup';
 import { updateProfile, updateProfiles } from '../../redux/profileSlice';
 window.electron.ipcRenderer.on('ipc-logger', (...params) => {
   console.log(params[0]);
