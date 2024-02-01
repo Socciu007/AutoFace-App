@@ -89,10 +89,22 @@ export const loginFacebook = (account) => {
           }
 
           const btnLogin = await getElement(page, '[data-bloks-name="bk.components.ViewTransformsExtension"]', 2);
+          const btnLoginNew = await getElement(page, '[name="login"]', 2);
 
           if(btnLogin){
-            await btnLogin.click();
-            await delay(2000);
+            try{
+                await btnLogin.click();
+                await delay(2000);
+            }catch(e){
+            }
+          }
+
+          if(btnLoginNew){
+            try{
+                await btnLoginNew.click();
+                await delay(2000);
+            }catch(e){
+            }
           }
 
           await page.keyboard.press("Enter");
