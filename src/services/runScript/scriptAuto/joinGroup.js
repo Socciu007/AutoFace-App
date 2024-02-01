@@ -125,37 +125,71 @@ const joinGroupByRequest = async (page, joinGroupObject) => {
 };
 const answerGroupQuestion = async (page, joinGroupObject) => {
   try {
+     let isAnswer = false;
+    // click radio button
+    const buttons = await getElements(page, '[class="native-text"]');
+    for (let i = 0; i < buttons.length; i++) {
+      const btn = await page.evaluate((el) => {
+        return el.innerHTML;
+      }, buttons[i]);
+      if (btn.includes("󰞰")) {
+        await clickElement(buttons[i]);
+        logger("success");
+        isAnswer = true;
+        break;
+      }
+    }
+    await delay(2000);
     let textareaSelector =
       "#screen-root > div > div > div > div > div > div> div > div > div > div > textarea";
     let textarea = await getElements(page, textareaSelector, 10);
-    logger(textarea.length);
-    let isAnswer = false;
-    for (let i = 0; i < textarea.length; i++) {
-      const textAreaId = await page.evaluate((el) => {
-        return el.parentNode.getAttribute(
-          "data-keyboard-shown-visible-component-id"
-        );
-      }, textarea[i]);
-      if (!textAreaId) break;
-      let areaSelector = 'div[data-keyboard-shown-visible-component-id="' +  textAreaId + '"]';
-      let area = await getElement(page, areaSelector, 10);
-      if (!area) break;
-      await scrollSmoothIfNotExistOnScreen(page, areaSelector);
-      await clickElement(area);
-      await delay(2000);
-      let randomText =
-        joinGroupObject.answer[getRandomInt(joinGroupObject.answer.length)];
-      await page.keyboard.type(randomText, { delay: 200 });
-      await delay(2000);
-    }
+      if (textarea) {
+        logger("textarea.length " + textarea.length);
+        for (let i = 0; i < textarea.length; i++) {
+            const textAreaId = await page.evaluate((el) => {
+              return el.parentNode.getAttribute(
+                "data-keyboard-shown-visible-component-id"
+              );
+            }, textarea[i]);
+            if (!textAreaId) {
+              isAnswer = false;
+              logger("không có textArea");
+              break;
+            }
+            let areaSelector =
+              'div[data-keyboard-shown-visible-component-id="' +
+              textAreaId +
+              '"]';
+            let area = await getElement(page, areaSelector, 10);
+            if (!area) {
+              isAnswer = false;
+              logger("không có area");
+              break;
+            }
+            await scrollSmoothIfNotExistOnScreen(page, areaSelector);
+            await delay(1000);
+            await clickElement(area);
+            await delay(2000);
+            let randomText =
+              joinGroupObject.answer[
+                getRandomInt(joinGroupObject.answer.length)
+              ];
+            await page.keyboard.type(randomText, { delay: 200 });
+            isAnswer = true;
+            logger("answer " + i);
+            await delay(2000);
+        }
+      }
+    // click submit
+    await delay(2000)
     let submitSelector =
       "#screen-root > div > div.m.fixed-container.bottom > div > div> div";
     const submitBtn = await getElement(page, submitSelector, 10);
     if (!submitBtn) return false;
     await scrollSmoothIfNotExistOnScreen(page, submitSelector);
-    await delay(1000);
+    await delay(2000);
     await clickElement(submitBtn);
-    isAnswer = true;
+    await delay(1000);
     return isAnswer;
   } catch (error) {
     logger(error);
@@ -164,6 +198,22 @@ const answerGroupQuestion = async (page, joinGroupObject) => {
 };
 const joinWithoutAnswer = async (page) => {
   try {
+
+    // click radio button
+    let arrBtn = [];
+    const buttons = await getElements(page, '[class="native-text"]');
+      for (let i = 0; i < buttons.length; i++) {
+        const btn = await page.evaluate((el) => {
+          return el.innerHTML;
+        }, buttons[i]);
+         if (btn.includes("󱠲")) {
+          arrBtn.push(button[i]);
+        }
+      }
+      if(arrBtn.length > 0) {
+        await clickElement(arrBtn[0]);
+      }
+
     let returnSelector =
       "#screen-root > div > div.m.fixed-container.top > div > div > div:nth-child(1) > div";
     let returnBtn = await getElement(page, returnSelector, 10);
@@ -213,32 +263,13 @@ const joinGroupByUID = async (page, joinGroupObject) => {
       joinGroupObject.delayTimeStart * 1000,
       joinGroupObject.delayTimeEnd * 1000
     );
-    const url = await page.url();
-    if (
-      url === "https://m.facebook.com/groups/" ||
-      url.includes("https://m.facebook.com/groups/")
-    ) {
-      logger("URL is correct");
-    } else {
-      await page.goto("https://m.facebook.com/groups/", {
-        waitUntil: "networkidle2",
-      });
-      logger("Go to group");
-    }
-    await page.goto(
-      'https://m.facebook.com/groups/' +
-        joinGroupObject.text[getRandomInt(joinGroupObject.text.length)]
-      ,
-      {
-        waitUntil: "networkidle2",
-      }
-    );
     await delay(randomDelay);
     // check joined group before
     const checkSelector =
       " #screen-root > div > div:nth-child(2) > div:nth-child(4) > div > div:nth-child(2)";
     const check = await getElements(page, checkSelector, 10);
     if (!check || check.length >= 2) {
+      logger("Đã vào nhóm từ trước");
       return false;
     }
     const joinSelector =
@@ -390,8 +421,31 @@ const joinGroupByUID = async (page, joinGroupObject) => {
 
   if (joinGroupObject.option == "UID") {
     let count = 0;
+    let UIDList = joinGroupObject.text;
     for (let i = 0; i < numGroup * 2; i++) {
       try {
+      const url = await page.url();
+    if (
+      url === "https://m.facebook.com/groups/" ||
+      url.includes("https://m.facebook.com/groups/")
+    ) {
+      logger("URL is correct");
+    } else {
+      await page.goto("https://m.facebook.com/groups/", {
+        waitUntil: "networkidle2",
+      });
+      logger("Go to group");
+    }
+    if(UIDList.length == 0) break;
+    let randomIndex = getRandomInt(UIDList.length);
+    let UID = UIDList[randomIndex];
+    await page.goto(
+      'https://m.facebook.com/groups/' + UID
+      ,
+      {
+        waitUntil: "networkidle2",
+      }
+    );
         const rs = await joinGroupByUID(page, joinGroupObject);
         if (rs) {
           count++;
@@ -400,6 +454,8 @@ const joinGroupByUID = async (page, joinGroupObject) => {
           logger("Tham gia nhóm không thành công");
         }
         if (count == numGroup) break;
+        UIDList = UIDList.filter((e) => e !== UID);
+        logger(UIDList);
         await delay(3000);
       } catch (error) {
         logger(error);
