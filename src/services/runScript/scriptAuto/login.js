@@ -20,6 +20,7 @@ export const loginFacebook = (account) => {
     }
     await returnHomePage(page);
     await delay(2000);
+    let loginDone = false;
     const { isLogin } = await checkLogin(page);
     if (!isLogin) {
       if (account.cookies && account.cookies.length) {
@@ -56,16 +57,17 @@ export const loginFacebook = (account) => {
           timeout: 60000,
         });
         await delay(3000);
-        const { isLogin, error } = await checkLogin(page);
-        if (!isLogin) {
-          return { isLogin, error };
-        }
-      } else if (
-        (account.twoFA && account.twoFA.length > 5) ||
+        const { isLogin } = await checkLogin(page);
+        loginDone = isLogin;
+      }
+      
+      if (
+        !loginDone &&
+        ((account.twoFA && account.twoFA.length > 5) ||
         (account.uid &&
           account.uid.length &&
           account.password &&
-          account.password.length)
+          account.password.length))
       ) {
         await returnHomePage(page);
         const email = await getElementEmail(page);
@@ -128,7 +130,6 @@ export const loginFacebook = (account) => {
                 const confirmButton = await getElement(page,'[id="checkpointSecondaryButton-actual-button"]', 5);
                 if(confirmButton){
                   await confirmButton.click();
-
                   const radioEmailbtn = await getElement(page,'[data-sigil="touchable"]', 5);
                   if(radioEmailbtn){
                     await radioEmailbtn.click();

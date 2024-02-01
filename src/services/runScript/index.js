@@ -487,8 +487,9 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
         for(let i=1;i<pages.length;i++){
           logger('Close page ' + i);
           await pages[i].close();
+          await delay(2000);
         }
-        let page = pages[0];
+        let page = await browser.newPage();
         await page.setBypassCSP(true);
         await page.setCacheEnabled(false);
         const session = await page.target().createCDPSession();
