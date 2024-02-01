@@ -159,10 +159,23 @@ export const loginFacebook = (account) => {
                 );
                 if (inputCodeMail) {
                   await delay(15000);
-                  const codeMail = await getCodeMail(
+                  let codeMail = await getCodeMail(
                     account.recoveryEmail,
                     account.recoveryPassword
                   );
+
+                  if(!codeMail || codeMail.length !== 8){
+                    for(let i=0;i<5;i++){
+                      await delay(10000);
+                      codeMail = await getCodeMail(
+                        account.recoveryEmail,
+                        account.recoveryPassword
+                      );
+                      if(codeMail && codeMail.length == 8){
+                        break;
+                      }
+                    }
+                  }
   
                   if (codeMail && codeMail.length == 8) {
                     await inputCodeMail.type(codeMail, { delay: 100 });
