@@ -71,8 +71,8 @@ const inviteGroupBySuggest = async (page, inviteGroupObject) => {
       let randomIndex = getRandomInt(arr.length);
       await delay(1000);
       await clickElement(arr[randomIndex]);
-      logger("Mời thành công " + count + " người");
       count++;
+      logger("Mời thành công " + count + " người");
       await delay(randomDelay);
       if (count == numFriends) {
         isInvite = true;
