@@ -89,7 +89,7 @@ export const addFriend = (setting) => {
     let addBtns = await getElements(page, addFriendSelector, 5);
     if (addBtns.length < 1) return false;
     let isAdd = false;
-     let arr = [];
+    let arr = [];
     let newIndex = -1;
     for (let i = 0; i < addBtns.length; i++) {
        if (newIndex > i) continue;
@@ -197,14 +197,15 @@ export const addFriend = (setting) => {
     let randomScrollTime = getRandomIntBetween(10000, 20000);
     try {
       while (randomScrollTime > 0) {
-        let scrollAmount = getRandomIntBetween(300, 400);
+        let scrollAmount = getRandomIntBetween(200, 300);
         let randomDelay = getRandomIntBetween(
           addFriendObject.delayTimeInteractStart * 1000,
           addFriendObject.delayTimeInteractEnd * 1000,
         );
         // Lưu lại vị trí cuối cùng trước khi scroll
         const positionBeforeScroll = await page.evaluate(() => window.scrollY);
-        await scrollByWheel(page, scrollAmount);await delay(1000)
+        await scrollByWheel(page, scrollAmount);
+        await delay(1000)
         // Lưu lại vị trí cuối cùng sau khi scroll
         const positionAfterScroll = await page.evaluate(() => window.scrollY);
         await delay(randomDelay);
@@ -219,22 +220,23 @@ export const addFriend = (setting) => {
       logger(error);
     }
   };
-  const randomComment = async (page, addFriendObject) => {
+  const randomComment = async (page, addFriendObject, temp,commentBtns, isActionBefore, loop) => {
     let randomDelay = getRandomIntBetween(
       addFriendObject.delayTimeInteractStart * 1000,
       addFriendObject.delayTimeInteractEnd * 1000,
     );
-    let commentSelector = '#screen-root > div > div > div > div:nth-child(2) > div > button > span';
-    let commentBtns = await getElements(page, commentSelector, 10);
-    if (!commentBtns) {
-      commentSelector = '#screen-root > div > div > div > div > div:nth-child(2) > div > button > span';
-      commentBtns = await getElements(page, commentSelector, 10);
-    }
-    if (!commentBtns) return false;
-  
+    const check = await scroll(page, addFriendObject);
+      if(check == false && isActionBefore == false && loop == 1 ) {
+        return {isEnd: true}
+      }
     let isClick = false;
+    if( temp == commentBtns.length - 1) {
+        logger("end");
+        return {isEnd: true}
+      }
+    isActionBefore = false;
     if (commentBtns.length > 0) {
-      for (let i = 0; i < commentBtns.length * 2; i++) {
+      for (let i = temp + 1 ; i < commentBtns.length * 2; i++) {
         // check selector in screen
         let selector = await page.evaluate((el) => {
           if (!el) return false;
@@ -243,9 +245,9 @@ export const addFriend = (setting) => {
             return (
               rect.width > 0 &&
               rect.height > 0 &&
-              rect.top >= 50 &&
+              rect.top >= 0 &&
               rect.left >= 0 &&
-              rect.bottom <= (window.innerHeight - 50 || document.documentElement.clientHeight - 50) &&
+              rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
               rect.right <= (window.innerWidth || document.documentElement.clientWidth)
             );
           } else {
@@ -288,22 +290,39 @@ export const addFriend = (setting) => {
         await clickElement(returnBtn);
         await delay(randomDelay);
         isClick = true;
+        temp = i;
+        isActionBefore = true;
         break;
       }
     }
-    return isClick;
+      return {
+        isComment: isClick,
+        newIndex: temp,
+        isEnd: false,
+        check: isActionBefore,
+        loop: 1
+      };
   };
-  const randomLike = async (page, addFriendObject, temp, likeBtns) => {
+  const randomLike = async (page, addFriendObject, temp, likeBtns, isActionBefore, loop) => {
     try {
       let randomDelay = getRandomIntBetween(
         addFriendObject.delayTimeInteractStart * 1000,
         addFriendObject.delayTimeInteractEnd * 1000,
       );
-      await delay(1000)
-      await scroll(page, addFriendObject);
-      await delay(1000)
+      await delay(1000);
+      const check = await scroll(page, addFriendObject);
+      if(check == false && isActionBefore == false && loop == 1 ) {
+        return {isEnd: true}
+      }
+      await delay(1000);
       let isClick = false;
-        for (let i = temp; i < likeBtns.length; i++) {
+      logger(temp);
+      if( temp == likeBtns.length - 1) {
+        logger("end");
+        return {isEnd: true}
+      }
+      isActionBefore = false;
+      for (let i = temp + 1; i < likeBtns.length; i++) {
           // check selector in screen
           let selector = await page.evaluate((el) => {
             if (el.innerHTML.includes('󰍸')) {
@@ -313,26 +332,30 @@ export const addFriend = (setting) => {
                 rect.height > 0 &&
                 rect.top >= 50 &&
                 rect.left >= 0 &&
-                rect.bottom <= (window.innerHeight - 50 || document.documentElement.clientHeight - 50) &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
                 rect.right <= (window.innerWidth || document.documentElement.clientWidth)
               );
             }
           }, likeBtns[i]);
           if (!selector) {
-            temp = i + 1;
             continue;
           }
           await delay(1000);
-          await likeBtns[i].evaluate((b) => b.click());
+          await clickElement(likeBtns[i]);
           await delay(randomDelay);
           isClick = true;
           temp = i;
+          isActionBefore = true;
           break;
         }
-        logger("temp: " +temp)
+      logger("temp: " + temp);
+
       return {
         isLike: isClick,
-        newIndex: temp
+        newIndex: temp,
+        isEnd: false,
+        check: isActionBefore,
+        loop: 1
       };
     } catch (error) {
       logger(error);
@@ -349,7 +372,9 @@ export const addFriend = (setting) => {
         if (addFriendObject.isLiked == true) {
           logger('Cần like ' + numPosts + ' bài');
           let count = 0;
-          let temp = 0;
+          let temp = -1;
+          let loop = 0;
+          let isActionBefore = false;
           let likeSelector = '#screen-root > div > div > div> div > div:nth-child(1) > div >button > span';
           let likeBtns = await getElements(page, likeSelector, 10);
           if (!likeBtns) {
@@ -360,12 +385,16 @@ export const addFriend = (setting) => {
               return false
             }; 
           }
-          logger("Có " + likeBtns.length + " nút like")
-          if(likeBtns.length < numPosts) numPosts = likeBtns.length
+         
           for (let i = 0; i < numPosts * 2; i++) {
             try {
-              const objLike = await randomLike(page, addFriendObject, temp, likeBtns);
-              if (objLike.isLike) {
+              likeBtns = await getElements(page, likeSelector, 10);
+              if(likeBtns.length < numPosts) numPosts = likeBtns.length;
+              const objLike = await randomLike(page, addFriendObject, temp, likeBtns, isActionBefore, loop);
+              isActionBefore = objLike.check;
+              loop = objLike.loop;
+              if(objLike.isEnd == true) break;
+              if (objLike.isLike == true) {
                 count++;
                 logger('Đã like được ' + count + ' bài');
               } else {
@@ -373,7 +402,6 @@ export const addFriend = (setting) => {
               }
               if (count == numPosts) {
                 logger('Xong like !');
-                isReactLike = true;
                 break;
               }
               temp = objLike.newIndex;
@@ -382,23 +410,41 @@ export const addFriend = (setting) => {
               logger(error);
             }
           }
+          isReactLike = true;
         } else {
           isReactLike = true;
         }
         if (addFriendObject.isComment == true) {
           let count = 0;
+          let temp = -1;
+          let loop = 0;
+          let isActionBefore = false;
           if (!addFriendObject.comment.length) {
             logger('Không thể comment với nội dung rỗng!');
             return false;
           }
-          logger('Cần comment' + numPosts + 'bài');
+          logger('Cần comment ' + numPosts + ' bài');
+
+          let commentSelector = '#screen-root > div > div > div > div:nth-child(2) > div > button > span';
+          let commentBtns = await getElements(page, commentSelector, 10);
+          if (!commentBtns) {
+            commentSelector = '#screen-root > div > div > div > div > div:nth-child(2) > div > button > span';
+            commentBtns = await getElements(page, commentSelector, 10);
+          if (!commentBtns){
+            logger("Không có nút comment!");
+            return false
+          }; 
+    }
+    if (!commentBtns) return false;
           for (let i = 0; i < numPosts * 2; i++) {
             try {
-               await delay(1000)
-              await scroll(page, addFriendObject);
-               await delay(1000)
-              const result = await randomComment(page, addFriendObject);
-              if (result) {
+              commentBtns = await getElements(page, commentSelector, 10);
+              if(commentBtns.length < numPosts) numPosts = commentBtns.length;
+              const objComment = await randomComment(page, addFriendObject, temp, commentBtns, isActionBefore, loop);
+              isActionBefore = objComment.check;
+              loop = objComment.loop;
+              if(objComment.isEnd == true) break;
+              if (objComment.isComment == true) {
                 count++;
                 logger('Đã comment được ' + count + ' bài');
               } else {
@@ -406,14 +452,15 @@ export const addFriend = (setting) => {
               }
               if (count == numPosts) {
                 logger('Xong comment!');
-                isComment = true;
                 break;
               }
+              temp = objComment.newIndex;
               await delay(randomDelay);
             } catch (error) {
               logger(error);
             }
           }
+          isComment = true;
         } else {
           isComment = true;
         }
@@ -422,6 +469,7 @@ export const addFriend = (setting) => {
         }
       }
       const rs = await clickAddBtn(page);
+      await delay(2000);
       if (!rs) return false;
       return true;
     } catch (error) {

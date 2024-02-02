@@ -15,7 +15,7 @@ import { createPostGroup } from './scriptAuto/CreatePostGroup';
 import { boostLikeComment } from './scriptAuto/BoostLikeComment';
 import { boostFollower } from './scriptAuto/BoostFollower';
 import { boostView } from './scriptAuto/BoostView';
-import { inviteGroup } from './scriptAuto/inviteGroup';
+import { inviteGroup } from './scriptAuto/InviteGroup';
 import { joinGroup } from './scriptAuto/JoinGroup';
 import { leftGroup } from './scriptAuto/LeaveGroup';
 import { updateProfile, updateProfiles } from '../../redux/profileSlice';
