@@ -6,13 +6,14 @@ export const boostView = (setting) => {
       }`;
   console.log(setting);
   return `
-  const getPostID = async (page, browser, boostObj) => {
+  const getPostID = async (page, boostObj) => {
     try {
       for (let i = 0; i < boostObj.videoID.length; i++) {
-        const url = 'https://mbasic.facebook.com/'+boostObj.videoID[i];
+        const [id, fbid] = boostObj.videoID[i].split("|");
+        const url = 'https://m.facebook.com/story.php/?id='+id+'&story_fbid='+fbid;
         await navigateToUrl(page, url);
         await delay(getRandomIntBetween(3000, 5000));
-        await viewPost(page, browser, boostObj);
+        await viewPost(page, boostObj);
         await delay(getRandomIntBetween(3000, 5000));
       }
     } catch (error) {
@@ -20,22 +21,32 @@ export const boostView = (setting) => {
     }
   };
   
-  const viewPost = async (page, browser, boostObj) => {
+  const viewPost = async (page, boostObj) => {
     try {
-      // Lưu lai index hien tai cua tab
-      const pages = await browser.pages();
       const timeViewPost = getRandomIntBetween(
         boostObj.viewTimeStart * 1000,
         boostObj.viewTimeEnd * 1000
       );
-      let hrefs = await page.$$eval("a", links => links.map(a => a.href));
-      await delay(getRandomIntBetween(3000, 5000));
-      const isPlay = await clickByHref(page, "/video_redirect", hrefs, 0);
-      if (isPlay) {
+      const element1 = await checkExistElement(
+        page,
+        "div.inline-video-icon.play.hidden",
+        3
+      );
+      logger(element1);
+      if (element1 === 0) {
+        const elementBtn = await page.$("div.inline-video-icon.play");
+        await delay(3000);
+        await scrollSmoothIfNotExistOnScreens(elementBtn);
+        await delay(getRandomIntBetween(3000, 5000));
+        await clickElement(elementBtn);
+        await delay(getRandomIntBetween(3000, 5000));
         await delay(timeViewPost);
-        await (await browser.pages())[pages.length].close();
         logger("Done view video");
       } else {
+        await delay(getRandomIntBetween(3000, 5000));
+        const elementBtn = await page.$("div.inline-video-container");
+        await delay(3000);
+        await scrollSmoothIfNotExistOnScreens(elementBtn);
         await delay(timeViewPost);
         logger("Done view video");
       }
@@ -44,26 +55,21 @@ export const boostView = (setting) => {
     }
   };
   
-  const clickByHref = async (page, namePage, href, indexHref) => {
-    if (href.length > 0) {
-      const hrefPage = href.filter(e => e.includes(namePage));
-      if (hrefPage.length > 0) {
-        const index =
-          indexHref !== undefined ? indexHref : getRandomInt(hrefPage.length);
-          const selector = '[href="'+hrefPage[index].replace("https://mbasic.facebook.com", "")+'"]';
-
-        const likeBtn = await page.$(selector);
-        if (likeBtn) {
-          await scrollSmoothIfNotExistOnScreen(page, selector);
-          await clickElement(likeBtn);
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        return false;
-      }
-    } else {
+  const checkExistElementOnScreens = async JSSelector => {
+    try {
+      const isElementVisible = await JSSelector.evaluate(el => {
+        const { top, left, bottom, right } = el.getBoundingClientRect();
+        return (
+          top >= 0 &&
+          left >= 0 &&
+          bottom <=
+            (window.innerHeight || document.documentElement.clientHeight) &&
+          right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+      });
+      return isElementVisible;
+    } catch (error) {
+      logger(error.message);
       return false;
     }
   };
@@ -79,22 +85,43 @@ export const boostView = (setting) => {
         logger("cant navigate");
       }
     } catch (error) {
-      logger('Error navigating to URL:' +error.message);
+      logger('Error navigating to URL:', error.message);
     }
   };
+  
+  const scrollSmoothIfNotExistOnScreens = async JSSelector => {
+    try {
+      const isExistElementOnScreen = await checkExistElementOnScreens(JSSelector);
+      if (!isExistElementOnScreen) {
+        await JSSelector.evaluate(el => {
+          el.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+            inline: "nearest",
+          });
+        });
+        return true;
+      }
+      return true;
+    } catch (error) {
+      logger(error.message);
+      return false;
+    }
+  };
+  
     let boostObj = ${strSetting}
     try {
       const isLive = await checkIsLive(page);
       if (isLive) {
         await returnHomePage(page);
         await delay(getRandomIntBetween(3000, 5000));
-        const login = await checkLogin(page, "https://m.facebook.com/");
-        if (login.isLogin) {
+        // const login = await checkLogin(page, "https://m.facebook.com/");
+        // if (login.isLogin) {
           boostObj = await checkObject(boostObj);
           if (boostObj.videoID.length > 0) {
-            await getPostID(page, browser, boostObj);
+            await getPostID(page, boostObj);
           }
-        }
+        // }
       }
     } catch (error) {
       logger(error.message);

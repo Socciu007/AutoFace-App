@@ -22,11 +22,11 @@ export const boostFollower = (setting) => {
         if (boostObj.selectTypeFollow === "profile") {
           await followProfile(page);
         } else if (boostObj.selectTypeFollow === "fanpage") {
-          if (boostObj.isFollow) {
-            await followFanpage(page, boostObj);
-            await delay(getRandomIntBetween(3000, 5000));
-          } else if (boostObj.isLike) {
+          if (boostObj.isLike) {
             await likeFanpage(page, boostObj);
+            await delay(getRandomIntBetween(3000, 5000));
+          } else if (boostObj.isFollow) {
+            await followFanpage(page, boostObj);
             await delay(getRandomIntBetween(3000, 5000));
           }
         }
@@ -77,7 +77,7 @@ export const boostFollower = (setting) => {
         if (likeBtn) {
           await clickElement(likeBtn);
           await delay(getRandomIntBetween(3000, 5000));
-          logger("Done like page");
+          logger("Done like and follow page");
         } else {
           logger("Liked page");
         }

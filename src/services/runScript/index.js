@@ -179,8 +179,7 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
         return error;
       }
     };
-
-    const scrollByWheel = async (page,scrollAmount) => {
+  const scrollByWheel = async (page,scrollAmount) => {
       return new Promise(async (resolve) => {
         try {
           setTimeout(() => {
@@ -277,18 +276,20 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
       }
     };
 
-    const scrollSmoothIfNotExistOnScreen = async (page, JSpath) => {
-      try {
-        if ((await checkExistElementOnScreen(page, JSpath)) !== 0) {
-          await page.evaluate((JSpath) => {
-            document.querySelector(JSpath).scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }, JSpath);
-        }
-        return 1;
-      } catch (error) {
-        return 0;
-      }
-    };
+const scrollSmoothIfNotExistOnScreen = async (page, JSpath) => {
+  try {
+    if ((await checkExistElementOnScreen(page, JSpath)) !== 0) {
+      await page.evaluate((JSpath) => {
+        document
+          .querySelector(JSpath)
+          .scrollIntoView({ behavior: "smooth", block: "center" });
+      }, JSpath);
+      return 1;
+    }
+  } catch (error) {
+    return 0;
+  }
+};
     
     const getElementByID = async  (
       page,

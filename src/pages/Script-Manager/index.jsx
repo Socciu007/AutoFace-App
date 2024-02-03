@@ -32,8 +32,9 @@ import { Table, Tooltip } from 'antd';
 import { formatTimeDay } from '../../services/utils';
 import { Store } from 'react-notifications-component';
 import notification from '../../resources/notification.json';
-import { useSelector } from 'react-redux';
-
+import { useSelector, useDispatch } from 'react-redux';
+import { setScriptAuto } from '../../redux/scriptAutoSlice';
+import PopupRunScript from '../../components/PopupHome/PopupRunScript/PopupRunScript';
 const ScriptManager = () => {
   const navigate = useNavigate();
 
@@ -84,7 +85,9 @@ const ScriptManager = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [itemSelect, setItemSelect] = useState(null);
   const [nameCoppy, setNameCoppy] = useState('');
+  const [isRunScript, setIsRunScript] = useState(false);
   const profiles = useSelector((state) => state.profile);
+  const dispatch = useDispatch();
   useEffect(() => {
     getScripts();
   }, []);
@@ -98,6 +101,9 @@ const ScriptManager = () => {
     contentArray.forEach((e, index) => {
       const total = profiles.filter((o) => o.script == e.id);
       const scriptDone = profiles.filter((o) => o.script == e.id && o.status == 'ready');
+      if (total.length > 0) {
+        dispatch(setScriptAuto(newArr[index].name));
+      }
       newArr[index].status =
         total.length > 0 ? (
           <div className="statusRunning">
@@ -287,6 +293,24 @@ const ScriptManager = () => {
       dataIndex: 'status',
       sorter: (a, b) => !a.isPin && !b.isPin && a.status.length - b.status.length,
       width: 180,
+      render: (status, script) => {
+        return (
+          <>
+            <div
+              onClick={() => {
+                setItemSelect(script);
+                setIsRunScript(true);
+              }}
+            >
+              {status}
+            </div>
+            <PopupRunScript
+              openRunScript={itemSelect && itemSelect.id === script.id && isRunScript}
+              handleCloseRunScript={() => setIsRunScript(false)}
+            ></PopupRunScript>
+          </>
+        );
+      },
     },
     {
       title: 'Tag',

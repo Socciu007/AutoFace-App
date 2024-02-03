@@ -316,6 +316,49 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
     }
   };
 
+  //comment
+  const handleCommentStart = (type) => {
+    if (type === 'increase') {
+      setLikeComment({
+        ...likeComment,
+        commentStart: likeComment.commentStart + 1,
+      });
+    } else {
+      setLikeComment({
+        ...likeComment,
+        commentStart: likeComment.commentStart > 0 ? likeComment.commentStart - 1 : 0,
+      });
+    }
+  };
+  const onChangeCommentStart = (e) => {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
+    }
+  };
+
+  const handleCommentEnd = (type) => {
+    if (type === 'increase') {
+      setLikeComment({
+        ...likeComment,
+        commentEnd: likeComment.commentEnd + 1,
+      });
+    } else {
+      setLikeComment({
+        ...likeComment,
+        commentEnd: likeComment.commentEnd > 0 ? likeComment.commentEnd - 1 : 0,
+      });
+    }
+  };
+  const onChangeCommentEnd = (e) => {
+    const decimalRegex = /^[+-]?\d*\.?\d+$/;
+    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+    if (!isNaN(value) && decimalRegex.test(value)) {
+      setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
+    }
+  };
+
   //post quantity
   const changeComment = (value) => {
     setLikeComment({ ...likeComment, isComment: value });
@@ -658,6 +701,39 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
                   onChange={(event) => changeComment(event.target.checked)}
                 />
                 <p>Comment</p>
+              </div>
+              <div
+                className="-option-boost-like__header__content"
+                style={{ display: likeComment.isComment ? 'flex' : 'none' }}
+              >
+                <div className="-option-boost-like__number">
+                  <div className="-option-boost-like__number__icon">
+                    <div style={{ marginBottom: '2px' }} onClick={() => handleCommentStart('increase')}>
+                      <img src={up} alt="up" width={10} height={7} />
+                    </div>
+                    <div style={{ marginTop: '2px' }} onClick={() => handleCommentStart('des')}>
+                      <img src={down} alt="down" width={10} height={7} />
+                    </div>
+                  </div>
+                  <input
+                    type="text"
+                    name="commentStart"
+                    value={likeComment.commentStart}
+                    onChange={onChangeCommentStart}
+                  />
+                </div>
+                <span>to</span>
+                <div className="-option-boost-like__number">
+                  <div className="-option-boost-like__number__icon">
+                    <div style={{ marginBottom: '2px' }} onClick={() => handleCommentEnd('increase')}>
+                      <img src={up} alt="up" width={10} height={7} />
+                    </div>
+                    <div style={{ marginTop: '2px' }} onClick={() => handleCommentEnd('des')}>
+                      <img src={down} alt="down" width={10} height={7} />
+                    </div>
+                  </div>
+                  <input type="text" name="commentEnd" value={likeComment.commentEnd} onChange={onChangeCommentEnd} />
+                </div>
               </div>
             </div>
             <div

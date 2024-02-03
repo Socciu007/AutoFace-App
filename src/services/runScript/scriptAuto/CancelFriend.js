@@ -148,7 +148,7 @@ export const cancelFriend = (setting) => {
   };
   const cancelFriendOnRequest = async (page, cancelObj, deleteBtns) => {
     try {
-          let randomDelay = getRandomIntBetween(
+    let randomDelay = getRandomIntBetween(
       cancelObj.delayTimeStart * 1000,
       cancelObj.delayTimeEnd * 1000
     );
@@ -202,6 +202,7 @@ export const cancelFriend = (setting) => {
     await returnHomePage(page);
 
     let numCancel = getRandomIntBetween(cancelObj.requestsStart, cancelObj.requestsEnd);
+    logger("Cần hủy kết bạn với " + numCancel + " người")
     let randomDelay = getRandomIntBetween(cancelObj.delayTimeStart * 1000, cancelObj.delayTimeEnd * 1000);
     const friendRequestSelector = '#screen-root > div > div:nth-child(1) > div:nth-child(4) > div:nth-child(2)';
     const friendRequestBtn = await getElement(page, friendRequestSelector, 10);
@@ -212,34 +213,31 @@ export const cancelFriend = (setting) => {
       let count = 0;
       await page.goto("https://m.facebook.com/friends/?target_pivot_link=requests")
       await delay(5000);
-      const check = await checkExistElement(
-        page,
-        "#screen-root > div > div:nth-child(2) > div.m.bg-s3 > div > div:nth-child(4)",
-        10
-      );
-      if (check == 1) {
-        return false;
-      }
+      const requestIconSelector =
+      'img[src="https://static.xx.fbcdn.net/rsrc.php/v3/yi/r/9hZDJWHZ1Do.png"]';
+      const requestIcon = await getElement(page, requestIconSelector, 10);
+      if (requestIcon) return false;
       await delay(5000);
       let deleteSelector =
       "#screen-root > div > div:nth-child(2) > div > div:nth-child(6)";
-    let deleteBtns = await getElements(page, deleteSelector, 10);
-    if (!deleteBtns) return false;
+      let deleteBtns = await getElements(page, deleteSelector, 10);
+      if (!deleteBtns) return false;
+      if (deleteBtns.length < numCancel) {
+        numCancel = deleteBtns.length;
+      }
       for (let i = 0; i < numCancel * 2; i++) {
         try {
-          await delay(randomDelay);
-           if (deleteBtns.length < numCancel) {
-          numCancel = deleteBtns.length;
-        }
-          const rs = await cancelFriendOnRequest(page, cancelObj,deleteBtns);
+          deleteBtns = await getElements(page, deleteSelector, 10);
+          logger("có " + deleteBtns.length + " nút xóa")
+          const rs = await cancelFriendOnRequest(page, cancelObj, deleteBtns);
           if (rs) {
             count++;
-            logger('Đã hủy kết bạn với' + count + 'người');
+            logger('Đã hủy kết bạn với ' + count + ' người');
           } else {
             logger('Hủy kết bạn không thành công');
           }
           if (count == numCancel) break;
-          await delay(5000);
+          await delay(randomDelay);
         } catch (error) {
           logger(error);
         }
