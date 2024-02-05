@@ -51,6 +51,8 @@ import DefaultSciptSettings from '../../resources/defaultSciptSettings.json';
 import { dbGetLocally, dbSetLocally } from '../../sender';
 import { Store } from 'react-notifications-component';
 import notification from '../../resources/notification.json';
+import PopupChooseProfile from '../../components/PopupHome/PopupChooseProfile/PopupChooseProfile.jsx';
+import PopupDebug from '../../components/PopupHome/PopupDebug/PopupDebug.jsx';
 const CreateScript = () => {
   const DnDFlowRef = useRef();
   const { state } = useLocation();
@@ -505,6 +507,23 @@ const CreateScript = () => {
         );
     }
   };
+  const [openProfiles, setOpenProfiles] = useState(false);
+  //profiles
+  const handleOpenProfiles = () => {
+    setOpenProfiles(true);
+  };
+  const handleCloseProfiles = () => {
+    setOpenProfiles(false);
+  };
+
+  const [openDebug, setOpenDebug] = useState(false);
+  //Debug
+  const handleOpenDebug = () => {
+    setOpenDebug(true);
+  };
+  const handleCloseDebug = () => {
+    setOpenDebug(false);
+  };
 
   return (
     <>
@@ -542,12 +561,17 @@ const CreateScript = () => {
                   />
                 </div>
                 <div className="groupEndBtn">
-                  <button className="debug">
+                  <button className="debug" onClick={handleOpenDebug}>
                     <img src={debug} alt="Debug" />
                   </button>
-                  <button className="test">
-                    <img src={runTest} alt="Debug" />
+                  <PopupDebug openDebug={openDebug} handleCloseDebug={handleCloseDebug}></PopupDebug>
+                  <button className="test" onClick={handleOpenProfiles}>
+                    <img src={runTest} alt="run test" />
                   </button>
+                  <PopupChooseProfile
+                    openProfiles={openProfiles}
+                    handleCloseProfiles={handleCloseProfiles}
+                  ></PopupChooseProfile>
                   {/* <button className="more">
                     <img src={option} alt="More" />
                   </button> */}
