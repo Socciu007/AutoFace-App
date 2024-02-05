@@ -33,13 +33,9 @@ export const joinGroup = (setting) => {
 const scrollAndJoin = async (page, selector, randomDelay, joinGroupObject) => {
   try {
     // scroll before click
-    let temp = getRandomIntBetween(2, 5);
+    let temp = getRandomIntBetween(2, 4);
     logger("số lần scroll " + temp);
-    while (temp > 0) {
-      await scrollByWheel(page, getRandomIntBetween(200, 300));
-      await delay(1000);
-      temp--;
-    }
+    await scrollSmooth(page,temp)
     let joinBtns = await getElements(page, selector, 10);
     if (joinBtns.length < 1) return false;
     let isJoin = false;

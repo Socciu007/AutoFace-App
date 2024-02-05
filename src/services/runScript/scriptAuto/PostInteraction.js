@@ -22,20 +22,6 @@ export const postInteract = (setting) => {
     }`;
   console.log(setting);
   return `
-  const returnProfilePage = async (page, id, fbid) => {
-    const url = await page.url();
-    if (
-      url === 'https://m.facebook.com/story.php/?id='+id+'&story_fbid='+fbid ||
-      url.includes('https://m.facebook.com/profile.php/')
-    ) {
-      logger('URL is correct');
-    } else {
-      logger('Redirect to homepage profile');
-      await page.goto('https://m.facebook.com/story.php/?id='+id+'&story_fbid='+fbid, {
-        waitUntil: 'networkidle2',
-      });
-    }
-  };
   const findBtn = async (page, content) => {
     try {
       const buttons = await getElements(page, '[class="native-text"]');
@@ -55,48 +41,17 @@ export const postInteract = (setting) => {
   const randomLike = async (page) => {
     try {
       let randomDelay = getRandomIntBetween(3 * 1000, 5 * 1000);
-      let likeSelector = '#screen-root > div > div > div> div > div:nth-child(1) > div >button > span';
-      let likeBtns = await getElements(page, likeSelector, 10);
+      let likeBtns = await findBtn(page, '󱍸');
       if (!likeBtns) {
-        likeSelector = '#screen-root > div > div > div > div:nth-child(1) > div > button > span:nth-child(1)';
-        likeBtns = await getElements(page, likeSelector, 10);
-        if (!likeBtns) {
-          logger('Không tìm thấy nút like');
-          return false;
-        }
+        logger('Không tìm thấy nút like');
+        return false;
       }
-      await scrollSmoothIfNotExistOnScreen(page, likeSelector);
+      await scrollSmoothIfElementNotExistOnScreen(page, likeBtns);
       await delay(5000);
       let isClick = false;
-      if (likeBtns.length > 0) {
-        for (let i = 0; i < likeBtns.length; i++) {
-          // check selector in screen
-          let selector = await page.evaluate((el) => {
-            if (!el) return false;
-            if (el.innerHTML.includes('󰍸')) {
-              const rect = el.getBoundingClientRect();
-              return (
-                rect.width > 0 &&
-                rect.height > 0 &&
-                rect.top >= 50 &&
-                rect.left >= 0 &&
-                rect.bottom <= (window.innerHeight - 50 || document.documentElement.clientHeight - 50) &&
-                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-              );
-            } else {
-              return false;
-            }
-          }, likeBtns[i]);
-          if (!selector) {
-            continue;
-          }
-          await delay(1000);
-          await likeBtns[i].evaluate((b) => b.click());
-          await delay(randomDelay);
-          isClick = true;
-          break;
-        }
-      }
+      await likeBtns[i].evaluate((b) => b.click());
+      await delay(randomDelay);
+      isClick = true;
       return isClick;
     } catch (error) {
       logger(error);
@@ -107,32 +62,25 @@ export const postInteract = (setting) => {
     try {
       logger('start share');
       let randomDelay = getRandomIntBetween(3 * 1000, 5 * 1000);
-      let shareSelector = '#screen-root > div > div > div> div > div:nth-child(3) > div >button';
       let shareBtns = await findBtn(page, '󰍺 ');
       if (!shareBtns) {
         logger('Không tìm thấy nút share');
         return false;
       }
-      await scrollSmoothIfNotExistOnScreen(page, shareSelector);
+      await scrollSmoothIfElementNotExistOnScreen(page, shareBtns);
       await delay(5000);
       let isClick = false;
-
       await clickElement(shareBtns);
       await delay(3000);
       const shareOptionBtn = await findBtn(page, '󱤱');
-      if (!shareOptionBtn) {
-        isClick = false;
-        return false;
-      }
+      if (!shareOptionBtn) isClick = false;
       await delay(1000);
       await clickElement(shareOptionBtn);
       await delay(3000);
+      // click post
       const postSelector = '#screen-root > div > div:nth-child(2) > div > div:nth-child(3) > div > button';
       const postBtn = await getElement(page, postSelector, 10);
-      if (!postBtn) {
-        isClick = false;
-        return false;
-      }
+      if (!postBtn) isClick = false;
       await delay(1000);
       await clickElement(postBtn);
       await delay(randomDelay);
@@ -146,65 +94,43 @@ export const postInteract = (setting) => {
   };
   const randomComment = async (page, PostInteract) => {
     let randomDelay = getRandomIntBetween(3 * 1000, 5 * 1000);
-    let commentSelector = '#screen-root > div > div > div > div:nth-child(2) > div > button > span';
-    let commentBtns = await getElements(page, commentSelector, 10);
+  
+    let commentBtns = await findBtn(page, '󰍹 ');
     if (!commentBtns) {
-      commentSelector = '#screen-root > div > div > div > div > div:nth-child(2) > div > button > span';
-      commentBtns = await getElements(page, commentSelector, 10);
-      if (!commentBtns) {
-        logger('Không tìm thấy nút comment');
-        return false;
-      }
+      logger('Không tìm thấy nút comment');
+      return false;
     }
-    await scrollSmoothIfNotExistOnScreen(page, commentSelector);
+  
+    await scrollSmoothIfElementNotExistOnScreen(page, commentBtns);
     await delay(5000);
+  
     let isClick = false;
-    if (commentBtns.length > 0) {
-      for (let i = 0; i < commentBtns.length * 2; i++) {
-        // check selector in screen
-        let selector = await page.evaluate((el) => {
-          if (!el) return false;
-          if (el.innerHTML.includes('󰍹')) {
-            const rect = el.getBoundingClientRect();
-            return (
-              rect.width > 0 &&
-              rect.height > 0 &&
-              rect.top >= 50 &&
-              rect.left >= 0 &&
-              rect.bottom <= (window.innerHeight - 50 || document.documentElement.clientHeight - 50) &&
-              rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-            );
-          } else {
-            return false;
-          }
-        }, commentBtns[i]);
-        if (!selector) continue;
-        await commentBtns[i].evaluate((b) => b.click());
-        await delay(randomDelay);
-        // find comment area
-        const commentAreaSelector = 'textarea[type="text"]';
-        const commentArea = await getElement(page, commentAreaSelector, 10);
-        if (!commentArea) continue;
-        await delay(1000);
-        await clickElement(commentArea);
-        logger('Đã chọn vùng comment');
-        // comment
-        let content = PostInteract.text;
-        let randomString = content[getRandomIntBetween(1, content.length)];
-        await delay(1000);
-        await page.keyboard.type(randomString, { delay: 100 });
-        await delay(1000);
-        const postBtn = await findBtn(page, '󱛅');
-        if (!postBtn) continue;
-        await delay(1000);
-        await clickElement(postBtn);
-        await delay(randomDelay);
-        isClick = true;
-        break;
-      }
-    }
+    await commentBtns[i].evaluate((b) => b.click());
+    await delay(randomDelay);
+    // find comment area
+    const commentAreaSelector = 'textarea[type="text"]';
+    const commentArea = await getElement(page, commentAreaSelector, 10);
+    if (!commentArea) isClick = false;
+    await delay(1000);
+    await clickElement(commentArea);
+    logger('Đã chọn vùng comment');
+    // comment
+    let content = PostInteract.text;
+    logger('content ' + content);
+    let randomString = content[getRandomIntBetween(1, content.length)];
+    logger('randomString ' + randomString);
+    await delay(1000);
+    await page.keyboard.type(randomString, { delay: 100 });
+    await delay(1000);
+    const postBtn = await findBtn(page, '󱛅');
+    if (!postBtn) isClick = false;
+    await delay(1000);
+    await clickElement(postBtn);
+    await delay(randomDelay);
+    isClick = true;
     return isClick;
   };
+  
   
   const PostInteract = ${strSetting}
   try {
@@ -237,6 +163,7 @@ export const postInteract = (setting) => {
       logger('randomLink', randomLink);
       logger('arrLink', arrLink);
       logger('arrLink.length', arrLink.length);
+      if (arrLink.length === randomPost) break;
       if (arrLink.includes(randomLink)) {
         logger('Đã hiển thị bài trước đó');
         continue;
@@ -246,6 +173,7 @@ export const postInteract = (setting) => {
       await page.goto('https://m.facebook.com/story.php/?id='+id+'&story_fbid='+fbid);
       await delay(2000);
       randomPost--;
+
       if (
         (await checkExistElementOnScreen(
           page,
@@ -255,7 +183,9 @@ export const postInteract = (setting) => {
         logger('Bài đăng không tồn tại ');
         continue;
       }
+
       const startTime = Date.now();
+
       const shouldLike = getRandomInt(3) == 0;
       logger('shouldLike', shouldLike);
       if (post.isLiked == true && shouldLike == true && numLikes > 0) {

@@ -18,47 +18,6 @@ export const createPost = (setting) => {
   }`;
   console.log(strSetting);
   return `
-  const tagFriendsRandomly = async (page, numberFriendTag) => {
-    try {
-      let count = 0;
-      let selector = "div.m.bg-s3[data-action-id]";
-      // Kiểm tra danh sách bạn bè
-      const listFriend = await getElements(page, selector, 3);
-      if (listFriend.length < 1) {
-        selector = "div.m.bg-s4[data-action-id]";
-        listFriend = await getElements(page, selector, 3);
-        if (listFriend.length < 1){
-          logger('Khong co ban be de tag');
-          return false;
-        } 
-      }
-      let temp = [];
-      while (count < numberFriendTag) {
-          console.log("list friend length " + listFriend.length);
-          // Chọn một bạn bè ngẫu nhiên từ danh sách và click vào
-          let randomFriend = getRandomIntBetween(0, listFriend.length);
-          let index = temp.indexOf(randomFriend);
-          if (index == -1) {
-            temp.push(randomFriend);
-          } else {
-            continue;
-          }
-          if (!(await isElementVisible(page, listFriend[randomFriend]))) {
-            await listFriend[randomFriend].evaluate((el) => {
-              el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
-            });
-            await delay(2000);
-          }
-          await clickElement(listFriend[randomFriend]);
-          logger('Clicked friend tag');
-          await delay(3000);
-          count++;
-        await delay(5000);
-      }
-    } catch (err) {
-      logger(err);
-    }
-  };
   const isElementVisible = async (page, element) => {
     try {
       // Evaluate if the element is visible by checking its bounding box
@@ -84,9 +43,7 @@ export const createPost = (setting) => {
       if (numberFriendTag > 0) {
         const tagBtn = await findBtn(page, '󱤇');
         if (!(await isElementVisible(page, tagBtn))) {
-          await tagBtn.evaluate((el) => {
-            el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
-          });
+          await scrollSmoothIfElementNotExistOnScreen(page, tagBtn);
           await delay(2000);
         }
         await clickElement(tagBtn);
@@ -126,6 +83,46 @@ export const createPost = (setting) => {
     } catch (error) {
       logger(error);
       return false;
+    }
+  };
+  const tagFriendsRandomly = async (page, numberFriendTag) => {
+    try {
+      let count = 0;
+      let selector = 'div.m.bg-s3[data-action-id]';
+      // Kiểm tra danh sách bạn bè
+      const listFriend = await getElements(page, selector, 3);
+      if (listFriend.length < 1) {
+        selector = 'div.m.bg-s4[data-action-id]';
+        listFriend = await getElements(page, selector, 3);
+        if (listFriend.length < 1) {
+          logger('Khong co ban be de tag');
+          return false;
+        }
+      }
+      let temp = [];
+      logger('numberFriendTag', numberFriendTag);
+      while (count < numberFriendTag) {
+        // Chọn một bạn bè ngẫu nhiên từ danh sách và click vào
+        let randomFriend = getRandomIntBetween(0, listFriend.length);
+        let index = temp.indexOf(randomFriend);
+        if (index == -1) {
+          temp.push(randomFriend);
+        } else {
+          continue;
+        }
+        if (!(await isElementVisible(page, listFriend[randomFriend]))) {
+          await scrollSmoothIfElementNotExistOnScreen(page, listFriend[randomFriend]);
+          await delay(2000);
+        }
+        logger('randomFriend', randomFriend);
+        await clickElement(listFriend[randomFriend]);
+        logger('Clicked friend tag');
+        await delay(3000);
+        count++;
+        await delay(5000);
+      }
+    } catch (err) {
+      logger(err);
     }
   };
   const uploadImg = async (page, CreatePost) => {
@@ -183,9 +180,7 @@ export const createPost = (setting) => {
         if (CreatePost.text.length > 0) {
           const randomTextIndex = getRandomIntBetween(0, CreatePost.text.length);
           logger('randomTextIndex ' + randomTextIndex);
-  
           await clickElement(InputTextContent);
-  
           logger('Clicked input content');
           await InputTextContent.type(CreatePost.text[randomTextIndex], { delay: 150 });
           logger('Hoan tat nhap content');
@@ -221,8 +216,8 @@ export const createPost = (setting) => {
     }
   };
 
+  const object = ${strSetting}
   try {
-    const object = ${strSetting}
     //Check obj start < end ? random(start,end) : random(end,start)
     let CreatePost = await checkObject(object);
     // check page is live reutrn -1, return 1, return 0
@@ -233,38 +228,42 @@ export const createPost = (setting) => {
     let count = 0;
     const numberOfPost = getRandomIntBetween(CreatePost.postStart, CreatePost.postEnd);
     logger('can create ' + numberOfPost + 'bai');
-    const arrContent = [];
+    let arrContent = [];
+
     while (count < numberOfPost) {
       await returnHomePage(page);
       await delay(3000);
-      await scrollSmoothIfNotExistOnScreen(
-        page,
-        '#screen-root > div > div:nth-child(1) > div > div > div:nth-child(3) > div > div:nth-child(2) > div',
-      );
-      await delay(3000);
+
       if (
-        (await checkExistElementOnScreen(
+        (await checkExistElement(
           page,
           '#screen-root > div > div:nth-child(1) > div > div > div:nth-child(3) > div > div:nth-child(2) > div',
-        )) == 0
+        )) != 0
       ) {
-        await delay(3000);
         const redictCreatePost = await getElement(
           page,
           '#screen-root > div > div:nth-child(1) > div > div > div:nth-child(3) > div > div:nth-child(2) > div',
         );
+
+        await scrollSmoothIfNotExistOnScreen(
+          page,
+          '#screen-root > div > div:nth-child(1) > div > div > div:nth-child(3) > div > div:nth-child(2) > div',
+        );
+        await delay(3000);
+
         await clickElement(redictCreatePost);
         await delay(1000);
-  
+
         // Text/photo
         if (CreatePost.option === 'text/photo') {
           const inputContentResult = await inputContent(page, CreatePost);
-          if (inputContentResult) {
+          if (inputContentResult != -1) {
             logger('Done input content');
           } else {
             logger('Khong the nhap content ');
             return 0;
           }
+
           const uploadImgResult = await uploadImg(page, CreatePost);
           if (uploadImgResult) {
             logger('Upload image successful');
@@ -280,15 +279,12 @@ export const createPost = (setting) => {
             logger('Khong tag ban be');
           }
         } else {
-
           // Using background
-          
           const background = await getElements(
             page,
             '#screen-root > div > div:nth-child(2) > div.m.hscroller.no-hscroller > div > div:nth-child(2)',
             5,
           );
-  
           await delay(2000);
           const listBackground = [6, 8, 9, 10];
           let randomBackground = getRandomIntBetween(1, background.length);
@@ -301,47 +297,52 @@ export const createPost = (setting) => {
             });
             await delay(2000);
           }
-          logger("randomBackground",randomBackground);
+          logger('randomBackground', randomBackground);
           await clickElement(background[randomBackground]);
           await delay(2000);
           const inputContentResult = await inputContent(page, CreatePost);
+
           if (inputContentResult != -1) {
             logger('Done input content');
           } else {
             logger('Khong the nhap content ');
             return 0;
           }
+
           logger('arrContent', arrContent);
 
           if (inputContentResult === arrContent[0]) {
             logger('Content giong voi bai dang truoc do');
             continue;
           }
+
+          // Nếu không trùng lặp, thêm vào mảng
           arrContent.unshift(inputContentResult);
         }
         // Click Post content
-        let PostBtnSelector = '#screen-root > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(3) > div > div > span';
+        let PostBtnSelector =
+          '#screen-root > div > div:nth-child(2) > div:nth-child(2) > div:nth-child(3) > div > div > span';
         let PostBtn = await getElement(page, PostBtnSelector);
-                                              
+
         if ((await checkExistElementOnScreen(page, PostBtnSelector)) !== 0) {
           PostBtnSelector = '#screen-root > div > div >div:nth-child(1) > div:nth-child(3) > div > div > span  ';
           PostBtn = await getElement(page, PostBtnSelector);
-          if(!PostBtn) return 0;
+          if (!PostBtn) return 0;
         }
         await delay(5000);
         if (PostBtn) {
           await clickElement(PostBtn);
-          console.log('Da click post');
+          logger('Da click post');
           await delay(5000);
         } else {
-          console.log('Button choose image is empty');
+          logger('Button choose image is empty');
           return 0;
         }
       } else {
         logger("Can't post status");
         break;
       }
-  
+
       count++;
       logger('Creat post done');
       await delay(getRandomIntBetween(CreatePost.delayTimeStart, CreatePost.delayTimeEnd) * 1000);

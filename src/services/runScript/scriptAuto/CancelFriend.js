@@ -98,13 +98,8 @@ export const cancelFriend = (setting) => {
       const moreBtns = await getElements(page, moreSelector, 10);
       if (moreBtns.length < 1) return false;
       // scroll before click more button
-      let temp = getRandomIntBetween(3, 7);
-      logger(temp);
-      while (temp > 0) {
-        await scrollByWheel(page, getRandomIntBetween(200, 300));
-        await delay(1000);
-        temp--;
-      }
+      let temp = getRandomIntBetween(1, 3);
+      await scrollSmooth(page,temp)
       // get more button on screen
       for (let i = 0; i < moreBtns.length; i++) {
         let randomIndex = getRandomInt(moreBtns.length);

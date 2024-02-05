@@ -79,13 +79,9 @@ export const addFriend = (setting) => {
     const addFriendSelector =
       "#screen-root > div > div:nth-child(2) > div > div.m.bg-s5 > div > div > div:nth-child(2)";
       // scroll before click more button
-    let temp = getRandomIntBetween(3, 5);
+    let temp = getRandomIntBetween(2, 4);
     logger("số lần scroll " + temp);
-    while (temp > 0) {
-      await scrollByWheel(page, getRandomIntBetween(200, 300));
-      await delay(1000);
-      temp--;
-    }
+    await scrollSmooth(page, temp);
     let addBtns = await getElements(page, addFriendSelector, 5);
     if (addBtns.length < 1) return false;
     let isAdd = false;
@@ -193,33 +189,61 @@ export const addFriend = (setting) => {
       return false;
     }
   };
-  const scroll = async (page, addFriendObject) => {
-    let randomScrollTime = getRandomIntBetween(10000, 20000);
+  const scroll = async (page, newsfeed) => {
+    let randomScrollTime = getRandomIntBetween(3, 7);
     try {
+      let randomDelay = getRandomIntBetween(newsfeed.delayTimeStart * 1000, newsfeed.delayTimeEnd * 1000);
       while (randomScrollTime > 0) {
-        let scrollAmount = getRandomIntBetween(200, 300);
-        let randomDelay = getRandomIntBetween(
-          addFriendObject.delayTimeInteractStart * 1000,
-          addFriendObject.delayTimeInteractEnd * 1000,
-        );
-        // Lưu lại vị trí cuối cùng trước khi scroll
-        const positionBeforeScroll = await page.evaluate(() => window.scrollY);
-        await scrollByWheel(page, scrollAmount);
-        await delay(1000)
-        // Lưu lại vị trí cuối cùng sau khi scroll
-        const positionAfterScroll = await page.evaluate(() => window.scrollY);
-        await delay(randomDelay);
-        randomScrollTime = randomScrollTime - randomDelay;
-        // So sánh vị trí cuối cùng trước và sau scroll
-        if (positionBeforeScroll == positionAfterScroll) {
-          logger('Đã scroll xuống cuối trang.');
-          return false;
-        }
+        await page.evaluate(async () => {
+          const getRandomIntBetween = (min, max) => {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+          };
+          const delay = async (time) => {
+            return new Promise((resolve) => setTimeout(resolve, time));
+          };
+          const smoothScrollByStep = (targetPosition, duration) => {
+            const startPosition = window.scrollY;
+            const distance = targetPosition - startPosition;
+            let startTime = null;
+  
+            const animation = (currentTime) => {
+              if (startTime === null) startTime = currentTime;
+              const timeElapsed = currentTime - startTime;
+              const run = ease(timeElapsed, startPosition, distance, duration);
+              window.scrollTo(0, run);
+              if (timeElapsed < duration) requestAnimationFrame(animation);
+            };
+  
+            const ease = (t, b, c, d) => {
+              t /= d / 2;
+              if (t < 1) return (c / 2) * t * t + b;
+              t--;
+              return (-c / 2) * (t * (t - 2) - 1) + b;
+            };
+  
+            requestAnimationFrame(animation);
+          };
+          let scrollAmount = getRandomIntBetween(400, 800);
+          const targetPosition = window.scrollY + scrollAmount;
+          let currentPosition = window.scrollY;
+          if (currentPosition < targetPosition) {
+            const durationPerStep = getRandomIntBetween(500, 1000);
+            const nextPosition = Math.max(currentPosition + scrollAmount, targetPosition);
+            smoothScrollByStep(nextPosition, durationPerStep);
+            await delay(getRandomIntBetween(1000, 5000));
+            await new Promise((resolve) => setTimeout(resolve, durationPerStep));
+            currentPosition = nextPosition;
+          }
+        });
+        randomScrollTime--;
       }
+      await delay(randomDelay);
+      console.log('Đã scroll xong');
     } catch (error) {
-      logger(error);
+      console.log(error);
     }
   };
+  
   const randomComment = async (page, addFriendObject, temp,commentBtns, isActionBefore, loop) => {
     let randomDelay = getRandomIntBetween(
       addFriendObject.delayTimeInteractStart * 1000,
@@ -535,13 +559,8 @@ export const addFriend = (setting) => {
       if (!allMember) return false;
       logger("Member length: " + allMember.length );
           // scroll before click
-      let temp = getRandomIntBetween(4, 6);
-      logger("Số lần scroll " + temp);
-      while (temp > 0) {
-        await scrollByWheel(page, getRandomIntBetween(200, 300));
-        await delay(1000);
-        temp--;
-      }
+      let temp = getRandomIntBetween(2, 4);
+      await scrollSmooth(page,temp)
       let arr = [];
       for (let i = index; i < allMember.length; i++) {
         allMember = await getElements(page, memberSelectors, 1);
@@ -610,7 +629,6 @@ export const addFriend = (setting) => {
     const fof = '#screen-root > div > div:nth-child(2) > div:nth-child(7) > div:nth-child(' + randomIndex +')';
     const fofBtn = await getElement(page, fof, 3);
     if (!fofBtn) return false;
-    await scrollByWheel(page, 300);
     await scrollSmoothIfNotExistOnScreen(page, fof);
     await delay(1000);
     await clickElement(fofBtn);
@@ -776,13 +794,8 @@ export const addFriend = (setting) => {
       await clickElement(friendRequestBtn);
       await delay(randomDelay);
             // scroll before click
-      let temp = getRandomIntBetween(13, 15);
-      while (temp > 0) {
-        await scrollByWheel(page, getRandomIntBetween(600, 700));
-        await delay(1000);
-        temp--;
-      }
-      
+      let temp = getRandomIntBetween(10, 13);
+      await scrollSmooth(page,temp)
       for (let i = 0; i < numsAdd * 2; i++) {
         try {
           await delay(randomDelay);
@@ -972,11 +985,7 @@ export const addFriend = (setting) => {
     // scroll before click more button
     let temp = getRandomIntBetween(2, 4);
     logger("số lần scroll " + temp);
-    while (temp > 0) {
-      await scrollByWheel(page, getRandomIntBetween(100, 200));
-      await delay(1000);
-      temp--;
-    } 
+    await scrollSmooth(page,temp)
               // get all friends
           let friendSelector =
             "#screen-root > div > div:nth-child(2) > div > div.m.bg-s3";

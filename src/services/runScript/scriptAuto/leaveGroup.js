@@ -11,42 +11,36 @@ export const leftGroup = (setting) => {
       }`;
   console.log(strSetting);
   return `
-const leaveGroupByRandom = async (page, leaveGroupObject, element) => {
+const leaveGroupByRandom = async (page, leaveGroupObject) => {
   try {
     let randomDelay = getRandomIntBetween(
       leaveGroupObject.delayTimeStart * 1000,
       leaveGroupObject.delayTimeEnd * 1000
     );
-    const objJoin = await joinGroup(page, element);
-    let newElement = objJoin.element
-    if (objJoin.isJoin == true) {
+    const isJoin = await joinGroup(page);
+
+    if (isJoin == true) {
       const rs = await clickLeave(page);
       if (rs) {
-        return {
-          isLeave: true,
-          element: newElement
-        };
+        return true;
       }
     }
     await delay(randomDelay);
-    return {
-      isLeave: false,
-      element: newElement
-    };
+    return false;
   } catch (error) {
     logger(error);
     return false;
   }
 };
-const leaveGroupByApprove = async (page, leaveGroupObject, element) => {
+const leaveGroupByApprove = async (page, leaveGroupObject) => {
   try {
     let randomDelay = getRandomIntBetween(
       leaveGroupObject.delayTimeStart * 1000,
       leaveGroupObject.delayTimeEnd * 1000
     );
-    const objJoin = await joinGroup(page, element);
-    let newElement = objJoin.element
-    if (objJoin.isJoin == true) {
+    const isJoin = await joinGroup(page);
+    logger("Đã click vào nhóm");
+    if (isJoin) {
       // check moderator in group
       let memberSelector =
         "#screen-root > div > div:nth-child(2) > div:nth-child(4) > div.m.bg-s3 > div:nth-child(1)";
@@ -55,10 +49,7 @@ const leaveGroupByApprove = async (page, leaveGroupObject, element) => {
         memberSelector =
           "#screen-root > div > div:nth-child(2) > div:nth-child(4) > div.m.bg-s4 > div:nth-child(1)";
         member = await getElement(page, memberSelector);
-        if (!member)      return {
-          isLeave: false,
-          element: newElement
-        };;
+        if (!member) return false;
       }
       await delay(1000);
       await scrollSmoothIfNotExistOnScreen(page, memberSelector);
@@ -67,10 +58,7 @@ const leaveGroupByApprove = async (page, leaveGroupObject, element) => {
       let moderatorSelector =
         "#screen-root > div > div:nth-child(2) > div:nth-child(6) > div > div > div:nth-child(3) > div";
       let moderator = await getElements(page, moderatorSelector, 10);
-      if (moderator.length < 1)      return {
-          isLeave: false,
-          element: newElement
-        };;
+      if (moderator.length < 1) return false;
       // loop through member
       for (let i = 0; i < moderator.length; i++) {
         const moderatorIcon = await page.evaluate((el) => {
@@ -84,10 +72,7 @@ const leaveGroupByApprove = async (page, leaveGroupObject, element) => {
           const rs = await clickLeave(page);
           if (rs) {
             logger("Rời thành công");
-             return {
-            isLeave: true,
-            element: newElement
-            };
+            return true;
           } else {
             break;
           }
@@ -95,10 +80,7 @@ const leaveGroupByApprove = async (page, leaveGroupObject, element) => {
       }
     }
     await delay(randomDelay);
-     return {
-          isLeave: false,
-          element: newElement
-        };
+    return false;
   } catch (error) {
     logger(error);
     return false;
@@ -110,17 +92,14 @@ const leaveGroupByConditional = async (page, leaveGroupObject) => {
       leaveGroupObject.delayTimeStart * 1000,
       leaveGroupObject.delayTimeEnd * 1000
     );
-    const objJoin = await joinGroup(page, element);
-    let newElement = objJoin.element;
-    if (objJoin.isJoin == true) {
+    const isJoin = await joinGroup(page);
+
+    if (isJoin == true) {
       // check number of members
       let groupInforSelector =
         "#screen-root > div > div:nth-child(2) > div:nth-child(4) > div:nth-child(2)";
       let groupInfor = await getElement(page, groupInforSelector, 10);
-      if (!groupInfor)      return {
-          isLeave: false,
-          element: newElement
-        };;
+      if (!groupInfor) return false;
       await delay(1000);
       await clickElement(groupInfor);
       await delay(1000);
@@ -132,17 +111,11 @@ const leaveGroupByConditional = async (page, leaveGroupObject) => {
         return parseInt(numberText);
       }, numsMember);
       logger("Số thành viên của nhóm: " + nums);
-      if (nums > leaveGroupObject.member)     return {
-          isLeave: false,
-          element: newElement
-        };;
+      if (nums > leaveGroupObject.member) return false;
       let groupNameSelector =
         "#screen-root > div > div:nth-child(2) > div:nth-child(3) > div:nth-child(1) > div > h3";
       let groupName = await getElement(page, groupNameSelector, 10);
-      if (!groupName)     return {
-          isLeave: false,
-          element: newElement
-        };;
+      if (!groupName) return false;
       let keyword =
         leaveGroupObject.text[
           getRandomInt(leaveGroupObject.text.length)
@@ -154,25 +127,16 @@ const leaveGroupByConditional = async (page, leaveGroupObject) => {
         groupName,
         keyword
       );
-      if (!name)      return {
-          isLeave: false,
-          element: newElement
-        };;
+      if (!name) return false;
       await clickReturn(page);
       await delay(3000);
       const rs = await clickLeave(page);
       if (rs) {
-             return {
-          isLeave: true,
-          element: newElement
-        };
+        return true;
       }
     }
     await delay(randomDelay);
-         return {
-          isLeave: false,
-          element: newElement
-        };
+    return false;
   } catch (error) {
     logger(error);
     return false;
@@ -213,32 +177,21 @@ const clickReturn = async (page) => {
   }
 };
 // click group and go to group page
-const joinGroup = async (page, element) => {
+const joinGroup = async (page) => {
   try {
-    let nameId = await page.evaluate((el) => {
-      return el.getAttribute("data-action-id");
-    }, element)
-    let nameSelector = 'div[data-action-id="' + nameId + '"]';
-    await scrollSmoothIfNotExistOnScreen(page, nameSelector);
-    await delay(1000)
     // scroll before click
-    let temp = getRandomIntBetween(2, 5);
+    let temp = getRandomIntBetween(2, 4);
     logger("số lần scroll " + temp);
-    while (temp > 0) {
-      let positionBeforeScroll = await page.evaluate(() => window.scrollY);
-      await scrollByWheel(page, getRandomIntBetween(150, 200));
-      await delay(2000);
-      let positionAfterScroll = await page.evaluate(() => window.scrollY);
-      if (positionBeforeScroll === positionAfterScroll) {
-        logger("Đã scroll xuống cuối trang.");
-        break;
-      }
-      temp--;
-    }
+    await scrollSmooth(page,temp)
+    let nameSelector =
+      "#screen-root > div > div:nth-child(2) > div > div> div:nth-child(2) > div.native-text";
+   
+    let nameGroup = await getElements(page, nameSelector, 10);
+    if (!nameGroup) return false;
     let isJoin = false;
     let arr = [];
-    let newIndex = 0;
-    for (let i = newIndex + 1; i < nameGroup.length; i++) {
+    let newIndex = -1;
+    for (let i = 1; i < nameGroup.length; i++) {
       if (newIndex > i) continue;
       nameGroup = await getElements(page, nameSelector, 10);
       const groupId = await page.evaluate((el) => {
@@ -265,10 +218,7 @@ const joinGroup = async (page, element) => {
     await clickElement(arr[randomIndex]);
     isJoin = true;
     await delay(2000);
-    return {
-      element: arr[randomIndex],
-      isJoin: isJoin
-    };
+    return isJoin;
   } catch (error) {
     logger(error);
     return false;
@@ -384,25 +334,19 @@ const leaveGroupObj = ${strSetting};
   await clickElement(yourGroupBtn);
   await delay(randomDelay);
   logger("Cần rời " + numGroup + " group");
-  let nameSelector =
-    "#screen-root > div > div:nth-child(2) > div > div> div:nth-child(2) > div.native-text";
-  let nameGroup = await getElements(page, nameSelector, 10);
-  if (!nameGroup) return false;
-  let element = nameGroup[1];
   if (leaveGroupObject.option == "random") {
     let count = 0;
     for (let i = 0; i < numGroup * 2; i++) {
       try {
         await GotoGroup(page);
-        const rs = await leaveGroupByRandom(page, leaveGroupObject, element);
-        if (rs.isLeave == true) {
+        const rs = await leaveGroupByRandom(page, leaveGroupObject);
+        if (rs) {
           count++;
           logger("Đã rời " + count + " nhóm");
         } else {
           logger("Rời nhóm không thành công");
         }
         if (count == numGroup) break;
-        element = rs.element;
         await delay(3000);
       } catch (error) {
         logger(error);
@@ -414,15 +358,14 @@ const leaveGroupObj = ${strSetting};
     for (let i = 0; i < numGroup * 2; i++) {
       try {
         await GotoGroup(page);
-        const rs = await leaveGroupByApprove(page, leaveGroupObject, element);
-        if (rs.isLeave == true) {
+        const rs = await leaveGroupByApprove(page, leaveGroupObject);
+        if (rs) {
           count++;
           logger("Đã rời " + count + " nhóm");
         } else {
           logger("Rời nhóm không thành công");
         }
         if (count == numGroup) break;
-        element = rs.element;
         await delay(3000);
       } catch (error) {
         logger(error);
@@ -434,15 +377,14 @@ const leaveGroupObj = ${strSetting};
     for (let i = 0; i < numGroup * 2; i++) {
       try {
         await GotoGroup(page);
-        const rs = await leaveGroupByConditional(page, leaveGroupObject,element);
-        if (rs.isLeave == true) {
+        const rs = await leaveGroupByConditional(page, leaveGroupObject);
+        if (rs) {
           count++;
           logger("Đã rời " + count + " nhóm");
         } else {
           logger("Rời nhóm không thành công");
         }
         if (count == numGroup) break;
-        element = rs.element;
         await delay(3000);
       } catch (error) {
         logger(error);

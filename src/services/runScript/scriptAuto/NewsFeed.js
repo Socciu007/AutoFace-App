@@ -19,59 +19,76 @@ export const newFeed = (setting) => {
   return `
   
   const scroll = async (page, newsfeed) => {
-    let randomScrollTime = getRandomIntBetween(4, 7);
+    let randomScrollTime = getRandomIntBetween(3, 7);
     try {
       let randomDelay = getRandomIntBetween(newsfeed.delayTimeStart * 1000, newsfeed.delayTimeEnd * 1000);
       while (randomScrollTime > 0) {
-        let scrollAmount = getRandomIntBetween(200, 300);
-        await scrollByWheel(page, scrollAmount);
-        await delay(randomDelay);
+        await page.evaluate(async () => {
+          const getRandomIntBetween = (min, max) => {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+          };
+          const delay = async (time) => {
+            return new Promise((resolve) => setTimeout(resolve, time));
+          };
+          const smoothScrollByStep = (targetPosition, duration) => {
+            const startPosition = window.scrollY;
+            const distance = targetPosition - startPosition;
+            let startTime = null;
+  
+            const animation = (currentTime) => {
+              if (startTime === null) startTime = currentTime;
+              const timeElapsed = currentTime - startTime;
+              const run = ease(timeElapsed, startPosition, distance, duration);
+              window.scrollTo(0, run);
+              if (timeElapsed < duration) requestAnimationFrame(animation);
+            };
+  
+            const ease = (t, b, c, d) => {
+              t /= d / 2;
+              if (t < 1) return (c / 2) * t * t + b;
+              t--;
+              return (-c / 2) * (t * (t - 2) - 1) + b;
+            };
+  
+            requestAnimationFrame(animation);
+          };
+          let scrollAmount = getRandomIntBetween(400, 800);
+          const targetPosition = window.scrollY + scrollAmount;
+          let currentPosition = window.scrollY;
+          if (currentPosition < targetPosition) {
+            const durationPerStep = getRandomIntBetween(500, 1000);
+            const nextPosition = Math.max(currentPosition + scrollAmount, targetPosition);
+            smoothScrollByStep(nextPosition, durationPerStep);
+            await delay(getRandomIntBetween(1000, 5000));
+            await new Promise((resolve) => setTimeout(resolve, durationPerStep));
+            currentPosition = nextPosition;
+          }
+        });
         randomScrollTime--;
       }
+      await delay(randomDelay);
+      console.log('Đã scroll xong');
     } catch (error) {
-      logger(error);
+      console.log(error);
     }
   };
-  const randomLike = async (page, newsfeed) => {
+  
+  const randomLike = async (page, newsfeed, likeBtns, temp) => {
     try {
       let randomDelay = getRandomIntBetween(newsfeed.delayTimeStart * 1000, newsfeed.delayTimeEnd * 1000);
-      let likeSelector = '#screen-root > div > div > div> div > div:nth-child(1) > div >button > span';
-      let likeBtns = await getElements(page, likeSelector, 10);
-      if (!likeBtns) {
-        likeSelector = '#screen-root > div > div > div > div:nth-child(1) > div > button > span:nth-child(1)';
-        likeBtns = await getElements(page, likeSelector, 10);
-      }
-      let isClick = false;
       if (likeBtns.length > 0) {
-        for (let i = 0; i < likeBtns.length; i++) {
-          // check selector in screen
-          let selector = await page.evaluate((el) => {
-            if (!el) return false;
-            if (el.innerHTML.includes('󰍸')) {
-              const rect = el.getBoundingClientRect();
-              return (
-                rect.width > 0 &&
-                rect.height > 0 &&
-                rect.top >= 50 &&
-                rect.left >= 0 &&
-                rect.bottom <= (window.innerHeight - 50 || document.documentElement.clientHeight - 50) &&
-                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-              );
-            } else {
-              return false;
-            }
-          }, likeBtns[i]);
-          if (!selector) {
-            continue;
-          }
+          const randomIndex = getRandomIntBetween(temp, likeBtns.length);
+          logger(randomIndex)
+          await scrollSmoothIfElementNotExistOnScreen(likeBtns[randomIndex]);
           await delay(1000);
-          await likeBtns[i].evaluate((b) => b.click());
+          await clickElement(likeBtns[randomIndex])
+          temp = randomIndex;
           await delay(randomDelay);
-          isClick = true;
-          break;
-        }
       }
-      return isClick;
+      return {
+        isClick: true,
+        newIndex: temp
+      };
     } catch (error) {
       logger(error);
       return false;
@@ -200,6 +217,24 @@ export const newFeed = (setting) => {
     }
     return isClick;
   };
+  const findBtn = async (page, content) => {
+    try {
+      let arr = [];
+      const buttons = await getElements(page, 'button[class="native-text"] > span:nth-child(1)');
+      for (let i = 0; i < buttons.length; i++) {
+        const btn = await page.evaluate((el) => {
+          return el.innerHTML;
+        }, buttons[i]);
+  
+        if (btn.includes(content)) {
+          arr.push( buttons[i]);
+        }
+      }
+      return arr;
+    } catch (err) {
+      logger(err);
+    }
+  };
 const newsfeed = ${strSetting};
 try {
   //Check obj start < end ? random(start,end) : random(end,start)
@@ -223,12 +258,19 @@ try {
       let count = 0;
       let numLikes = getRandomIntBetween(news.likeStart, news.likeEnd);
       logger('Cần like ' + numLikes + ' bài');
+      let temp = 4;
       for (let i = 0; i < numLikes * 2; i++) {
         try {
           await returnHomePage(page);
-          await delay(1000)
-          const isLike = await randomLike(page, news);
-          if (isLike) {
+          await delay(1000);
+          const likeBtns = await findBtn(page, "󰍸");
+          if (!likeBtns) {
+            logger("Không có nút like!");
+            return false
+          };
+          logger("có " + likeBtns.length + " nút like")
+          const objLike = await randomLike(page, news, likeBtns,temp);
+          if (objLike.isClick) {
             count++;
             logger('Đã like được '+ count + ' bài');
           } else {
@@ -237,11 +279,10 @@ try {
           if (count == numLikes) {
             logger('Xong like !');
             loopLike++;
-            await scroll(page, news);
             break;
           }
+          temp = objLike.newIndex
           await delay(randomDelay);
-          await scroll(page, news);
         } catch (error) {
           logger(error);
         }
@@ -254,8 +295,14 @@ try {
       logger('Cần share ' + numShares + ' bài');
       for (let i = 0; i < numShares * 2; i++) {
         try {
+          const shareBtns = await findBtn(page, "󰍺");
+          if (!shareBtns) {
+            logger("Không có nút share!");
+            return false
+          };
+          logger("có " + shareBtns.length + " nút share")
           await returnHomePage(page);
-          const result = await randomShare(page, news);
+          const result = await randomShare(page, news, shareBtns, temp);
           if (result) {
             count++;
             logger('Đã share được ' + count + ' bài');

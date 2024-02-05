@@ -35,11 +35,7 @@ const inviteGroupBySuggest = async (page, inviteGroupObject) => {
       // scroll before click
       let temp = getRandomIntBetween(2, 4);
       logger("số lần scroll " + temp);
-      while (temp > 0) {
-        await scrollByWheel(page, getRandomIntBetween(200, 250));
-        await delay(1000);
-        temp--;
-      }
+      await scrollSmooth(page,temp)
       let invite =
         "#screen-root > div > div:nth-child(2) > div > div:nth-child(3) > div.m";
       let inviteButtons = await getElements(page, invite, 10);
