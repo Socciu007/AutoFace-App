@@ -18,61 +18,6 @@ export const newFeed = (setting) => {
     }`;
   return `
   
-  const scroll = async (page, newsfeed) => {
-    let randomScrollTime = getRandomIntBetween(3, 7);
-    try {
-      let randomDelay = getRandomIntBetween(newsfeed.delayTimeStart * 1000, newsfeed.delayTimeEnd * 1000);
-      while (randomScrollTime > 0) {
-        await page.evaluate(async () => {
-          const getRandomIntBetween = (min, max) => {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-          };
-          const delay = async (time) => {
-            return new Promise((resolve) => setTimeout(resolve, time));
-          };
-          const smoothScrollByStep = (targetPosition, duration) => {
-            const startPosition = window.scrollY;
-            const distance = targetPosition - startPosition;
-            let startTime = null;
-  
-            const animation = (currentTime) => {
-              if (startTime === null) startTime = currentTime;
-              const timeElapsed = currentTime - startTime;
-              const run = ease(timeElapsed, startPosition, distance, duration);
-              window.scrollTo(0, run);
-              if (timeElapsed < duration) requestAnimationFrame(animation);
-            };
-  
-            const ease = (t, b, c, d) => {
-              t /= d / 2;
-              if (t < 1) return (c / 2) * t * t + b;
-              t--;
-              return (-c / 2) * (t * (t - 2) - 1) + b;
-            };
-  
-            requestAnimationFrame(animation);
-          };
-          let scrollAmount = getRandomIntBetween(400, 800);
-          const targetPosition = window.scrollY + scrollAmount;
-          let currentPosition = window.scrollY;
-          if (currentPosition < targetPosition) {
-            const durationPerStep = getRandomIntBetween(500, 1000);
-            const nextPosition = Math.max(currentPosition + scrollAmount, targetPosition);
-            smoothScrollByStep(nextPosition, durationPerStep);
-            await delay(getRandomIntBetween(1000, 5000));
-            await new Promise((resolve) => setTimeout(resolve, durationPerStep));
-            currentPosition = nextPosition;
-          }
-        });
-        randomScrollTime--;
-      }
-      await delay(randomDelay);
-      console.log('Đã scroll xong');
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  
   const randomLike = async (page, newsfeed, likeBtns, temp) => {
     try {
       let randomDelay = getRandomIntBetween(newsfeed.delayTimeStart * 1000, newsfeed.delayTimeEnd * 1000);
@@ -94,101 +39,70 @@ export const newFeed = (setting) => {
       return false;
     }
   };
-  const randomShare = async (page, newsfeed) => {
+  const randomShare = async (page, newsfeed, shareBtns, temp) => {
     try {
       let randomDelay = getRandomIntBetween(newsfeed.delayTimeStart * 1000, newsfeed.delayTimeEnd * 1000);
-      let shareSelector = '#screen-root > div > div > div> div > div:nth-child(3) > div > button > span';
-      let shareBtns = await getElements(page, shareSelector, 10);
-      if (!shareBtns) {
-        shareSelector = '#screen-root > div > div > div > div:nth-child(3) > div >button > span';
-        shareBtns = await getElements(page, shareSelector, 10);
-      }
-      if (!shareBtns) return false;
-      let isClick = false;
       if (shareBtns.length > 0) {
-        for (let i = 0; i < shareBtns.length * 2; i++) {
-          // check selector in screen
-          let selector = await page.evaluate((el) => {
-            if (!el) return false;
-            if (el.innerHTML.includes('󰍺 ')) {
-              const rect = el.getBoundingClientRect();
-              return (
-                rect.width > 0 &&
-                rect.height > 0 &&
-                rect.top >= 50 &&
-                rect.left >= 0 &&
-                rect.bottom <= (window.innerHeight - 50 || document.documentElement.clientHeight - 50) &&
-                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-              );
-            } else {
-              return false;
-            }
-          }, shareBtns[i]);
-          if (!selector) continue;
-          await shareBtns[i].evaluate((b) => b.click());
-          await delay(3000);
+        const randomIndex = getRandomIntBetween(temp, shareBtns.length);
+        logger(randomIndex);
+        await scrollSmoothIfElementNotExistOnScreen(shareBtns[randomIndex]);
+        await delay(1000);
+        await clickElement(shareBtns[randomIndex])
+        temp = randomIndex;
+        await delay(randomDelay);
           // choose share option
-          const shareOptionSelector =
-            '#screen-root > div > div> div > div:nth-child(2) > div > div > div.m.bg-s3> div:nth-child(1)';
-          const shareOptionBtn = await getElement(page, shareOptionSelector, 10);
-          if (!shareOptionBtn) continue;
+        const buttons = await getElements(page, '[class="native-text"]');
+        for (let i = 0; i < buttons.length; i++) {
+          const btn = await page.evaluate((el) => {
+            return el.innerHTML;
+          }, buttons[i]);
+  
+         if (btn.includes("󱤱")) {
+            await clickElement(buttons[i]);
+            break;
+          }
+        }
           await delay(1000);
-          await clickElement(shareOptionBtn);
-          await delay(3000);
           logger('Đã chọn option 1');
           // click post
           const postSelector = '#screen-root > div > div > div > div > div > div > button';
           const postBtn = await getElement(page, postSelector, 10);
-          if (!postBtn) continue;
+          if (!postBtn) return {
+            isClick: false,
+            newIndex: temp
+          };
           await delay(1000);
           await clickElement(postBtn);
           await delay(randomDelay);
           logger('Đã share xong');
-          isClick = true;
-          break;
-        }
       }
-      return isClick;
+      return {
+        isClick: true,
+        newIndex: temp
+      };
     } catch (error) {
       logger(error);
       return false;
     }
   };
-  const randomComment = async (page, newsfeed) => {
+  const randomComment = async (page, newsfeed, commentBtns, temp) => {
     let randomDelay = getRandomIntBetween(newsfeed.delayTimeStart * 1000, newsfeed.delayTimeEnd * 1000);
-    let commentSelector = '#screen-root > div > div > div > div:nth-child(2) > div > button > span';
-    let commentBtns = await getElements(page, commentSelector, 10);
-    if (!commentBtns) {
-      commentSelector = '#screen-root > div > div > div > div > div:nth-child(2) > div > button > span';
-      commentBtns = await getElements(page, commentSelector, 10);
-    }
     let isClick = false;
     if (commentBtns.length > 0) {
-      for (let i = 0; i < commentBtns.length * 2; i++) {
-        // check selector in screen
-        let selector = await page.evaluate((el) => {
-          if (!el) return false;
-          if (el.innerHTML.includes('󰍹')) {
-            const rect = el.getBoundingClientRect();
-            return (
-              rect.width > 0 &&
-              rect.height > 0 &&
-              rect.top >= 50 &&
-              rect.left >= 0 &&
-              rect.bottom <= (window.innerHeight - 50 || document.documentElement.clientHeight - 50) &&
-              rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-            );
-          } else {
-            return false;
-          }
-        }, commentBtns[i]);
-        if (!selector) continue;
-        await commentBtns[i].evaluate((b) => b.click());
-        await delay(randomDelay);
+      const randomIndex = getRandomIntBetween(temp, commentBtns.length);
+      logger(randomIndex);
+      await scrollSmoothIfElementNotExistOnScreen(commentBtns[randomIndex]);
+      await delay(1000);
+      await clickElement(commentBtns[randomIndex]);
+      temp = randomIndex;
+        await delay(2000);
         // find comment area
         const commentAreaSelector = 'textarea[type="text"]';
         const commentArea = await getElement(page, commentAreaSelector, 10);
-        if (!commentArea) continue;
+        if (!commentArea) return {
+          isClick: isClick,
+          newIndex: temp
+        };
         await delay(1000);
         await clickElement(commentArea);
         logger('Đã chọn vùng comment');
@@ -200,22 +114,30 @@ export const newFeed = (setting) => {
         await delay(1000);
         const postSelector = 'div[aria-label="SEND"]';
         const postBtn = await getElement(page, postSelector, 10);
-        if (!postBtn) continue;
+        if (!postBtn) return {
+          isClick: isClick,
+          newIndex: temp
+        };;
         await delay(1000);
         await clickElement(postBtn);
         await delay(randomDelay);
         // return home
         const returnSelector = '#screen-root > div > div > div > div > div.m.bg-s3 > div:nth-child(1)';
         const returnBtn = await getElement(page, returnSelector, 10);
-        if (!returnBtn) continue;
+        if (!returnBtn) return {
+          isClick: isClick,
+          newIndex: temp
+        };
         await delay(1000);
         await clickElement(returnBtn);
         await delay(3000);
         isClick = true;
-        break;
-      }
     }
-    return isClick;
+
+     return {
+      isClick: isClick,
+      newIndex: temp
+    };
   };
   const findBtn = async (page, content) => {
     try {
@@ -253,12 +175,17 @@ try {
   let loopShare = 0;
   while (scrollTime > 0) {
     let startTime = Date.now();
-    await scroll(page, news);
     if (news.randomLike == true && loopLike == 0) {
       let count = 0;
+      const homeSelector1 =
+      "#screen-root > div > div:nth-child(1) > div:nth-child(4) > div:nth-child(1)";
+      if( await checkExistElementOnScreen(page,homeSelector1) != 0) {
+        await page.goto("https://m.facebook.com/");
+      }
+      await delay(1000);
       let numLikes = getRandomIntBetween(news.likeStart, news.likeEnd);
       logger('Cần like ' + numLikes + ' bài');
-      let temp = 4;
+      let temp = 2;
       for (let i = 0; i < numLikes * 2; i++) {
         try {
           await returnHomePage(page);
@@ -293,17 +220,24 @@ try {
       let count = 0;
       let numShares = getRandomIntBetween(news.shareStart, news.shareEnd);
       logger('Cần share ' + numShares + ' bài');
+      const homeSelector1 =
+      "#screen-root > div > div:nth-child(1) > div:nth-child(4) > div:nth-child(1)";
+      if( await checkExistElementOnScreen(page,homeSelector1) != 0) {
+        await page.goto("https://m.facebook.com/");
+      }
+      await delay(1000);
+      let temp = 2;
       for (let i = 0; i < numShares * 2; i++) {
         try {
           const shareBtns = await findBtn(page, "󰍺");
           if (!shareBtns) {
             logger("Không có nút share!");
-            return false
+            return false;
           };
           logger("có " + shareBtns.length + " nút share")
           await returnHomePage(page);
           const result = await randomShare(page, news, shareBtns, temp);
-          if (result) {
+          if (result.isClick) {
             count++;
             logger('Đã share được ' + count + ' bài');
           } else {
@@ -312,11 +246,10 @@ try {
           if (count == numShares) {
             logger('Xong share!');
             loopShare++;
-            await scroll(page, news);
             break;
           }
+          temp = result.newIndex;
           await delay(randomDelay);
-          await scroll(page, news);
         } catch (error) {
           logger(error);
         }
@@ -328,15 +261,30 @@ try {
         logger('Không thể comment với nội dung rỗng!');
         return false;
       }
+      const homeSelector1 =
+      "#screen-root > div > div:nth-child(1) > div:nth-child(4) > div:nth-child(1)";
+      if( await checkExistElementOnScreen(page,homeSelector1) != 0) {
+        await page.goto("https://m.facebook.com/");
+      }
+      await delay(1000);
       const numComments = getRandomIntBetween(news.commentStart, news.commentEnd);
       logger('Cần comment '+  numComments + ' bài');
       let count = 0;
+      let temp = 1;
       for (let i = 0; i < numComments * 2; i++) {
         try {
+          
           await returnHomePage(page);
-          const result = await randomComment(page, news);
+          const commentBtns = await findBtn(page, "󰍹");
+          if (!commentBtns) {
+            logger("Không có nút comment!");
+            return false;
+          };
+          logger("có " + commentBtns.length + " nút comment");
+          
+          const result = await randomComment(page, news, commentBtns, temp);
           await delay(randomDelay);
-          if (result) {
+          if (result.isClick) {
             count++;
             logger('Đã comment được ' + count + ' bài');
           } else {
@@ -347,8 +295,8 @@ try {
             loopComment++;
             break;
           }
+          temp = result.newIndex;
           await delay(randomDelay);
-          await scroll(page, news);
         } catch (error) {
           logger(error);
         }
