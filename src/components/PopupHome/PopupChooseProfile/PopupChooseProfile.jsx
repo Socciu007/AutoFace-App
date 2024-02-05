@@ -416,8 +416,6 @@ const PopupChooseProfile = ({ openProfiles, handleCloseProfiles }) => {
           );
         }
       }
-      storageService.setSessionObject('user', null);
-      loading = false;
     }
   };
 
@@ -533,7 +531,7 @@ const PopupChooseProfile = ({ openProfiles, handleCloseProfiles }) => {
                   </span>
                   <input placeholder="Search..."></input>
                 </div>
-                <button onClick={addProfiles}>{loading ? <Loading></Loading> : ''} RUN</button>
+                <button onClick={addProfiles}>RUN</button>
               </div>
             </div>
             <div className="scrollable-container">

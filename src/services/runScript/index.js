@@ -34,97 +34,105 @@ const splitToChunks = (array, size) => {
 
 export const runScript = async (profileSelected, scriptDesign, dispatch) => {
   // set all profiles selected to waiting status
-  let newProfileSelected = profileSelected.map((profile) => {
-    profile.script = scriptDesign.id;
-    profile.status = 'waiting';
-    return profile;
-  });
-  dispatch(updateProfiles(newProfileSelected));
-  // ------
+  try {
+    let newProfileSelected = profileSelected.map((profile) => {
+      return { ...profile, script: scriptDesign.id, status: 'waiting' };
+    });
+    dispatch(updateProfiles(newProfileSelected));
+    // ------
 
-  const settings = await dbGetLocally(storageSettings);
-  let thread = 1;
-  if (!isNaN(settings.countProfile)) {
-    thread = settings.countProfile;
-  }
-  const lengthThread = thread <= profileSelected.length ? thread : profileSelected.length;
+    const settings = await dbGetLocally(storageSettings);
+    let thread = 1;
+    if (!isNaN(settings.countProfile)) {
+      thread = settings.countProfile;
+    }
+    const lengthThread = thread <= profileSelected.length ? thread : profileSelected.length;
 
-  const results = splitToChunks(profileSelected, lengthThread);
+    const results = splitToChunks(profileSelected, lengthThread);
 
-  let arrfunction = [];
-  const nodes = scriptDesign.design.nodes;
-  const edges = scriptDesign.design.edges.filter((edge) => {
-    const check = nodes.find((node) => node.id == edge.target);
-    if (check) return true;
-    return false;
-  });
+    let arrfunction = [];
+    const nodes = scriptDesign.design.nodes;
+    const edges = scriptDesign.design.edges.filter((edge) => {
+      const check = nodes.find((node) => node.id == edge.target);
+      if (check) return true;
+      return false;
+    });
 
-  const scripts = scriptDesign.script;
+    const scripts = scriptDesign.script;
 
-  if (edges && edges.length) {
-    let node = nodes.find((node) => node.id == edges[0].target);
-    while (node) {
-      const script = scripts.find((e) => e.id == node.id);
-      arrfunction.push(script);
-      const edge = edges.find((e) => e.source == node.id);
-      if (edge) {
-        node = nodes.find((node) => node.id == edge.target);
-      } else {
-        node = null;
+    if (edges && edges.length) {
+      let node = nodes.find((node) => node.id == edges[0].target);
+      while (node) {
+        const script = scripts.find((e) => e.id == node.id);
+        arrfunction.push(script);
+        const edge = edges.find((e) => e.source == node.id);
+        if (edge) {
+          node = nodes.find((node) => node.id == edge.target);
+        } else {
+          node = null;
+        }
       }
     }
-  }
 
-  for (let i = 0; i < settings.countLoop; i++) {
-    for (let j = 0; j < results.length; j++) {
-      await new Promise.map(
-        results[j],
-        async (profile, index) => {
-          // set profiledSelected running status
-          dispatch(updateProfile({ ...profile, status: 'running' }));
-          // --------------
-          await delay(settings.delayThread && settings.delayThread > 0 ? index * settings.delayThread * 1000 : 1000);
-          let proxyStr = '';
-          let proxy;
-          let proxyConvert;
-          if (settings.assignProxy) {
-            if (settings.proxies.length) {
-              const indexProfile = index + j * results.length;
-              proxy = settings.proxies[indexProfile % settings.proxies.length];
+    for (let i = 0; i < settings.countLoop; i++) {
+      for (let j = 0; j < results.length; j++) {
+        await new Promise.map(
+          results[j],
+          async (profile, index) => {
+            // set profiledSelected running status
+            dispatch(updateProfile({ ...profile, status: 'running' }));
+            // --------------
+            await delay(settings.delayThread && settings.delayThread > 0 ? index * settings.delayThread * 1000 : 1000);
+            let proxyStr = '';
+            let proxy;
+            let proxyConvert;
+            if (settings.assignProxy) {
+              if (settings.proxies.length) {
+                const indexProfile = index + j * results.length;
+                proxy = settings.proxies[indexProfile % settings.proxies.length];
+              } else {
+                proxy = profile.proxy;
+              }
             } else {
               proxy = profile.proxy;
+              if (settings.proxies.length && (!proxy.host || !proxy.host.length)) {
+                const indexProfile = index + j * results.length;
+                proxy = settings.proxies[indexProfile % settings.proxies.length];
+              }
             }
-          } else {
-            proxy = profile.proxy;
-            if (settings.proxies.length && (!proxy.host || !proxy.host.length)) {
-              const indexProfile = index + j * results.length;
-              proxy = settings.proxies[indexProfile % settings.proxies.length];
-            }
-          }
 
-          if (proxy.host && proxy.host.length) {
-            proxyConvert = await getProxy(proxy, profile.id);
-            if (proxyConvert && proxyConvert.host && proxyConvert.port) {
-              proxyStr = `"--proxy-server=${proxyConvert.mode}://${proxyConvert.host}:${proxyConvert.port}",`;
-            } else {
-              proxyStr = null;
+            if (proxy.host && proxy.host.length) {
+              proxyConvert = await getProxy(proxy, profile.id);
+              if (proxyConvert && proxyConvert.host && proxyConvert.port) {
+                proxyStr = `"--proxy-server=${proxyConvert.mode}://${proxyConvert.host}:${proxyConvert.port}",`;
+              } else {
+                proxyStr = null;
+              }
             }
-          }
-          if (proxyStr || proxyStr == '') {
-            let cpu, mem;
-            const infor = await getInformation();
-            cpu = infor.cpu;
-            mem = infor.mem;
-
-            while (cpu > settings.maxCpu || mem > settings.maxRam) {
-              await delay(5000);
+            if (proxyStr || proxyStr == '') {
+              let cpu, mem;
               const infor = await getInformation();
               cpu = infor.cpu;
               mem = infor.mem;
-            }
-            const browserData = await getBrowserData(profile.id);
-            if (browserData && browserData.data) {
-              const strCode = `
+
+              while (cpu > settings.maxCpu || mem > settings.maxRam) {
+                await delay(5000);
+                const infor = await getInformation();
+                cpu = infor.cpu;
+                mem = infor.mem;
+              }
+              let browserData = await getBrowserData(profile.id);
+
+              if (!browserData || !browserData.data || !browserData.executablePath || !browserData.pathProfile) {
+                for (let i = 0; i < 5; i++) {
+                  await delay(2000);
+                  browserData = await getBrowserData(profile.id);
+                  if (browserData && browserData.data && browserData.executablePath && browserData.pathProfile) break;
+                }
+              }
+
+              if (browserData && browserData.data && browserData.executablePath && browserData.pathProfile) {
+                const strCode = `
 
     let browser;
     const logger = (...params) => {
@@ -690,7 +698,7 @@ const scrollSmoothIfNotExistOnScreen = async (page, JSpath) => {
         for(let i=1;i<pages.length;i++){
           logger('Close page ' + i);
           await pages[i].close();
-          await delay(2000);
+          await delay(1000);
         }
         let page = await browser.newPage();
         await page.setBypassCSP(true);
@@ -721,33 +729,46 @@ const scrollSmoothIfNotExistOnScreen = async (page, JSpath) => {
         ${getAllFunc(arrfunction)}
        
       } catch (error) {
+        resolve(error);
           logger(error);
         } finally {
           if(browser){
               await browser.close();
           }
+          resolve('Done');
         }
-        resolve('Done');
+      
       });
 
      
       `;
 
-              const result = await runProfile(strCode, profile.id);
-              console.log(result);
+                const result = await runProfile(strCode, profile.id);
+                console.log(result);
+              } else {
+                console.log('Open Profile Fail!');
+              }
             } else {
-              console.log('Open Profile Fail!');
+              console.log('Connect proxy Fail!');
             }
-          } else {
-            console.log('Connect proxy Fail!');
-          }
-          dispatch(updateProfile({ ...profile, status: 'ready' }));
-        },
-        { concurrency: lengthThread },
-      );
+            dispatch(updateProfile({ ...profile, status: 'ready' }));
+          },
+          { concurrency: lengthThread },
+        );
+      }
     }
+    newProfileSelected = profileSelected.map((profile) => {
+      return { ...profile, script: scriptDesign.id, status: 'ready' };
+    });
+    dispatch(updateProfiles(newProfileSelected));
+    return;
+  } catch (err) {
+    console.log(err);
+    let newProfileSelected = profileSelected.map((profile) => {
+      return { ...profile, script: scriptDesign.id, status: 'ready' };
+    });
+    dispatch(updateProfiles(newProfileSelected));
   }
-  return;
 };
 
 const getAllFunc = (arrfunction) => {
