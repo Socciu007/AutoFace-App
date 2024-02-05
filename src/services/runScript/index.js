@@ -682,7 +682,7 @@ const scrollSmoothIfNotExistOnScreen = async (page, JSpath) => {
             "--proxy-bypass-list=https://static.xx.fbcdn.net",
             "--flag-switches-begin",
             "--flag-switches-end",
-            "--window-size=360,640"
+            "--window-size=360,760"
           ]
         });
 

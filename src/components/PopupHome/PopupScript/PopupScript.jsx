@@ -14,7 +14,7 @@ import Dialog from '@mui/material/Dialog';
 import { Store } from 'react-notifications-component';
 import notification from '../../../resources/notification.json';
 import { useDispatch } from 'react-redux';
-const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOpenScripts, profilesSelected }) => {
+const PopupScript = ({ openScripts, handleCloseScripts, profilesSelected }) => {
   const dispatch = useDispatch();
   const typeScript = [
     {
@@ -62,6 +62,10 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
     } else {
       newList = contentArray;
     }
+    newList = newList.sort(function (a, b) {
+      if (a.createdAt && b.createdAt) return new Date(b.createdAt) - new Date(a.createdAt);
+      return 0;
+    });
     newList = newList.sort((x, y) => Number(y.isPin) - Number(x.isPin));
     setListScript(newList);
   }, [contentArray]);
@@ -71,7 +75,7 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
     if (scriptStr && scriptStr.length) {
       const script = JSON.parse(scriptStr);
       if (script && script.length) {
-        setContentArray(script.reverse());
+        setContentArray(script);
       }
     }
   };
@@ -87,8 +91,11 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
         type: 'warning',
         message: 'Please choose script',
       });
+      return;
     }
-
+    handleCloseScripts();
+    setSelectedRowKeys([]);
+    setScriptSelected(null);
     await runScript(profilesSelected, scriptSelected, dispatch);
   };
 
@@ -103,6 +110,11 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
         return note.includes(text.toLowerCase()) || name.includes(text.toLowerCase());
       });
     }
+    newScripts = newScripts.sort(function (a, b) {
+      if (a.createdAt && b.createdAt) return new Date(b.createdAt) - new Date(a.createdAt);
+      return 0;
+    });
+
     newScripts = newScripts.sort((x, y) => Number(y.isPin) - Number(x.isPin));
     setListScript(newScripts);
   };
@@ -182,7 +194,11 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
   return (
     <Dialog
       open={openScripts}
-      onClose={handleCloseScripts}
+      onClose={() => {
+        handleCloseScripts();
+        setSelectedRowKeys([]);
+        setScriptSelected(null);
+      }}
       style={{ margin: 'auto' }}
       sx={{
         '& .MuiPaper-root': makeCopyChooseScript,
@@ -195,7 +211,14 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
         <div className="-layout-choose-scripts__container">
           <div className="-nav-scripts">
             <div className="-nav-scripts__header">
-              <div className="-nav-scripts__header__close" onClick={handleCloseScripts}>
+              <div
+                className="-nav-scripts__header__close"
+                onClick={() => {
+                  handleCloseScripts();
+                  setSelectedRowKeys([]);
+                  setScriptSelected(null);
+                }}
+              >
                 <img src={closePopup} alt="icon-x"></img>
               </div>
               <h1>CHOOSE SCRIPT</h1>
@@ -209,7 +232,6 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
                 <button
                   onClick={async () => {
                     await runScriptAuto();
-                    handleCloseScripts();
                   }}
                 >
                   Run
@@ -228,7 +250,11 @@ const PopupScript = ({ openScripts, handleCloseScripts, handleSettings, handleOp
                           key={index}
                           className={`-option-item ${type == script.value && 'active'}`}
                           onClick={() => {
-                            handleTypeScript(script.value);
+                            if (script.value !== type) {
+                              setSelectedRowKeys([]);
+                              setScriptSelected(null);
+                              handleTypeScript(script.value);
+                            }
                           }}
                         >
                           <div className="-option-item__row">

@@ -136,6 +136,10 @@ const ScriptManager = () => {
       newList = contentArray;
     }
     newList = mapStatus(newList);
+    newList = newList.sort(function (a, b) {
+      if (a.createdAt && b.createdAt) return new Date(b.createdAt) - new Date(a.createdAt);
+      return 0;
+    });
     newList = newList.sort((x, y) => Number(y.isPin) - Number(x.isPin));
     setListScript(newList);
   };
@@ -151,24 +155,9 @@ const ScriptManager = () => {
     if (scriptStr && scriptStr.length) {
       const script = JSON.parse(scriptStr);
       if (script && script.length) {
-        setContentArray(script.reverse());
+        setContentArray(script);
       }
     }
-  };
-
-  const searchScript = (text) => {
-    let newScripts = [];
-    if (text == '') {
-      newScripts = contentArray;
-    } else {
-      newScripts = contentArray.filter((e) => {
-        const note = e.note.toLowerCase();
-        const name = e.name.toLowerCase();
-        return note.includes(text.toLowerCase()) || name.includes(text.toLowerCase());
-      });
-    }
-    newScripts = newScripts.sort((x, y) => Number(y.isPin) - Number(x.isPin));
-    setListScript(newScripts);
   };
 
   // Handle the button add
@@ -190,6 +179,10 @@ const ScriptManager = () => {
     let newList = contentArray.filter((e) => {
       if (!e.isSystem && isSystem) return true;
       return false;
+    });
+    newList = newList.sort(function (a, b) {
+      if (a.createdAt && b.createdAt) return new Date(b.createdAt) - new Date(a.createdAt);
+      return 0;
     });
     newList = newList.sort((x, y) => Number(y.isPin) - Number(x.isPin));
     setIsSystem(!isSystem);

@@ -82,10 +82,11 @@ export const watchStory = (setting) => {
           await inputClick1.type(watchStoryObj.text[indexText], {
             delay: 200,
           });
-          await delay(3000);
-          //div.fl.ac > div.native-text > span.f3 󱛅
-          await clickElementRandom(page, "div.fl.ac > div.native-text > span.f3", 1)
-          logger("Da comment");
+          const clickCmt = await page.$(sendElement);
+          if (clickCmt) {
+            await clickElement(clickCmt);
+            logger("Da comment");
+          }
         }
       } else {
         logger("Comment button is not exist");
@@ -100,7 +101,7 @@ export const watchStory = (setting) => {
       //check page live
       const isLive = await checkIsLive(page);
       if (isLive) {
-        await delay(getRandomIntBetween(3000, 5000));
+        await delay(getRandomIntBetween(1000, 3000));
         const storySelectors = await page.$$(
           "div.m.hscroller.no-hscroller > div.m.bg-s3 > div.m > div.m.bg-s3"
         );
@@ -133,7 +134,7 @@ export const watchStory = (setting) => {
         logger("cant navigate");
       }
     } catch (error) {
-      logger('Error navigating to URL:', error.message);
+      logger('Error navigating to URL');
     }
   };
   
@@ -170,7 +171,24 @@ export const watchStory = (setting) => {
       }
       return true;
     } catch (error) {
+      logger(error.message);
       return false;
+    }
+  };
+  
+  const findBtn = async (page, content, selector) => {
+    try {
+      const buttons = await getElements(page, selector);
+      for (let i = 0; i < buttons.length; i++) {
+        const btn = await page.evaluate(el => {
+          return el.innerHTML;
+        }, buttons[i]);
+        if (btn.includes(content)) {
+          return buttons[i];
+        }
+      }
+    } catch (err) {
+      logger(err);
     }
   };
   let watchStoryObj = ${strSetting};
@@ -178,7 +196,6 @@ export const watchStory = (setting) => {
     //check page live
     const isLive = await checkIsLive(page);
     if (isLive) {
-      await returnHomePage(page);
       await delay(getRandomIntBetween(3000, 5000));
       const isLogin = await checkLogin(page);
       if (isLogin) {
@@ -188,24 +205,24 @@ export const watchStory = (setting) => {
           watchStoryObj.numsStoryStart,
           watchStoryObj.numsStoryEnd
         );
+        await delay(getRandomIntBetween(7000, 15000));
+        await goToStory(page);
         while (countStory < numsStory) {
-          await delay(getRandomIntBetween(7000, 15000));
-          await goToStory(page);
-          const playSelector = await page.$("div.inline-video-icon.play")
-          const isPlayBtn = await checkExistElementOnScreens(playSelector);
+          const isPlayBtn = await checkExistElementOnScreens(
+            "div.inline-video-icon.play"
+          );
           if (isPlayBtn) {
             await clickElementRandom(page, "div.inline-video-icon.play", 0);
-          } else {
-            logger("Play button is not exist");
           }
           const timeViewStory = getRandomIntBetween(
             watchStoryObj.timeViewStoryStart * 1000,
             watchStoryObj.timeViewStoryEnd * 1000
           );
           await delay(timeViewStory);
+          logger("Done view story");
           //click react random
           if (watchStoryObj.isReact && watchStoryObj.isComment) {
-            await delay(getRandomIntBetween(3000, 5000));
+            await delay(getRandomIntBetween(1000, 3000));
             const isClickReact = await clickElementRandom(
               page,
               "div.m.hscroller.no-hscroller > div.m > img.img.contain"
@@ -283,11 +300,12 @@ export const watchStory = (setting) => {
                 "div.m.hscroller.no-hscroller > div.m > img.img.contain",
                 3
               );
+            } else {
+              await reactStory(
+                page,
+                "div.m.hscroller.no-hscroller > div.m > img.img.contain"
+              );
             }
-            await reactStory(
-              page,
-              "div.m.hscroller.no-hscroller > div.m > img.img.contain"
-            );
             logger("Done react story");
           } else if (watchStoryObj.isComment) {
             await commentStory(
@@ -296,18 +314,30 @@ export const watchStory = (setting) => {
               "button.textbox-submit-button"
             );
           }
-          //return home
-          await delay(getRandomIntBetween(3000, 5000));
-          await clickElementRandom(
-            page,
-            "div.m > div.m > div.native-text > span.f2",
-            2,
-            "https://m.facebook.com/"
-          );
 
+          if (countStory + 1 < numsStory) {
+            const nextBtn = await findBtn(
+              page,
+              "󰙺",
+              "div.fl.ac > div.native-text > span.f3"
+            );
+            if (nextBtn) {
+              await clickElement(nextBtn);
+              logger("Next story");
+            }
+          } else {
+            //return home
+            await delay(getRandomIntBetween(3000, 5000));
+            await clickElementRandom(
+              page,
+              "div.m > div.m > div.native-text > span.f2",
+              2,
+              "https://m.facebook.com/"
+            );
+          }
           countStory++;
         }
-        logger("Done view story");
+        logger("Watch story complete");
       } else {
         logger("You need log in");
         return;
