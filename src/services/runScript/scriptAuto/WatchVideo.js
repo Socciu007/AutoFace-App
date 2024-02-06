@@ -206,7 +206,7 @@ export const watchVideo = (setting) => {
   };
   
   const scroll = async page => {
-    let randomScrollTime = getRandomIntBetween(3, 7);
+    let randomScrollTime = getRandomIntBetween(4, 10);
     try {
       while (randomScrollTime > 0) {
         await page.evaluate(async () => {
@@ -342,7 +342,7 @@ export const watchVideo = (setting) => {
           return (
             bounding.top >= 0 &&
             bounding.left >= 0 &&
-            bounding.bottom - bounding.top/2 <=
+            bounding.bottom - bounding.top/1.5 <=
               (window.innerHeight || document.documentElement.clientHeight) &&
             bounding.right <=
               (window.innerWidth || document.documentElement.clientWidth)
@@ -361,7 +361,7 @@ export const watchVideo = (setting) => {
           let currentPosition = window.scrollY;
           while (!isInViewport(element)) {
             const stepSize =
-              getRandomIntBetween(370, 600) *
+              getRandomIntBetween(400, 500) *
               (currentPosition > targetPosition ? -1 : 1);
             const durationPerStep = getRandomIntBetween(500, 2000);
             const nextPosition = currentPosition + stepSize;
