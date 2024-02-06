@@ -38,6 +38,7 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
     let newProfileSelected = profileSelected.map((profile) => {
       return { ...profile, script: scriptDesign.id, status: 'waiting' };
     });
+
     dispatch(updateProfiles(newProfileSelected));
     // ------
 
@@ -48,7 +49,7 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
     }
     const lengthThread = thread <= profileSelected.length ? thread : profileSelected.length;
 
-    const results = splitToChunks(profileSelected, lengthThread);
+    const results = splitToChunks(newProfileSelected, lengthThread);
 
     let arrfunction = [];
     const nodes = scriptDesign.design.nodes;
@@ -671,7 +672,6 @@ const scrollSmoothIfNotExistOnScreen = async (page, JSpath) => {
           resolve('Time out');
         }, ${settings.maxTime} * 1000);
        
-
         browser = await puppeteer.launch({
           executablePath: "${browserData.executablePath}",
           devtools: false,
@@ -693,7 +693,6 @@ const scrollSmoothIfNotExistOnScreen = async (page, JSpath) => {
             "--window-size=360,760"
           ]
         });
-
         const pages = await browser.pages();
         for(let i=1;i<pages.length;i++){
           logger('Close page ' + i);
@@ -701,6 +700,7 @@ const scrollSmoothIfNotExistOnScreen = async (page, JSpath) => {
           await delay(1000);
         }
         let page = await browser.newPage();
+        await page.bringToFront();
         await page.setBypassCSP(true);
         await page.setCacheEnabled(false);
         const session = await page.target().createCDPSession();

@@ -4,155 +4,20 @@ import './style.scss';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import Dialog from '@mui/material/Dialog';
-import Loading from '../../loading/Loading';
 import { Store } from 'react-notifications-component';
 import notification from '../../../resources/notification.json';
 import search from '../../../assets/pictures/icon-search.svg';
-
-import { Input, Popover, Table, Tooltip } from 'antd';
-import options from '../../../assets/icon/icon-options.svg';
+import { Table, Tooltip } from 'antd';
 import closePopup from '../../../assets/pictures/icon-x.svg';
-import deleted from '../../../assets/pictures/icon-delete.svg';
 import pin from '../../../assets/pictures/icon-pin.svg';
-import defaultSettings from '../../../resources/defaultSettings.json';
-import defaultDisplaySettings from '../../../resources/defaultDisplaySettings.json';
-import { EditableCell, EditableRow } from '../../EditableTable/EditableTable';
-import { accessToken, storageDisplaySettings, storageProfiles, storageSettings } from '../../../common/const.config';
-import { dbGetLocally, dbSetLocally, getProfilesMarco } from '../../../sender';
+import { storageProfiles } from '../../../common/const.config';
+import { dbGetLocally, getProfilesMarco } from '../../../sender';
 import storageService from '../../../services/storage.service';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router';
-const PopupChooseProfile = ({ openProfiles, handleCloseProfiles }) => {
-  const initialValues = {
-    text: [],
-    option: 'http',
-    proxy: [],
-    tag: [],
-    isTag: false,
-    isProxy: false,
-  };
-
-  const [loading, setLoading] = useState(false);
-  const [values, setValues] = useState(initialValues);
-
-  const setInitialValues = () => {
-    setValues(initialValues);
-  };
-
-  const addProfiles = async () => {
-    if (loading) return;
-    // if (textContent == '') {
-    //   Store.addNotification({
-    //     ...notification,
-    //     type: 'warning',
-    //     message: 'The Account field is required',
-    //   });
-    // }
-    if (values.isTag && (!values.tag || values.tag.length == 0)) {
-      Store.addNotification({
-        ...notification,
-        type: 'warning',
-        message: 'The Tag field is required',
-      });
-    }
-
-    let newProfiles = [];
-    const accounts = [];
-    const proxies = [];
-    values.text.forEach((e, index) => {
-      const uid = e.split('|')[0];
-      const password = e.split('|')[1];
-      const twoFA = e.split('|')[2] ? e.split('|')[2] : '';
-      const recoveryEmail = e.split('|')[3] ? e.split('|')[3] : '';
-      const recoveryPassword = e.split('|')[4] ? e.split('|')[4] : '';
-      const cookies = e.split('|')[5] ? e.split('|')[5] : '';
-      if (uid && uid !== '' && password && password !== '') {
-        accounts.push({
-          uid,
-          password,
-          isPin: false,
-          recoveryEmail,
-          recoveryPassword,
-          cookies,
-          twoFA,
-          status: 'ready',
-          tag,
-        });
-      }
-    });
-    values.proxy.forEach((e) => {
-      const host = e.split(':')[0];
-      const port = e.split(':')[1];
-      const username = e.split(':')[2] ? e.split(':')[2] : '';
-      const password = e.split(':')[3] ? e.split(':')[3] : '';
-      if (host && host !== '' && port && port !== '') {
-        proxies.push({
-          host,
-          port,
-          username,
-          password,
-          mode: values.option,
-        });
-      }
-    });
-
-    if (accounts.length > proxies.length && values.isProxy) {
-      Store.addNotification({
-        ...notification,
-        type: 'warning',
-        message: 'The Proxy field is required',
-      });
-    }
-
-    if (accounts.length) {
-      setLoading(true);
-      const users = await dbGetLocally(storageProfiles);
-      if (users && users.length) newProfiles = [...users];
-
-      for (let i = 0; i < accounts.length; i++) {
-        let proxy = {
-          host: '',
-          port: 80,
-          username: '',
-          password: '',
-        };
-        if (values.isProxy) {
-          proxy = proxies[i % proxies.length]
-            ? proxies[i % proxies.length]
-            : {
-                host: '',
-                port: 80,
-                username: '',
-                password: '',
-              };
-        }
-        const res = await createProfile(accounts[i].uid, proxy);
-        if (res && res.code == 1) {
-          newProfiles.push({ ...res.result, ...accounts[i] });
-        } else {
-          Store.addNotification({
-            ...notification,
-            type: 'danger',
-            message: 'Add account fail!',
-          });
-          break;
-        }
-      }
-
-      await dbSetLocally(storageProfiles, newProfiles);
-
-      setLoading(false);
-      setInitialValues();
-      handleCloseProfiles();
-    } else {
-      Store.addNotification({
-        ...notification,
-        type: 'warning',
-        message: 'The Account field is required',
-      });
-    }
-  };
-
+import { runScript } from '../../../services/runScript';
+import { useDispatch } from 'react-redux';
+const PopupChooseProfile = ({ openProfiles, handleCloseProfiles, designScript }) => {
+  const dispatch = useDispatch();
   const makeCopyProfile = {
     position: 'fixed',
     maxWidth: '100%',
@@ -186,15 +51,11 @@ const PopupChooseProfile = ({ openProfiles, handleCloseProfiles }) => {
 
   const profiles = useSelector((state) => state.profile);
 
-  let rowID;
-  // let loading = false;
-  const [columns, setColumns] = useState([]);
-  const [displaySettings, setDisplaySettings] = useState(null);
+  let loading = false;
   const [profilesSelected, setProfilesSelected] = useState([]);
   const [dataProfiles, setDataProfiles] = useState([]);
   const [dataSearch, setDataSearch] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  const navigate = useNavigate();
 
   useEffect(() => {
     config();
@@ -217,146 +78,93 @@ const PopupChooseProfile = ({ openProfiles, handleCloseProfiles }) => {
   }, [profiles]);
 
   const config = async () => {
-    await checkSettings();
     await getProfiles(true);
   };
 
-  const checkSettings = async () => {
-    const token = await dbGetLocally(accessToken);
-    if (!token || token == '') {
-      return navigate('/login');
-    }
-    const settings = await dbGetLocally(storageSettings);
-    if (!settings) {
-      await dbSetLocally(storageSettings, defaultSettings);
-    }
-
-    let display = await dbGetLocally(storageDisplaySettings);
-    if (!display) {
-      await dbSetLocally(storageDisplaySettings, defaultDisplaySettings);
-      display = defaultDisplaySettings;
-    }
-    setDisplaySettings(display);
-  };
-
-  const renderColumns = async () => {
-    // if (!settings) settings = await dbGetLocally(storageDisplaySettings);
-
-    const settingsColumns = [
-      {
-        title: '#',
-        // dataIndex: 'key',
-        width: 20,
-        render: (text, record, index) => <div>{index + 1}</div>,
+  const columns = [
+    {
+      title: '#',
+      // dataIndex: 'key',
+      width: 20,
+      render: (text, record, index) => <div>{index + 1}</div>,
+    },
+    {
+      title: 'UID',
+      render: (profile) => {
+        return (
+          <div className="-text-profile">
+            <span>{profile.uid}</span>
+            {profile.isPin && <img src={pin} alt="icon-pin"></img>}
+          </div>
+        );
       },
-    ];
-
+      width: 120,
+      sorter: (a, b) => !a.isPin && !b.isPin && a.uid - b.uid,
+    },
     {
-      settingsColumns.push({
-        title: 'UID',
-        render: (profile) => {
+      title: 'Name',
+      dataIndex: 'nameAccount',
+      width: 100,
+      render: (nameAccount) => (
+        <Tooltip placement="topLeft" title={nameAccount}>
+          {nameAccount}
+        </Tooltip>
+      ),
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      width: 50,
+      render: (status) => {
+        if (status === 'running') {
+          return <div className="-status-profiles">{status.charAt(0).toUpperCase() + status.slice(1)}</div>;
+        } else if (status === 'ready') {
           return (
-            <div className="-text-profile">
-              <span>{profile.uid}</span>
-              {profile.isPin && <img src={pin} alt="icon-pin"></img>}
+            <div className="-status-profiles -status-profiles-ready">
+              {status.charAt(0).toUpperCase() + status.slice(1)}
             </div>
           );
-        },
-        width: 100,
-        sorter: (a, b) => !a.isPin && !b.isPin && a.uid - b.uid,
-      });
-    }
-    {
-      settingsColumns.push({
-        title: 'Name',
-        dataIndex: 'nameAccount',
-        width: 100,
-        render: (nameAccount) => (
-          <Tooltip placement="topLeft" title={nameAccount}>
-            {nameAccount}
-          </Tooltip>
-        ),
-      });
-    }
-    {
-      settingsColumns.push({
-        title: 'Status',
-        dataIndex: 'status',
-        width: 50,
-        render: (status) => {
-          if (status === 'running') {
-            return <div className="-status-profiles">{status.charAt(0).toUpperCase() + status.slice(1)}</div>;
-          } else if (status === 'ready') {
-            return (
-              <div className="-status-profiles -status-profiles-ready">
-                {status.charAt(0).toUpperCase() + status.slice(1)}
-              </div>
-            );
-          } else {
-            return (
-              <>
-                {status ? (
-                  <div className="-status-profiles -status-profiles-used">
-                    {status.charAt(0).toUpperCase() + status.slice(1)}
-                  </div>
-                ) : null}
-              </>
-            );
-          }
-        },
-      });
-    }
-
-    {
-      settingsColumns.push({
-        title: 'Proxy',
-        dataIndex: 'proxy',
-        width: 100,
-        ellipsis: {
-          showTitle: false,
-        },
-        render: (proxy) => {
+        } else {
           return (
-            <div className="-proxy-profiles">
-              <Tooltip placement="topLeft" title={generateProxyStr(proxy, false)}>
-                {generateProxyStr(proxy)}
-              </Tooltip>
-            </div>
+            <>
+              {status ? (
+                <div className="-status-profiles -status-profiles-used">
+                  {status.charAt(0).toUpperCase() + status.slice(1)}
+                </div>
+              ) : null}
+            </>
           );
-        },
-        sorter: (a, b) => !a.isPin && !b.isPin && a.proxy.length - b.proxy.length,
-      });
-    }
+        }
+      },
+    },
     {
-      settingsColumns.push({
-        title: 'Tag',
-        dataIndex: 'tag',
-        width: 50,
-        editable: true,
-        render: (tag) => {
-          return <p className="-tag-profiles">{tag}</p>;
-        },
-        sorter: (a, b) => !a.isPin && !b.isPin && a.tag.length - b.tag.length,
-      });
-    }
-
-    const newColumns = settingsColumns.map((col) => {
-      if (!col.editable) {
-        return col;
-      }
-      return {
-        ...col,
-        onCell: (record) => ({
-          record,
-          editable: col.editable,
-          dataIndex: col.dataIndex,
-          title: col.title,
-          handleSave: handleSaveTag,
-        }),
-      };
-    });
-    setColumns(newColumns);
-  };
+      title: 'Proxy',
+      dataIndex: 'proxy',
+      width: 100,
+      ellipsis: {
+        showTitle: false,
+      },
+      render: (proxy) => {
+        return (
+          <div className="-proxy-profiles">
+            <Tooltip placement="topLeft" title={generateProxyStr(proxy, false)}>
+              {generateProxyStr(proxy)}
+            </Tooltip>
+          </div>
+        );
+      },
+      sorter: (a, b) => !a.isPin && !b.isPin && a.proxy.length - b.proxy.length,
+    },
+    {
+      title: 'Tag',
+      dataIndex: 'tag',
+      width: 50,
+      render: (tag) => {
+        return <p className="-tag-profiles">{tag}</p>;
+      },
+      sorter: (a, b) => !a.isPin && !b.isPin && a.tag.length - b.tag.length,
+    },
+  ];
 
   useEffect(() => {
     if (dataProfiles && dataSearch) {
@@ -384,14 +192,11 @@ const PopupChooseProfile = ({ openProfiles, handleCloseProfiles }) => {
         }),
       );
     }
-    if (dataProfiles && displaySettings) {
-      renderColumns(displaySettings, dataProfiles);
-    }
   }, [dataProfiles]);
 
   const getProfiles = async (local = false) => {
     if (!loading) {
-      setLoading(true);
+      loading = true;
       let profilesFromServer;
       if (local) {
         profilesFromServer = storageService.getSessionObject('profiles');
@@ -416,6 +221,7 @@ const PopupChooseProfile = ({ openProfiles, handleCloseProfiles }) => {
           );
         }
       }
+      loading = false;
     }
   };
 
@@ -431,29 +237,6 @@ const PopupChooseProfile = ({ openProfiles, handleCloseProfiles }) => {
       proxyStr = `${proxy.host}:${proxy.port}...`;
     }
     return proxyStr;
-  };
-
-  const handleSaveTag = async (row) => {
-    const newData = [...dataProfiles];
-    const index = newData.findIndex((profile) => row.id === profile.id);
-    const profile = newData[index];
-    profile.tag = row.tag.split(',').map((e) => {
-      if (e && e.length && !e.startsWith('#')) {
-        return '#' + e;
-      }
-      return e;
-    });
-    newData.splice(index, 1, {
-      ...profile,
-    });
-    setDataProfiles(newData);
-    await dbSetLocally(storageProfiles, newData);
-  };
-  const components = {
-    body: {
-      row: EditableRow,
-      cell: EditableCell,
-    },
   };
 
   const rowSelection = {
@@ -489,11 +272,38 @@ const PopupChooseProfile = ({ openProfiles, handleCloseProfiles }) => {
     }
   };
 
+  const runScriptAuto = async () => {
+    if (profilesSelected.length == 0) {
+      Store.addNotification({
+        ...notification,
+        type: 'warning',
+        message: 'Please choose profile!',
+      });
+    } else {
+      const check = profilesSelected.find((e) => e.status !== 'ready');
+      if (!check) {
+        handleCloseProfiles();
+        setSelectedRowKeys([]);
+        await runScript(profilesSelected, designScript, dispatch);
+      } else {
+        Store.addNotification({
+          ...notification,
+          type: 'warning',
+          message: `Profile ${check.uid} is ${check.status}!`,
+        });
+      }
+    }
+  };
+
   return (
     <>
       <Dialog
         open={openProfiles}
-        onClose={handleCloseProfiles}
+        onClose={() => {
+          setSelectedRowKeys([]);
+          setProfilesSelected([]);
+          handleCloseProfiles();
+        }}
         sx={{
           '& .MuiPaper-root[role="dialog"]': makeCopyProfile,
           '& .MuiBackdrop-root': overlay,
@@ -508,9 +318,9 @@ const PopupChooseProfile = ({ openProfiles, handleCloseProfiles }) => {
                 <div
                   className="-nav-scripts__header__close"
                   onClick={() => {
-                    if (!loading) {
-                      handleCloseProfiles();
-                    }
+                    setSelectedRowKeys([]);
+                    setProfilesSelected([]);
+                    handleCloseProfiles();
                   }}
                 >
                   <img src={closePopup} alt="icon-x"></img>
@@ -520,18 +330,22 @@ const PopupChooseProfile = ({ openProfiles, handleCloseProfiles }) => {
               <div className="-wrapper-option-profiles -nav-scripts__btn">
                 <div className="-search-profiles">
                   <span>
-                    <img
-                      src={search}
-                      alt="search"
-                      onChange={(event) => {
-                        searchProfiles(event.target.value);
-                      }}
-                      style={{ marginLeft: '11px' }}
-                    ></img>
+                    <img src={search} alt="search" style={{ marginLeft: '11px' }}></img>
                   </span>
-                  <input placeholder="Search..."></input>
+                  <input
+                    onChange={(event) => {
+                      searchProfiles(event.target.value);
+                    }}
+                    placeholder="Search..."
+                  ></input>
                 </div>
-                <button onClick={addProfiles}>RUN</button>
+                <button
+                  onClick={async () => {
+                    await runScriptAuto();
+                  }}
+                >
+                  RUN
+                </button>
               </div>
             </div>
             <div className="scrollable-container">
@@ -540,7 +354,6 @@ const PopupChooseProfile = ({ openProfiles, handleCloseProfiles }) => {
                   ...rowSelection,
                   type: 'radio',
                 }}
-                components={components}
                 showSorterTooltip={false}
                 rowClassName={(profile) => (profile.isPin ? 'editable-row pinned-row' : 'editable-row')}
                 columns={columns}

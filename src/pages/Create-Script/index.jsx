@@ -26,7 +26,6 @@ import back from '../../assets/icon/icon-back.svg';
 import newNote from '../../assets/icon/icon-newNote.svg';
 import debug from '../../assets/icon/icon-debug.svg';
 import runTest from '../../assets/icon/icon-runTest.svg';
-import option from '../../assets/icon/icon-options.svg';
 import save from '../../assets/icon/icon-save.svg';
 import watchStory from '../../assets/icon/icon-watchStoryGeneral.svg';
 import watchVideo from '../../assets/icon/icon-watchVideoGeneral.svg';
@@ -35,8 +34,6 @@ import createPost from '../../assets/icon/icon-createPostGeneral.svg';
 import postInteract from '../../assets/icon/icon-postInteractGeneral.svg';
 import deletePost from '../../assets/icon/icon-deletePostGeneral.svg';
 import viewNoti from '../../assets/icon/icon-viewNotiGeneral.svg';
-import sendMsg from '../../assets/icon/icon-sendMsgGeneral.svg';
-import reply from '../../assets/icon/icon-replyGeneral.svg';
 import addFriend from '../../assets/icon/icon-addFriendGeneral.svg';
 import cancel from '../../assets/icon/icon-cancelGeneral.svg';
 import joinGroup from '../../assets/icon/icon-joinGroup.svg';
@@ -70,6 +67,7 @@ const CreateScript = () => {
   const [currentComponent, setCurrentComponent] = useState('');
   const [currentSetup, setCurrentSetup] = useState(null);
   const [activeCategory, setActiveCategory] = useState(1);
+  const [openProfiles, setOpenProfiles] = useState(false);
   const navigate = useNavigate();
   useEffect(() => {
     setDefaultScript();
@@ -145,6 +143,7 @@ const CreateScript = () => {
           design,
           name: nameScript,
           note: noteScript,
+          status: '',
           id: designScript.id ? designScript.id : uuidv4(),
           isPin: designScript.isPin ? true : false,
           createdAt: new Date(),
@@ -507,9 +506,11 @@ const CreateScript = () => {
         );
     }
   };
-  const [openProfiles, setOpenProfiles] = useState(false);
+
   //profiles
   const handleOpenProfiles = () => {
+    const design = DnDFlowRef.current.getReactFlowInstance();
+    setDesignScript({ ...designScript, design });
     setOpenProfiles(true);
   };
   const handleCloseProfiles = () => {
@@ -569,6 +570,7 @@ const CreateScript = () => {
                     <img src={runTest} alt="run test" />
                   </button>
                   <PopupChooseProfile
+                    designScript={designScript}
                     openProfiles={openProfiles}
                     handleCloseProfiles={handleCloseProfiles}
                   ></PopupChooseProfile>

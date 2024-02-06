@@ -1,47 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import './style.scss';
-import { Input, Popover, Table, Tooltip } from 'antd';
+import { Table, Tooltip } from 'antd';
 import PopupComponent from '../PopupComponent/PopupComponent';
 import closePopup from '../../../assets/pictures/icon-x.svg';
 import search from '../../../assets/pictures/icon-search.svg';
-import refresh from '../../../assets/pictures/icon-refresh.png';
-import { formatTimeDay } from '../../../services/utils';
-import { aesDecrypt } from '../../../services/crypto-js';
-import { storageProfiles } from '../../../common/const.config';
-import { Store } from 'react-notifications-component';
-import storageService from '../../../services/storage.service';
-import { dbGetLocally, dbSetLocally, deleteProfile, getMe, getProfilesMarco, runProfile } from '../../../sender';
-import notification from '../../../resources/notification.json';
+import pin from '../../../assets/icon/icon-pin.svg';
+
 import { useSelector } from 'react-redux';
-const PopupRunScript = ({
-  openRunScript,
-  handleCloseRunScript,
-  defaultProxies,
-  profilesSelected,
-  // getProfiles,
-  // dataProfiles,
-}) => {
-  let loading = false;
+const PopupRunScript = ({ openRunScript, handleCloseRunScript }) => {
   const profiles = useSelector((state) => state.profile);
   const scriptName = useSelector((state) => state.scriptAuto);
-  const [proxies, setProxies] = useState([]);
   const [dataProfiles, setDataProfiles] = useState(profiles);
   const [dataSearch, setDataSearch] = useState(profiles);
   const [textSearch, setTextSearch] = useState('');
-  const [selectedProxy, setSelectedProxy] = useState([]);
 
   useEffect(() => {
     setDataSearch(profiles);
     setDataProfiles(profiles);
   }, [profiles]);
 
-  const generateProxyStr = (proxy) => {
-    let proxyStr = `${proxy.host}:${proxy.port}${proxy.username && proxy.username != '' ? ':' + proxy.username : ''}${
-      proxy.password ? ':' + proxy.password : ''
-    }`;
+  const generateProxyStr = (proxy, shot = true) => {
+    let proxyStr =
+      proxy.host && proxy.host.length
+        ? `${proxy.host}:${proxy.port}${proxy.username && proxy.username != '' ? ':' + proxy.username : ''}${
+            proxy.password ? ':' + proxy.password : ''
+          }`
+        : 'none';
 
-    if (proxyStr.length > 30) {
-      proxyStr = `${proxy.host}:${proxy.port}`;
+    if (proxyStr.length > 30 && shot) {
+      proxyStr = `${proxy.host}:${proxy.port}...`;
     }
     return proxyStr;
   };
@@ -66,68 +53,12 @@ const PopupRunScript = ({
     }
   }, [dataProfiles]);
 
-  const getProfiles = async (local = false) => {
-    if (!loading) {
-      loading = true;
-      let profilesFromServer;
-      if (local) {
-        profilesFromServer = storageService.getSessionObject('profiles');
-      }
-
-      if (!profilesFromServer) profilesFromServer = await getProfilesMarco();
-      if (profilesFromServer && profilesFromServer.code) {
-        storageService.setSessionObject('profiles', profilesFromServer);
-        let profiles = await dbGetLocally(storageProfiles);
-        profiles = profiles.filter((e) => {
-          const check = profilesFromServer.result.find((o) => o.id == e.id);
-          if (check) return true;
-          return false;
-        });
-
-        if (profiles && profiles.length) {
-          setDataProfiles(profiles);
-          setDataSearch(
-            profiles.map((e, index) => {
-              return { ...e, key: index + 1 };
-            }),
-          );
-        }
-      }
-      storageService.setSessionObject('user', null);
-      loading = false;
-    }
-  };
-
-  const getProxies = async () => {
-    const res = null;
-    if (res && res.success) {
-      let listProxy = res.data.data.filter((e) => {
-        if (defaultProxies) {
-          const check = defaultProxies.find((o) => o.id == e.id);
-          return !check;
-        }
-        return true;
-      });
-      listProxy = listProxy.map((e, index) => {
-        let username = e.username;
-        let password = e.password;
-        if (e.encrypted) {
-          username = aesDecrypt(e.username);
-          password = aesDecrypt(e.password);
-        }
-        return { ...e, username, password, key: index + 1 };
-      });
-      setProxies(listProxy);
-      setDataSearch(listProxy);
-    }
-  };
-
   const searchProfiles = (text) => {
     setTextSearch(text);
     if (text == '') {
-      setDataSearch(proxies);
+      setDataSearch(dataSearch);
     } else {
-      const newData = proxies.filter((e) => {
+      const newData = profiles.filter((e) => {
         const textLowerCase = text.toLowerCase();
         const mode = e.mode ? e.mode.toLowerCase() : '';
         const host = e.host ? e.host.toLowerCase() : '';
@@ -146,45 +77,6 @@ const PopupRunScript = ({
     }
   };
 
-  const changeProxy = async () => {
-    const listProxy = selectedProxy;
-    if (listProxy.length < profilesSelected.length) {
-      Store.addNotification({
-        ...notification,
-        type: 'warning',
-        message: `Please select ${profilesSelected.length} proxy!`,
-      });
-    } else {
-      for (let i = 0; i < profilesSelected.length; i++) {
-        const res = await apiUpdateProfiles(profilesSelected[i].id, listProxy[i], profilesSelected[i].browserSource);
-        if (res && res.success && res.data.code == 1) {
-          const index = dataProfiles.findIndex((e) => e.id === profilesSelected[i].id);
-          const newData = [...dataProfiles];
-          newData[index].proxy = res.data.data.proxy;
-
-          await dbSetLocally(storageProfiles, newData);
-        }
-      }
-      getProfiles();
-      handleCloseRunScript();
-      setTimeout(() => {
-        Store.addNotification({
-          ...notification,
-          type: 'warning',
-          message: 'The Account field is required',
-        });
-      }, 500);
-    }
-  };
-
-  const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      if (selectedRows.length) {
-        console.log(selectedRows);
-        setSelectedProxy(selectedRows);
-      } else setSelectedProxy([]);
-    },
-  };
   const columnsProxys = [
     {
       title: 'UID',
@@ -200,6 +92,13 @@ const PopupRunScript = ({
     },
     {
       title: 'Name',
+      dataIndex: 'nameAccount',
+      width: 150,
+      render: (nameAccount) => (
+        <Tooltip placement="topLeft" title={nameAccount}>
+          {nameAccount}
+        </Tooltip>
+      ),
     },
     {
       title: 'Status',
@@ -255,13 +154,7 @@ const PopupRunScript = ({
     },
   ];
   return (
-    <PopupComponent
-      open={openRunScript}
-      // onOpen={() => {
-      //   getProxies();
-      // }}
-      onClose={handleCloseRunScript}
-    >
+    <PopupComponent open={openRunScript} onClose={handleCloseRunScript}>
       {
         <div className="layout-run-script">
           <div className="layout-run-script__container -proxy-manage">
@@ -293,7 +186,12 @@ const PopupRunScript = ({
               <div>{scriptName}</div>
             </div>
             <div className="-container-scripts -proxy-manage__content">
-              <Table columns={columnsProxys} dataSource={dataSearch} pagination={false}></Table>
+              <Table
+                rowClassName={(profile) => (profile.isPin ? 'editable-row pinned-row' : 'editable-row')}
+                columns={columnsProxys}
+                dataSource={dataSearch}
+                pagination={false}
+              ></Table>
             </div>
           </div>
         </div>
