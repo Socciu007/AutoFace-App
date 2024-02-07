@@ -62,7 +62,7 @@ export const createPost = (setting) => {
         }
         else{
           logger("Tag friend khong thanh cong");
-          return 0;
+          return false;
         }
   
         // Click "Done" button after tag
@@ -246,7 +246,8 @@ export const createPost = (setting) => {
     const numberOfPost = getRandomIntBetween(CreatePost.postStart, CreatePost.postEnd);
     logger('can create ' + numberOfPost + 'bai');
     let arrContent = [];
-
+    let countUploadImg = 0;
+    let countTagFriend = 0;
     while (count < numberOfPost) {
       await returnHomePage(page);
       await delay(3000);
@@ -289,20 +290,32 @@ export const createPost = (setting) => {
           //   return 0;
           // }
 
-
+         
           const uploadImgResult = await uploadImg(page, CreatePost);
           const checkImg = await getElements(page, '[class="img cover"][data-client-image="true"]');
-          if (uploadImgResult && checkImg.length > 0 && checkImg) {
+          if (uploadImgResult && checkImg != null) {
             logger('Upload image successful');
           } else {
             logger("Can't upload image");
-            return 0;
+            countUploadImg++;
+            if(countUploadImg >= 3) return 0;
+            continue;
           }
 
           await delay(5000);
           // TAG
           if (CreatePost.isTag) {
-            await tagFriend(page, CreatePost);
+            
+            const rsTag = await tagFriend(page, CreatePost);
+            if(rsTag){
+              logger('Tag ban be thanh cong');
+            }
+            else{
+              logger('Tag ban be khong thanh cong');
+              countTagFriend++;
+              if(countTagFriend >= 3) return 0;
+              continue;
+            }
           } else {
             logger('Khong tag ban be');
           }
