@@ -47,14 +47,22 @@ export const createPost = (setting) => {
           await delay(2000);
         }
         await clickElement(tagBtn);
-        await delay(2000);
-        if (CreatePost.typeTag === 'UIDList') {
-          // Tag UID
-          logger('Khong the tag bang UID list');
-          // await tagFriendsByUIDList(page, CreatePost);
-        } else {
-          // tag random
-          await tagFriendsRandomly(page, numberFriendTag);
+        await delay(5000);
+
+        const url = await page.url();
+        if (url == 'https://m.facebook.com/') {
+          if (CreatePost.typeTag === 'UIDList') {
+            // Tag UID
+            logger('Khong the tag bang UID list');
+            // await tagFriendsByUIDList(page, CreatePost);
+          } else {
+            // tag random
+            await tagFriendsRandomly(page, numberFriendTag);
+          }
+        }
+        else{
+          logger("Tag friend khong thanh cong");
+          return 0;
         }
   
         // Click "Done" button after tag
