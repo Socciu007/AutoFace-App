@@ -204,6 +204,9 @@
       border-radius: 20px;
     }
   }
+  .ant-table-wrapper .ant-table-tbody .ant-table-row.ant-table-row-selected > .pinned-row.ant-table-cell-row-hover {
+    background-color: #fffbea !important;
+  }
   .ant-table-wrapper .ant-table-tbody .ant-table-row.ant-table-row-selected > .ant-table-cell {
     background-color: #f2f8ff;
   }

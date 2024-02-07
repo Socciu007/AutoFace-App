@@ -125,6 +125,7 @@ export const createPost = (setting) => {
       logger(err);
     }
   };
+ 
   const uploadImg = async (page, CreatePost) => {
     try {
       const numberPhoto =
@@ -144,12 +145,18 @@ export const createPost = (setting) => {
             '#screen-root > div > div:nth-child(2) > div:nth-child(7) > div:nth-child(1)',
             5,
           );
+          const arrImg = [];
+          for (let i = 0; i < numberPhoto; i++) {
+            let randomImg = getRandomIntBetween(0, CreatePost.photos.length);
+            arrImg.push(CreatePost.photos[randomImg]);
+          }
+          logger(arrImg);
           CreatePost.photos.length = numberPhoto;
+          logger('CreatePost.photos.length', CreatePost.photos.length);
           if (select) {
             const [fileChooser] = await Promise.all([page.waitForFileChooser(), await clickElement(select)]);
-            await delay(3000);
-            // Accept multiple files
-            await fileChooser.accept(CreatePost.photos);
+            await delay(getRandomIntBetween(5000, 12000));
+            await fileChooser.accept(arrImg);
             await delay(8000);
           } else {
             return false;
@@ -168,6 +175,8 @@ export const createPost = (setting) => {
       return false;
     }
   };
+  
+  
   const inputContent = async (page, CreatePost) => {
     try {
       // Input text
@@ -264,13 +273,24 @@ export const createPost = (setting) => {
             return 0;
           }
 
+          // const uploadImgResult = await uploadImg(page, CreatePost);
+          // if (uploadImgResult) {
+          //   logger('Upload image successful');
+          // } else {
+          //   logger("Can't upload image");
+          //   return 0;
+          // }
+
+
           const uploadImgResult = await uploadImg(page, CreatePost);
-          if (uploadImgResult) {
+          const checkImg = await getElements(page, '[class="img cover"][data-client-image="true"]');
+          if (uploadImgResult && checkImg.length > 0 && checkImg) {
             logger('Upload image successful');
           } else {
             logger("Can't upload image");
             return 0;
           }
+
           await delay(5000);
           // TAG
           if (CreatePost.isTag) {
