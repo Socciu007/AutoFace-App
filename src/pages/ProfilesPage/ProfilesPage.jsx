@@ -571,7 +571,7 @@ const ProfilesPage = () => {
       } else {
         Store.addNotification({
           ...notification,
-          type: 'success',
+          type: 'warning',
           message: `Profile ${check.uid} is ${check.status}!`,
         });
       }

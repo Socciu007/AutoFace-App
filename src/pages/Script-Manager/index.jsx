@@ -1,23 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './style.scss';
 import { useNavigate } from 'react-router-dom';
-import DnDFlow from '../../components/drag/drag';
 import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 import Dialog from '@mui/material/Dialog';
 import back from '../../assets/icon/icon-back.svg';
-import search from '../../assets/icon/icon-search.svg';
-import reload from '../../assets/icon/icon-reload.svg';
-import add from '../../assets/icon/icon-add.svg';
 import pin from '../../assets/icon/icon-pin.svg';
 import pinBlack from '../../assets/icon/icon-pinBlack.svg';
 import iconEdit from '../../assets/icon/icon-editBlack.svg';
 import iconDuplicate from '../../assets/icon/icon-duplicate.svg';
 import iconDelete from '../../assets/icon/icon-Delete.svg';
-import iconRename from '../../assets/icon/icon-rename.svg';
 import option from '../../assets/icon/icon-options.svg';
-import newNote from '../../assets/icon/icon-newNote.svg';
-import edit from '../../assets/icon/icon-editWhite.svg';
 import close from '../../assets/icon/icon-close.svg';
 import yourScript from '../../assets/pictures/icon-yourScripts.svg';
 import yourScriptBlue from '../../assets/icon/icon-yourScriptsBlue.svg';
@@ -96,26 +88,34 @@ const ScriptManager = () => {
     setListScript(mapStatus(listScript));
   }, [profiles]);
 
+  useEffect(() => {
+    if (contentArray && contentArray.length) {
+      setListScript(mapStatus(listScript));
+    }
+  }, [contentArray]);
+
   const mapStatus = (newList) => {
+    if (!profiles || profiles.length == 0) return newList;
     const newArr = [...newList];
     contentArray.forEach((e, index) => {
       const total = profiles.filter((o) => o.script == e.id);
       const scriptDone = profiles.filter((o) => o.script == e.id && o.status == 'ready');
-      if (total.length > 0) {
-        dispatch(setScriptAuto(newArr[index].name));
-      }
-      newArr[index].status =
-        total.length > 0 ? (
-          <div className="statusRunning">
-            <img src={running} alt="run profile icon" />
-            <span>
-              <span className="profileRunning">{scriptDone.length}</span>
-              <span className="totalProfile"> / {total.length} profiles</span>
-            </span>
-          </div>
-        ) : (
-          ''
-        );
+
+      newArr[index] = {
+        ...newArr[index],
+        status:
+          total.length > 0 ? (
+            <div className="statusRunning">
+              <img src={running} alt="run profile icon" />
+              <span>
+                <span className="profileRunning">{scriptDone.length}</span>
+                <span className="totalProfile"> / {total.length} profiles</span>
+              </span>
+            </div>
+          ) : (
+            ''
+          ),
+      };
     });
     return newArr;
   };
@@ -291,6 +291,7 @@ const ScriptManager = () => {
           <>
             <div
               onClick={() => {
+                dispatch(setScriptAuto(script.name));
                 setItemSelect(script);
                 setIsRunScript(true);
               }}

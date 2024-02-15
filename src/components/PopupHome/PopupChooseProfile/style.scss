@@ -4,6 +4,14 @@
   border-radius: 15px;
   background: #fff;
   box-shadow: 0px 4px 10px 0px rgba(8, 35, 106, 0.25);
+  .-text-profile {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    img {
+      cursor: pointer;
+    }
+  }
   &__container {
     padding: 2% 4% 2% 4%;
     height: 100%;
@@ -195,6 +203,9 @@
       background-color: #f0f0f0; /* Màu của phần bên dưới thanh cuộn */
       border-radius: 20px;
     }
+  }
+  .ant-table-wrapper .ant-table-tbody .ant-table-row.ant-table-row-selected > .pinned-row.ant-table-cell-row-hover {
+    background-color: #fffbea !important;
   }
   .ant-table-wrapper .ant-table-tbody .ant-table-row.ant-table-row-selected > .ant-table-cell {
     background-color: #f2f8ff;

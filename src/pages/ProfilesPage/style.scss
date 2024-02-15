@@ -202,6 +202,9 @@
   .ant-table-wrapper .ant-table-tbody .ant-table-row.ant-table-row-selected > .ant-table-cell {
     background-color: #f2f8ff;
   }
+  .ant-table-wrapper .ant-table-tbody .ant-table-row.pinned-row.ant-table-row-selected > .ant-table-cell {
+    background-color: #fffbea;
+  }
   .ant-table-wrapper {
     height: calc(100vh - 190px);
   }

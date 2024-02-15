@@ -1,3 +1,5 @@
+Menu;
+
 import { storageSettings } from '../../common/const.config';
 import { createPost } from './scriptAuto/CreatePost';
 import { dbGetLocally, getBrowserData, getInformation, getProxy, runProfile } from '../../sender';
@@ -15,8 +17,8 @@ import { createPostGroup } from './scriptAuto/CreatePostGroup';
 import { boostLikeComment } from './scriptAuto/BoostLikeComment';
 import { boostFollower } from './scriptAuto/BoostFollower';
 import { boostView } from './scriptAuto/BoostView';
-import { inviteGroup } from './scriptAuto/InviteGroup';
-import { joinGroup } from './scriptAuto/JoinGroup';
+import { inviteGroup } from './scriptAuto/inviteGroup';
+import { joinGroup } from './scriptAuto/joinGroup';
 import { leftGroup } from './scriptAuto/leaveGroup';
 import { updateProfile, updateProfiles } from '../../redux/profileSlice';
 window.electron.ipcRenderer.on('ipc-logger', (...params) => {
@@ -34,105 +36,98 @@ const splitToChunks = (array, size) => {
 
 export const runScript = async (profileSelected, scriptDesign, dispatch) => {
   // set all profiles selected to waiting status
-  try {
-    let newProfileSelected = profileSelected.map((profile) => {
-      return { ...profile, script: scriptDesign.id, status: 'waiting' };
-    });
-    dispatch(updateProfiles(newProfileSelected));
-    // ------
+  let newProfileSelected = profileSelected.map((profile) => {
+    profile.script = scriptDesign.id;
+    profile.status = 'waiting';
+    return profile;
+  });
+  dispatch(updateProfiles(newProfileSelected));
+  // ------
 
-    const settings = await dbGetLocally(storageSettings);
-    let thread = 1;
-    if (!isNaN(settings.countProfile)) {
-      thread = settings.countProfile;
-    }
-    const lengthThread = thread <= profileSelected.length ? thread : profileSelected.length;
+  const settings = await dbGetLocally(storageSettings);
+  let thread = 1;
+  if (!isNaN(settings.countProfile)) {
+    thread = settings.countProfile;
+  }
+  const lengthThread = thread <= profileSelected.length ? thread : profileSelected.length;
 
-    const results = splitToChunks(profileSelected, lengthThread);
+  const results = splitToChunks(profileSelected, lengthThread);
 
-    let arrfunction = [];
-    const nodes = scriptDesign.design.nodes;
-    const edges = scriptDesign.design.edges.filter((edge) => {
-      const check = nodes.find((node) => node.id == edge.target);
-      if (check) return true;
-      return false;
-    });
+  let arrfunction = [];
+  const nodes = scriptDesign.design.nodes;
+  const edges = scriptDesign.design.edges.filter((edge) => {
+    const check = nodes.find((node) => node.id == edge.target);
+    if (check) return true;
+    return false;
+  });
 
-    const scripts = scriptDesign.script;
+  const scripts = scriptDesign.script;
 
-    if (edges && edges.length) {
-      let node = nodes.find((node) => node.id == edges[0].target);
-      while (node) {
-        const script = scripts.find((e) => e.id == node.id);
-        arrfunction.push(script);
-        const edge = edges.find((e) => e.source == node.id);
-        if (edge) {
-          node = nodes.find((node) => node.id == edge.target);
-        } else {
-          node = null;
-        }
+  if (edges && edges.length) {
+    let node = nodes.find((node) => node.id == edges[0].target);
+    console.log('scrip', node);
+    while (node) {
+      const script = scripts.find((e) => e.id == node.id);
+      arrfunction.push(script);
+      const edge = edges.find((e) => e.source == node.id);
+      if (edge) {
+        node = nodes.find((node) => node.id == edge.target);
+      } else {
+        node = null;
       }
     }
-
-    for (let i = 0; i < settings.countLoop; i++) {
-      for (let j = 0; j < results.length; j++) {
-        await new Promise.map(
-          results[j],
-          async (profile, index) => {
-            // set profiledSelected running status
-            dispatch(updateProfile({ ...profile, status: 'running' }));
-            // --------------
-            await delay(settings.delayThread && settings.delayThread > 0 ? index * settings.delayThread * 1000 : 1000);
-            let proxyStr = '';
-            let proxy;
-            let proxyConvert;
-            if (settings.assignProxy) {
-              if (settings.proxies.length) {
-                const indexProfile = index + j * results.length;
-                proxy = settings.proxies[indexProfile % settings.proxies.length];
-              } else {
-                proxy = profile.proxy;
-              }
+  }
+  console.log('arr', arrfunction);
+  for (let i = 0; i < settings.countLoop; i++) {
+    for (let j = 0; j < results.length; j++) {
+      await new Promise.map(
+        results[j],
+        async (profile, index) => {
+          // set profiledSelected running status
+          dispatch(updateProfile({ ...profile, status: 'running' }));
+          // --------------
+          await delay(settings.delayThread && settings.delayThread > 0 ? index * settings.delayThread * 1000 : 1000);
+          let proxyStr = '';
+          let proxy;
+          let proxyConvert;
+          if (settings.assignProxy) {
+            if (settings.proxies.length) {
+              const indexProfile = index + j * results.length;
+              proxy = settings.proxies[indexProfile % settings.proxies.length];
             } else {
               proxy = profile.proxy;
-              if (settings.proxies.length && (!proxy.host || !proxy.host.length)) {
-                const indexProfile = index + j * results.length;
-                proxy = settings.proxies[indexProfile % settings.proxies.length];
-              }
             }
+          } else {
+            proxy = profile.proxy;
+            if (settings.proxies.length && (!proxy.host || !proxy.host.length)) {
+              const indexProfile = index + j * results.length;
+              proxy = settings.proxies[indexProfile % settings.proxies.length];
+            }
+          }
 
-            if (proxy.host && proxy.host.length) {
-              proxyConvert = await getProxy(proxy, profile.id);
-              if (proxyConvert && proxyConvert.host && proxyConvert.port) {
-                proxyStr = `"--proxy-server=${proxyConvert.mode}://${proxyConvert.host}:${proxyConvert.port}",`;
-              } else {
-                proxyStr = null;
-              }
+          if (proxy.host && proxy.host.length) {
+            proxyConvert = await getProxy(proxy, profile.id);
+            if (proxyConvert && proxyConvert.host && proxyConvert.port) {
+              proxyStr = `"--proxy-server=${proxyConvert.mode}://${proxyConvert.host}:${proxyConvert.port}",`;
+            } else {
+              proxyStr = null;
             }
-            if (proxyStr || proxyStr == '') {
-              let cpu, mem;
+          }
+          if (proxyStr || proxyStr == '') {
+            let cpu, mem;
+            const infor = await getInformation();
+            cpu = infor.cpu;
+            mem = infor.mem;
+
+            while (cpu > settings.maxCpu || mem > settings.maxRam) {
+              await delay(5000);
               const infor = await getInformation();
               cpu = infor.cpu;
               mem = infor.mem;
-
-              while (cpu > settings.maxCpu || mem > settings.maxRam) {
-                await delay(5000);
-                const infor = await getInformation();
-                cpu = infor.cpu;
-                mem = infor.mem;
-              }
-              let browserData = await getBrowserData(profile.id);
-
-              if (!browserData || !browserData.data || !browserData.executablePath || !browserData.pathProfile) {
-                for (let i = 0; i < 5; i++) {
-                  await delay(2000);
-                  browserData = await getBrowserData(profile.id);
-                  if (browserData && browserData.data && browserData.executablePath && browserData.pathProfile) break;
-                }
-              }
-
-              if (browserData && browserData.data && browserData.executablePath && browserData.pathProfile) {
-                const strCode = `
+            }
+            const browserData = await getBrowserData(profile.id);
+            if (browserData && browserData.data) {
+              const strCode = `
 
     let browser;
     const logger = (...params) => {
@@ -187,7 +182,8 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
         return error;
       }
     };
-  const scrollByWheel = async (page,scrollAmount) => {
+
+    const scrollByWheel = async (page,scrollAmount) => {
       return new Promise(async (resolve) => {
         try {
           setTimeout(() => {
@@ -284,223 +280,19 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
       }
     };
 
-const scrollSmoothIfNotExistOnScreen = async (page, JSpath) => {
+    const scrollSmoothIfNotExistOnScreen = async (page, JSpath) => {
       try {
-        await page.evaluate(async (JSpath) => {
-          const getRandomIntBetween = (min, max) => {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-          };
-          const delay = async (time) => {
-            return new Promise((resolve) => setTimeout(resolve, time));
-          };
-    
-          const smoothScrollByStep = (targetPosition, duration) => {
-            const startPosition = window.scrollY;
-            const distance = targetPosition - startPosition;
-            let startTime = null;
-    
-            const ease = (t, b, c, d) => {
-              t /= d / 2;
-              if (t < 1) return (c / 2) * t * t + b;
-              t--;
-              return (-c / 2) * (t * (t - 2) - 1) + b;
-            };
-    
-            const animation = (currentTime) => {
-              if (startTime === null) startTime = currentTime;
-              const timeElapsed = currentTime - startTime;
-              const run = ease(timeElapsed, startPosition, distance, duration);
-              window.scrollTo(0, run);
-              if (timeElapsed < duration) requestAnimationFrame(animation);
-            };
-    
-            requestAnimationFrame(animation);
-          };
-    
-          const isInViewport = (elem) => {
-            const bounding = elem.getBoundingClientRect();
-            return (
-              bounding.top >= 0 &&
-              bounding.left >= 0 &&
-              bounding.bottom <=
-                (window.innerHeight || document.documentElement.clientHeight) &&
-              bounding.right <=
-                (window.innerWidth || document.documentElement.clientWidth)
-            );
-          };
-    
-          const element = document.querySelector(JSpath);
-          if (element && !isInViewport(element)) {
-            const elementRect = element.getBoundingClientRect();
-            const viewportHeight =
-              window.innerHeight || document.documentElement.clientHeight;
-            const targetPosition =
-              window.scrollY +
-              elementRect.top -
-              (elementRect.top > viewportHeight ? viewportHeight : 0);
-    
-            let currentPosition = window.scrollY;
-            while (
-              Math.abs(currentPosition - targetPosition) > 0 &&
-              !isInViewport(element)
-            ) {
-              const stepSize =
-                getRandomIntBetween(200, 600) *
-                (currentPosition > targetPosition ? -1 : 1);
-              const durationPerStep = getRandomIntBetween(500, 1000);
-              const nextPosition = currentPosition + stepSize;
-    
-              smoothScrollByStep(nextPosition, durationPerStep);
-              await delay(getRandomIntBetween(1000, 2000));
-              await new Promise((resolve) => setTimeout(resolve, durationPerStep));
-              currentPosition = window.scrollY;
-            }
-          }
-        }, JSpath);
-        return true;
-      } catch (error) {
-        console.log(error);
-        return false;
-      }
-    };
-    
- const scrollSmoothIfElementNotExistOnScreen = async (page, element) => {
-      try {
-        await page.evaluate(async (element) => {
-          const getRandomIntBetween = (min, max) => {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-          };
-          const delay = async (time) => {
-            return new Promise((resolve) => setTimeout(resolve, time));
-          };
-    
-          const smoothScrollByStep = (targetPosition, duration) => {
-            const startPosition = window.scrollY;
-            const distance = targetPosition - startPosition;
-            let startTime = null;
-    
-            const ease = (t, b, c, d) => {
-              t /= d / 2;
-              if (t < 1) return (c / 2) * t * t + b;
-              t--;
-              return (-c / 2) * (t * (t - 2) - 1) + b;
-            };
-    
-            const animation = (currentTime) => {
-              if (startTime === null) startTime = currentTime;
-              const timeElapsed = currentTime - startTime;
-              const run = ease(timeElapsed, startPosition, distance, duration);
-              window.scrollTo(0, run);
-              if (timeElapsed < duration) requestAnimationFrame(animation);
-            };
-    
-            requestAnimationFrame(animation);
-          };
-    
-          const isInViewport = (elem) => {
-            const bounding = elem.getBoundingClientRect();
-            return (
-              bounding.top >= 0 &&
-              bounding.left >= 0 &&
-              bounding.bottom <=
-                (window.innerHeight || document.documentElement.clientHeight) &&
-              bounding.right <=
-                (window.innerWidth || document.documentElement.clientWidth)
-            );
-          };
-    
-          if (element && !isInViewport(element)) {
-            const elementRect = element.getBoundingClientRect();
-            const viewportHeight =
-              window.innerHeight || document.documentElement.clientHeight;
-            const targetPosition =
-              window.scrollY +
-              elementRect.top -
-              (elementRect.top > viewportHeight ? viewportHeight : 0);
-    
-            let currentPosition = window.scrollY;
-            while (
-              Math.abs(currentPosition - targetPosition) > 0 &&
-              !isInViewport(element)
-            ) {
-              const stepSize =
-                getRandomIntBetween(50, 500) *
-                (currentPosition > targetPosition ? -1 : 1);
-              const durationPerStep = getRandomIntBetween(500, 1000);
-              const nextPosition = currentPosition + stepSize;
-    
-              smoothScrollByStep(nextPosition, durationPerStep);
-              await delay(getRandomIntBetween(1000, 2000));
-              await new Promise((resolve) => setTimeout(resolve, durationPerStep));
-              currentPosition = window.scrollY;
-            }
-          }
-        }, element);
-        return true;
-      } catch (error) {
-        console.log(error);
-        return false;
-      }
-    };
-    
-    const scrollSmooth = async (page, randomScrollTime) => {
-      if (!checkIsLive()) {
-        return -2;
-      }
-      try {
-        while (randomScrollTime > 0) {
-          await page.evaluate(async () => {
-            const getRandomIntBetween = (min, max) => {
-              return Math.floor(Math.random() * (max - min + 1)) + min;
-            };
-            const delay = async (time) => {
-              return new Promise((resolve) => setTimeout(resolve, time));
-            };
-            const smoothScrollByStep = (targetPosition, duration) => {
-              const startPosition = window.scrollY;
-              const distance = targetPosition - startPosition;
-              let startTime = null;
-    
-              const animation = (currentTime) => {
-                if (startTime === null) startTime = currentTime;
-                const timeElapsed = currentTime - startTime;
-                const run = ease(timeElapsed, startPosition, distance, duration);
-                window.scrollTo(0, run);
-                if (timeElapsed < duration) requestAnimationFrame(animation);
-              };
-    
-              const ease = (t, b, c, d) => {
-                t /= d / 2;
-                if (t < 1) return (c / 2) * t * t + b;
-                t--;
-                return (-c / 2) * (t * (t - 2) - 1) + b;
-              };
-    
-              requestAnimationFrame(animation);
-            };
-            let scrollAmount = getRandomIntBetween(400, 800);
-            const targetPosition = window.scrollY + scrollAmount;
-            let currentPosition = window.scrollY;
-            if (currentPosition < targetPosition) {
-              const durationPerStep = getRandomIntBetween(500, 1000);
-              const nextPosition = Math.max(
-                currentPosition + scrollAmount,
-                targetPosition
-              );
-              smoothScrollByStep(nextPosition, durationPerStep);
-              await delay(getRandomIntBetween(1000, 5000));
-              await new Promise((resolve) => setTimeout(resolve, durationPerStep));
-              currentPosition = nextPosition;
-            }
-          });
-          randomScrollTime--;
+        if ((await checkExistElementOnScreen(page, JSpath)) !== 0) {
+          await page.evaluate((JSpath) => {
+            document.querySelector(JSpath).scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, JSpath);
         }
         return 1;
       } catch (error) {
         return 0;
       }
     };
-
+    
     const getElementByID = async  (
       page,
       id,
@@ -690,7 +482,7 @@ const scrollSmoothIfNotExistOnScreen = async (page, JSpath) => {
             "--proxy-bypass-list=https://static.xx.fbcdn.net",
             "--flag-switches-begin",
             "--flag-switches-end",
-            "--window-size=360,760"
+            "--window-size=360,640"
           ]
         });
 
@@ -698,9 +490,8 @@ const scrollSmoothIfNotExistOnScreen = async (page, JSpath) => {
         for(let i=1;i<pages.length;i++){
           logger('Close page ' + i);
           await pages[i].close();
-          await delay(1000);
         }
-        let page = await browser.newPage();
+        let page = pages[0];
         await page.setBypassCSP(true);
         await page.setCacheEnabled(false);
         const session = await page.target().createCDPSession();
@@ -729,46 +520,33 @@ const scrollSmoothIfNotExistOnScreen = async (page, JSpath) => {
         ${getAllFunc(arrfunction)}
        
       } catch (error) {
-        resolve(error);
           logger(error);
         } finally {
           if(browser){
               await browser.close();
           }
-          resolve('Done');
         }
-      
+        resolve('Done');
       });
 
      
       `;
 
-                const result = await runProfile(strCode, profile.id);
-                console.log(result);
-              } else {
-                console.log('Open Profile Fail!');
-              }
+              const result = await runProfile(strCode, profile.id);
+              console.log(result);
             } else {
-              console.log('Connect proxy Fail!');
+              console.log('Open Profile Fail!');
             }
-            dispatch(updateProfile({ ...profile, status: 'ready' }));
-          },
-          { concurrency: lengthThread },
-        );
-      }
+          } else {
+            console.log('Connect proxy Fail!');
+          }
+          dispatch(updateProfile({ ...profile, status: 'ready' }));
+        },
+        { concurrency: lengthThread },
+      );
     }
-    newProfileSelected = profileSelected.map((profile) => {
-      return { ...profile, script: scriptDesign.id, status: 'ready' };
-    });
-    dispatch(updateProfiles(newProfileSelected));
-    return;
-  } catch (err) {
-    console.log(err);
-    let newProfileSelected = profileSelected.map((profile) => {
-      return { ...profile, script: scriptDesign.id, status: 'ready' };
-    });
-    dispatch(updateProfiles(newProfileSelected));
   }
+  return;
 };
 
 const getAllFunc = (arrfunction) => {
@@ -792,6 +570,14 @@ const convertToFunc = (script) => {
     case 'viewNoti':
       return `{
         ${viewNoti(script)}
+      }`;
+    case 'replyMsg':
+      return `{
+        ${replyMsg(script)}
+      }`;
+    case 'sendMsg':
+      return `{
+        ${sendMsg(script)}
       }`;
     case 'deletePost':
       return `{

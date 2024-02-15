@@ -344,6 +344,12 @@
                 .ant-table-tbody .ant-table-row.ant-table-row-selected > .ant-table-cell-row-hover {
                   background: #f2f8ff;
                 }
+                .ant-table-tbody .ant-table-row.pinned-row.ant-table-row-selected > .ant-table-cell-row-hover {
+                  background: #fffbea;
+                }
+              }
+              .ant-table-row.pinned-row > .ant-table-cell-row-hover {
+                background: #fffbea !important;
               }
               .ant-spin-container
                 .ant-table
