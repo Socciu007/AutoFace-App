@@ -5,17 +5,11 @@ export const boostLikeComment = (setting) => {
     delayTimeStart: ${setting.delayTimeStart},
     delayTimeEnd: ${setting.delayTimeEnd},
     isLike: ${setting.isLike},
-    likeStart: ${setting.likeStart},
-    likeEnd: ${setting.likeEnd},
     isShare: ${setting.isShare},
-    shareToFeedStart: ${setting.shareToFeedStart},
-    shareToFeedEnd: ${setting.shareToFeedEnd},
     postQuantityStart: ${setting.postQuantityStart},
     postQuantityEnd: ${setting.postQuantityEnd},
     postID: ${JSON.stringify(setting.postID)},
     isComment: ${setting.isComment},
-    commentStart: ${setting.commentStart},
-    commentEnd: ${setting.commentEnd},
     photoVideoQuantityStart: ${setting.photoVideoQuantityStart},
     photoVideoQuantityEnd: ${setting.photoVideoQuantityEnd},
     file: ${JSON.stringify(setting.file)},
@@ -26,7 +20,6 @@ export const boostLikeComment = (setting) => {
   }`;
   console.log('strSetting', strSetting);
   return `
-
   const getPostID = async (page, boostObj) => {
     try {
       const numsTag = getRandomIntBetween(
@@ -193,10 +186,10 @@ export const boostLikeComment = (setting) => {
           "div.fl.ac.am > button.native-text > span"
         );
         await delay(getRandomIntBetween(3000, 5000));
-        await scrollSmoothIfNotExistOnScreens(shareBtn)
+        await scrollSmoothIfNotExistOnScreens(page, shareBtn);
+        await delay(getRandomIntBetween(1000, 5000));
         if (shareBtn) {
-          await delay(getRandomIntBetween(3000, 5000));
-          await shareBtn.evaluate(b => b.click())
+          await shareBtn.evaluate(b => b.click());
           //click type of share
           await delay(getRandomIntBetween(3000, 5000));
           const typeShareBtn = await findBtn(
@@ -356,7 +349,6 @@ export const boostLikeComment = (setting) => {
       });
       return isElementVisible;
     } catch (error) {
-      logger(error.message);
       return false;
     }
   };
@@ -376,7 +368,6 @@ export const boostLikeComment = (setting) => {
       }
       return true;
     } catch (error) {
-      logger(error.message);
       return false;
     }
   };
@@ -417,7 +408,7 @@ export const boostLikeComment = (setting) => {
         logger("cant navigate");
       }
     } catch (error) {
-      logger('Error navigating to URL:'+ error.message);
+      logger(error.message);
     }
   };
     let boostObj = ${strSetting}

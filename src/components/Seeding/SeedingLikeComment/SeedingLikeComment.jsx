@@ -103,92 +103,92 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
     setLikeComment({ ...likeComment, isLike: value });
   };
 
-  const handleLikeStart = (type) => {
-    if (type === 'increase') {
-      setLikeComment({
-        ...likeComment,
-        likeStart: likeComment.likeStart + 1,
-      });
-    } else {
-      setLikeComment({
-        ...likeComment,
-        likeStart: likeComment.likeStart > 0 ? likeComment.likeStart - 1 : 0,
-      });
-    }
-  };
-  const onChangeLikeStart = (e) => {
-    const decimalRegex = /^[+-]?\d*\.?\d+$/;
-    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
-    if (!isNaN(value) && decimalRegex.test(value)) {
-      setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
-    }
-  };
+  // const handleLikeStart = (type) => {
+  //   if (type === 'increase') {
+  //     setLikeComment({
+  //       ...likeComment,
+  //       likeStart: likeComment.likeStart + 1,
+  //     });
+  //   } else {
+  //     setLikeComment({
+  //       ...likeComment,
+  //       likeStart: likeComment.likeStart > 0 ? likeComment.likeStart - 1 : 0,
+  //     });
+  //   }
+  // };
+  // const onChangeLikeStart = (e) => {
+  //   const decimalRegex = /^[+-]?\d*\.?\d+$/;
+  //   const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+  //   if (!isNaN(value) && decimalRegex.test(value)) {
+  //     setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
+  //   }
+  // };
 
-  const handleLikeEnd = (type) => {
-    if (type === 'increase') {
-      setLikeComment({
-        ...likeComment,
-        likeEnd: likeComment.likeEnd + 1,
-      });
-    } else {
-      setLikeComment({
-        ...likeComment,
-        likeEnd: likeComment.likeEnd > 0 ? likeComment.likeEnd - 1 : 0,
-      });
-    }
-  };
-  const onChangeLikeEnd = (e) => {
-    const decimalRegex = /^[+-]?\d*\.?\d+$/;
-    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
-    if (!isNaN(value) && decimalRegex.test(value)) {
-      setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
-    }
-  };
+  // const handleLikeEnd = (type) => {
+  //   if (type === 'increase') {
+  //     setLikeComment({
+  //       ...likeComment,
+  //       likeEnd: likeComment.likeEnd + 1,
+  //     });
+  //   } else {
+  //     setLikeComment({
+  //       ...likeComment,
+  //       likeEnd: likeComment.likeEnd > 0 ? likeComment.likeEnd - 1 : 0,
+  //     });
+  //   }
+  // };
+  // const onChangeLikeEnd = (e) => {
+  //   const decimalRegex = /^[+-]?\d*\.?\d+$/;
+  //   const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+  //   if (!isNaN(value) && decimalRegex.test(value)) {
+  //     setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
+  //   }
+  // };
   //share to feed
   const changeShare = (value) => {
     setLikeComment({ ...likeComment, isShare: value });
   };
 
-  const handleShareToFeedStart = (type) => {
-    if (type === 'increase') {
-      setLikeComment({
-        ...likeComment,
-        shareToFeedStart: likeComment.shareToFeedStart + 1,
-      });
-    } else {
-      setLikeComment({
-        ...likeComment,
-        shareToFeedStart: likeComment.shareToFeedStart > 0 ? likeComment.shareToFeedStart - 1 : 0,
-      });
-    }
-  };
-  const onChangeShareToFeedStart = (e) => {
-    const decimalRegex = /^[+-]?\d*\.?\d+$/;
-    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
-    if (!isNaN(value) && decimalRegex.test(value)) {
-      setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
-    }
-  };
-  const handleShareToFeedEnd = (type) => {
-    if (type === 'increase') {
-      setLikeComment({
-        ...likeComment,
-        shareToFeedEnd: likeComment.shareToFeedEnd + 1,
-      });
-    } else {
-      setLikeComment({
-        ...likeComment,
-        shareToFeedEnd: likeComment.shareToFeedEnd > 0 ? likeComment.shareToFeedEnd - 1 : 0,
-      });
-    }
-  };
-  const onChangeShareToFeedEnd = (e) => {
-    const decimalRegex = /^[+-]?\d*\.?\d+$/;
-    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
-    if (!isNaN(value) && decimalRegex.test(value)) {
-      setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
-    }
-  };
+  // const handleShareToFeedStart = (type) => {
+  //   if (type === 'increase') {
+  //     setLikeComment({
+  //       ...likeComment,
+  //       shareToFeedStart: likeComment.shareToFeedStart + 1,
+  //     });
+  //   } else {
+  //     setLikeComment({
+  //       ...likeComment,
+  //       shareToFeedStart: likeComment.shareToFeedStart > 0 ? likeComment.shareToFeedStart - 1 : 0,
+  //     });
+  //   }
+  // };
+  // const onChangeShareToFeedStart = (e) => {
+  //   const decimalRegex = /^[+-]?\d*\.?\d+$/;
+  //   const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+  //   if (!isNaN(value) && decimalRegex.test(value)) {
+  //     setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
+  //   }
+  // };
+  // const handleShareToFeedEnd = (type) => {
+  //   if (type === 'increase') {
+  //     setLikeComment({
+  //       ...likeComment,
+  //       shareToFeedEnd: likeComment.shareToFeedEnd + 1,
+  //     });
+  //   } else {
+  //     setLikeComment({
+  //       ...likeComment,
+  //       shareToFeedEnd: likeComment.shareToFeedEnd > 0 ? likeComment.shareToFeedEnd - 1 : 0,
+  //     });
+  //   }
+  // };
+  // const onChangeShareToFeedEnd = (e) => {
+  //   const decimalRegex = /^[+-]?\d*\.?\d+$/;
+  //   const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+  //   if (!isNaN(value) && decimalRegex.test(value)) {
+  //     setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
+  //   }
+  // };
   //Post view time
   const handleViewTimeStart = (type) => {
     if (type === 'increase') {
@@ -317,47 +317,47 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
   };
 
   //comment
-  const handleCommentStart = (type) => {
-    if (type === 'increase') {
-      setLikeComment({
-        ...likeComment,
-        commentStart: likeComment.commentStart + 1,
-      });
-    } else {
-      setLikeComment({
-        ...likeComment,
-        commentStart: likeComment.commentStart > 0 ? likeComment.commentStart - 1 : 0,
-      });
-    }
-  };
-  const onChangeCommentStart = (e) => {
-    const decimalRegex = /^[+-]?\d*\.?\d+$/;
-    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
-    if (!isNaN(value) && decimalRegex.test(value)) {
-      setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
-    }
-  };
+  // const handleCommentStart = (type) => {
+  //   if (type === 'increase') {
+  //     setLikeComment({
+  //       ...likeComment,
+  //       commentStart: likeComment.commentStart + 1,
+  //     });
+  //   } else {
+  //     setLikeComment({
+  //       ...likeComment,
+  //       commentStart: likeComment.commentStart > 0 ? likeComment.commentStart - 1 : 0,
+  //     });
+  //   }
+  // };
+  // const onChangeCommentStart = (e) => {
+  //   const decimalRegex = /^[+-]?\d*\.?\d+$/;
+  //   const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+  //   if (!isNaN(value) && decimalRegex.test(value)) {
+  //     setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
+  //   }
+  // };
 
-  const handleCommentEnd = (type) => {
-    if (type === 'increase') {
-      setLikeComment({
-        ...likeComment,
-        commentEnd: likeComment.commentEnd + 1,
-      });
-    } else {
-      setLikeComment({
-        ...likeComment,
-        commentEnd: likeComment.commentEnd > 0 ? likeComment.commentEnd - 1 : 0,
-      });
-    }
-  };
-  const onChangeCommentEnd = (e) => {
-    const decimalRegex = /^[+-]?\d*\.?\d+$/;
-    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
-    if (!isNaN(value) && decimalRegex.test(value)) {
-      setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
-    }
-  };
+  // const handleCommentEnd = (type) => {
+  //   if (type === 'increase') {
+  //     setLikeComment({
+  //       ...likeComment,
+  //       commentEnd: likeComment.commentEnd + 1,
+  //     });
+  //   } else {
+  //     setLikeComment({
+  //       ...likeComment,
+  //       commentEnd: likeComment.commentEnd > 0 ? likeComment.commentEnd - 1 : 0,
+  //     });
+  //   }
+  // };
+  // const onChangeCommentEnd = (e) => {
+  //   const decimalRegex = /^[+-]?\d*\.?\d+$/;
+  //   const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
+  //   if (!isNaN(value) && decimalRegex.test(value)) {
+  //     setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
+  //   }
+  // };
 
   //post quantity
   const changeComment = (value) => {
@@ -593,13 +593,13 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
                   onClick={handleWritePostID}
                   style={{ display: UIDPost ? 'none' : 'inline' }}
                 >
-                  <p>
+                  <p style={{ width: '51%' }}>
                     <span>1</span>
-                    <div>Enter the ID here</div>
+                    <div>Enter the UID|Post UID here</div>
                   </p>
                   <p>
                     <span>2</span>
-                    <div>Each ID/line</div>
+                    <div>Each UID|Post UID/line</div>
                   </p>
                 </div>
               </div>
@@ -614,7 +614,7 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
                 />
                 <p>Like</p>
               </div>
-              <div
+              {/* <div
                 className="-option-boost-like__header__content"
                 style={{ display: likeComment.isLike ? 'flex' : 'none' }}
               >
@@ -641,7 +641,7 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
                   </div>
                   <input type="text" name="likeEnd" value={likeComment.likeEnd} onChange={onChangeLikeEnd} />
                 </div>
-              </div>
+              </div> */}
             </div>
             <div className="-option-boost-like">
               <div className="-option-boost-like__header">
@@ -653,7 +653,7 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
                 />
                 <p>Share to Feed</p>
               </div>
-              <div
+              {/* <div
                 className="-option-boost-like__header__content"
                 style={{ display: likeComment.isShare ? 'flex' : 'none' }}
               >
@@ -690,7 +690,7 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
                     onChange={onChangeShareToFeedEnd}
                   />
                 </div>
-              </div>
+              </div> */}
             </div>
             <div className="-option-boost-like">
               <div className="-option-boost-like__header">
@@ -702,7 +702,7 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
                 />
                 <p>Comment</p>
               </div>
-              <div
+              {/* <div
                 className="-option-boost-like__header__content"
                 style={{ display: likeComment.isComment ? 'flex' : 'none' }}
               >
@@ -734,7 +734,7 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
                   </div>
                   <input type="text" name="commentEnd" value={likeComment.commentEnd} onChange={onChangeCommentEnd} />
                 </div>
-              </div>
+              </div> */}
             </div>
             <div
               className="-option-boost-like -option-boost-comment"
@@ -772,7 +772,10 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
                 </div>
               </div>
             </div>
-            <div className="-option-boost-like -option-photo-video">
+            <div
+              className="-option-boost-like -option-photo-video"
+              style={{ display: likeComment.isComment ? 'block' : 'none' }}
+            >
               <h1>Photo/Video</h1>
               <div className="-option-boost-like">
                 <p>Quantity:</p>
@@ -812,12 +815,15 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
               </div>
             </div>
             {/* <div className="-option-boost-like dragVideoOrPhoto" onClick={handleFile}> */}
-            <div {...getRootProps({ className: '-option-boost-like dragVideoOrPhoto' })}>
+            <div
+              {...getRootProps({ className: '-option-boost-like dragVideoOrPhoto' })}
+              style={{ display: likeComment.isComment ? 'flex' : 'none' }}
+            >
               <img src={drag} alt="icon-drag" />
               <span>Drag the photo/video folder here</span>
               <input {...getInputProps()} />
             </div>
-            {likeComment.file.length > 0 && (
+            {likeComment.file.length > 0 && likeComment.isComment && (
               <div className="folderPhoto">
                 <p>
                   <span>Folder:</span>

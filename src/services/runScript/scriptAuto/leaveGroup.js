@@ -110,27 +110,43 @@ const leaveGroupByConditional = async (page, leaveGroupObject) => {
         const numberText = el.innerHTML.replace(/[^0-9]/g, "");
         return parseInt(numberText);
       }, numsMember);
+      await delay(1000);
       logger("Số thành viên của nhóm: " + nums);
-      if (nums > leaveGroupObject.member) return false;
+      logger("....");
+      if (nums > leaveGroupObject.member){
+        logger("Số lượng thành viên không thỏa mãn điều kiện");
+        return false;
+      };
       let groupNameSelector =
         "#screen-root > div > div:nth-child(2) > div:nth-child(3) > div:nth-child(1) > div > h3";
       let groupName = await getElement(page, groupNameSelector, 10);
-      if (!groupName) return false;
-      let keyword =
-        leaveGroupObject.text[
-          getRandomInt(leaveGroupObject.text.length)
-        ].toLowerCase();
-      let name = await page.evaluate(
-        (el, keyword) => {
-          return el.innerHTML.toLowerCase().includes(keyword);
-        },
-        groupName,
-        keyword
-      );
-      if (!name) return false;
+      if (!groupName) {
+        logger("không có group name");
+        return false
+      };
+      let isContainKeyword = false;
+      for( let i = 0 ; i < leaveGroupObject.text.length ; i++){
+        let keyword = leaveGroupObject.text[i].toLowerCase();
+        let name = await page.evaluate(
+          (el, keyword) => {
+            return el.innerHTML.toLowerCase().includes(keyword);
+          },
+          groupName,
+          keyword
+        );
+        if (name) {
+          isContainKeyword = true;
+        };
+      }
+      if(!isContainKeyword) {
+        logger("tên không chứa keyword");
+       return false
+      }
+      await delay(1000);
       await clickReturn(page);
       await delay(3000);
       const rs = await clickLeave(page);
+      await delay(1000)
       if (rs) {
         return true;
       }
@@ -165,7 +181,10 @@ const clickReturn = async (page) => {
     let returnSelector =
       "#screen-root > div > div.m.fixed-container.top > div > div > div:nth-child(1) > div";
     let returnBtn = await getElement(page, returnSelector, 10);
-    if (!returnBtn) return fasle;
+    if (!returnBtn){
+      logger("không có nút return");
+      return fasle
+    };
     await scrollSmoothIfNotExistOnScreen(page, returnSelector);
     await delay(1000);
     await clickElement(returnBtn);
