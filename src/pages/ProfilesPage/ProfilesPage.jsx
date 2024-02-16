@@ -632,8 +632,12 @@ const ProfilesPage = () => {
         const profile = e.uid.toLowerCase();
         const mail = e.recoveryEmail ? e.recoveryEmail.toLowerCase() : '';
         const name = e.nameAccount ? e.nameAccount.toLowerCase() : '';
+        const tags = e.tag ? e.tag.join(',').toLowerCase() : '';
         return (
-          profile.includes(text.toLowerCase()) || name.includes(text.toLowerCase()) || mail.includes(text.toLowerCase())
+          profile.includes(text.toLowerCase()) ||
+          name.includes(text.toLowerCase()) ||
+          mail.includes(text.toLowerCase()) ||
+          tags.includes(text.toLowerCase())
         );
       });
       setDataSearch(
