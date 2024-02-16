@@ -55,6 +55,31 @@ const ProfilesPage = () => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
+  if (!window.electron.ipcRenderer.eventNames().includes('ipc-logger')) {
+    window.electron.ipcRenderer.on('ipc-logger', (...params) => {
+      if (params[0].length == 3 && params[0][1] && params[0][2].includes('Update name:')) {
+        const name = params[0][2].split('|')[0].replace('Update name:', '');
+        const friend = params[0][2].split('|')[1] ? params[0][2].split('|')[1] : '';
+        updateAccount(params[0][1], name, friend);
+      } else console.log(params[0]);
+    });
+  }
+
+  const updateAccount = async (id, accountName, friends) => {
+    const newData = await dbGetLocally(storageProfiles);
+    const index = newData.findIndex((profile) => id == profile.id);
+    if (index >= 0) {
+      const profile = newData[index];
+      console.log(profile);
+      profile.nameAccount = accountName;
+      profile.friends = friends;
+      newData.splice(index, 1, {
+        ...profile,
+      });
+      await dbSetLocally(storageProfiles, newData);
+    }
+  };
+
   useEffect(() => {
     config();
   }, []);

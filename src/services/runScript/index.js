@@ -19,9 +19,7 @@ import { inviteGroup } from './scriptAuto/inviteGroup';
 import { joinGroup } from './scriptAuto/joinGroup';
 import { leftGroup } from './scriptAuto/leaveGroup';
 import { updateProfile, updateProfiles } from '../../redux/profileSlice';
-window.electron.ipcRenderer.on('ipc-logger', (...params) => {
-  console.log(params[0]);
-});
+import { getInfor } from './scriptAuto/GetInfo';
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const splitToChunks = (array, size) => {
@@ -246,6 +244,20 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
             resolve(true);
           }, 3000);
           await element.click();
+        } catch (err) {
+          logger(err);
+        }
+        resolve(true);
+      });
+    };
+
+    const closePage = async (page) => {
+      return new Promise(async (resolve) => {
+        try {
+          setTimeout(() => {
+            resolve(true);
+          }, 1000);
+          await page.close();
         } catch (err) {
           logger(err);
         }
@@ -675,14 +687,14 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
             "--proxy-bypass-list=https://static.xx.fbcdn.net",
             "--flag-switches-begin",
             "--flag-switches-end",
-            "--window-size=360,640"
+            "--window-size=360,760"
           ]
         });
 
         const pages = await browser.pages();
         for(let i=1;i<pages.length;i++){
           logger('Close page ' + i);
-          await pages[i].close();
+          await closePage(pages[i]);
         }
         let page = pages[0];
         await page.setBypassCSP(true);
@@ -710,10 +722,14 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
      },2000);
 
         {${loginFacebook(profile)}}
+        ${getInfor(profile)}
         ${getAllFunc(arrfunction)}
        
       } catch (error) {
-          logger(error);
+        if(error.includes('Failed to launch the browser process')){
+          logger('Failed to launch the browser process!!!!!!!');
+        }
+        else logger(error);
         } finally {
           if(browser){
               await browser.close();
@@ -721,8 +737,6 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
         }
         resolve('Done');
       });
-
-     
       `;
 
               const result = await runProfile(strCode, profile.id);
