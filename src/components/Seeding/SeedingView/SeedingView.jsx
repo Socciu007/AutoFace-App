@@ -163,13 +163,13 @@ const SeedingView = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
                   onClick={handleClickText}
                   style={{ display: UIDContent ? 'none' : 'inline' }}
                 >
-                  <p>
+                  <p style={{ width: '51%' }}>
                     <span>1</span>
-                    <div>Enter the ID here</div>
+                    <div>Enter the UID|Video ID here</div>
                   </p>
                   <p>
                     <span>2</span>
-                    <div>Each ID/line</div>
+                    <div>Each UID|Video ID/line</div>
                   </p>
                 </div>
               </div>

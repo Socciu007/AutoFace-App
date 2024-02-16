@@ -312,7 +312,20 @@ const ProfilesPage = () => {
             </div>
           );
         },
-        sorter: (a, b) => !a.isPin && !b.isPin && a.proxy.length - b.proxy.length,
+        // sorter: (a, b) => !a.isPin && !b.isPin && a.proxy.length - b.proxy.length,
+        sorter: (a, b) => {
+          if (!a.isPin && !b.isPin) {
+            const nameA = a.name.toUpperCase();
+            const nameB = b.name.toUpperCase();
+            if (nameA < nameB) {
+              return -1;
+            }
+            if (nameA > nameB) {
+              return 1;
+            }
+            return 0;
+          }
+        },
       });
     }
     if (settings.tag) {

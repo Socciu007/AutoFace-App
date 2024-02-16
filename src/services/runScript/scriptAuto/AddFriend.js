@@ -20,6 +20,33 @@ export const addFriend = (setting) => {
       }`;
   console.log(strSetting);
   return `
+  const isButtonAboveScreen = async (page, selector) => {
+    const buttonPosition = await page.evaluate(selector => {
+        const element = document.querySelector(selector);
+        if (!element) {
+            return null; // Element not found
+        }
+        const rect = element.getBoundingClientRect();
+        return {
+            top: rect.top,
+            isVisible: rect.top >= 0 && rect.bottom <= window.innerHeight
+        };
+    }, selector);
+
+    if (buttonPosition === null) {
+        console.log('Button not found.');
+        return false;
+    } else if (buttonPosition.top < 0) {
+        console.log('Button is above the screen.');
+        return true;
+    } else if (!buttonPosition.isVisible) {
+        console.log('Button is in the viewport, but not visible.');
+        return false;
+    } else {
+        console.log('Button is in the viewport and visible.');
+        return false;
+    }
+}
   const addFriendBySuggest = async (page, addFriendObject) => {
     try {
       let randomDelay = getRandomIntBetween(addFriendObject.delayTimeStart * 1000, addFriendObject.delayTimeEnd * 1000);
@@ -31,7 +58,7 @@ export const addFriend = (setting) => {
       mutualSelector =
         "#screen-root > div > div:nth-child(2) > div> div.m.bg-s4 > div:nth-child(3)";
       mutualElement = await getElements(page, mutualSelector, 10);
-      if (mutualElement.length < 1) return false;
+      if (!mutualElement) return false;
     }
       let isAddMutual = false;
       for (let i = 0; i < mutualElement.length; i++) {
@@ -48,7 +75,18 @@ export const addFriend = (setting) => {
             return el.childNodes.length;
           }, mutualElement[randomIndex]);
           if (isMutual < 2) continue;
-          await scrollSmoothIfNotExistOnScreen(page, 'div[data-action-id="'+addId+'"]');
+          const isAbove = await isButtonAboveScreen(page, 'div[data-action-id="'+addId+'"]');
+          if(isAbove) {
+            logger("button nằm ở trên viewport !");
+            if (Math.random() <= 0.2) { 
+              await scrollSmoothIfNotExistOnScreen(page, 'div[data-action-id="'+addId+'"]');
+            } else {
+              continue;
+            }
+          } else {
+            await scrollSmoothIfNotExistOnScreen(page, 'div[data-action-id="'+addId+'"]');
+          }
+          
           await delay(1000);
           await clickElement(addBtn);
           await delay(randomDelay);
@@ -56,7 +94,17 @@ export const addFriend = (setting) => {
           break;
         }
         if (addFriendObject.isOnlyAddFriend == false) {
-          await scrollSmoothIfNotExistOnScreen(page, 'div[data-action-id="'+addId+'"]');
+          const isAbove = await isButtonAboveScreen(page, 'div[data-action-id="'+addId+'"]');
+          if(isAbove) {
+            logger("button nằm ở trên viewport !");
+            if (Math.random() <= 0.2) { 
+              await scrollSmoothIfNotExistOnScreen(page, 'div[data-action-id="'+addId+'"]');
+            } else {
+              continue;
+            }
+          } else {
+            await scrollSmoothIfNotExistOnScreen(page, 'div[data-action-id="'+addId+'"]');
+          }
           await delay(1000);
           await clickElement(addBtn);
           await delay(randomDelay);
@@ -141,17 +189,17 @@ export const addFriend = (setting) => {
       let randomDelay = getRandomIntBetween(addFriendObject.delayTimeStart * 1000, addFriendObject.delayTimeEnd * 1000);
       const isMutualSelector = '#screen-root > div > div:nth-child(2) > div > div:nth-child(4)';
       const mutualElements = await getElements(page, isMutualSelector, 10);
-      if (mutualElements.length < 1) return false;
+      if (!mutualElements) return false;
       let isAdd = false;
-    let arr = [];
+      let arr = [];
       for (let i = 0; i < mutualElements.length; i++) {
         let randomIndex = getRandomInt(mutualElements.length);
-              let index = arr.indexOf(randomIndex);
-      if (index == -1) {
-        arr.push(randomIndex);
-      } else {
-        continue;
-      }
+        let index = arr.indexOf(randomIndex);
+        if (index == -1) {
+          arr.push(randomIndex);
+        } else {
+          continue;
+        }
         let confirmId = await page.evaluate((el) => {
           return el.parentNode.childNodes[4].getAttribute('data-action-id');
         }, mutualElements[randomIndex]);

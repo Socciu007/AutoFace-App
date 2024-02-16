@@ -38,6 +38,15 @@ export const boostLikeComment = (setting) => {
           const urlPost = 'https://m.facebook.com/story.php/?id='+id+'&story_fbid='+fbid;
           await navigateToUrl(page, urlPost);
           await delay(getRandomIntBetween(3000, 5000));
+          const notAvailableBtn = await findBtn(
+            page,
+            "Page Not Available",
+            "h2.native-text > span.f2"
+          );
+          if (notAvailableBtn) {
+            arrID.push(id);
+            continue;
+          }
           await viewPost(page, boostObj, urlPost);
           await delay(getRandomIntBetween(3000, 5000));
           await likePost(page, boostObj);
@@ -53,7 +62,7 @@ export const boostLikeComment = (setting) => {
         }
       }
     } catch (error) {
-      logger(error.message);
+      logger("Runtest: No can access UID or Post UID of user");
     }
   };
   
@@ -81,7 +90,7 @@ export const boostLikeComment = (setting) => {
         logger("Done view post");
       }
     } catch (error) {
-      logger(error.message);
+      logger('Runtest: ' + error.message);
     }
   };
   
@@ -103,7 +112,7 @@ export const boostLikeComment = (setting) => {
         logger("Liked enough posts");
       }
     } catch (error) {
-      logger(error.message);
+      logger('Runtest: ' + error.message);
     }
   };
   
@@ -134,13 +143,13 @@ export const boostLikeComment = (setting) => {
             await delay(getRandomIntBetween(3000, 5000));
             if (listTag.length > 0) {
               const elementTag = await listTag[getRandomInt(listTag.length)];
-              await scrollSmoothIfNotExistOnScreens(elementTag);
+              await scrollSmoothIfNotExistOnScreens0(elementTag);
               await delay(getRandomIntBetween(3000, 5000));
               await clickElement(elementTag);
               await delay(getRandomIntBetween(3000, 5000));
             } else if (listTag1.length) {
               const elementTag = await listTag1[getRandomInt(listTag1.length)];
-              await scrollSmoothIfNotExistOnScreens(elementTag);
+              await scrollSmoothIfNotExistOnScreens0(elementTag);
               await delay(getRandomIntBetween(3000, 5000));
               await clickElement(elementTag);
               await delay(getRandomIntBetween(3000, 5000));
@@ -186,8 +195,8 @@ export const boostLikeComment = (setting) => {
           "div.fl.ac.am > button.native-text > span"
         );
         await delay(getRandomIntBetween(3000, 5000));
-        await scrollSmoothIfNotExistOnScreens(page, shareBtn);
-        await delay(getRandomIntBetween(1000, 5000));
+        await scrollSmoothIfNotExistOnScreens0(page, shareBtn);
+        await delay(getRandomIntBetween(3000, 5000));
         if (shareBtn) {
           await shareBtn.evaluate(b => b.click());
           //click type of share
@@ -235,7 +244,7 @@ export const boostLikeComment = (setting) => {
   
   const findBtn = async (page, content, selector) => {
     try {
-      const buttons = await getElements(page, selector);
+      const buttons = await page.$$(selector);
       for (let i = 0; i < buttons.length; i++) {
         const btn = await page.evaluate(el => {
           return el.innerHTML;
@@ -245,7 +254,8 @@ export const boostLikeComment = (setting) => {
         }
       }
     } catch (err) {
-      logger(err);
+      logger(error.message);
+      return false;
     }
   };
   
@@ -335,39 +345,40 @@ export const boostLikeComment = (setting) => {
     }
   };
   
-  const checkExistElementOnScreens = async JSSelector => {
+  const checkExistElementOnScreens0 = async (JSSelector) => {
     try {
-      const isElementVisible = await JSSelector.evaluate(el => {
+      const isElementVisible = await JSSelector.evaluate((el) => {
         const { top, left, bottom, right } = el.getBoundingClientRect();
         return (
           top >= 0 &&
           left >= 0 &&
-          bottom <=
-            (window.innerHeight || document.documentElement.clientHeight) &&
+          bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
           right <= (window.innerWidth || document.documentElement.clientWidth)
         );
       });
       return isElementVisible;
     } catch (error) {
+      logger(error.message);
       return false;
     }
   };
-  
-  const scrollSmoothIfNotExistOnScreens = async JSSelector => {
+
+  const scrollSmoothIfNotExistOnScreens0 = async (JSSelector) => {
     try {
-      const isExistElementOnScreen = await checkExistElementOnScreens(JSSelector);
+      const isExistElementOnScreen = await checkExistElementOnScreens0(JSSelector);
       if (!isExistElementOnScreen) {
         await JSSelector.evaluate(el => {
           el.scrollIntoView({
             behavior: "smooth",
-            block: "center",
             inline: "nearest",
+            block: "center",
           });
         });
         return true;
       }
       return true;
     } catch (error) {
+      logger(error.message);
       return false;
     }
   };
@@ -426,7 +437,8 @@ export const boostLikeComment = (setting) => {
         }
       }
     } catch (error) {
-      logger(error.message);
+      logger('Runtest: ' + error.message);
+      return;
     }
       `;
 };
