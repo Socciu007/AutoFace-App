@@ -1,5 +1,3 @@
-Menu;
-
 import { storageSettings } from '../../common/const.config';
 import { createPost } from './scriptAuto/CreatePost';
 import { dbGetLocally, getBrowserData, getInformation, getProxy, runProfile } from '../../sender';

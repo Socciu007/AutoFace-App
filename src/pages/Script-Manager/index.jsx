@@ -103,18 +103,7 @@ const ScriptManager = () => {
 
       newArr[index] = {
         ...newArr[index],
-        status:
-          total.length > 0 ? (
-            <div className="statusRunning">
-              <img src={running} alt="run profile icon" />
-              <span>
-                <span className="profileRunning">{scriptDone.length}</span>
-                <span className="totalProfile"> / {total.length} profiles</span>
-              </span>
-            </div>
-          ) : (
-            ''
-          ),
+        status: total.length > 0 ? { done: scriptDone.length, total: total.length } : {},
       };
     });
     return newArr;
@@ -296,7 +285,15 @@ const ScriptManager = () => {
                 setIsRunScript(true);
               }}
             >
-              {status}
+              {status.total ? (
+                <div className="statusRunning">
+                  <img src={running} alt="run profile icon" />
+                  <span>
+                    <span className="profileRunning">{status.done}</span>
+                    <span className="totalProfile"> / {status.total} profiles</span>
+                  </span>
+                </div>
+              ) : null}
             </div>
             <PopupRunScript
               openRunScript={itemSelect && itemSelect.id === script.id && isRunScript}
@@ -407,8 +404,7 @@ const ScriptManager = () => {
   ];
 
   const listScripts = listScript.map((item, index) => {
-    item.index = index;
-    return item;
+    return { ...item, index, key: index };
   });
 
   return (
