@@ -266,6 +266,7 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
     };
 
     const returnHomePage = async (page) => {
+      await delay(1000);
       const url = await page.url();
       if (url === 'https://m.facebook.com/' || url.includes('https://m.facebook.com/home.php')) {
         logger('URL is correct');
@@ -275,6 +276,7 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
           waitUntil: 'networkidle2',
           timeout: 60000,
         });
+        await delay(2000);
       }
     };
 

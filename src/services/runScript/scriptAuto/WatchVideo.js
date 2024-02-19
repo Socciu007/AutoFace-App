@@ -221,7 +221,7 @@ export const watchVideo = (setting) => {
   };
   
   const scroll = async page => {
-    let randomScrollTime = getRandomIntBetween(5, 10);
+    let randomScrollTime = getRandomIntBetween(10, 15);
     try {
       while (randomScrollTime > 0) {
         await page.evaluate(async () => {
