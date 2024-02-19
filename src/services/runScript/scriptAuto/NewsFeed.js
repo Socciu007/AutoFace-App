@@ -142,7 +142,7 @@ export const newFeed = (setting) => {
   const findBtn = async (page, content) => {
     try {
       let arr = [];
-      const buttons = await getElements(page, 'button[class="native-text"] > span:nth-child(1)');
+      const buttons = await getElements(page, '[class="native-text"]');
       for (let i = 0; i < buttons.length; i++) {
         const btn = await page.evaluate((el) => {
           return el.innerHTML;
@@ -193,7 +193,7 @@ try {
           const likeBtns = await findBtn(page, "󰍸");
           if (!likeBtns) {
             logger("Không có nút like!");
-            return false
+            break;
           };
           logger("có " + likeBtns.length + " nút like")
           const objLike = await randomLike(page, news, likeBtns,temp);
@@ -233,7 +233,7 @@ try {
           const shareBtns = await findBtn(page, "󰍺");
           if (!shareBtns) {
             logger("Không có nút share!");
-            return false;
+            break;
           };
           logger("có " + shareBtns.length + " nút share")
           await returnHomePage(page);
