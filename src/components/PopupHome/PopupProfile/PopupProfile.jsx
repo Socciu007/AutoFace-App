@@ -62,6 +62,7 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
       const recoveryEmail = e.split('|')[3] ? e.split('|')[3] : '';
       const recoveryPassword = e.split('|')[4] ? e.split('|')[4] : '';
       const cookies = e.split('|')[5] ? e.split('|')[5] : '';
+      const birth = e.split('|')[6] ? e.split('|')[6] : '';
       if (uid && uid !== '' && password && password !== '') {
         accounts.push({
           uid,
@@ -71,6 +72,7 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
           recoveryPassword,
           cookies,
           twoFA,
+          birth,
           status: 'ready',
           tag:
             values.isTag && values.tag.split(',').length
@@ -253,7 +255,9 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
               </div>
             </div>
             <div className="scrollable-container">
-              <p style={{ marginLeft: '1%' }}>UID|Password|2FA|Recovery email|Recovery email’s password|Cookie</p>
+              <p style={{ marginLeft: '1%' }}>
+                UID|Password|2FA|Recovery email|Recovery email’s password|Cookie|Date of birth
+              </p>
               <div className="newProfile-content">
                 <div className="Textarea" style={{ position: 'relative' }}>
                   <div style={{ width: '99%', height: 419, overflow: 'auto' }} className="text">
@@ -278,7 +282,8 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
                     </p>
                     <p>
                       <span>2</span>
-                      <strong>Account format:</strong> UID|Password|2FA|Recovery email|Recovery email’s password|Cookie
+                      <strong>Account format:</strong> UID|Password|2FA|Recovery email|Recovery email’s
+                      password|Cookie|Date of birth
                     </p>
                   </div>
                 </div>

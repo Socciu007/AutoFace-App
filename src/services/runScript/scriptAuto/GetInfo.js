@@ -17,6 +17,7 @@ export const getInfor = (profile) => {
          const elName = await getElement(page,'span strong');
          if(elName){
             const name = await getText(page, elName);
+           
             const elFriends = await getElements(page,'a');
             logger(elFriends.length);
             for(let i=0;i<elFriends.length;i++){
@@ -34,7 +35,7 @@ export const getInfor = (profile) => {
                 for(let i=0;i< elTexts.length;i++){
                     const text = await getText(page, elTexts[i]);
                     if(text.includes('(')){
-                        textFriends = text;
+                        textFriends = text.split("(")[1] ? text.split("(")[1].replace(")","") : '';
                         break;
                     }
                 }
