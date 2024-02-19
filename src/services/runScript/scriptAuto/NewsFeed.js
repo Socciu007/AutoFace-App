@@ -24,7 +24,7 @@ export const newFeed = (setting) => {
       if (likeBtns.length > 0) {
           const randomIndex = getRandomIntBetween(temp, likeBtns.length);
           logger(randomIndex)
-          await scrollSmoothIfElementNotExistOnScreen(likeBtns[randomIndex]);
+          await scrollSmoothIfElementNotExistOnScreen(page,likeBtns[randomIndex]);
           await delay(1000);
           await clickElement(likeBtns[randomIndex])
           temp = randomIndex;
@@ -45,7 +45,7 @@ export const newFeed = (setting) => {
       if (shareBtns.length > 0) {
         const randomIndex = getRandomIntBetween(temp, shareBtns.length);
         logger(randomIndex);
-        await scrollSmoothIfElementNotExistOnScreen(shareBtns[randomIndex]);
+        await scrollSmoothIfElementNotExistOnScreen(page,shareBtns[randomIndex]);
         await delay(1000);
         await clickElement(shareBtns[randomIndex])
         temp = randomIndex;
