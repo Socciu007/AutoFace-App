@@ -182,14 +182,14 @@ try {
       if( await checkExistElementOnScreen(page,homeSelector1) != 0) {
         await page.goto("https://m.facebook.com/");
       }
-      await delay(1000);
+      await delay(2000);
       let numLikes = getRandomIntBetween(news.likeStart, news.likeEnd);
       logger('Cần like ' + numLikes + ' bài');
       let temp = 2;
       for (let i = 0; i < numLikes * 2; i++) {
         try {
           await returnHomePage(page);
-          await delay(1000);
+          await delay(2000);
           const likeBtns = await findBtn(page, "󰍸");
           if (!likeBtns) {
             logger("Không có nút like!");
@@ -220,13 +220,16 @@ try {
       let count = 0;
       let numShares = getRandomIntBetween(news.shareStart, news.shareEnd);
       logger('Cần share ' + numShares + ' bài');
-      const homeSelector1 =
+      const homeSelector2 =
       "#screen-root > div > div:nth-child(1) > div:nth-child(4) > div:nth-child(1)";
-      if( await checkExistElementOnScreen(page,homeSelector1) != 0) {
+      if( await checkExistElementOnScreen(page,homeSelector2) != 0) {
         await page.goto("https://m.facebook.com/");
+      } else {
+        logger("xuat hien tren man hinh")
       }
-      await delay(1000);
+      await delay(2000);
       let temp = 2;
+      logger("???");
       for (let i = 0; i < numShares * 2; i++) {
         try {
           const shareBtns = await findBtn(page, "󰍺");
@@ -266,7 +269,7 @@ try {
       if( await checkExistElementOnScreen(page,homeSelector1) != 0) {
         await page.goto("https://m.facebook.com/");
       }
-      await delay(1000);
+      await delay(2000);
       const numComments = getRandomIntBetween(news.commentStart, news.commentEnd);
       logger('Cần comment '+  numComments + ' bài');
       let count = 0;

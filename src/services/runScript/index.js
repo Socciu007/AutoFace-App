@@ -399,7 +399,7 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
           const isInViewport = (elem) => {
             const bounding = elem.getBoundingClientRect();
             return (
-              bounding.top >= 0 &&
+              bounding.top >= 100 &&
               bounding.left >= 0 &&
               bounding.bottom <=
                 (window.innerHeight || document.documentElement.clientHeight) &&
@@ -407,7 +407,6 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
                 (window.innerWidth || document.documentElement.clientWidth)
             );
           };
-    
           if (element && !isInViewport(element)) {
             const elementRect = element.getBoundingClientRect();
             const viewportHeight =

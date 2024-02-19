@@ -103,7 +103,7 @@ const ScriptManager = () => {
 
       newArr[index] = {
         ...newArr[index],
-        status: total.length > 0 ? { done: scriptDone.length, total: total.length } : {},
+        status: total.length > 0 ? { done: scriptDone.length, total: total.length } : null,
       };
     });
     return newArr;
@@ -285,7 +285,7 @@ const ScriptManager = () => {
                 setIsRunScript(true);
               }}
             >
-              {status.total ? (
+              {status && status.total ? (
                 <div className="statusRunning">
                   <img src={running} alt="run profile icon" />
                   <span>
