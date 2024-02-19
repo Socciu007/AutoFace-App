@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './style.scss';
 import { Input, Popover, Table, Tooltip } from 'antd';
@@ -133,10 +133,141 @@ const ProfilesPage = () => {
     }
     setDisplaySettings(display);
   };
+  // const [inputVisible, setInputVisible] = useState(false);
+  // const [inputValue, setInputValue] = useState('');
+  // const [editInputIndex, setEditInputIndex] = useState(-1);
+  // const [editInputValue, setEditInputValue] = useState('');
+  // const inputRef = useRef(null);
+  // const editInputRef = useRef(null);
+  // useEffect(() => {
+  //   if (inputVisible) {
+  //     inputRef.current?.focus();
+  //   }
+  // }, [inputVisible]);
+  // useEffect(() => {
+  //   editInputRef.current?.focus();
+  // }, [editInputValue]);
+  // const handleCloseTag = async (record, removedTag) => {
+  //   const listProfiles = [...dataProfiles];
+  //   const index = listProfiles.findIndex((profile) => record.id === profile.id);
+  //   const newData = listProfiles[index].filter((tag) => tag !== removedTag);
+  //   console.log('new', newData);
+  //   setDataProfiles(newData);
+  //   await dbSetLocally(storageProfiles, newData);
+  // };
+  // const showInput = () => {
+  //   setInputVisible(true);
+  // };
+  // const handleInputChange = (e) => {
+  //   setInputValue(e.target.value);
+  // };
+  // const handleInputConfirm = () => {
+  //   if (inputValue && !tags.includes(inputValue)) {
+  //     setTags([...tag, inputValue]);
+  //   }
+  //   setInputVisible(false);
+  //   setInputValue('');
+  // };
+  // const handleEditInputChange = (e) => {
+  //   setEditInputValue(e.target.value);
+  // };
+  // const handleEditInputConfirm = async (record, tag) => {
+  //   const newTags = [...tag];
+  //   newTags[editInputIndex] = editInputValue;
+  //   setTags(newTags);
+  //   setEditInputIndex(-1);
+  //   setEditInputValue('');
+  //   const newData = [...dataProfiles];
+  //   const index = newData.findIndex((profile) => record.id === profile.id);
+  //   const profile = newData[index];
+  //   profile.tag = record.tag.split(',').map((e) => {
+  //     if (e && e.length && !e.startsWith('#')) {
+  //       return '#' + e;
+  //     }
+  //     return e;
+  //   });
+  //   newData.splice(index, 1, {
+  //     ...profile,
+  //   });
+  //   setDataProfiles(newData);
+  //   await dbSetLocally(storageProfiles, newData);
+  // };
+  // const tagInputStyle = {
+  //   width: 64,
+  //   height: 22,
+  //   marginInlineEnd: 8,
+  //   verticalAlign: 'top',
+  // };
+  // const listTag = (record, tags) => {
+  //   return (
+  //     <Space size={[0, 8]} wrap>
+  //       {tags.map((tag, index) => {
+  //         if (editInputIndex === index) {
+  //           return (
+  //             <Input
+  //               ref={editInputRef}
+  //               type='text'
+  //               key={index}
+  //               size="small"
+  //               style={tagInputStyle}
+  //               value={editInputValue}
+  //               onChange={handleEditInputChange}
+  //               // onBlur={handleEditInputConfirm(tags)}
+  //               onPressEnter={handleEditInputConfirm(tags)}
+  //             />
+  //           );
+  //         }
+  //         const isLongTag = tag.length > 20;
+  //         const tagElem = (
+  //           <Tag
+  //             key={tag}
+  //             closable={index !== 0}
+  //             style={{
+  //               userSelect: 'none',
+  //             }}
+  //             onClose={() => handleCloseTag(record, tag)}
+  //           >
+  //             <span
+  //               onDoubleClick={(e) => {
+  //                 if (index !== 0) {
+  //                   setEditInputIndex(index);
+  //                   setEditInputValue(tag);
+  //                   e.preventDefault();
+  //                 }
+  //               }}
+  //             >
+  //               {isLongTag ? `${tag.slice(0, 20)}...` : tag}
+  //             </span>
+  //           </Tag>
+  //         );
+  //         return isLongTag ? (
+  //           <Tooltip title={tag} key={tag}>
+  //             {tagElem}
+  //           </Tooltip>
+  //         ) : (
+  //           tagElem
+  //         );
+  //       })}
+  //       {inputVisible ? (
+  //         <Input
+  //           ref={inputRef}
+  //           type="text"
+  //           size="small"
+  //           style={tagInputStyle}
+  //           value={inputValue}
+  //           onChange={() => handleInputChange()}
+  //           onBlur={handleInputConfirm()}
+  //           onPressEnter={handleInputConfirm()}
+  //         />
+  //       ) : (
+  //         <Tag onClick={showInput}>New Tag</Tag>
+  //       )}
+  //     </Space>
+  //   );
+  // };
 
   const renderColumns = async (settings, data) => {
     if (!settings) settings = await dbGetLocally(storageDisplaySettings);
-
     const settingsColumns = [
       {
         title: '#',
@@ -178,7 +309,19 @@ const ProfilesPage = () => {
           );
         },
         width: 200,
-        sorter: (a, b) => !a.isPin && !b.isPin && a.uid - b.uid,
+        sorter: (a, b) => {
+          if (!a.isPin && !b.isPin) {
+            const nameA = a.name.toUpperCase();
+            const nameB = b.name.toUpperCase();
+            if (nameA < nameB) {
+              return -1;
+            }
+            if (nameA > nameB) {
+              return 1;
+            }
+            return 0;
+          }
+        },
       });
     }
     if (settings.name) {
@@ -296,7 +439,19 @@ const ProfilesPage = () => {
         ellipsis: {
           showTitle: false,
         },
-        sorter: (a, b) => !a.isPin && !b.isPin && a.recoveryEmail.length - b.recoveryEmail.length,
+        sorter: (a, b) => {
+          if (!a.isPin && !b.isPin) {
+            const nameA = a.name.toUpperCase();
+            const nameB = b.name.toUpperCase();
+            if (nameA < nameB) {
+              return -1;
+            }
+            if (nameA > nameB) {
+              return 1;
+            }
+            return 0;
+          }
+        },
         render: (recoveryEmail) => (
           <Tooltip placement="topLeft" title={recoveryEmail}>
             {recoveryEmail}
@@ -337,7 +492,6 @@ const ProfilesPage = () => {
             </div>
           );
         },
-        // sorter: (a, b) => !a.isPin && !b.isPin && a.proxy.length - b.proxy.length,
         sorter: (a, b) => {
           if (!a.isPin && !b.isPin) {
             const nameA = a.name.toUpperCase();
@@ -362,7 +516,19 @@ const ProfilesPage = () => {
         render: (tag) => {
           return <Input name="tag" value={tag} className="-tag-profiles" onChange={(e) => e.target.value}></Input>;
         },
-        sorter: (a, b) => !a.isPin && !b.isPin && a.tag.length - b.tag.length,
+        sorter: (a, b) => {
+          if (!a.isPin && !b.isPin) {
+            const nameA = a.name.toUpperCase();
+            const nameB = b.name.toUpperCase();
+            if (nameA < nameB) {
+              return -1;
+            }
+            if (nameA > nameB) {
+              return 1;
+            }
+            return 0;
+          }
+        },
       });
     }
     settingsColumns.push({
@@ -389,7 +555,6 @@ const ProfilesPage = () => {
               renderColumns();
             }}
           >
-            {/* <img src={options} alt="image-option"></img> */}
             <Popover
               open={rowID == profile.id}
               trigger="click"
@@ -400,8 +565,8 @@ const ProfilesPage = () => {
                 <div className="-popover-options">
                   <div
                     onClick={() => {
-                      pinProfile(profile.id, data ? data : dataProfiles);
                       handleCloseAction();
+                      pinProfile(profile.id, data ? data : dataProfiles);
                     }}
                     className="-popover-options__attribute border-bottom"
                   >
@@ -410,6 +575,7 @@ const ProfilesPage = () => {
                   </div>
                   <div
                     onClick={() => {
+                      handleCloseAction();
                       handleClickRemove();
                     }}
                     className="-popover-options__attribute"
@@ -470,7 +636,7 @@ const ProfilesPage = () => {
         }),
       );
     }
-    if (dataProfiles && displaySettings) {
+    if (displaySettings && dataProfiles) {
       renderColumns(displaySettings, dataProfiles);
     }
   }, [dataProfiles]);
@@ -500,6 +666,8 @@ const ProfilesPage = () => {
               return { ...e, key: index + 1 };
             }),
           );
+        } else {
+          setDataProfiles([]);
         }
       }
       storageService.setSessionObject('user', null);

@@ -127,11 +127,11 @@ export const addFriend = (setting) => {
     const addFriendSelector =
       "#screen-root > div > div:nth-child(2) > div > div.m.bg-s5 > div > div > div:nth-child(2)";
       // scroll before click more button
-    let temp = getRandomIntBetween(2, 4);
+    let temp = getRandomIntBetween(1, 3);
     logger("số lần scroll " + temp);
     await scrollSmooth(page, temp);
     let addBtns = await getElements(page, addFriendSelector, 5);
-    if (addBtns.length < 1) return false;
+    if (!addBtns) return false;
     let isAdd = false;
     let arr = [];
     let newIndex = -1;
@@ -184,12 +184,10 @@ export const addFriend = (setting) => {
     return false;
   }
 };
-  const addFriendByAcceptRequest = async (page, addFriendObject) => {
+  const addFriendByAcceptRequest = async (page, addFriendObject, mutualElements) => {
     try {
       let randomDelay = getRandomIntBetween(addFriendObject.delayTimeStart * 1000, addFriendObject.delayTimeEnd * 1000);
-      const isMutualSelector = '#screen-root > div > div:nth-child(2) > div > div:nth-child(4)';
-      const mutualElements = await getElements(page, isMutualSelector, 10);
-      if (!mutualElements) return false;
+      
       let isAdd = false;
       let arr = [];
       for (let i = 0; i < mutualElements.length; i++) {
@@ -697,6 +695,7 @@ export const addFriend = (setting) => {
     return error;
   }
 };
+
   const clickAddBtn = async (page) => {
     try {
       // TH1 nút add nằm ở vị trí đầu tiên
@@ -918,16 +917,47 @@ export const addFriend = (setting) => {
       await delay(5000);
       const check = await checkExistElement(
         page,
-        "#screen-root > div > div:nth-child(2) > div.m.bg-s3 > div > div:nth-child(4)",
+        'img[src="https://static.xx.fbcdn.net/rsrc.php/v3/yi/r/9hZDJWHZ1Do.png"]',
         10
       );
       if (check == 1) {
         return false;
       }
       await delay(5000);
+      const isMutualSelector = '#screen-root > div > div:nth-child(2) > div > div:nth-child(4)';
+      const mutualElements = await getElements(page, isMutualSelector);
+      if (!mutualElements)
+      {
+          logger("Debug" + "|" + "Add friend by accept request" + "|" + "Add friend failed!");
+         return false;
+      }
+      if(mutualElements.length < numsAdd) {
+        numsAdd = mutualElements.length;
+      }
+      if (addFriendObject.isOnlyAddFriend == true) { 
+        let numsMutual = 0;
+        for( let i = 0 ; i < mutualElements.length; i++){
+        const isMutual = await page.evaluate((el) => {
+            return el.childNodes.length;
+          }, mutualElements[i]);
+          if (isMutual < 1){
+            continue;
+          } else {
+            numsMutual++;
+          }
+        }
+      if(numsMutual == 0) {
+        logger("Debug" + "|" + "Add friend by accept request" + "|" + "Do not have mutual friend request!");
+        return false;
+      }
+      if(numsMutual < numsAdd){
+         numsAdd = numsMutual;
+      }
+      }
+      logger("numsAdd " + numsAdd);
       for (let i = 0; i < numsAdd * 2; i++) {
         try {
-          const isAddFriend = await addFriendByAcceptRequest(page, addFriendObject);
+          const isAddFriend = await addFriendByAcceptRequest(page, addFriendObject, mutualElements);
           if (isAddFriend) {
             count++;
             logger('Đã kết bạn với ' + count + ' người bằng accept request');
@@ -954,6 +984,7 @@ export const addFriend = (setting) => {
           let UID = UIDList[getRandomInt(UIDList.length)];
           await page.goto('https://m.facebook.com/profile.php/?id='+UID);
           await delay(randomDelay);
+
           const isAddFriend = await addFriendByUIDList(page, addFriendObject);
           if (isAddFriend) {
             count++;

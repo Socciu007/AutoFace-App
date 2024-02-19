@@ -35,7 +35,7 @@ export const newFeed = (setting) => {
         newIndex: temp
       };
     } catch (error) {
-      logger(error);
+      logger("Debug" + "|" + "NewsFeed" + "|" + "Like failed!");
       return false;
     }
   };
@@ -81,11 +81,12 @@ export const newFeed = (setting) => {
         newIndex: temp
       };
     } catch (error) {
-      logger(error);
+     logger("Debug" + "|" + "NewsFeed" + "|" + "Sharing failed!");
       return false;
     }
   };
   const randomComment = async (page, newsfeed, commentBtns, temp) => {
+    try {
     let randomDelay = getRandomIntBetween(newsfeed.delayTimeStart * 1000, newsfeed.delayTimeEnd * 1000);
     let isClick = false;
     if (commentBtns.length > 0) {
@@ -138,6 +139,10 @@ export const newFeed = (setting) => {
       isClick: isClick,
       newIndex: temp
     };
+    } catch (error) {
+     logger("Debug" + "|" + "NewsFeed" + "|" + "Comment failed!");
+      return false;
+    }
   };
   const findBtn = async (page, content) => {
     try {
@@ -165,6 +170,7 @@ try {
   const isLive = await checkIsLive(page);
   logger('Tình trạng trang web: '+ isLive);
   if (!isLive) {
+    logger("Debug" + "|" + "NewsFeed" + "|" + "Page is dead!");
     return -1;
   }
 
@@ -192,7 +198,7 @@ try {
           await delay(2000);
           const likeBtns = await findBtn(page, "󰍸");
           if (!likeBtns) {
-            logger("Không có nút like!");
+            logger("Debug" + "|" + "NewsFeed" + "|" + "Can't find any like buttons");
             break;
           };
           logger("có " + likeBtns.length + " nút like")
@@ -211,7 +217,7 @@ try {
           temp = objLike.newIndex
           await delay(randomDelay);
         } catch (error) {
-          logger(error);
+         logger(error);
         }
       }
     }
@@ -232,7 +238,7 @@ try {
         try {
           const shareBtns = await findBtn(page, "󰍺");
           if (!shareBtns) {
-            logger("Không có nút share!");
+            logger("Debug" + "|" + "NewsFeed" + "|" + "Can't find any share buttons");
             break;
           };
           logger("có " + shareBtns.length + " nút share")
@@ -259,7 +265,7 @@ try {
 
     if (news.randomComment == true && loopComment == 0) {
       if (!news.commentStrs.length) {
-        logger('Không thể comment với nội dung rỗng!');
+        logger("Debug" + "|" + "NewsFeed" + "|" + "Cannot comment with empty content!");
         return false;
       }
       const homeSelector1 =
@@ -274,11 +280,10 @@ try {
       let temp = 1;
       for (let i = 0; i < numComments * 2; i++) {
         try {
-          
           await returnHomePage(page);
           const commentBtns = await findBtn(page, "󰍹");
           if (!commentBtns) {
-            logger("Không có nút comment!");
+            logger("Debug" + "|" + "NewsFeed" + "|" + "Can't find any comment buttons");
             return false;
           };
           logger("có " + commentBtns.length + " nút comment");
