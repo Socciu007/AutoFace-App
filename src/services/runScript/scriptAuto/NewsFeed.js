@@ -109,16 +109,16 @@ export const newFeed = (setting) => {
         // comment
         let content = newsfeed.commentStrs;
         let randomString = content[getRandomInt(content.length)];
-        await delay(1000);
+        await delay(2000);
         await page.keyboard.type(randomString, { delay: 100 });
-        await delay(1000);
+        await delay(2000);
         const postSelector = 'div[aria-label="SEND"]';
         const postBtn = await getElement(page, postSelector, 10);
         if (!postBtn) return {
           isClick: isClick,
           newIndex: temp
         };;
-        await delay(1000);
+        await delay(2000);
         await clickElement(postBtn);
         await delay(randomDelay);
         // return home
@@ -128,10 +128,10 @@ export const newFeed = (setting) => {
           isClick: isClick,
           newIndex: temp
         };
-        await delay(1000);
+        await delay(2000);
         await clickElement(returnBtn);
-        await delay(3000);
         isClick = true;
+        await delay(3000);
     }
 
      return {
@@ -182,7 +182,7 @@ try {
       if( await checkExistElementOnScreen(page,homeSelector1) != 0) {
         await page.goto("https://m.facebook.com/");
       }
-      await delay(2000);
+      await delay(3000);
       let numLikes = getRandomIntBetween(news.likeStart, news.likeEnd);
       logger('Cần like ' + numLikes + ' bài');
       let temp = 2;
@@ -224,10 +224,8 @@ try {
       "#screen-root > div > div:nth-child(1) > div:nth-child(4) > div:nth-child(1)";
       if( await checkExistElementOnScreen(page,homeSelector2) != 0) {
         await page.goto("https://m.facebook.com/");
-      } else {
-        logger("xuat hien tren man hinh")
       }
-      await delay(2000);
+      await delay(3000);
       let temp = 2;
       logger("???");
       for (let i = 0; i < numShares * 2; i++) {
@@ -269,7 +267,7 @@ try {
       if( await checkExistElementOnScreen(page,homeSelector1) != 0) {
         await page.goto("https://m.facebook.com/");
       }
-      await delay(2000);
+      await delay(3000);
       const numComments = getRandomIntBetween(news.commentStart, news.commentEnd);
       logger('Cần comment '+  numComments + ' bài');
       let count = 0;
