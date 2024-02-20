@@ -33,9 +33,9 @@ const inviteGroupBySuggest = async (page, inviteGroupObject) => {
     let isInvite = false;
     for (let i = 0; i < numFriends * 2; i++) {
       // scroll before click
-      let temp = getRandomIntBetween(2, 4);
+      let temp = getRandomIntBetween(1, 3);
       logger("số lần scroll " + temp);
-      await scrollSmooth(page,temp)
+      await scrollSmooth(page,temp);
       let invite =
         "#screen-root > div > div:nth-child(2) > div > div:nth-child(3) > div.m";
       let inviteButtons = await getElements(page, invite, 10);
@@ -65,6 +65,8 @@ const inviteGroupBySuggest = async (page, inviteGroupObject) => {
       }
       if (arr.length == 0) return false;
       let randomIndex = getRandomInt(arr.length);
+      await delay(1000);
+      await scrollSmoothIfElementNotExistOnScreen(page, arr[randomIndex]);
       await delay(1000);
       await clickElement(arr[randomIndex]);
       count++;
