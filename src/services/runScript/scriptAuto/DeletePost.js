@@ -39,11 +39,12 @@ export const deletePost = (setting) => {
           await delay(5000);
           return true;
         } else {
-          logger("Can't find confirm delete button");
+          logger("Debug" + "|" + "Delete post" + "|" + "Can't find confirm delete button!");
           return false;
         }
       } else {
-        logger("Can't find delete button");
+        logger("Debug" + "|" + "Delete post" + "|" + "Can't find delete button!");
+
         return false;
       }
     }
@@ -112,7 +113,9 @@ const returnPost = async (page, id, fbid) => {
           if (userID) {
             logger('UserID:'+  userID);
           } else {
-            logger('UserID not found.');
+            logger("Debug" + "|" + "Delete post" + "|" + "UserID not found.");
+
+            return 0;
           }
       
           for (let i = 0; i < post.lineCount; i++) {

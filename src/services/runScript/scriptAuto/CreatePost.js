@@ -53,7 +53,7 @@ export const createPost = (setting) => {
         if (url == 'https://m.facebook.com/') {
           if (CreatePost.typeTag === 'UIDList') {
             // Tag UID
-            logger('Khong the tag bang UID list');
+            logger("Debug" + "|" + "Create post" + "|" + "Can't tag friend by UID!");
             // await tagFriendsByUIDList(page, CreatePost);
           } else {
             // tag random
@@ -61,7 +61,7 @@ export const createPost = (setting) => {
           }
         }
         else{
-          logger("Tag friend khong thanh cong");
+          logger("Debug" + "|" + "Create post" + "|" + "Tag friend not success!");
           return false;
         }
   
@@ -81,11 +81,11 @@ export const createPost = (setting) => {
           await delay(6000);
           return true;
         } else {
-          logger("Can't find done tag");
+          logger("Debug" + "|" + "Create post" + "|" + "Can't find done tag!");
           return false;
         }
       } else {
-        logger('Khong tag friend');
+        logger("Debug" + "|" + "Create post" + "|" + "Don't tag friend!");
       }
       return true;
     } catch (error) {
@@ -103,7 +103,7 @@ export const createPost = (setting) => {
         selector = 'div.m.bg-s4[data-action-id]';
         listFriend = await getElements(page, selector, 3);
         if (listFriend.length < 1) {
-          logger('Khong co ban be de tag');
+          logger("Debug" + "|" + "Create post" + "|" + "Have not friend to tag");
           return false;
         }
       }
@@ -170,11 +170,11 @@ export const createPost = (setting) => {
             return false;
           }
         } else {
-          logger("Can't find click photo btn");
+          logger("Debug" + "|" + "Create post" + "|" + "Can't find click photo btn!");
           return false;
         }
       } else {
-        logger('So anh random khong hop le');
+        logger("Debug" + "|" + "Create post" + "|" + "So anh random khong hop le!");
         return false;
       }
       return true;
@@ -204,11 +204,11 @@ export const createPost = (setting) => {
           await delay(5000);
           return randomTextIndex;
         } else {
-          logger('Text is empty');
+          logger("Debug" + "|" + "Create post" + "|" + "Text is empty!");
           return -1;
         }
       } else {
-        logger("Can't input content");
+        logger("Debug" + "|" + "Create post" + "|" + "Can't input content!");
         return -1;
       }
     } catch (error) {
@@ -278,7 +278,7 @@ export const createPost = (setting) => {
           if (inputContentResult != -1) {
             logger('Done input content');
           } else {
-            logger('Khong the nhap content ');
+            logger("Debug" + "|" + "Create post" + "|" + "Can't input content!");
             return 0;
           }
 
@@ -287,7 +287,8 @@ export const createPost = (setting) => {
           if (uploadImgResult && checkImg != null) {
             logger('Upload image successful');
           } else {
-            logger("Can't upload image");
+            logger("Debug" + "|" + "Create post" + "|" + "Can't upload image");
+
             countUploadImg++;
             if(countUploadImg >= 3) return 0;
             continue;
@@ -302,7 +303,7 @@ export const createPost = (setting) => {
               logger('Tag ban be thanh cong');
             }
             else{
-              logger('Tag ban be khong thanh cong');
+              logger("Debug" + "|" + "Create post" + "|" + "Tag friend is not success!");
               countTagFriend++;
               if(countTagFriend >= 3) return 0;
               continue;
@@ -337,7 +338,8 @@ export const createPost = (setting) => {
           if (inputContentResult != -1) {
             logger('Done input content');
           } else {
-            logger('Khong the nhap content ');
+            logger("Debug" + "|" + "Create post" + "|" + "Can't input content!");
+
             return 0;
           }
 
@@ -367,7 +369,7 @@ export const createPost = (setting) => {
           logger('Da click post');
           await delay(5000);
         } else {
-          logger('Button choose image is empty');
+          logger("Debug" + "|" + "Create post" + "|" + "Button choose image is empty!");
           return 0;
         }
       } else {

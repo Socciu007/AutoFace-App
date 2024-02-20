@@ -57,7 +57,8 @@ export const postInteract = (setting) => {
       let randomDelay = getRandomIntBetween(3 * 1000, 5 * 1000);
       let likeBtns = await findBtn(page, '󱍸');
       if (!likeBtns) {
-        logger('Không tìm thấy nút like');
+        logger("Debug" + "|" + "Post interaction" + "|" + "Can't find like button.");
+
         return false;
       }
       await scrollSmoothIfElementNotExistOnScreen(page, likeBtns);
@@ -74,11 +75,11 @@ export const postInteract = (setting) => {
   };
   const randomShare = async (page) => {
     try {
-      logger('start share');
       let randomDelay = getRandomIntBetween(3 * 1000, 5 * 1000);
       let shareBtns = await findBtn(page, '󰍺 ');
       if (!shareBtns) {
-        logger('Không tìm thấy nút share');
+        logger("Debug" + "|" + "Post interaction" + "|" + "Can't find share button.");
+
         return false;
       }
       await scrollSmoothIfElementNotExistOnScreen(page, shareBtns);
@@ -111,7 +112,8 @@ export const postInteract = (setting) => {
   
     let commentBtns = await findBtn(page, '󰍹 ');
     if (!commentBtns) {
-      logger('Không tìm thấy nút comment');
+      logger("Debug" + "|" + "Post interaction" + "|" + "Can't find comment button.");
+
       return false;
     }
   
@@ -251,7 +253,8 @@ export const postInteract = (setting) => {
       logger('shouldComment', shouldComment);
       if (post.isComment == true && post.isText == true && shouldComment == true && numComments > 0) {
         if (!post.text.length) {
-          logger('Không thể comment với nội dung rỗng!');
+          logger("Debug" + "|" + "Post interaction" + "|" + "Can't comment with empty text.");
+
           return 0;
         }
         try {
