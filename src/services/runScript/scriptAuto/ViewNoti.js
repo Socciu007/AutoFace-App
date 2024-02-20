@@ -37,6 +37,57 @@ export const viewNoti = (setting) => {
       return false;
     }
   };
+  const scroll = async page => {
+    let randomScrollTime = getRandomIntBetween(3, 7);
+    try {
+      while (randomScrollTime > 0) {
+        await page.evaluate(async () => {
+          const getRandomIntBetween = (min, max) => {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+          };
+          const smoothScrollByStep = (targetPosition, duration) => {
+            const startPosition = window.scrollY;
+            const distance = targetPosition - startPosition;
+            let startTime = null;
+  
+            const animation = currentTime => {
+              if (startTime === null) startTime = currentTime;
+              const timeElapsed = currentTime - startTime;
+              const run = ease(timeElapsed, startPosition, distance, duration);
+              window.scrollTo(0, run);
+              if (timeElapsed < duration) requestAnimationFrame(animation);
+            };
+  
+            const ease = (t, b, c, d) => {
+              t /= d / 2;
+              if (t < 1) return (c / 2) * t * t + b;
+              t--;
+              return (-c / 2) * (t * (t - 2) - 1) + b;
+            };
+  
+            requestAnimationFrame(animation);
+          };
+          let scrollAmount = getRandomIntBetween(150, 500);
+          const targetPosition = window.scrollY + scrollAmount;
+          let currentPosition = window.scrollY;
+          if (currentPosition < targetPosition) {
+            const durationPerStep = getRandomIntBetween(500, 2000);
+            const nextPosition = Math.max(
+              currentPosition + scrollAmount,
+              targetPosition
+            );
+            smoothScrollByStep(nextPosition, durationPerStep);
+            await new Promise(resolve => setTimeout(resolve, durationPerStep));
+            currentPosition = nextPosition;
+          }
+        });
+        randomScrollTime--;
+      }
+      await delay(getRandomIntBetween(1000, 3000));
+    } catch (error) {
+      logger('Debug|WatchVideo|Error scroll video');
+    }
+  };
   const checkExistElementOnScreens = async (JSSelector) => {
     try {
       const isElementVisible = await JSSelector.evaluate((el) => {
@@ -112,6 +163,84 @@ export const viewNoti = (setting) => {
       return false;
     }
   };
+
+  const scrollSmoothIfElementNotExistOnScreens = async (page, element) => {
+    try {
+      await page.evaluate(async element => {
+        const getRandomIntBetween = (min, max) => {
+          return Math.floor(Math.random() * (max - min + 1)) + min;
+        };
+        const delay = async time => {
+          return new Promise(resolve => setTimeout(resolve, time));
+        };
+        const smoothScrollByStep = (targetPosition, duration) => {
+          const startPosition = window.scrollY;
+          const distance = targetPosition - startPosition;
+          let startTime = null;
+  
+          const ease = (t, b, c, d) => {
+            t /= d / 2;
+            if (t < 1) return (c / 2) * t * t + b;
+            t--;
+            return (-c / 2) * (t * (t - 2) - 1) + b;
+          };
+  
+          const animation = currentTime => {
+            if (startTime === null) startTime = currentTime;
+            const timeElapsed = currentTime - startTime;
+            const run = ease(timeElapsed, startPosition, distance, duration);
+            window.scrollTo(0, run);
+            if (timeElapsed < duration) requestAnimationFrame(animation);
+          };
+  
+          requestAnimationFrame(animation);
+        };
+  
+        const isInViewport = elem => {
+          const bounding = elem.getBoundingClientRect();
+          return (
+            bounding.top >= 0 &&
+            bounding.left >= 0 &&
+            bounding.bottom <=
+              (window.innerHeight || document.documentElement.clientHeight) &&
+            bounding.right <=
+              (window.innerWidth || document.documentElement.clientWidth)
+          );
+        };
+  
+        if (element && !isInViewport(element)) {
+          const elementRect = element.getBoundingClientRect();
+          const viewportHeight =
+            window.innerHeight || document.documentElement.clientHeight;
+          const targetPosition =
+            window.scrollY +
+            elementRect.top -
+            (elementRect.top > viewportHeight ? viewportHeight : 0);
+  
+          let currentPosition = window.scrollY;
+          while (
+            Math.abs(currentPosition - targetPosition) > 0 &&
+            !isInViewport(element)
+          ) {
+            const stepSize =
+              getRandomIntBetween(50, 500) *
+              (currentPosition > targetPosition ? -1 : 1);
+            const durationPerStep = getRandomIntBetween(500, 2000);
+            const nextPosition = currentPosition + stepSize;
+  
+            smoothScrollByStep(nextPosition, durationPerStep);
+            await delay(getRandomIntBetween(1000, 2000));
+            await new Promise(resolve => setTimeout(resolve, durationPerStep));
+            currentPosition = window.scrollY;
+          }
+        }
+      }, element);
+      return true;
+    } catch (error) {
+      logger(error);
+      return false;
+    }
+  };
   
   const goToNotificationDetail = async (page) => {
     try {
@@ -124,15 +253,15 @@ export const viewNoti = (setting) => {
   
         if (notiSelectors.length > 0) {
           const index = getRandomInt(notiSelectors.length);
-          await scrollSmoothIfNotExistOnScreens(notiSelectors[index]);
-          await delay(getRandomIntBetween(3000, 5000));
+          await scrollSmoothIfElementNotExistOnScreens(notiSelectors[index]);
+          await delay(getRandomIntBetween(1000, 3000));
           await notiSelectors[index].evaluate((b) => b.click());
           logger("Da doc thong bao");
           return true;
         } else if (notiSelectors1.length > 0) {
           const index = getRandomInt(notiSelectors1.length);
-          await scrollSmoothIfNotExistOnScreens(notiSelectors1[index]);
-          await delay(getRandomIntBetween(3000, 5000));
+          await scrollSmoothIfElementNotExistOnScreens(notiSelectors1[index]);
+          await delay(getRandomIntBetween(1000, 3000));
           await notiSelectors1[index].evaluate((b) => b.click());
           logger("Da doc thong bao");
           return true;
@@ -195,12 +324,12 @@ export const viewNoti = (setting) => {
                 notiObj.notificationEnd,
                 notiObj.notificationStart
               );
-              const isGoToNoti = await clickElementRandom(
-                page,
-                'div[data-comp-id="7"]',
-                0,
-                "https://m.facebook.com/notifications/"
-              );
+        const isGoToNoti = await clickElementRandom(
+          page,
+          'div[data-comp-id="7"]',
+          0,
+          "https://m.facebook.com/notifications/"
+        );
         while (notiCount < numsNoti) {
           // wait time before read noti
           const waitTime =
@@ -214,28 +343,17 @@ export const viewNoti = (setting) => {
                   notiObj.delayTimeStart * 1000
                 );
           await delay(waitTime);
-
+          await scroll(page);
           if (isGoToNoti) {
             const pages = await browser.pages();
             const lengthPage = pages.length;
-            logger(lengthPage)
             await delay(getRandomIntBetween(3000, 5000));
             await goToNotificationDetail(page);
             await delay(getRandomIntBetween(10000, 15000));
-            // if (notiObj.option === "randomly") {
-            // }
+      
             await returnPages(page, browser, lengthPage);
             await delay(getRandomIntBetween(3000, 5000));
-            // const isNavigateHome = await clickElementRandom(
-            //   page,
-            //   'div[data-comp-id="3"]',
-            //   0,
-            //   "https://m.facebook.com/"
-            // );
-            // if (!isNavigateHome) {
-            //   await navigateToUrl(page, "https://m.facebook.com/");
-            // }
-            // await delay(getRandomIntBetween(3000, 5000));
+  
           }
 
           notiCount++;

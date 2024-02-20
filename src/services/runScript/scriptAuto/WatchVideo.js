@@ -35,19 +35,17 @@ export const watchVideo = (setting) => {
         }
       }
     } catch (err) {
-      logger(err);
+      logger(error.message);
       return false;
     }
   };
+
   const uploadImg = async (page, watchVideoObj) => {
     try {
       let isHaveComment = false;
       if (watchVideoObj.photos.length > 0) {
-        const upload = await findBtn(
-          page,
-          "󰘋",
-          "div.fl.ac > div.native-text > span.f3"
-        );
+        const upload = await findBtn(page,'󰘋','[class="f3"]');
+        logger('uploade', upload)
         if (upload) {
           const [fileChooser] = await Promise.all([
             page.waitForFileChooser(),
@@ -67,28 +65,18 @@ export const watchVideo = (setting) => {
           if (element === 1) {
             const uploadBtn = await page.$("div.m > div.native-text");
             await clickElement(uploadBtn);
-            await delay(10000);
+            await delay(6000);
             logger("Done upload img");
             isHaveComment = true;
           }
-        } else {
-          return false;
-        }
-      } else {
-        logger("Runtest: User is not upload success image");
-        return;
-      }
+        } 
+      } 
   
       //cmt text
       if (watchVideoObj.text.length > 0) {
         const elementInput = await checkExistElement(
           page,
           "textarea.textbox.multi-line-floating-textbox",
-          3
-        );
-        const elementInput1 = await checkExistElement(
-          page,
-          "textarea.internal-input.input-box.native-input",
           3
         );
         if (elementInput == 1) {
@@ -102,7 +90,7 @@ export const watchVideo = (setting) => {
           );
           await delay(getRandomIntBetween(3000, 5000));
           isHaveComment = true;
-        } else if (elementInput1 == 1) {
+        } else {
           const commentBtn1 = await page.$(
             "textarea.internal-input.input-box.native-input"
           );
@@ -216,12 +204,12 @@ export const watchVideo = (setting) => {
         logger("Click to video");
       }
     } catch (error) {
-      logger('Runtest: No access to video');
+      logger('Debug|WatchVideo|No access to video');
     }
   };
   
   const scroll = async page => {
-    let randomScrollTime = getRandomIntBetween(10, 15);
+    let randomScrollTime = getRandomIntBetween(7, 15);
     try {
       while (randomScrollTime > 0) {
         await page.evaluate(async () => {
@@ -268,7 +256,7 @@ export const watchVideo = (setting) => {
       }
       await delay(getRandomIntBetween(1000, 3000));
     } catch (error) {
-      logger('Runtest: Error scroll video');
+      logger('Debug|WatchVideo|Error scroll video');
     }
   };
   
@@ -429,7 +417,7 @@ export const watchVideo = (setting) => {
       const languageBtn1 = await findBtn(
         page,
         "󰠂",
-        "div.m > div.fl.ac > div.native-text"
+        '[class="native-text"]'
       );
       const cfLanguageEle1 = await page.$(
         "div.m > div.fl.ac > div.native-text > span.f2"
@@ -437,7 +425,7 @@ export const watchVideo = (setting) => {
       const cfLanguageEle = await findBtn(
         page,
         "Confirm languages",
-        "div.m > div.fl.ac > div.native-text > span.f2"
+        '[class="f2"]'
       );
       if (languageBtn && cfLanguageEle) {
         await clickElement(languageBtn);
@@ -481,7 +469,7 @@ export const watchVideo = (setting) => {
         // );
         const playVideoElement = await page.$$("div.inline-video-container");
         if (playVideoElement.length > 0) {
-          const index = getRandomIntBetween(3, playVideoElement.length);
+          const index = getRandomIntBetween(7, playVideoElement.length);
           await goToVideo(page, playVideoElement[index]);
           const timeViewVideo = getRandomIntBetween(
             watchVideoObj.delayTimeStart * 1000,
@@ -495,7 +483,7 @@ export const watchVideo = (setting) => {
             try {
               if (countLike <= numsLike && getRandomIntBetween(0, 2) == 1) {
                 await delay(getRandomIntBetween(3000, 5000));
-                const likeBtn = await findBtn(page, "󰍸", "button.native-text");
+                const likeBtn = await findBtn(page, '󰍸', '[class="native-text"]');
                 if (likeBtn) {
                   await scrollSmoothIfNotExistOnScreens(likeBtn);
                   await delay(getRandomIntBetween(3000, 5000));
@@ -503,12 +491,11 @@ export const watchVideo = (setting) => {
                   countLike++;
                   logger("Done like video");
                 } else {
-                  logger("Runtest: No can find like button");
-                  return;
+                  logger("No can find like button");
                 }
               }
             } catch (err) {
-              logger("Runtest: No can find like button");
+              logger("Debug|WatchVideo|No can find like button");
               return;
             }
           }
@@ -519,23 +506,28 @@ export const watchVideo = (setting) => {
                 if (getRandomIntBetween(0, 2) == 1) {          
                   const button = await findBtn(
                     page,
-                    "󰍹",
-                    'span[style="color:#ffffff;"]'
+                    '󰍹',
+                    '[style="color:#ffffff;"]'
                   );
                   await scrollSmoothIfNotExistOnScreens(button);
                   await delay(getRandomIntBetween(3000, 5000));
-                  await clickElement(button);
-                  await uploadImg(page, watchVideoObj);
-                  //return page
-                  await delay(getRandomIntBetween(3000, 5000));
-                  const returnBtn = await findBtn(
-                    page,
-                    "󰟙",
-                    "div.m > div.fl.ac > div.native-text > span.f3"
-                  );
-                  await delay(getRandomIntBetween(3000, 5000));
-                  await clickElement(returnBtn);
-                  countComment++;
+                  if (button) {
+                    await clickElement(button); 
+                    await delay(3000);
+                    await uploadImg(page, watchVideoObj);
+                    //return page
+                    await delay(getRandomIntBetween(3000, 5000));
+                    const returnBtn = await findBtn(
+                      page,
+                      '󰟙',
+                      'div.m > div.fl.ac > div.native-text > span.f3'
+                    );
+                    await delay(getRandomIntBetween(3000, 5000));
+                    await clickElement(returnBtn);
+                    countComment++;
+                  } else {
+                    logger("No comment button")
+                  }
                 }
               } else if (
                 countComment <= numsComment &&
@@ -548,40 +540,44 @@ export const watchVideo = (setting) => {
                   const button = await findBtn(
                     page,
                     "󰍹",
-                    'span[style="color:#ffffff;"]'
+                    '[style="color:#ffffff;"]'
                   );
-                  await scrollSmoothIfNotExistOnScreens(button);
-                  await delay(getRandomIntBetween(3000, 5000));
-                  await clickElement(button);
-                  await delay(getRandomIntBetween(3000, 5000));
-                  await page.type(
-                    "div.m.mentions-text > textarea.internal-input.input-box.native-input",
-                    watchVideoObj.text[getRandomInt(watchVideoObj.text.length)],
-                    { delay: 200 }
-                  );
-                  await delay(getRandomIntBetween(3000, 5000));
-                  const sendBtn = await findBtn(
-                    page,
-                    "󱛅",
-                    "div.m > div.fl.ac > div.native-text > span.f3"
-                  );
-                  await delay(getRandomIntBetween(3000, 5000));
-                  await clickElement(sendBtn);
-                  logger("Done comment video");
-                  //return page
-                  await delay(getRandomIntBetween(3000, 5000));
-                  const returnBtn = await findBtn(
-                    page,
-                    "󰟙",
-                    "div.m > div.fl.ac > div.native-text > span.f3"
-                  );
-                  await delay(getRandomIntBetween(3000, 5000));
-                  await clickElement(returnBtn);
-                  countComment++;
+                  if (button) {
+                    await scrollSmoothIfNotExistOnScreens(button);
+                    await delay(getRandomIntBetween(3000, 5000));
+                    await clickElement(button);
+                    await delay(getRandomIntBetween(3000, 5000));
+                    await page.type(
+                      "div.m.mentions-text > textarea.internal-input.input-box.native-input",
+                      watchVideoObj.text[getRandomInt(watchVideoObj.text.length)],
+                      { delay: 200 }
+                    );
+                    await delay(getRandomIntBetween(3000, 5000));
+                    const sendBtn = await findBtn(
+                      page,
+                      "󱛅",
+                      "div.m > div.fl.ac > div.native-text > span.f3"
+                    );
+                    await delay(getRandomIntBetween(3000, 5000));
+                    await clickElement(sendBtn);
+                    logger("Done comment video");
+                    //return page
+                    await delay(getRandomIntBetween(3000, 5000));
+                    const returnBtn = await findBtn(
+                      page,
+                      "󰟙",
+                      "div.m > div.fl.ac > div.native-text > span.f3"
+                    );
+                    await delay(getRandomIntBetween(3000, 5000));
+                    await clickElement(returnBtn);
+                    countComment++;
+                  } else {
+                    logger("No can find comment button");
+                  }
                 }
               }
             } catch (err) {
-              logger("Runtest: No can find comment button");
+              logger("Debug|WatchVideo|No can find comment button");
               return;
             }
           }
@@ -592,7 +588,7 @@ export const watchVideo = (setting) => {
                 const shareBtn = await findBtn(
                   page,
                   "󰍺",
-                  'span[style="color:#ffffff;"]'
+                  '[style="color:#ffffff;"]'
                 );
                 await delay(getRandomIntBetween(3000, 5000));
                 await clickElement(shareBtn);
@@ -626,7 +622,7 @@ export const watchVideo = (setting) => {
                 countShare++;
               }
             } catch (err) {
-              logger("Runtest: No can find share button");
+              logger("Debug|WatchVideo|No can find share button");
               return;
             }
           }
@@ -644,7 +640,7 @@ export const watchVideo = (setting) => {
       logger("Complete watch video");
     }
   } catch (error) {
-    logger('Runtest: ' + error.message);
+    logger('Debug|WatchVideo|' + error.message);
     return;
   }
     `;

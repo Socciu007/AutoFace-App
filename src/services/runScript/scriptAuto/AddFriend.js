@@ -598,11 +598,11 @@ export const addFriend = (setting) => {
     for (let i = 0; i < numsAdd * 2; i++) {
       // click member
       const memberSelectors = "#screen-root > div > div:nth-child(2) > div > div > div:nth-child(2)";
-      let allMember = await getElements(page, memberSelectors, 10);
+      let allMember = await getElements(page, memberSelectors);
       if (!allMember) return false;
       logger("Member length: " + allMember.length);
-      let randomIndex = getRandomInt(allMember.length);
-      logger(randomIndex)
+      let randomIndex = getRandomIntBetween(1, allMember.length);
+      logger(randomIndex);
       let index1 = arr.indexOf(randomIndex);
          if (index1 == -1) {
           arr.push(randomIndex);
@@ -645,13 +645,22 @@ export const addFriend = (setting) => {
     );
     const fofSelector =
       "#screen-root > div > div:nth-child(2) > div:nth-child(7) > div";
-    const followerSelector =
-      "#screen-root > div > div:nth-child(2) > div:nth-child(4) > div:nth-child(10)";
     const fofElements = await getElements(page, fofSelector, 3);
-    const followElement = await getElement(page, followerSelector, 3);
-    if (followElement) return false;
-    if (fofElements.length < 1) return false;
-    let randomIndex = getRandomIntBetween(3, fofElements.length);
+    await delay(2000);
+    if (!fofElements) {
+      logger("Can't find friend !");
+      return false
+    };
+    const followerSelector = "#screen-root > div > div:nth-child(2) > div:nth-child(4) > div:nth-child(10)";
+    const followerElement = await getElement(page, followerSelector, 3);
+    if(!followerElement) {
+      return false;
+    }
+    const follower = await page.evaluate((el) => {
+      return el.childNodes.length;
+    }, followerElement);
+    if(follower > 0) return false;
+    let randomIndex = getRandomIntBetween(3, fofElements.length - 1);
     const fof = '#screen-root > div > div:nth-child(2) > div:nth-child(7) > div:nth-child(' + randomIndex +')';
     const fofBtn = await getElement(page, fof, 3);
     if (!fofBtn) return false;
@@ -662,7 +671,7 @@ export const addFriend = (setting) => {
     const rs = await clickAddBtn(page);
     await delay(3000)
     if (!rs) {
-       await clickReturn(page);
+    await clickReturn(page);
     await delay(2000);
       return false;
     }
@@ -708,7 +717,7 @@ export const addFriend = (setting) => {
           await clickElement(moreBtn[1]);
           await delay(1000);
           const addBtn = await findBtn(page, "󱤇");
-          if(isBtnAdd) {
+          if(addBtn.length != 0) {
             await clickElement(addBtn[0]);
             await delay(1000);
             logger('Add thành công');
@@ -725,16 +734,6 @@ export const addFriend = (setting) => {
       logger(error);
       return false;
     }
-  };
-  const clickAddFriendButton = async (page, selector) => {
-    let addFriendBtn = await getElement(page, selector, 3);
-    if (addFriendBtn) {
-      await scrollSmoothIfNotExistOnScreen(page, selector);
-      await delay(1000);
-      await clickElement(addFriendBtn);
-      return true;
-    }
-    return false;
   };
   const clickReturn = async (page) => {
   try {
@@ -1039,12 +1038,13 @@ export const addFriend = (setting) => {
               await delay(1000);
             }
           }
-      if (arr.length < 4) return false;
+      if (arr.length < 3) return false;
       let randomIndex = getRandomInt(arr.length);
         await delay(1000);
-        await page.evaluate((el) => {
+       const nameFriend =  await page.evaluate((el) => {
               return el.childNodes[1].click();
             }, arr[randomIndex]);
+        
         await delay(1000);
           const isAddFriend = await addFriendByFriendOfFriend(page, addFriendObject);
           if (isAddFriend) {
