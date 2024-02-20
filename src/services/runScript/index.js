@@ -480,7 +480,7 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
             const targetPosition = window.scrollY + scrollAmount;
             let currentPosition = window.scrollY;
             if (currentPosition < targetPosition) {
-              const durationPerStep = getRandomIntBetween(500, 1000);
+              const durationPerStep = getRandomIntBetween(600, 1000);
               const nextPosition = Math.max(
                 currentPosition + scrollAmount,
                 targetPosition

@@ -235,10 +235,10 @@ export const addFriend = (setting) => {
       return false;
     }
   };
-  const scroll = async (page, newsfeed) => {
+  const scroll = async (page, addFriendObject) => {
     let randomScrollTime = getRandomIntBetween(3, 7);
     try {
-      let randomDelay = getRandomIntBetween(newsfeed.delayTimeStart * 1000, newsfeed.delayTimeEnd * 1000);
+      let randomDelay = getRandomIntBetween(addFriendObject.delayTimeStart * 1000, addFriendObject.delayTimeEnd * 1000);
       while (randomScrollTime > 0) {
         await page.evaluate(async () => {
           const getRandomIntBetween = (min, max) => {
@@ -290,145 +290,86 @@ export const addFriend = (setting) => {
     }
   };
   
-  const randomComment = async (page, addFriendObject, temp,commentBtns, isActionBefore, loop) => {
-    let randomDelay = getRandomIntBetween(
+const randomComment = async (page, addFriendObject, commentBtns, temp) => {
+    try {
+      let randomDelay = getRandomIntBetween(
       addFriendObject.delayTimeInteractStart * 1000,
       addFriendObject.delayTimeInteractEnd * 1000,
     );
-    const check = await scroll(page, addFriendObject);
-      if(check == false && isActionBefore == false && loop == 1 ) {
-        return {isEnd: true}
-      }
     let isClick = false;
-    if( temp == commentBtns.length - 1) {
-        logger("end");
-        return {isEnd: true}
-      }
-    isActionBefore = false;
     if (commentBtns.length > 0) {
-      for (let i = temp + 1 ; i < commentBtns.length * 2; i++) {
-        // check selector in screen
-        let selector = await page.evaluate((el) => {
-          if (!el) return false;
-          if (el.innerHTML.includes('󰍹')) {
-            const rect = el.getBoundingClientRect();
-            return (
-              rect.width > 0 &&
-              rect.height > 0 &&
-              rect.top >= 0 &&
-              rect.left >= 0 &&
-              rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-              rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-            );
-          } else {
-            return false;
-          }
-        }, commentBtns[i]);
-        if (!selector) continue;
-        await commentBtns[i].evaluate((b) => b.click());
+      await scrollSmoothIfElementNotExistOnScreen(commentBtns[temp]);
+      await delay(1000);
+      await clickElement(commentBtns[temp]);
+      temp++;
         await delay(2000);
         // find comment area
         const commentAreaSelector = 'textarea[type="text"]';
         const commentArea = await getElement(page, commentAreaSelector, 10);
-        if (!commentArea) continue;
+        if (!commentArea) return {
+          isClick: isClick,
+          newIndex: temp
+        };
         await delay(1000);
         await clickElement(commentArea);
         logger('Đã chọn vùng comment');
         // comment
         let content = addFriendObject.comment;
         let randomString = content[getRandomInt(content.length)];
-        await delay(1000);
-        await page.keyboard.type(randomString, { delay: 100 });
-        await delay(1000);
-        const postSelector = 'div[aria-label="SEND"]';
-        const postBtn = await getElement(page, postSelector, 10);
-        if (!postBtn) continue;
-        await delay(1000);
-        await clickElement(postBtn);
         await delay(2000);
-        // return home
-        let returnSelector =
-        "#screen-root > div > div > div > div > div.m.bg-s3 > div:nth-child(1)";
-        let returnBtn = await getElement(page, returnSelector, 10);
-        if (!returnBtn) {
-          returnSelector =
-            "#screen-root > div > div > div > div > div.m.bg-s4 > div:nth-child(1)";
-         returnBtn = await getElement(page, returnSelector, 10);
-          if (!returnBtn) continue;
-        }
-        await delay(1000);
-        await clickElement(returnBtn);
+        await page.keyboard.type(randomString, { delay: 100 });
+        await delay(2000);
+        const postBtn = await findBtn(page, "󱛅");
+        if (!postBtn || postBtn.length == 0) {
+                logger("Debug" + "|" + "addFriendByUIDList" + "|" + "Can't find post button");
+                return {
+                  isClick: isClick,
+                  newIndex: temp
+                };
+          };
+        
+        await delay(2000);
+        await clickElement(postBtn[0]);
         await delay(randomDelay);
+        // return home
+        const returnSelector = '#screen-root > div > div > div > div > div.m.bg-s3 > div:nth-child(1)';
+        const returnBtn = await getElement(page, returnSelector, 10);
+        if (!returnBtn) return {
+          isClick: isClick,
+          newIndex: temp
+        };
+        await delay(2000);
+        await clickElement(returnBtn);
         isClick = true;
-        temp = i;
-        isActionBefore = true;
-        break;
-      }
+        await delay(3000);
     }
-      return {
-        isComment: isClick,
-        newIndex: temp,
-        isEnd: false,
-        check: isActionBefore,
-        loop: 1
-      };
+     return {
+      isClick: isClick,
+      newIndex: temp
+    };
+    } catch (error) {
+     logger("Debug" + "|" + "Add friend by UID List" + "|" + "Comment failed!");
+      return false;
+    }
   };
-  const randomLike = async (page, addFriendObject, temp, likeBtns, isActionBefore, loop) => {
+  const randomLike = async (page, addFriendObject, likeBtns, temp) => {
     try {
-      let randomDelay = getRandomIntBetween(
+        let randomDelay = getRandomIntBetween(
         addFriendObject.delayTimeInteractStart * 1000,
         addFriendObject.delayTimeInteractEnd * 1000,
       );
-      await delay(1000);
-      const check = await scroll(page, addFriendObject);
-      if(check == false && isActionBefore == false && loop == 1 ) {
-        return {isEnd: true}
-      }
-      await delay(1000);
-      let isClick = false;
-      logger(temp);
-      if( temp == likeBtns.length - 1) {
-        logger("end");
-        return {isEnd: true}
-      }
-      isActionBefore = false;
-      for (let i = temp + 1; i < likeBtns.length; i++) {
-          // check selector in screen
-          let selector = await page.evaluate((el) => {
-            if (el.innerHTML.includes('󰍸')) {
-              const rect = el.getBoundingClientRect();
-              return (
-                rect.width > 0 &&
-                rect.height > 0 &&
-                rect.top >= 50 &&
-                rect.left >= 0 &&
-                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-              );
-            }
-          }, likeBtns[i]);
-          if (!selector) {
-            continue;
-          }
+      if (likeBtns.length > 0) {
+          await scrollSmoothIfElementNotExistOnScreen(page,likeBtns[temp]);
           await delay(1000);
-          await clickElement(likeBtns[i]);
+          await clickElement(likeBtns[temp]);
           await delay(randomDelay);
-          isClick = true;
-          temp = i;
-          isActionBefore = true;
-          break;
-        }
-      logger("temp: " + temp);
-
+      }
       return {
-        isLike: isClick,
-        newIndex: temp,
-        isEnd: false,
-        check: isActionBefore,
-        loop: 1
+        isClick: true,
+        newIndex: temp
       };
     } catch (error) {
-      logger(error);
+      logger("Debug" + "|" + "Add friend by UID List" + "|" + "Like failed!");
       return false;
     }
   };
@@ -442,29 +383,18 @@ export const addFriend = (setting) => {
         if (addFriendObject.isLiked == true) {
           logger('Cần like ' + numPosts + ' bài');
           let count = 0;
-          let temp = -1;
-          let loop = 0;
-          let isActionBefore = false;
-          let likeSelector = '#screen-root > div > div > div> div > div:nth-child(1) > div >button > span';
-          let likeBtns = await getElements(page, likeSelector, 10);
-          if (!likeBtns) {
-            likeSelector = '#screen-root > div > div > div > div:nth-child(1) > div > button > span:nth-child(1)';
-            likeBtns = await getElements(page, likeSelector, 10);
-            if (!likeBtns){
-              logger("Không có nút like!");
-              return false
-            }; 
-          }
-         
+          let temp = 0;
           for (let i = 0; i < numPosts * 2; i++) {
             try {
-              likeBtns = await getElements(page, likeSelector, 10);
+             const likeBtns = await findBtn(page, "󰍸");
+              if (!likeBtns || likeBtns.length == 0) {
+               logger("Debug" + "|" + "addFriendByUIDList" + "|" + "Can't find any like buttons");
+               break;
+              };
               if(likeBtns.length < numPosts) numPosts = likeBtns.length;
-              const objLike = await randomLike(page, addFriendObject, temp, likeBtns, isActionBefore, loop);
-              isActionBefore = objLike.check;
-              loop = objLike.loop;
-              if(objLike.isEnd == true) break;
-              if (objLike.isLike == true) {
+              logger("có " + likeBtns.length + " nút like");
+              const objLike = await randomLike(page, addFriendObject, likeBtns,temp);
+              if (objLike.isClick == true) {
                 count++;
                 logger('Đã like được ' + count + ' bài');
               } else {
@@ -486,35 +416,24 @@ export const addFriend = (setting) => {
         }
         if (addFriendObject.isComment == true) {
           let count = 0;
-          let temp = -1;
-          let loop = 0;
-          let isActionBefore = false;
+          let temp = 0;
           if (!addFriendObject.comment.length) {
             logger('Không thể comment với nội dung rỗng!');
             return false;
           }
           logger('Cần comment ' + numPosts + ' bài');
-
-          let commentSelector = '#screen-root > div > div > div > div:nth-child(2) > div > button > span';
-          let commentBtns = await getElements(page, commentSelector, 10);
-          if (!commentBtns) {
-            commentSelector = '#screen-root > div > div > div > div > div:nth-child(2) > div > button > span';
-            commentBtns = await getElements(page, commentSelector, 10);
-          if (!commentBtns){
-            logger("Không có nút comment!");
-            return false
-          }; 
-    }
-    if (!commentBtns) return false;
+  
           for (let i = 0; i < numPosts * 2; i++) {
             try {
-              commentBtns = await getElements(page, commentSelector, 10);
+              const commentBtns = await findBtn(page, "󰍹");
+              if (!commentBtns || commentBtns.length == 0) {
+                logger("Debug" + "|" + "addFriendByUIDList" + "|" + "Can't find any comment buttons");
+                return false;
+              };
+              logger("có " + commentBtns.length + " nút comment");
               if(commentBtns.length < numPosts) numPosts = commentBtns.length;
-              const objComment = await randomComment(page, addFriendObject, temp, commentBtns, isActionBefore, loop);
-              isActionBefore = objComment.check;
-              loop = objComment.loop;
-              if(objComment.isEnd == true) break;
-              if (objComment.isComment == true) {
+              const objComment = await randomComment(page, addFriendObject, commentBtns, temp);
+              if (objComment.isClick == true) {
                 count++;
                 logger('Đã comment được ' + count + ' bài');
               } else {
@@ -651,16 +570,18 @@ export const addFriend = (setting) => {
       logger("Can't find friend !");
       return false
     };
-    const followerSelector = "#screen-root > div > div:nth-child(2) > div:nth-child(4) > div:nth-child(10)";
-    const followerElement = await getElement(page, followerSelector, 3);
-    if(!followerElement) {
-      return false;
+    for(let i = 3; i <= fofElements.length; i++){
+       const check = await page.evaluate((el) => {
+          return el.childNodes.length;
+        }, fofElements[i-1]);
+        if(!check || check < 2) {
+          logger("Không có danh sách bạn !");
+          return false;
+        } else {
+          break;
+        }
     }
-    const follower = await page.evaluate((el) => {
-      return el.childNodes.length;
-    }, followerElement);
-    if(follower > 0) return false;
-    let randomIndex = getRandomIntBetween(3, fofElements.length - 1);
+    let randomIndex = getRandomIntBetween(3, fofElements.length);
     const fof = '#screen-root > div > div:nth-child(2) > div:nth-child(7) > div:nth-child(' + randomIndex +')';
     const fofBtn = await getElement(page, fof, 3);
     if (!fofBtn) return false;
@@ -673,11 +594,10 @@ export const addFriend = (setting) => {
     if (!rs) {
     await clickReturn(page);
     await delay(2000);
-      return false;
+    return false;
     }
     await clickReturn(page);
     await delay(2000);
-
     return true;
   } catch (error) {
     logger(error);
@@ -703,9 +623,15 @@ export const addFriend = (setting) => {
   };
   const clickAddBtn = async (page) => {
     try {
+      const isAdded = await findBtn(page,"󱤈");
+      if(isAdded.length != 0) {
+        logger("Đã kết bạn từ trước");
+        return false;
+      }
       const isBtnAdd = await findBtn(page, "󱤇");
       logger(isBtnAdd);
       if(isBtnAdd.length != 0) {
+        await scrollSmoothIfElementNotExistOnScreen(isBtnAdd[0]);
         await clickElement(isBtnAdd[0]);
         await delay(1000);
         logger('Add thành công');
@@ -713,11 +639,13 @@ export const addFriend = (setting) => {
         return true;
       } else {
         const moreBtn = await findBtn(page, "󰟝");
-        if(moreBtn) {
+        if(moreBtn.length != 0) {
+          await scrollSmoothIfElementNotExistOnScreen(moreBtn[1]);
           await clickElement(moreBtn[1]);
           await delay(1000);
           const addBtn = await findBtn(page, "󱤇");
           if(addBtn.length != 0) {
+            await scrollSmoothIfElementNotExistOnScreen(addBtn[0]);
             await clickElement(addBtn[0]);
             await delay(1000);
             logger('Add thành công');
@@ -925,6 +853,12 @@ export const addFriend = (setting) => {
           let UID = UIDList[getRandomInt(UIDList.length)];
           await page.goto('https://m.facebook.com/profile.php/?id='+UID);
           await delay(randomDelay);
+          const isAdded = await findBtn(page,"󱤈");
+          if(isAdded.length != 0) {
+            logger("Đã kết bạn từ trước");
+            UIDList = UIDList.filter((e) => e !== UID);
+            continue;
+          }
           const isAddFriend = await addFriendByUIDList(page, addFriendObject);
           if (isAddFriend) {
             count++;
@@ -933,7 +867,7 @@ export const addFriend = (setting) => {
             logger('Kết bạn không thành công');
           }
           if (count == numsAdd) break;
-           UIDList = UIDList.filter((e) => e !== UID);
+          UIDList = UIDList.filter((e) => e !== UID);
           await delay(3000);
         } catch (error) {
           logger(error);
@@ -973,13 +907,13 @@ export const addFriend = (setting) => {
       const friendRequestBtn = await getElement(page, friendRequestSelector, 3);
       if (!friendRequestBtn) return false;
       await clickElement(friendRequestBtn);
-      await delay(3000);
+      await delay(2000);
       // see your friends
       const yourFriendSelector = '#screen-root > div > div:nth-child(2) > div:nth-child(4) > div > div:nth-child(2)';
       const yourFriendBtn = await getElement(page, yourFriendSelector, 10);
       if (!yourFriendBtn) return false;
       await clickElement(yourFriendBtn);
-      await delay(3000);
+      await delay(2000);
       let index = 0;
       for (let i = 0; i < numsAdd * 2; i++) {
         try {
@@ -1004,20 +938,22 @@ export const addFriend = (setting) => {
     // scroll before click more button
     let temp = getRandomIntBetween(2, 4);
     logger("số lần scroll " + temp);
-    await scrollSmooth(page,temp)
-              // get all friends
+    await scrollSmooth(page,temp);
+    await delay(1000);
+          // get all friends
           let friendSelector =
             "#screen-root > div > div:nth-child(2) > div > div.m.bg-s3";
-          let friendBtns = await getElements(page, friendSelector, 10);
+          let friendBtns = await getElements(page, friendSelector);
           if (!friendBtns) {
             friendSelector =
               "#screen-root > div > div:nth-child(2) > div > div.m.bg-s4";
-            friendBtns = await getElements(page, friendSelector, 10);
+            friendBtns = await getElements(page, friendSelector);
             if (!friendBtns) {
+              logger("can't find friend buttons")
               return false;
             }
           }
-        let arr= [];
+          let arr= [];
           for (let i = index; i < friendBtns.length; i++) {
             // choose one random friend
             const friendId = await page.evaluate((el) => {
@@ -1043,8 +979,7 @@ export const addFriend = (setting) => {
         await delay(1000);
        const nameFriend =  await page.evaluate((el) => {
               return el.childNodes[1].click();
-            }, arr[randomIndex]);
-        
+        }, arr[randomIndex]);
         await delay(1000);
           const isAddFriend = await addFriendByFriendOfFriend(page, addFriendObject);
           if (isAddFriend) {

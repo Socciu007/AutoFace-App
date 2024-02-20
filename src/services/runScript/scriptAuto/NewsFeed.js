@@ -113,14 +113,17 @@ export const newFeed = (setting) => {
         await delay(2000);
         await page.keyboard.type(randomString, { delay: 100 });
         await delay(2000);
-        const postSelector = 'div[aria-label="SEND"]';
-        const postBtn = await getElement(page, postSelector, 10);
-        if (!postBtn) return {
-          isClick: isClick,
-          newIndex: temp
-        };;
+        const postBtn = await findBtn(page, "󱛅");
+        if (!postBtn || postBtn.length == 0) {
+                logger("Debug" + "|" + "addFriendByUIDList" + "|" + "Can't find post button");
+                return {
+                  isClick: isClick,
+                  newIndex: temp
+                };
+          };
+        
         await delay(2000);
-        await clickElement(postBtn);
+        await clickElement(postBtn[0]);
         await delay(randomDelay);
         // return home
         const returnSelector = '#screen-root > div > div > div > div > div.m.bg-s3 > div:nth-child(1)';
@@ -175,7 +178,8 @@ try {
   }
 
   let randomDelay = getRandomIntBetween(newsfeed.delayTimeStart * 1000, newsfeed.delayTimeEnd * 1000);
-  let scrollTime = getRandomInt(newsfeed.scrollTimeStart * 1000, newsfeed.scrollTimeEnd * 1000);
+  let scrollTime = getRandomIntBetween(newsfeed.scrollTimeStart * 1000, newsfeed.scrollTimeEnd * 1000);
+  logger("scroll time " + scrollTime);
   let loopLike = 0;
   let loopComment = 0;
   let loopShare = 0;
@@ -308,6 +312,9 @@ try {
         }
       }
       logger('end');
+    }
+    if(news.randomLike == false && news.randomShare == false && news.randomComment == false) {
+      await scrollSmooth(page, 3);
     }
     let endTime = Date.now();
     scrollTime -= endTime - startTime;

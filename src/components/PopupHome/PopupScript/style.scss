@@ -328,12 +328,6 @@
                     vertical-align: middle;
                   }
                   tr.ant-table-row-selected {
-                    background: #f2f8ff;
-                  }
-                  tr.ant-table-row-selected:focus-within {
-                    background: #f2f8ff;
-                  }
-                  tr.ant-table-row.ant-table-row-level-0:hover {
                     background: #f2f8ff !important;
                   }
                   .pinned-row {
@@ -341,11 +335,8 @@
                   }
                 }
 
-                .ant-table-tbody .ant-table-row.ant-table-row-selected > .ant-table-cell-row-hover {
-                  background: #f2f8ff;
-                }
                 .ant-table-tbody .ant-table-row.pinned-row.ant-table-row-selected > .ant-table-cell-row-hover {
-                  background: #fffbea;
+                  background: #fffbea !important;
                 }
               }
               .ant-table-row.pinned-row > .ant-table-cell-row-hover {
@@ -374,6 +365,9 @@
               .ant-table-content::-webkit-scrollbar-track {
                 background-color: rgba(1, 22, 43, 0.2); /* Màu của phần bên dưới thanh cuộn */
                 border-radius: 5px;
+              }
+              .ant-table-wrapper .ant-table-tbody .ant-table-row.ant-table-row-selected > .ant-table-cell {
+                background-color: #f2f8ff !important;
               }
             }
           }

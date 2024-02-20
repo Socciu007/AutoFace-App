@@ -33,11 +33,11 @@ export const joinGroup = (setting) => {
 const scrollAndJoin = async (page, selector, randomDelay, joinGroupObject) => {
   try {
     // scroll before click
-    let temp = getRandomIntBetween(2, 4);
+    let temp = getRandomIntBetween(1, 3);
     logger("số lần scroll " + temp);
     await scrollSmooth(page,temp)
     let joinBtns = await getElements(page, selector, 10);
-    if (joinBtns.length < 1) return false;
+    if (joinBtns.length < 1 || !joinBtns) return false;
     let isJoin = false;
     let arr = [];
     let newIndex = -1;
@@ -70,6 +70,8 @@ const scrollAndJoin = async (page, selector, randomDelay, joinGroupObject) => {
     // random nút có trên màn hình để click
     if (arr.length == 0) return false;
     let randomIndex = getRandomInt(arr.length);
+    await delay(1000);
+    await scrollSmoothIfElementNotExistOnScreen(arr[randomIndex]);
     await delay(1000);
     await clickElement(arr[randomIndex]);
     await delay(randomDelay);

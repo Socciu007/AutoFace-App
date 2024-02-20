@@ -99,7 +99,19 @@ const PopupChooseProfile = ({ openProfiles, handleCloseProfiles, designScript })
         );
       },
       width: 120,
-      sorter: (a, b) => !a.isPin && !b.isPin && a.uid - b.uid,
+      sorter: (a, b) => {
+        if (!a.isPin && !b.isPin) {
+          const nameA = a.name.toUpperCase();
+          const nameB = b.name.toUpperCase();
+          if (nameA < nameB) {
+            return -1;
+          }
+          if (nameA > nameB) {
+            return 1;
+          }
+          return 0;
+        }
+      },
     },
     {
       title: 'Name',
@@ -153,7 +165,19 @@ const PopupChooseProfile = ({ openProfiles, handleCloseProfiles, designScript })
           </div>
         );
       },
-      sorter: (a, b) => !a.isPin && !b.isPin && a.proxy.length - b.proxy.length,
+      sorter: (a, b) => {
+        if (!a.isPin && !b.isPin) {
+          const nameA = a.name.toUpperCase();
+          const nameB = b.name.toUpperCase();
+          if (nameA < nameB) {
+            return -1;
+          }
+          if (nameA > nameB) {
+            return 1;
+          }
+          return 0;
+        }
+      },
     },
     {
       title: 'Tag',
@@ -162,7 +186,19 @@ const PopupChooseProfile = ({ openProfiles, handleCloseProfiles, designScript })
       render: (tag) => {
         return <p className="-tag-profiles">{tag}</p>;
       },
-      sorter: (a, b) => !a.isPin && !b.isPin && a.tag.length - b.tag.length,
+      sorter: (a, b) => {
+        if (!a.isPin && !b.isPin) {
+          const nameA = a.name.toUpperCase();
+          const nameB = b.name.toUpperCase();
+          if (nameA < nameB) {
+            return -1;
+          }
+          if (nameA > nameB) {
+            return 1;
+          }
+          return 0;
+        }
+      },
     },
   ];
 

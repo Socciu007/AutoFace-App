@@ -13,82 +13,48 @@ export const cancelFriend = (setting) => {
     }`;
   console.log(strSetting);
   return `
+    const findBtn = async (page, content) => {
+    try {
+      let arr = [];
+      const buttons = await getElements(page, '[class="native-text"]');
+      for (let i = 0; i < buttons.length; i++) {
+        const btn = await page.evaluate((el) => {
+          return el.innerHTML;
+        }, buttons[i]);
+        if (btn.includes(content)) {
+          arr.push( buttons[i]);
+        }
+      }
+      return arr;
+    } catch (err) {
+      logger(err);
+    }
+  };
  const unfriendByUID = async (page, cancelObj) => {
   let randomDelay = getRandomIntBetween(
     cancelObj.delayTimeStart * 1000,
     cancelObj.delayTimeEnd * 1000
   );
-
-  // check đã add friend hay chưa
-  let addFriendIcon1 =
-    "#screen-root > div > div:nth-child(2) > div:nth-child(5) > div:nth-child(3) > div.m > div > div:nth-child(1) > div > div > span";
-    
-  let Added1 = await getElement(page, addFriendIcon1, 2);
-  if (Added1) {
-    const isAddIcon1 = await page.evaluate((el) => {
-      return el.innerHTML.includes("󱤇");
-    }, Added1);
-    if (isAddIcon1) {
-      logger("Chưa kết bạn 1!");
-      return false;
+  const isBtnAdd = await findBtn(page, "󱤇");
+  if(isBtnAdd.length != 0) {
+    return false;
+  }
+  const isAdded = await findBtn(page,"󱤈");
+  if(isAdded.length != 0) {
+    await clickElement(isAdded[0]);
+    await delay(1000);
+    const cancelFriend = await findBtn(page,"󱤉");
+    if(cancelFriend.length != 0) {
+      await clickElement(cancelFriend[0]);
+      const confirmBtn = await getElement(page, "#screen-root > div.dialog-screen > div.dialog-vscroller > div > div > div > div > div:nth-child(4)");
+      if(!confirmBtn) return false;
+      await clickElement(confirmBtn) ;
+      await delay(1000);
+      return true;
     }
+  } else {
+    return false;
   }
-
-  let addFriendIcon2 =
-    "#screen-root > div > div:nth-child(2) > div:nth-child(5) > div:nth-child(1) > div.m > div > div:nth-child(1) > div > div > span";
-    let Added2 = await getElement(page, addFriendIcon2, 2);
-  if (Added2) {
-    const isAddIcon2 = await page.evaluate((el) => {
-      return el.innerHTML.includes("󱤇");
-    }, Added2);
-    if (isAddIcon2) {
-      logger("Chưa kết bạn 2!");
-      return false;
-    } else {
-      await clickElement(Added2);
-      await delay(randomDelay);
-  let unfriendSelector =
-    "#screen-root > div.dialog-screen > div > div > div > div > div > div.m.bg-s3 > div:nth-child(4) > div";
-  let unfriendBtn = await getElement(page, unfriendSelector, 10);
-  if (!unfriendBtn) {
-    unfriendSelector =
-      "#screen-root > div.dialog-screen > div > div > div > div > div > div.m.bg-s4 > div:nth-child(4) > div";
-    unfriendBtn = await getElement(page, unfriendSelector, 10);
-    if (!unfriendBtn) return false;
-  }
-  await clickElement(unfriendBtn);
-  await delay(randomDelay);
-  const confirmSelector =
-    "#screen-root > div.m.bg-s1.dialog-screen > div.m.dialog-vscroller > div > div > div.m.nb > div > div:nth-child(4)";
-  const confirmBtn = await getElement(page, confirmSelector, 10);
-  if (!confirmBtn) return false;
-  await clickElement(confirmBtn);
-  return true;
-    }
-  }
-  const friendSelector =
-    "#screen-root > div > div:nth-child(2) > div:nth-child(5) > div:nth-child(3) > div.m";
-  const friendBtn = await getElement(page, friendSelector, 10);
-  if (!friendBtn) return false;
-  await clickElement(friendBtn);
-  await delay(randomDelay);
-  let unfriendSelector =
-    "#screen-root > div.dialog-screen > div > div > div > div > div > div.m.bg-s3 > div:nth-child(4) > div";
-  let unfriendBtn = await getElement(page, unfriendSelector, 10);
-  if (!unfriendBtn) {
-    unfriendSelector =
-      "#screen-root > div.dialog-screen > div > div > div > div > div > div.m.bg-s4 > div:nth-child(4) > div";
-    unfriendBtn = await getElement(page, unfriendSelector, 10);
-    if (!unfriendBtn) return false;
-  }
-  await clickElement(unfriendBtn);
-  await delay(randomDelay);
-  const confirmSelector =
-    "#screen-root > div.m.bg-s1.dialog-screen > div.m.dialog-vscroller > div > div > div.m.nb > div > div:nth-child(4)";
-  const confirmBtn = await getElement(page, confirmSelector, 10);
-  if (!confirmBtn) return false;
-  await clickElement(confirmBtn);
-  return true;
 };
   const unfriendByRandom = async (page, cancelObj) => {
     try {
@@ -175,6 +141,7 @@ export const cancelFriend = (setting) => {
       await delay(randomDelay);
       await clickElement(deleteBtn);
       isCancel = true;
+      await delay(2000);
       break;
     }
 
@@ -195,16 +162,16 @@ export const cancelFriend = (setting) => {
       return -1;
     }
     await returnHomePage(page);
-
-    let numCancel = getRandomIntBetween(cancelObj.requestsStart, cancelObj.requestsEnd);
-    logger("Cần hủy kết bạn với " + numCancel + " người")
     let randomDelay = getRandomIntBetween(cancelObj.delayTimeStart * 1000, cancelObj.delayTimeEnd * 1000);
+  
+    if (cancelObj.optionCancelFriend == 'cancelRequest') {
+      let numCancel = getRandomIntBetween(cancelObj.requestsStart, cancelObj.requestsEnd);
+    logger("Cần hủy kết bạn với " + numCancel + " người")
     const friendRequestSelector = '#screen-root > div > div:nth-child(1) > div:nth-child(4) > div:nth-child(2)';
     const friendRequestBtn = await getElement(page, friendRequestSelector, 10);
     if (!friendRequestBtn) return false;
     await clickElement(friendRequestBtn);
     await delay(randomDelay);
-    if (cancelObj.optionCancelFriend == 'cancelRequest') {
       let count = 0;
       await page.goto("https://m.facebook.com/friends/?target_pivot_link=requests")
       await delay(5000);
@@ -231,7 +198,10 @@ export const cancelFriend = (setting) => {
           } else {
             logger('Hủy kết bạn không thành công');
           }
-          if (count == numCancel) break;
+          if (count == numCancel) {
+            await delay(1000);
+            break;
+          };
           await delay(randomDelay);
         } catch (error) {
           logger(error);
@@ -239,11 +209,16 @@ export const cancelFriend = (setting) => {
       }
     }
     if (cancelObj.optionCancelFriend == 'unfriend') {
+      const friendRequestSelector = '#screen-root > div > div:nth-child(1) > div:nth-child(4) > div:nth-child(2)';
+      const friendRequestBtn = await getElement(page, friendRequestSelector, 10);
+      if (!friendRequestBtn) return false;
+      await clickElement(friendRequestBtn);
+      await delay(randomDelay);
       let count = 0;
-      let numCancel = getRandomIntBetween(cancelObj.numberFriendStart, cancelObj.numberFriendEnd);
-      logger('Cần hủy kết bạn với' + numCancel + 'người');
       await delay(randomDelay);
       if (cancelObj.optionUnfriend == 'random') {
+      let numCancel = getRandomIntBetween(cancelObj.numberFriendStart, cancelObj.numberFriendEnd);
+      logger('Cần hủy kết bạn với ' + numCancel + ' người');
         // click your friend
         const yourFriendSelector = '#screen-root > div > div:nth-child(2) > div:nth-child(4) > div > div:nth-child(2)';
         const yourFriendBtn = await getElement(page, yourFriendSelector, 10);
@@ -268,6 +243,8 @@ export const cancelFriend = (setting) => {
         }
       }
     if (cancelObj.optionUnfriend == "UID") {
+      
+    logger("Cần hủy kết bạn với " + cancelObj.UID.length + " người")
       for (let i = 0; i < cancelObj.UID.length; i++) {
         try {
           let UID = cancelObj.UID[i];
@@ -282,7 +259,7 @@ export const cancelFriend = (setting) => {
           } else {
             logger("Hủy kết bạn không thành công");
           }
-          if (count == numCancel) break;
+          if (count == cancelObj.UID.length) break;
           await delay(5000);
         } catch (error) {
           logger(error);
