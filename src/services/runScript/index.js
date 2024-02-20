@@ -714,6 +714,7 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
            if (!checkPage){
            if(interval)
            clearInterval(interval);
+            logger("Debug||Page is close")
            resolve('Page is close');
        }
      },2000);

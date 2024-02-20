@@ -5,7 +5,7 @@ import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import Dialog from '@mui/material/Dialog';
 import img_debug from '../../../assets/images/img_debug.png';
-const PopupDebug = ({ openDebug, handleCloseDebug }) => {
+const PopupDebug = ({ openDebug, handleCloseDebug, debugs }) => {
   const makeCopyDebug = {
     position: 'fixed',
     maxWidth: '100%',
@@ -66,9 +66,19 @@ const PopupDebug = ({ openDebug, handleCloseDebug }) => {
               </div>
             </div>
             <div className="scrollable-container">
-              <img className="imgNoBug" src={img_debug} alt="img debug" />
+              {debugs && debugs.length ? (
+                debugs.map((e, index) => (
+                  <div key={index}>
+                    <p>{e}</p>
+                  </div>
+                ))
+              ) : (
+                <div>
+                  <img className="imgNoBug" src={img_debug} alt="img debug" />
 
-              <p className="noBug">No bugs</p>
+                  <p className="noBug">No bugs</p>
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -7,10 +7,13 @@ export const debugSlice = createSlice({
     setDebug: (state, action) => {
       return [...state, action.payload];
     },
+    removeDebug: (state, action) => {
+      return [];
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { setDebug } = debugSlice.actions;
+export const { setDebug, removeDebug } = debugSlice.actions;
 
 export default debugSlice.reducer;

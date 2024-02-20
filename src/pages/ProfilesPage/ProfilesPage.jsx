@@ -14,8 +14,6 @@ import yourScript from '../../assets/pictures/icon-yourScripts.svg';
 import pin from '../../assets/pictures/icon-pin.svg';
 import avatar from '../../assets/icon/icon-avatar.svg';
 import activeProfile from '../../assets/icon/icon-profileTotal.svg';
-import myProfile from '../../assets/icon/icon-myProfile.svg';
-import payment from '../../assets/icon/icon-Payment.svg';
 import logout from '../../assets/icon/icon-logOut.svg';
 import defaultSettings from '../../resources/defaultSettings.json';
 import defaultDisplaySettings from '../../resources/defaultDisplaySettings.json';
@@ -33,10 +31,11 @@ import notification from '../../resources/notification.json';
 import { Menu } from '@mui/material';
 import storageService from '../../services/storage.service';
 import { formatTimeDay } from '../../services/utils';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setDebug } from '../../redux/debugSlice';
 const ProfilesPage = () => {
   const profiles = useSelector((state) => state.profile);
-
+  const dispatch = useDispatch();
   let rowID;
   let loading = false;
   const [columns, setColumns] = useState([]);
@@ -61,7 +60,16 @@ const ProfilesPage = () => {
         const name = params[0][2].split('|')[0].replace('Update name:', '');
         const friend = params[0][2].split('|')[1] ? params[0][2].split('|')[1] : '';
         updateAccount(params[0][1], name, friend);
-      } else console.log(params[0]);
+      }
+
+      if (params[0][1] && params[0][1].toString().includes('Debug|')) {
+        const script = params[0][1].split('|')[1] ? params[0][1].split('|')[1] : '';
+        const err = params[0][1].split('|')[2] ? params[0][1].split('|')[2] : '';
+        const debug = script !== '' ? script + ': ' + err : err;
+        dispatch(setDebug(debug));
+      }
+
+      console.log(params[0]);
     });
   }
 

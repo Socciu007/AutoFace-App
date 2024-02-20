@@ -50,6 +50,7 @@ import { Store } from 'react-notifications-component';
 import notification from '../../resources/notification.json';
 import PopupChooseProfile from '../../components/PopupHome/PopupChooseProfile/PopupChooseProfile.jsx';
 import PopupDebug from '../../components/PopupHome/PopupDebug/PopupDebug.jsx';
+import { useSelector } from 'react-redux';
 const CreateScript = () => {
   const DnDFlowRef = useRef();
   const { state } = useLocation();
@@ -70,15 +71,7 @@ const CreateScript = () => {
   const [openProfiles, setOpenProfiles] = useState(false);
   const navigate = useNavigate();
 
-  // if (!window.electron.ipcRenderer.eventNames().includes('ipc-logger')) {
-  //   window.electron.ipcRenderer.on('ipc-logger', (...params) => {
-  //     if (params[0].length == 3 && params[0][1] && params[0][2].includes('Update name:')) {
-  //       const name = params[0][2].split('|')[0].replace('Update name:', '');
-  //       const friend = params[0][2].split('|')[1] ? params[0][2].split('|')[1] : '';
-  //       updateAccount(params[0][1], name, friend);
-  //     } else console.log('CreateScript' + params[0]);
-  //   });
-  // }
+  const debugs = useSelector((state) => state.debug);
 
   useEffect(() => {
     setDefaultScript();
@@ -92,8 +85,6 @@ const CreateScript = () => {
   };
 
   const handleMessageChange = (component, id) => {
-    console.log(component, id);
-    console.log('designScript ' + JSON.stringify(designScript.script));
     const setup = designScript.script.find((e) => e.id == id);
 
     if (setup) {
@@ -576,7 +567,7 @@ const CreateScript = () => {
                   <button className="debug" onClick={handleOpenDebug}>
                     <img src={debug} alt="Debug" />
                   </button>
-                  <PopupDebug openDebug={openDebug} handleCloseDebug={handleCloseDebug}></PopupDebug>
+                  <PopupDebug debugs={debugs} openDebug={openDebug} handleCloseDebug={handleCloseDebug}></PopupDebug>
                   <button className="test" onClick={handleOpenProfiles}>
                     <img src={runTest} alt="run test" />
                   </button>
