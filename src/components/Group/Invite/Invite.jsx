@@ -200,7 +200,7 @@ const Invite = ({ onGoBackClick, id, updateDesignScript, currentSetup, component
                     }}
                     value={values.option}
                   >
-                    <MenuItem value="random">Random</MenuItem>
+                    {/* <MenuItem value="random">Random</MenuItem> */}
                     <MenuItem value="suggestions">By suggestions</MenuItem>
                   </Select>
                 </div>

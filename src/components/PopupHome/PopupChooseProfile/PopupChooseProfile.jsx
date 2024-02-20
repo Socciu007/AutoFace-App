@@ -86,7 +86,7 @@ const PopupChooseProfile = ({ openProfiles, handleCloseProfiles, designScript })
     {
       title: '#',
       // dataIndex: 'key',
-      width: 20,
+      width: 30,
       render: (text, record, index) => <div>{index + 1}</div>,
     },
     {
@@ -183,9 +183,9 @@ const PopupChooseProfile = ({ openProfiles, handleCloseProfiles, designScript })
     {
       title: 'Tag',
       dataIndex: 'tag',
-      width: 50,
+      width: 150,
       render: (tag) => {
-        return <p className="-tag-profiles">{tag}</p>;
+        return <p className="-tag-script">{tag}</p>;
       },
       sorter: (a, b) => {
         if (!a.isPin && !b.isPin) {

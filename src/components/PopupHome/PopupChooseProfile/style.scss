@@ -258,4 +258,16 @@
   .ant-table-wrapper .ant-table-thead th.ant-table-column-has-sorters:hover {
     background-color: #f2f8ff;
   }
+  .-tag-script {
+    font-family: 'GoogleSans';
+    padding: 0;
+    border: none;
+    // max-width: fit-content;
+    background: transparent;
+    color: #2a86ff;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: normal;
+    cursor: pointer;
+  }
 }
