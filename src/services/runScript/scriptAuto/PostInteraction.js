@@ -22,6 +22,20 @@ export const postInteract = (setting) => {
     }`;
   console.log(setting);
   return `
+  const returnProfilePage = async (page, id, fbid) => {
+    const url = await page.url();
+    if (
+      url === 'https://m.facebook.com/story.php/?id='+id+'&story_fbid='+fbid ||
+      url.includes('https://m.facebook.com/profile.php/')
+    ) {
+      logger('URL is correct');
+    } else {
+      logger('Redirect to homepage profile');
+      await page.goto('https://m.facebook.com/story.php/?id='+id+'&story_fbid='+fbid , {
+        waitUntil: 'networkidle2',
+      });
+    }
+  };
   const findBtn = async (page, content) => {
     try {
       const buttons = await getElements(page, '[class="native-text"]');
@@ -132,6 +146,7 @@ export const postInteract = (setting) => {
   };
   
   
+  
   const PostInteract = ${strSetting}
   try {
     //Check obj start < end ? random(start,end) : random(end,start)
@@ -170,7 +185,7 @@ export const postInteract = (setting) => {
       }
       arrLink.push(randomLink);
       const [id, fbid] = post.UID[randomLink].split('|');
-      await page.goto('https://m.facebook.com/story.php/?id='+id+'&story_fbid='+fbid);
+      await page.goto('https://m.facebook.com/story.php/?id='+id+'&story_fbid='+fbid );
       await delay(2000);
       randomPost--;
 

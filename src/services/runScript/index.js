@@ -1,4 +1,4 @@
-Menu;
+// Menu;
 
 import { storageSettings } from '../../common/const.config';
 import { createPost } from './scriptAuto/CreatePost';
@@ -571,14 +571,14 @@ const convertToFunc = (script) => {
       return `{
         ${viewNoti(script)}
       }`;
-    case 'replyMsg':
-      return `{
-        ${replyMsg(script)}
-      }`;
-    case 'sendMsg':
-      return `{
-        ${sendMsg(script)}
-      }`;
+    // case 'replyMsg':
+    //   return `{
+    //     ${replyMsg(script)}
+    //   }`;
+    // case 'sendMsg':
+    //   return `{
+    //     ${sendMsg(script)}
+    //   }`;
     case 'deletePost':
       return `{
         ${deletePost(script)}
