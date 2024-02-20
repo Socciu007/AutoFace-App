@@ -25,20 +25,6 @@ const PopupDisplaySetting = ({
               <p>DISPLAY SETTINGS</p>
             </div>
             <ul>
-              {/* <li>
-                <span>
-                  <input
-                    onChange={(event) => {
-                      const checked = event.target.checked;
-                      const newSettings = { ...settings, profile: checked };
-                      setSettings(newSettings);
-                    }}
-                    checked={settings.profile}
-                    type="checkbox"
-                  ></input>
-                </span>
-                <p>Profile</p>
-              </li> */}
               <li>
                 <span>
                   <input

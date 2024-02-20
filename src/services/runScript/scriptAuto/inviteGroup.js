@@ -102,7 +102,7 @@ const findBtn = async (page, content) => {
   //Check obj start < end ? random(start,end) : random(end,start)
   let inviteGroupObject = await checkObject(inviteGroupObj);
   // check page is live return -1, return 1, return 0
-  const isLive = await checkIsLive(page);
+  const isLive = checkIsLive(page);
   logger("Tình trạng trang web: " + isLive);
   if (!isLive) {
     return -1;

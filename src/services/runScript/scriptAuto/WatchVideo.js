@@ -373,7 +373,7 @@ export const watchVideo = (setting) => {
   let watchVideoObj = ${strSetting}
   try {
     //check page live
-    const isLive = await checkIsLive(page);
+    const isLive = checkIsLive(page);
     if (isLive) {
       await returnHomePage(page);
       await delay(getRandomIntBetween(1000, 3000));

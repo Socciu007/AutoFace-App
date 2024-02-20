@@ -280,9 +280,9 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
       }
     };
 
-    const checkIsLive = async (page) => {
+    const checkIsLive = (page) => {
       try {
-        if (page && !page.isClosed()) {
+        if (page && page.isClosed() == false) {
           return true;
         }
         return false;
@@ -441,24 +441,23 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
         return false;
       }
     };
+
     const scrollSmooth = async (page, randomScrollTime) => {
-      if (!checkIsLive()) {
-        return -2;
-      }
+      logger('scrollSmooth');
       try {
-        while (randomScrollTime > 0) {
-          await page.evaluate(async () => {
+        while(randomScrollTime > 0){
+        const isLive = checkIsLive(page);
+          if (!isLive) {
+            return -2;
+          }
+        await page.evaluate(() => {
             const getRandomIntBetween = (min, max) => {
               return Math.floor(Math.random() * (max - min + 1)) + min;
-            };
-            const delay = async (time) => {
-              return new Promise((resolve) => setTimeout(resolve, time));
             };
             const smoothScrollByStep = (targetPosition, duration) => {
               const startPosition = window.scrollY;
               const distance = targetPosition - startPosition;
               let startTime = null;
-    
               const animation = (currentTime) => {
                 if (startTime === null) startTime = currentTime;
                 const timeElapsed = currentTime - startTime;
@@ -466,38 +465,35 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
                 window.scrollTo(0, run);
                 if (timeElapsed < duration) requestAnimationFrame(animation);
               };
-    
               const ease = (t, b, c, d) => {
                 t /= d / 2;
                 if (t < 1) return (c / 2) * t * t + b;
                 t--;
                 return (-c / 2) * (t * (t - 2) - 1) + b;
               };
-    
               requestAnimationFrame(animation);
             };
             let scrollAmount = getRandomIntBetween(400, 800);
             const targetPosition = window.scrollY + scrollAmount;
             let currentPosition = window.scrollY;
             if (currentPosition < targetPosition) {
-              const durationPerStep = getRandomIntBetween(600, 1000);
+              const durationPerStep = getRandomIntBetween(500, 1000);
               const nextPosition = Math.max(
                 currentPosition + scrollAmount,
                 targetPosition
               );
               smoothScrollByStep(nextPosition, durationPerStep);
-              await delay(getRandomIntBetween(1000, 5000));
-              await new Promise((resolve) => setTimeout(resolve, durationPerStep));
-              currentPosition = nextPosition;
             }
           });
+          await delay(getRandomIntBetween(1000, 5000));
           randomScrollTime--;
         }
-        return 1;
+          return 1;
       } catch (error) {
         return 0;
       }
     };
+    
     
     const getElementByID = async  (
       page,
@@ -714,7 +710,7 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
         } 
 
         interval = setInterval(async()=>{
-          const checkPage = await checkIsLive(page);
+          const checkPage = checkIsLive(page);
            if (!checkPage){
            if(interval)
            clearInterval(interval);

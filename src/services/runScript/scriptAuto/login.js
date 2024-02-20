@@ -13,7 +13,7 @@ export const loginFacebook = (account) => {
   try {
     const account = ${accountStr};
   
-    const checkPageIsLive = await checkIsLive(page);
+    const checkPageIsLive = checkIsLive(page);
     if (!checkPageIsLive) {
       logger("Page null!");
       return false;
@@ -30,7 +30,6 @@ export const loginFacebook = (account) => {
             acc.split("=")[0] &&
             acc.split("=")[0].length &&
             acc.split("=")[1] &&
-            acc.split("=")[0] !== "m_page_voice" &&
             acc.split("=")[0] !== "locale" &&
             acc.split("=")[0] !== "useragent" &&
             acc.split("=")[0] !== "_uafec"
@@ -232,7 +231,11 @@ export const loginFacebook = (account) => {
         if (!isLogin) {
           return { isLogin, error };
         }
-      } else return { isLogin: false, error: "2FA and Cookies not found!" };
+      }
+      const { isLogin, error } = await checkLogin(page);
+        if (!isLogin) {
+          return { isLogin, error };
+        }
     }
   } catch (err) {
     logger(err);

@@ -245,7 +245,7 @@ export const viewNoti = (setting) => {
   const goToNotificationDetail = async (page) => {
     try {
       //check page live
-      const isLive = await checkIsLive(page);
+      const isLive = checkIsLive(page);
       if (isLive) {
         await delay(getRandomIntBetween(3000, 5000));
         const notiSelectors = await page.$$('div.m > div.m > div.m > img.rounded.gray-border');
@@ -279,7 +279,7 @@ export const viewNoti = (setting) => {
   const clickElementRandom = async (page, element, index, urlPage) => {
     try {
       //check page live
-      const isLive = await checkIsLive(page);
+      const isLive = checkIsLive(page);
       if (isLive) {
         await delay(getRandomIntBetween(3000, 5000));
         const selectors = await page.$$(element);
@@ -307,7 +307,7 @@ export const viewNoti = (setting) => {
   const notiObj = ${strSetting}
   try {
     //check page live
-    const isLive = await checkIsLive(page);
+    const isLive = checkIsLive(page);
     if (isLive) {
       await returnHomePage(page);
       await delay(getRandomIntBetween(3000, 5000));

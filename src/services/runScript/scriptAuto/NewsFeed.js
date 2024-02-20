@@ -25,10 +25,19 @@ export const newFeed = (setting) => {
           const randomIndex = getRandomIntBetween(temp, likeBtns.length);
           logger(randomIndex)
           await scrollSmoothIfElementNotExistOnScreen(page,likeBtns[randomIndex]);
-          await delay(1000);
-          await clickElement(likeBtns[randomIndex])
-          temp = randomIndex;
           await delay(randomDelay);
+          temp = randomIndex;
+          const rd = getRandomIntBetween(0,100);
+          if(rd < 50){
+             await clickElement(likeBtns[randomIndex])
+          }
+          else{
+            return {
+              isClick: false,
+              newIndex: temp
+            };
+          }
+          await delay(getRandomIntBetween(1000,3000));
       }
       return {
         isClick: true,
@@ -170,7 +179,7 @@ try {
   //Check obj start < end ? random(start,end) : random(end,start)
   let news = await checkObject(newsfeed);
   // check page is live reutrn -1, return 1, return 0
-  const isLive = await checkIsLive(page);
+  const isLive = checkIsLive(page);
   logger('Tình trạng trang web: '+ isLive);
   if (!isLive) {
     logger("Debug" + "|" + "NewsFeed" + "|" + "Page is dead!");
@@ -184,6 +193,8 @@ try {
   let loopComment = 0;
   let loopShare = 0;
   while (scrollTime > 0) {
+    try{
+
     let startTime = Date.now();
     if (news.randomLike == true && loopLike == 0) {
       let count = 0;
@@ -211,7 +222,7 @@ try {
             count++;
             logger('Đã like được '+ count + ' bài');
           } else {
-            logger('Like không thành công');
+            logger('Xem bài viết thành công');
           }
           if (count == numLikes) {
             logger('Xong like !');
@@ -314,10 +325,18 @@ try {
       logger('end');
     }
     if(news.randomLike == false && news.randomShare == false && news.randomComment == false) {
-      await scrollSmooth(page, 3);
+        const result =  await scrollSmooth(page, 3);
+        if(result == -2){
+          break;
+        }
     }
     let endTime = Date.now();
     scrollTime -= endTime - startTime;
+  }
+  catch(e){
+    scrollTime = 0;
+    break;
+  }
   }
 } catch (err) {
   logger(err);

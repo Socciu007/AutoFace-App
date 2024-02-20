@@ -21,7 +21,7 @@ export const watchStory = (setting) => {
   const clickElementRandom = async (page, element, index, urlPage) => {
     try {
       //check page live
-      const isLive = await checkIsLive(page);
+      const isLive = checkIsLive(page);
       if (isLive) {
         await delay(getRandomIntBetween(3000, 5000));
         const selectors = await page.$$(element);
@@ -99,7 +99,7 @@ export const watchStory = (setting) => {
   const goToStory = async page => {
     try {
       //check page live
-      const isLive = await checkIsLive(page);
+      const isLive = checkIsLive(page);
       if (isLive) {
         await delay(getRandomIntBetween(1000, 3000));
         const storySelectors = await page.$$(
@@ -194,7 +194,7 @@ export const watchStory = (setting) => {
   let watchStoryObj = ${strSetting};
   try {
     //check page live
-    const isLive = await checkIsLive(page);
+    const isLive = checkIsLive(page);
     if (isLive) {
       await delay(getRandomIntBetween(3000, 5000));
       const isLogin = await checkLogin(page);

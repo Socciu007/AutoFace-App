@@ -700,7 +700,7 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
     await returnHomePage(page);
     let addFriendObject = await checkObject(addFriendObj);
     // check page is live reutrn -1, return 1, return 0
-    const isLive = await checkIsLive(page);
+    const isLive = checkIsLive(page);
     logger('Tình trạng trang web: ' + isLive);
     if (!isLive) {
       return -1;

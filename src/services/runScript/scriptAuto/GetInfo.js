@@ -3,7 +3,7 @@ export const getInfor = (profile) => {
   if (!profile.nameAccount) {
     return `{
             try{
-                const checkPageIsLive = await checkIsLive(page);
+                const checkPageIsLive = checkIsLive(page);
     if (!checkPageIsLive) {
       logger("Page null!");
       return false;

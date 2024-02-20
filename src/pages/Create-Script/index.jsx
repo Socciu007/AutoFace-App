@@ -69,6 +69,17 @@ const CreateScript = () => {
   const [activeCategory, setActiveCategory] = useState(1);
   const [openProfiles, setOpenProfiles] = useState(false);
   const navigate = useNavigate();
+
+  // if (!window.electron.ipcRenderer.eventNames().includes('ipc-logger')) {
+  //   window.electron.ipcRenderer.on('ipc-logger', (...params) => {
+  //     if (params[0].length == 3 && params[0][1] && params[0][2].includes('Update name:')) {
+  //       const name = params[0][2].split('|')[0].replace('Update name:', '');
+  //       const friend = params[0][2].split('|')[1] ? params[0][2].split('|')[1] : '';
+  //       updateAccount(params[0][1], name, friend);
+  //     } else console.log('CreateScript' + params[0]);
+  //   });
+  // }
+
   useEffect(() => {
     setDefaultScript();
   }, [state]);

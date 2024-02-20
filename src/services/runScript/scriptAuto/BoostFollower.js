@@ -199,7 +199,7 @@ export const boostFollower = (setting) => {
   };
     let boostObj = ${strSetting}
     try {
-      const isLive = await checkIsLive(page);
+      const isLive = checkIsLive(page);
       if (isLive) {
         await returnHomePage(page);
         await delay(getRandomIntBetween(3000, 5000));

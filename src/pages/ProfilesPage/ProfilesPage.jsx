@@ -736,20 +736,22 @@ const ProfilesPage = () => {
   };
 
   const handleSaveTag = async (row) => {
-    const newData = [...dataProfiles];
-    const index = newData.findIndex((profile) => row.id === profile.id);
-    const profile = newData[index];
-    profile.tag = row.tag.split(',').map((e) => {
-      if (e && e.length && !e.startsWith('#')) {
-        return '#' + e;
-      }
-      return e;
-    });
-    newData.splice(index, 1, {
-      ...profile,
-    });
-    setDataProfiles(newData);
-    await dbSetLocally(storageProfiles, newData);
+    if (row && row.tag && row.tag.length) {
+      const newData = [...dataProfiles];
+      const index = newData.findIndex((profile) => row.id === profile.id);
+      const profile = newData[index];
+      profile.tag = row.tag.split(',').map((e) => {
+        if (e && e.length && !e.startsWith('#')) {
+          return '#' + e;
+        }
+        return e;
+      });
+      newData.splice(index, 1, {
+        ...profile,
+      });
+      setDataProfiles(newData);
+      await dbSetLocally(storageProfiles, newData);
+    }
   };
   const components = {
     body: {

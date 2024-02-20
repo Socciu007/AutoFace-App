@@ -365,7 +365,7 @@ const createPost = async (page, CreatePost) => {
     //Check obj start < end ? random(start,end) : random(end,start)
     let CreatePost = await checkObject(createPostObj);
     // check page is live return -1, return 1, return 0
-    const checkPageIsLive = await checkIsLive(page);
+    const checkPageIsLive = checkIsLive(page);
     if (!checkPageIsLive) return false;
     await returnHomePage(page);
     await delay(2000);

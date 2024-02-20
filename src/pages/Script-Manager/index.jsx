@@ -28,7 +28,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setScriptAuto } from '../../redux/scriptAutoSlice';
 import PopupRunScript from '../../components/PopupHome/PopupRunScript/PopupRunScript';
 import { EditableCell, EditableRow } from '../../components/EditableTable/EditableTable';
-import defaultDisplayScriptManager from '../../resources/defaultDisplayScriptManager.json';
 const ScriptManager = () => {
   const navigate = useNavigate();
 
@@ -74,12 +73,12 @@ const ScriptManager = () => {
     background: 'rgba(255,255,255,0.9)',
   };
   const [isSystem, setIsSystem] = useState(false);
-  const [isRunScript, setIsRunScript] = useState(false);
   const [contentArray, setContentArray] = useState([]);
   const [listScript, setListScript] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null);
   const [itemSelect, setItemSelect] = useState(null);
   const [nameCoppy, setNameCoppy] = useState('');
+  const [isRunScript, setIsRunScript] = useState(false);
   const profiles = useSelector((state) => state.profile);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -105,7 +104,7 @@ const ScriptManager = () => {
 
       newArr[index] = {
         ...newArr[index],
-        status: total.length > 0 ? { done: scriptDone.length, total: total.length } : {},
+        status: total.length > 0 ? { done: scriptDone.length, total: total.length } : null,
       };
     });
     return newArr;
@@ -259,21 +258,23 @@ const ScriptManager = () => {
   });
 
   const handleSaveTag = async (row) => {
-    const newScript = [...listScripts];
-    const index = newScript.findIndex((script) => row.id === script.id);
-    const script = newScript[index];
-    script.tag = row.tag.split(',').map((e) => {
-      if (e && e.length && !e.startsWith('#')) {
-        return '#' + e;
-      }
-      return e;
-    });
-    newScript.splice(index, 1, {
-      ...script,
-    });
-    setContentArray(newScript);
-    setListScript(newScript);
-    await dbSetLocally(storageScripts, JSON.stringify(newScript));
+    if (row && row.tag && row.tag.length) {
+      const newScript = [...listScripts];
+      const index = newScript.findIndex((script) => row.id === script.id);
+      const script = newScript[index];
+      script.tag = row.tag.split(',').map((e) => {
+        if (e && e.length && !e.startsWith('#')) {
+          return '#' + e;
+        }
+        return e;
+      });
+      newScript.splice(index, 1, {
+        ...script,
+      });
+      setContentArray(newScript);
+      setListScript(newScript);
+      await dbSetLocally(storageScripts, JSON.stringify(newScript));
+    }
   };
   const components = {
     body: {
@@ -305,8 +306,8 @@ const ScriptManager = () => {
       dataIndex: 'status',
       sorter: (a, b) => {
         if (!a.isPin && !b.isPin) {
-          const nameA = a.name.toUpperCase();
-          const nameB = b.name.toUpperCase();
+          const nameA = a.status.toUpperCase();
+          const nameB = b.status.toUpperCase();
           if (nameA < nameB) {
             return -1;
           }
@@ -316,16 +317,26 @@ const ScriptManager = () => {
           return 0;
         }
       },
+      width: 180,
       render: (status, script) => {
         return (
           <>
             <div
               onClick={() => {
+                dispatch(setScriptAuto(script.name));
                 setItemSelect(script);
                 setIsRunScript(true);
               }}
             >
-              {status}
+              {status && status.total ? (
+                <div className="statusRunning">
+                  <img src={running} alt="run profile icon" />
+                  <span>
+                    <span className="profileRunning">{status.done}</span>
+                    <span className="totalProfile"> / {status.total} profiles</span>
+                  </span>
+                </div>
+              ) : null}
             </div>
             <PopupRunScript
               openRunScript={itemSelect && itemSelect.id === script.id && isRunScript}
@@ -334,7 +345,6 @@ const ScriptManager = () => {
           </>
         );
       },
-      width: 180,
     },
     {
       title: 'Tag',
@@ -502,7 +512,7 @@ const ScriptManager = () => {
                     handleButtonClick(true);
                   }}
                 >
-                  <img src={yourScriptBlue} alt="icon your script blue" className="icon" />
+                  <img src={yourScriptBlue} alt="icon your script blue" />
                   <p>Your Scripts</p>
                   {!isSystem ? <img src={iconCheck} alt="icon check" /> : ''}
                 </div>
@@ -512,7 +522,7 @@ const ScriptManager = () => {
                     handleButtonClick(false);
                   }}
                 >
-                  <img src={systemScript} alt="icon system scripts" className="icon" />
+                  <img src={systemScript} alt="icon system scripts" />
                   <p>System’s Scripts</p>
                   {isSystem ? <img src={iconCheck} alt="icon check" /> : ''}
                 </div>

@@ -88,7 +88,7 @@ const returnPost = async (page, id, fbid) => {
         //Check obj start < end ? random(start,end) : random(end,start)
         let post = await checkObject(DeletePost);
         // check page is live reutrn -1, return 1, return 0
-        const isLive = await checkIsLive(page);
+        const isLive = checkIsLive(page);
         logger('Tình trạng trang web:'+ isLive);
         if (!isLive) return -1;
         await returnHomePage(page);

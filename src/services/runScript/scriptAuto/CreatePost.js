@@ -238,7 +238,7 @@ export const createPost = (setting) => {
     //Check obj start < end ? random(start,end) : random(end,start)
     let CreatePost = await checkObject(object);
     // check page is live reutrn -1, return 1, return 0
-    const checkPageIsLive = await checkIsLive(page);
+    const checkPageIsLive = checkIsLive(page);
     if (!checkPageIsLive) return -1;
     await returnHomePage(page);
     await delay(2000);
