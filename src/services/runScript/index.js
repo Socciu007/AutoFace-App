@@ -779,14 +779,14 @@ const convertToFunc = (script) => {
       return `{
         ${viewNoti(script)}
       }`;
-    case 'replyMsg':
-      return `{
-        ${replyMsg(script)}
-      }`;
-    case 'sendMsg':
-      return `{
-        ${sendMsg(script)}
-      }`;
+    // case 'replyMsg':
+    //   return `{
+    //     ${replyMsg(script)}
+    //   }`;
+    // case 'sendMsg':
+    //   return `{
+    //     ${sendMsg(script)}
+    //   }`;
     case 'deletePost':
       return `{
         ${deletePost(script)}
