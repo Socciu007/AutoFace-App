@@ -34,16 +34,16 @@ export const addFriend = (setting) => {
     }, selector);
 
     if (buttonPosition === null) {
-        console.log('Button not found.');
+        logger('Button not found.');
         return false;
     } else if (buttonPosition.top < 0) {
-        console.log('Button is above the screen.');
+        logger('Button is above the screen.');
         return true;
     } else if (!buttonPosition.isVisible) {
-        console.log('Button is in the viewport, but not visible.');
+        logger('Button is in the viewport, but not visible.');
         return false;
     } else {
-        console.log('Button is in the viewport and visible.');
+        logger('Button is in the viewport and visible.');
         return false;
     }
 }
@@ -58,7 +58,10 @@ export const addFriend = (setting) => {
       mutualSelector =
         "#screen-root > div > div:nth-child(2) > div> div.m.bg-s4 > div:nth-child(3)";
       mutualElement = await getElements(page, mutualSelector, 10);
-      if (!mutualElement) return false;
+      if (!mutualElement){
+        logger("Debug" + "|" + "Add friend" + "|" + "Can't find friend button");
+        return false;
+      } 
     }
       let isAddMutual = false;
       for (let i = 0; i < mutualElement.length; i++) {
@@ -114,7 +117,7 @@ export const addFriend = (setting) => {
       }
       return isAddMutual;
     } catch (error) {
-      logger(error);
+      logger("Debug" + "|" + "Add friend" + "|" + "Add friend by suggest failed!");
       return false;
     }
   };
@@ -131,7 +134,10 @@ export const addFriend = (setting) => {
     logger("số lần scroll " + temp);
     await scrollSmooth(page, temp);
     let addBtns = await getElements(page, addFriendSelector, 5);
-    if (!addBtns) return false;
+    if (!addBtns) {
+      logger("Debug" + "|" + "Add friend" + "|" + "Can't find any add buttons!");
+      return false;
+    }
     let isAdd = false;
     let arr = [];
     let newIndex = -1;
@@ -158,7 +164,10 @@ export const addFriend = (setting) => {
         logger("push to array");
       }
     }
-     if (arr.length == 0) return false;
+     if (arr.length == 0){
+      logger("Debug" + "|" + "Add friend" + "|" + "Can't click friend element!");
+      return false;
+    } 
     let randomIndex = getRandomInt(arr.length);
     await delay(1000);
     await clickElement(arr[randomIndex]);
@@ -180,7 +189,7 @@ export const addFriend = (setting) => {
     isAdd = true;
     return isAdd;
   } catch (error) {
-    logger(error);
+    logger("Debug" + "|" + "Add friend" + "|" + "Add friend by keyword failed!");
     return false;
   }
 };
@@ -349,7 +358,7 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
     };
     } catch (error) {
      logger("Debug" + "|" + "Add friend by UID List" + "|" + "Comment failed!");
-      return false;
+     return false;
     }
   };
   const randomLike = async (page, addFriendObject, likeBtns, temp) => {
