@@ -125,16 +125,14 @@ const answerGroupQuestion = async (page, joinGroupObject) => {
   try {
      let isAnswer = false;
     // click radio button
-    const buttons = await getElements(page, '[class="native-text"]');
-    for (let i = 0; i < buttons.length; i++) {
-      const btn = await page.evaluate((el) => {
-        return el.innerHTML;
-      }, buttons[i]);
-      if (btn.includes("󰞰")) {
-        await clickElement(buttons[i]);
-        logger("success");
+    const radioBtns = await findBtn(page, "󰞰");
+    for(let i = 0 ; i < radioBtns.length; i++){
+      if(i % 2 == 0){
+        await scrollSmoothIfElementNotExistOnScreen(page,radioBtns[i]);
+        await delay(1000);
+        await clickElement(radioBtns[i]);
         isAnswer = true;
-        break;
+        await delay(1000);
       }
     }
     await delay(2000);
