@@ -289,7 +289,7 @@ const ScriptManager = () => {
   const columns = [
     {
       title: '#',
-      width: 30,
+      width: 50,
       render: (text, record, index) => <div style={{ textAlign: 'center' }}>{index + 1}</div>,
     },
     {
