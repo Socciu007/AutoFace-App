@@ -62,7 +62,7 @@ export const boostLikeComment = (setting) => {
         }
       }
     } catch (error) {
-      logger("Runtest: No can access UID or Post UID of user");
+      logger("Debug|BoostLikeComment|No can access UID or Post UID of user");
     }
   };
   
@@ -90,7 +90,7 @@ export const boostLikeComment = (setting) => {
         logger("Done view post");
       }
     } catch (error) {
-      logger('Runtest: ' + error.message);
+      logger('Debug|BoostLikeComment|' + error.message);
     }
   };
   
@@ -112,7 +112,7 @@ export const boostLikeComment = (setting) => {
         logger("Liked enough posts");
       }
     } catch (error) {
-      logger('Runtest: ' + error.message);
+      logger('Debug|BoostLikeComment|' + error.message);
     }
   };
   
@@ -181,7 +181,7 @@ export const boostLikeComment = (setting) => {
         logger("No comment content or enough comment");
       }
     } catch (error) {
-      logger(error.message);
+      logger('Debug|BoostLikeComment|' + error.message);
     }
   };
   
@@ -238,7 +238,7 @@ export const boostLikeComment = (setting) => {
         logger("shared enough posts");
       }
     } catch (error) {
-      logger(error.message);
+      logger('Debug|BoostLikeComment|' + error.message);
     }
   };
   
@@ -419,7 +419,7 @@ export const boostLikeComment = (setting) => {
         logger("cant navigate");
       }
     } catch (error) {
-      logger(error.message);
+      logger('Debug|BoostLikeComment|' + error.message);
     }
   };
     let boostObj = ${strSetting}
@@ -437,7 +437,7 @@ export const boostLikeComment = (setting) => {
         }
       }
     } catch (error) {
-      logger('Runtest: ' + error.message);
+      logger('Debug|BoostLikeComment|' + error.message);
       return;
     }
       `;

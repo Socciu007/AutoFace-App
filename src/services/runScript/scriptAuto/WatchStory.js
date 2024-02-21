@@ -339,12 +339,12 @@ export const watchStory = (setting) => {
         }
         logger("Watch story complete");
       } else {
-        logger("You need log in");
+        logger("Debug|WatchStory|You need log in");
         return;
       }
     }
   } catch (error) {
-    logger(error.message);
+    logger('Debug|WatchStory|' + error.message);
   }
   `;
 };

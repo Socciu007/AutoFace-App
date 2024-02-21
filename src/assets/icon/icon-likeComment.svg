@@ -1,23 +1,7 @@
-<svg width="37" height="30" viewBox="0 0 37 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="Like, comment" filter="url(#filter0_d_174_13014)">
-<path id="Vector" d="M9.44444 1V21M9.44444 1L13.8889 5.44444M9.44444 1L5 5.44444" stroke="#01162B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Vector_2" fill-rule="evenodd" clip-rule="evenodd" d="M27.3727 2.14248C27.7241 1.08845 26.9396 0 25.8285 0C25.3028 0 24.8094 0.25387 24.5039 0.681634L21.8329 4.42105H19.6316L19 5.05263V11.3684L19.6316 12H28.8641L30.804 8.12025C31.3801 6.96817 31.1542 5.57676 30.2435 4.66594C29.6822 4.10475 28.9211 3.78947 28.1274 3.78947H26.8237L27.3727 2.14248ZM22.7895 5.25507L25.5318 1.41583C25.6003 1.32003 25.7108 1.26316 25.8285 1.26316C26.0773 1.26316 26.2531 1.50696 26.1743 1.74302L25.0712 5.05263H28.1274C28.5861 5.05263 29.026 5.23486 29.3502 5.55916C29.8766 6.08547 30.0071 6.8896 29.6742 7.55537L28.0835 10.7368H22.7895V5.25507ZM21.5263 10.7368H20.2632V5.68421H21.5263V10.7368Z" fill="#01162B"/>
-<g id="Group 520">
-<path id="Line 90" d="M20 15H29" stroke="#01162B" stroke-width="1.5" stroke-linecap="round"/>
-<path id="Line 91" d="M20 18H32" stroke="#01162B" stroke-width="1.5" stroke-linecap="round"/>
-<path id="Line 92" d="M20 21H31" stroke="#01162B" stroke-width="1.5" stroke-linecap="round"/>
-</g>
-</g>
-<defs>
-<filter id="filter0_d_174_13014" x="0" y="0" width="36.75" height="30" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-<feFlood flood-opacity="0" result="BackgroundImageFix"/>
-<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
-<feOffset dy="4"/>
-<feGaussianBlur stdDeviation="2"/>
-<feComposite in2="hardAlpha" operator="out"/>
-<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
-<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_174_13014"/>
-<feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_174_13014" result="shape"/>
-</filter>
-</defs>
+<svg width="29" height="22" viewBox="0 0 29 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M5.44444 1V21M5.44444 1L9.88889 5.44444M5.44444 1L1 5.44444" stroke="#01162B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M23.3727 2.14248C23.7241 1.08845 22.9396 0 21.8285 0C21.3028 0 20.8094 0.25387 20.5039 0.681634L17.8329 4.42105H15.6316L15 5.05263V11.3684L15.6316 12H24.8641L26.804 8.12025C27.3801 6.96817 27.1542 5.57676 26.2435 4.66594C25.6822 4.10475 24.9211 3.78947 24.1274 3.78947H22.8237L23.3727 2.14248ZM18.7895 5.25507L21.5318 1.41583C21.6003 1.32003 21.7108 1.26316 21.8285 1.26316C22.0773 1.26316 22.2531 1.50696 22.1743 1.74302L21.0712 5.05263H24.1274C24.5861 5.05263 25.026 5.23486 25.3502 5.55916C25.8766 6.08547 26.0071 6.8896 25.6742 7.55537L24.0835 10.7368H18.7895V5.25507ZM17.5263 10.7368H16.2632V5.68421H17.5263V10.7368Z" fill="#01162B"/>
+<path d="M16 15H25" stroke="#01162B" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M16 18H28" stroke="#01162B" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M16 21H27" stroke="#01162B" stroke-width="1.5" stroke-linecap="round"/>
 </svg>

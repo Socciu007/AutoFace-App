@@ -85,7 +85,7 @@ export const viewNoti = (setting) => {
       }
       await delay(getRandomIntBetween(1000, 3000));
     } catch (error) {
-      logger('Debug|WatchVideo|Error scroll video');
+      logger('Debug|ViewNotification|Error scroll video');
     }
   };
   const checkExistElementOnScreens = async (JSSelector) => {
@@ -116,7 +116,7 @@ export const viewNoti = (setting) => {
         logger('cant navigate');
       }
     } catch (error) {
-      logger('Error navigating to URL:'+ error.message);
+      logger('Debug|ViewNotification|' + error.message);
     }
   };
 
@@ -256,14 +256,14 @@ export const viewNoti = (setting) => {
           await scrollSmoothIfElementNotExistOnScreens(notiSelectors[index]);
           await delay(getRandomIntBetween(1000, 3000));
           await notiSelectors[index].evaluate((b) => b.click());
-          logger("Da doc thong bao");
+          logger("Read notification");
           return true;
         } else if (notiSelectors1.length > 0) {
           const index = getRandomInt(notiSelectors1.length);
           await scrollSmoothIfElementNotExistOnScreens(notiSelectors1[index]);
           await delay(getRandomIntBetween(1000, 3000));
           await notiSelectors1[index].evaluate((b) => b.click());
-          logger("Da doc thong bao");
+          logger("Read notification");
           return true;
         } else {
           return false;
@@ -359,11 +359,12 @@ export const viewNoti = (setting) => {
           notiCount++;
         }
       } else {
-        logger("You need log in");
+        logger("Debug|ViewNotification|You need log in");
+        return;
       }
     }
   } catch (error) {
-    logger(error.message);
+    logger('Debug|ViewNotification|' + error.message);
   }
     `;
 };
