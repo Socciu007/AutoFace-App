@@ -43,7 +43,12 @@ export const boostLikeComment = (setting) => {
             "Page Not Available",
             "h2.native-text > span.f2"
           );
-          if (notAvailableBtn) {
+          const notAvailableBtn1 = await findBtn(
+            page,
+            "Không thể hiển thị",
+            "h2.native-text > span.f2"
+          );
+          if (notAvailableBtn || notAvailableBtn1) {
             arrID.push(id);
             continue;
           }
@@ -103,6 +108,8 @@ export const boostLikeComment = (setting) => {
           "div.fl.ac.am > button.native-text > span"
         );
         if (likeBtn) {
+          await scrollSmoothIfNotExistOnScreens0(likeBtn);
+          await delay(3000);
           await clickElement(likeBtn);
           logger("Done like post");
         } else {
@@ -195,7 +202,7 @@ export const boostLikeComment = (setting) => {
           "div.fl.ac.am > button.native-text > span"
         );
         await delay(getRandomIntBetween(3000, 5000));
-        await scrollSmoothIfNotExistOnScreens0(page, shareBtn);
+        await scrollSmoothIfNotExistOnScreens0(shareBtn);
         await delay(getRandomIntBetween(3000, 5000));
         if (shareBtn) {
           await shareBtn.evaluate(b => b.click());
