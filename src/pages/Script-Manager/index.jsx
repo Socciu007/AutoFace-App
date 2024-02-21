@@ -262,12 +262,15 @@ const ScriptManager = () => {
       const newScript = [...listScripts];
       const index = newScript.findIndex((script) => row.id === script.id);
       const script = newScript[index];
-      script.tag = row.tag.split(',').map((e) => {
-        if (e && e.length && !e.startsWith('#')) {
-          return '#' + e;
-        }
-        return e;
-      });
+      script.tag = row.tag
+        .toString()
+        .split(',')
+        .map((e) => {
+          if (e && e.length && !e.startsWith('#')) {
+            return '#' + e;
+          }
+          return e;
+        });
       newScript.splice(index, 1, {
         ...script,
       });
@@ -354,20 +357,16 @@ const ScriptManager = () => {
         return <Input name="tag" value={tag} className="-tag-script" onChange={(e) => e.target.value}></Input>;
       },
       sorter: (a, b) => {
-        if (a.tag && !a.isPin && !b.isPin) {
-          if (a.tag.length !== b.tag.length) {
-            return a.tag.length - b.tag.length;
-          } else {
-            const nameA = a.tag[0].toUpperCase();
-            const nameB = b.tag[0].toUpperCase();
-            if (nameA < nameB) {
-              return -1;
-            }
-            if (nameA > nameB) {
-              return 1;
-            }
-            return 0;
+        if (!a.isPin && !b.isPin) {
+          const tagsA = a.tag ? a.tag.join(',').toLowerCase() : '';
+          const tagsB = b.tag ? b.tag.join(',').toLowerCase() : '';
+          if (tagsA < tagsB) {
+            return -1;
           }
+          if (tagsA > tagsB) {
+            return 1;
+          }
+          return 0;
         }
       },
       width: 150,

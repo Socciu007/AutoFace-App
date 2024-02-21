@@ -85,7 +85,6 @@ const PopupChooseProfile = ({ openProfiles, handleCloseProfiles, designScript })
   const columns = [
     {
       title: '#',
-      // dataIndex: 'key',
       width: 30,
       render: (text, record, index) => <div>{index + 1}</div>,
     },
@@ -102,8 +101,8 @@ const PopupChooseProfile = ({ openProfiles, handleCloseProfiles, designScript })
       width: 120,
       sorter: (a, b) => {
         if (!a.isPin && !b.isPin) {
-          const nameA = a.name.toUpperCase();
-          const nameB = b.name.toUpperCase();
+          const nameA = a.uid.toUpperCase();
+          const nameB = b.uid.toUpperCase();
           if (nameA < nameB) {
             return -1;
           }
@@ -189,12 +188,12 @@ const PopupChooseProfile = ({ openProfiles, handleCloseProfiles, designScript })
       },
       sorter: (a, b) => {
         if (!a.isPin && !b.isPin) {
-          const nameA = a.name.toUpperCase();
-          const nameB = b.name.toUpperCase();
-          if (nameA < nameB) {
+          const tagsA = a.tag ? a.tag.join(',').toLowerCase() : '';
+          const tagsB = b.tag ? b.tag.join(',').toLowerCase() : '';
+          if (tagsA < tagsB) {
             return -1;
           }
-          if (nameA > nameB) {
+          if (tagsA > tagsB) {
             return 1;
           }
           return 0;

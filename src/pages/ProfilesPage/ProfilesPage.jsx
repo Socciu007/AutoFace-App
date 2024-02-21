@@ -502,19 +502,8 @@ const ProfilesPage = () => {
         },
         sorter: (a, b) => {
           if (!a.isPin && !b.isPin) {
-            const nameA = a.proxy.host.toUpperCase();
-            const nameB = b.proxy.host.toUpperCase();
-            if (nameA == nameB) {
-              const portA = a.proxy.port.toUpperCase();
-              const portB = b.proxy.port.toUpperCase();
-              if (portA < portB) {
-                return -1;
-              }
-              if (portA > portB) {
-                return 1;
-              }
-              return 0;
-            }
+            const nameA = generateProxyStr(a.proxy, false).toUpperCase();
+            const nameB = generateProxyStr(b.proxy, false).toUpperCase();
             if (nameA < nameB) {
               return -1;
             }
@@ -537,19 +526,15 @@ const ProfilesPage = () => {
         },
         sorter: (a, b) => {
           if (!a.isPin && !b.isPin) {
-            if (a.tag.length !== b.tag.length) {
-              return a.tag.length - b.tag.length;
-            } else {
-              const nameA = a.tag[0].toUpperCase();
-              const nameB = b.tag[0].toUpperCase();
-              if (nameA < nameB) {
-                return -1;
-              }
-              if (nameA > nameB) {
-                return 1;
-              }
-              return 0;
+            const tagsA = a.tag ? a.tag.join(',').toLowerCase() : '';
+            const tagsB = b.tag ? b.tag.join(',').toLowerCase() : '';
+            if (tagsA < tagsB) {
+              return -1;
             }
+            if (tagsA > tagsB) {
+              return 1;
+            }
+            return 0;
           }
         },
       });
@@ -748,12 +733,15 @@ const ProfilesPage = () => {
       const newData = [...dataProfiles];
       const index = newData.findIndex((profile) => row.id === profile.id);
       const profile = newData[index];
-      profile.tag = row.tag.split(',').map((e) => {
-        if (e && e.length && !e.startsWith('#')) {
-          return '#' + e;
-        }
-        return e;
-      });
+      profile.tag = row.tag
+        .toString()
+        .split(',')
+        .map((e) => {
+          if (e && e.length && !e.startsWith('#')) {
+            return '#' + e;
+          }
+          return e;
+        });
       newData.splice(index, 1, {
         ...profile,
       });
