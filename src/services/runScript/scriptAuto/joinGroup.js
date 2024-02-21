@@ -29,7 +29,23 @@ export const joinGroup = (setting) => {
       logger(err);
     }
   };
-
+    const findBtns = async (page, content) => {
+    try {
+      let arr = [];
+      const buttons = await getElements(page, '[class="native-text"]');
+      for (let i = 0; i < buttons.length; i++) {
+        const btn = await page.evaluate((el) => {
+          return el.innerHTML;
+        }, buttons[i]);
+        if (btn.includes(content)) {
+          arr.push( buttons[i]);
+        }
+      }
+      return arr;
+    } catch (err) {
+      logger(err);
+    }
+  };
 const scrollAndJoin = async (page, selector, randomDelay, joinGroupObject) => {
   try {
     // scroll before click
@@ -125,7 +141,7 @@ const answerGroupQuestion = async (page, joinGroupObject) => {
   try {
      let isAnswer = false;
     // click radio button
-    const radioBtns = await findBtn(page, "󰞰");
+    const radioBtns = await findBtns(page, "󰞰");
     for(let i = 0 ; i < radioBtns.length; i++){
       if(i % 2 == 0){
         await scrollSmoothIfElementNotExistOnScreen(page,radioBtns[i]);
