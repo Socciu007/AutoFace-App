@@ -126,9 +126,19 @@ export const viewNoti = (setting) => {
       const isHaveUrlGroup = await checkUrlPage(page, "m.facebook.com/groups");
       const isHaveUrlStory = await checkUrlPage(page, "m.facebook.com/story");
       const isHaveUrlPost = await checkUrlPage(page, "/posts");
+      const isHaveUrlFriends = await checkUrlPage(page, "/friends");
       if (pages.length > lengthPage) {
         await pages[pages.length].close();
         await delay(getRandomIntBetween(3000, 5000));
+      } else if (isHaveUrlFriends) {
+        await clickElementRandom(
+          page,
+          'div[data-comp-id="6"]',
+          0,
+          "https://m.facebook.com/notifications/"
+        );
+        logger("return prev page");
+        return true;
       } else if (isHaveUrlGroup || isHaveUrlStory || isHaveUrlPost) {
         const JSSelector = await page.$(
           "div.m > div.m > div.fl.ac > div.native-text > span.f3"
