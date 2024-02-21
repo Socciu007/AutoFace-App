@@ -38,7 +38,7 @@ export const viewNoti = (setting) => {
     }
   };
   const scroll = async page => {
-    let randomScrollTime = getRandomIntBetween(3, 7);
+    let randomScrollTime = getRandomIntBetween(3, 5);
     try {
       while (randomScrollTime > 0) {
         await page.evaluate(async () => {
