@@ -329,6 +329,9 @@ try {
         if(result == -2){
           break;
         }
+        if(Math.random() < 0.3){
+          await delay(randomDelay);
+        }
     }
     let endTime = Date.now();
     scrollTime -= endTime - startTime;

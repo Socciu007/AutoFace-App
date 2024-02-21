@@ -28,7 +28,7 @@ const tagFriendsRandomly = async (page, numberFriendTag) => {
     if (!listFriend) {
       selector = "div.m.bg-s4[data-action-id]";
       listFriend = await getElements(page, selector, 3);
-      if (listFriend.length < 1) return false;
+      if (!listFriend) return false;
     }
     let temp = [];
     for (let i = 0; i < numberFriendTag * 2; i++) {
@@ -40,16 +40,8 @@ const tagFriendsRandomly = async (page, numberFriendTag) => {
       } else {
         continue;
       }
-      if (!(await isElementVisible(page, listFriend[randomFriend]))) {
-        await listFriend[randomFriend].evaluate((el) => {
-          el.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-            inline: "nearest",
-          });
-        });
-        await delay(2000);
-      }
+      await scrollSmoothIfElementNotExistOnScreen(page, listFriend[randomFriend]);
+      await delay(1000);
       await clickElement(listFriend[randomFriend]);
       logger("Tag thành công");
       count++;
@@ -91,16 +83,8 @@ const tagFriend = async (page, CreatePost) => {
     );
     if (numberFriendTag > 0) {
       const tagBtn = await findBtn(page, "󰤇");
-      if (!(await isElementVisible(page, tagBtn))) {
-        await tagBtn.evaluate((el) => {
-          el.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-            inline: "nearest",
-          });
-        });
-        await delay(2000);
-      }
+      await scrollSmoothIfElementNotExistOnScreen(page, tagBtn);
+      await delay(1000);
       await clickElement(tagBtn);
       await delay(2000);
       if (CreatePost.typeTag === "UIDL") {
@@ -251,13 +235,25 @@ const createPost = async (page, CreatePost) => {
     );
     logger("Cần đăng " + numberOfPost + " bài");
     for (let i = 0; i < numberOfPost * 2; i++) {
+      
       // click post area in group
-      const postAreaSelector =
+      let postAreaSelector =
         "#screen-root > div > div:nth-child(2) > div:nth-child(6) > div:nth-child(2) > div";
-      const postArea = await getElement(page, postAreaSelector);
-      if (!postArea) return false;
-      await delay(5000);
-      await scrollSmoothIfNotExistOnScreen(page, postAreaSelector);
+      let postArea = await getElement(page, postAreaSelector, 2);
+      if (!postArea) {
+         postAreaSelector =
+        "#screen-root > div > div:nth-child(2) > div:nth-child(6) > div:nth-child(1) > div:nth-child(2)";
+        postArea = await getElement(page, postAreaSelector, 2);
+        if(!postArea) {
+          postArea = await findBtn(page, "...");
+          if(postArea == false) {
+            logger("Debug" + "|" + "Create post group" + "|" + "Can't find post area!");
+            return false;
+          }
+        }
+      };
+      await delay(3000);
+      await scrollSmoothIfElementNotExistOnScreen(page, postArea);
       await delay(1000);
       await clickElement(postArea);
       await delay(1000);
@@ -285,6 +281,21 @@ const createPost = async (page, CreatePost) => {
           }
           isFillInput = true;
         } else {
+          await delay(2000);
+          const rs = await inputContent(page, CreatePost);
+          if (rs) {
+            logger("Nhập xong nội dung !");
+          } else {
+            logger("Không thể nhập nội dung");
+            break;
+          }
+          
+        
+          await delay(2000);
+          const scrollX = await page.evaluate(() => window.scrollX);
+          await page.mouse.click(scrollX , 100);
+          await delay(1000);
+
           // Using background
           const background = await getElements(
             page,
@@ -310,13 +321,7 @@ const createPost = async (page, CreatePost) => {
           }
           await clickElement(background[randomBackground]);
           await delay(2000);
-          const rs = await inputContent(page, CreatePost);
-          if (rs) {
-            logger("Nhập xong nội dung !");
-          } else {
-            logger("Không thể nhập nội dung");
-            break;
-          }
+          isFillInput = true;
         }
         if (isFillInput == false) break;
         // Click Post content
@@ -340,8 +345,8 @@ const createPost = async (page, CreatePost) => {
           await delay(2000);
         }
         if (PostBtn) {
+          await delay(1000);
           await clickElement(PostBtn);
-          logger("Da click post");
           count++;
           logger("Đăng thành công " + count + " bài");
           isCreatePost = true;
