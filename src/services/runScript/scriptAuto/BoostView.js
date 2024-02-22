@@ -17,7 +17,7 @@ export const boostView = (setting) => {
         await delay(getRandomIntBetween(3000, 5000));
       }
     } catch (error) {
-      logger(error.message);
+      logger('Debug|BoostViewVideo|' + error.message);
     }
   };
   
@@ -51,7 +51,7 @@ export const boostView = (setting) => {
         logger("Done view video");
       }
     } catch (error) {
-      logger(error.message);
+      logger('Debug|BoostViewVideo|' + error.message);
     }
   };
   
@@ -85,7 +85,7 @@ export const boostView = (setting) => {
         logger("cant navigate");
       }
     } catch (error) {
-      logger('Error navigating to URL:', error.message);
+      logger('Debug|BoostViewVideo|' + error.message);
     }
   };
   
@@ -124,7 +124,7 @@ export const boostView = (setting) => {
         // }
       }
     } catch (error) {
-      logger(error.message);
+      logger('Debug|BoostViewVideo|' + error.message);
     }
       `;
 };

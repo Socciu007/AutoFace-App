@@ -25,13 +25,13 @@ export const postInteract = (setting) => {
   const returnProfilePage = async (page, id, fbid) => {
     const url = await page.url();
     if (
-      url === 'https://m.facebook.com/story.php/?id='+id+'&story_fbid='+fbid ||
+      url === 'https://m.facebook.com/story.php/?id=' + id + '&story_fbid=' + fbid ||
       url.includes('https://m.facebook.com/profile.php/')
     ) {
       logger('URL is correct');
     } else {
       logger('Redirect to homepage profile');
-      await page.goto('https://m.facebook.com/story.php/?id='+id+'&story_fbid='+fbid , {
+      await page.goto('https://m.facebook.com/story.php/?id=' + id + '&story_fbid=' + fbid, {
         waitUntil: 'networkidle2',
       });
     }
@@ -57,8 +57,8 @@ export const postInteract = (setting) => {
       let randomDelay = getRandomIntBetween(3 * 1000, 5 * 1000);
       let likeBtns = await findBtn(page, '󱍸');
       if (!likeBtns) {
-        logger("Debug" + "|" + "Post interaction" + "|" + "Can't find like button.");
-
+        logger('Debug' + '|' + 'Post interaction' + '|' + "Can't find like button.");
+  
         return false;
       }
       await scrollSmoothIfElementNotExistOnScreen(page, likeBtns);
@@ -78,8 +78,8 @@ export const postInteract = (setting) => {
       let randomDelay = getRandomIntBetween(3 * 1000, 5 * 1000);
       let shareBtns = await findBtn(page, '󰍺 ');
       if (!shareBtns) {
-        logger("Debug" + "|" + "Post interaction" + "|" + "Can't find share button.");
-
+        logger('Debug' + '|' + 'Post interaction' + '|' + "Can't find share button.");
+  
         return false;
       }
       await scrollSmoothIfElementNotExistOnScreen(page, shareBtns);
@@ -112,8 +112,8 @@ export const postInteract = (setting) => {
   
     let commentBtns = await findBtn(page, '󰍹 ');
     if (!commentBtns) {
-      logger("Debug" + "|" + "Post interaction" + "|" + "Can't find comment button.");
-
+      logger('Debug' + '|' + 'Post interaction' + '|' + "Can't find comment button.");
+  
       return false;
     }
   
@@ -121,7 +121,7 @@ export const postInteract = (setting) => {
     await delay(5000);
   
     let isClick = false;
-    await commentBtns[i].evaluate((b) => b.click());
+    await clickElement(commentBtns);
     await delay(randomDelay);
     // find comment area
     const commentAreaSelector = 'textarea[type="text"]';
@@ -175,6 +175,44 @@ export const postInteract = (setting) => {
     logger('Cần share', numShares, 'bài');
     let numComments = getRandomIntBetween(post.commentStart, post.commentEnd);
     logger('Cần comment', numComments, 'bài');
+
+    let arrLike = [];
+    let arrComment = [];
+    let arrShare = [];
+
+    while (numLikes > 0) {
+      const index = getRandomIntBetween(0, randomPost);
+      if (arrLike.includes(index)) {
+        continue;
+      }
+      arrLike.push(index);
+      numLikes--;
+      logger('numLikes', numLikes);
+    }
+    logger('arrLike', arrLike);
+
+    while (numShares > 0) {
+      const index = getRandomIntBetween(0, randomPost);
+      if (arrShare.includes(index)) {
+        continue;
+      }
+      arrShare.push(index);
+      numShares--;
+      logger('numShares', numShares);
+    }
+    logger('arrShare', arrShare);
+
+    while (numComments > 0) {
+      const index = getRandomIntBetween(0, randomPost);
+      if (arrComment.includes(index)) {
+        continue;
+      }
+      arrComment.push(index);
+      numComments--;
+      logger('numcomment', numComments);
+    }
+    logger('arrComment', arrComment);
+
     while (randomViewTime > 0 && randomPost > 0 && post.UID.length > 0) {
       let randomLink = getRandomIntBetween(0, post.UID.length);
       logger('randomLink', randomLink);
@@ -187,7 +225,7 @@ export const postInteract = (setting) => {
       }
       arrLink.push(randomLink);
       const [id, fbid] = post.UID[randomLink].split('|');
-      await page.goto('https://m.facebook.com/story.php/?id='+id+'&story_fbid='+fbid );
+      await page.goto('https://m.facebook.com/story.php/?id=' + id + '&story_fbid=' + fbid);
       await delay(2000);
       randomPost--;
 
@@ -203,21 +241,14 @@ export const postInteract = (setting) => {
 
       const startTime = Date.now();
 
-      const shouldLike = getRandomInt(3) == 0;
-      logger('shouldLike', shouldLike);
-      if (post.isLiked == true && shouldLike == true && numLikes > 0) {
+      if (post.isLiked == true && arrLike.includes(randomLink)) {
         try {
           await returnProfilePage(page, id, fbid);
           const result = await randomLike(page);
           if (result) {
-            numLikes--;
-            logger('Số bài cần like còn lại ', numLikes, ' bài');
+            logger('Đã like bài');
           } else {
             logger('Like không thành công');
-          }
-          if (numLikes <= 0) {
-            logger('Da like du');
-            numLikes = 0;
           }
           await delay(getRandomIntBetween(2, 5) * 1000);
         } catch (error) {
@@ -226,21 +257,14 @@ export const postInteract = (setting) => {
       }
       await delay(getRandomIntBetween(4, 8) * 1000);
 
-      const shouldShare = getRandomInt(3) == 0;
-      logger('shouldShare', shouldShare);
-      if (post.isShare == true && shouldShare == true && numShares > 0) {
+      if (post.isShare == true && arrShare.includes(randomLink)) {
         try {
           await returnProfilePage(page, id, fbid);
           const result = await randomShare(page);
           if (result) {
-            numShares--;
-            logger('Số bài cần share còn lại ', numShares, ' bài');
+            logger('Da share bai');
           } else {
             logger('Share không thành công');
-          }
-          if (numShares <= 0) {
-            logger('Da share du');
-            numShares = 0;
           }
           await delay(getRandomIntBetween(3, 5) * 1000);
         } catch (error) {
@@ -249,11 +273,9 @@ export const postInteract = (setting) => {
       }
       await delay(getRandomIntBetween(4, 8) * 1000);
 
-      const shouldComment = getRandomInt(3) == 0;
-      logger('shouldComment', shouldComment);
-      if (post.isComment == true && post.isText == true && shouldComment == true && numComments > 0) {
+      if (post.isComment == true && post.isText == true && arrComment.includes(randomLink)) {
         if (!post.text.length) {
-          logger("Debug" + "|" + "Post interaction" + "|" + "Can't comment with empty text.");
+          logger('Debug' + '|' + 'Post interaction' + '|' + "Can't comment with empty text.");
 
           return 0;
         }
@@ -261,14 +283,9 @@ export const postInteract = (setting) => {
           await returnProfilePage(page, id, fbid);
           const result = await randomComment(page, post);
           if (result) {
-            numComments--;
-            logger('Số bài comment còn lại ', numComments, ' bài');
+            logger('Da comment');
           } else {
             logger('Comment không thành công');
-          }
-          if (numComments <= 0) {
-            logger('Da comment du');
-            numComments = 0;
           }
           await delay(getRandomIntBetween(3, 5) * 1000);
         } catch (error) {

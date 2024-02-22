@@ -38,7 +38,7 @@ export const viewNoti = (setting) => {
     }
   };
   const scroll = async page => {
-    let randomScrollTime = getRandomIntBetween(3, 7);
+    let randomScrollTime = getRandomIntBetween(3, 5);
     try {
       while (randomScrollTime > 0) {
         await page.evaluate(async () => {
@@ -85,7 +85,7 @@ export const viewNoti = (setting) => {
       }
       await delay(getRandomIntBetween(1000, 3000));
     } catch (error) {
-      logger('Debug|WatchVideo|Error scroll video');
+      logger('Debug|ViewNotification|Error scroll video');
     }
   };
   const checkExistElementOnScreens = async (JSSelector) => {
@@ -116,7 +116,7 @@ export const viewNoti = (setting) => {
         logger('cant navigate');
       }
     } catch (error) {
-      logger('Error navigating to URL:'+ error.message);
+      logger('Debug|ViewNotification|' + error.message);
     }
   };
 
@@ -126,9 +126,19 @@ export const viewNoti = (setting) => {
       const isHaveUrlGroup = await checkUrlPage(page, "m.facebook.com/groups");
       const isHaveUrlStory = await checkUrlPage(page, "m.facebook.com/story");
       const isHaveUrlPost = await checkUrlPage(page, "/posts");
+      const isHaveUrlFriends = await checkUrlPage(page, "/friends");
       if (pages.length > lengthPage) {
         await pages[pages.length].close();
         await delay(getRandomIntBetween(3000, 5000));
+      } else if (isHaveUrlFriends) {
+        await clickElementRandom(
+          page,
+          'div[data-comp-id="6"]',
+          0,
+          "https://m.facebook.com/notifications/"
+        );
+        logger("return prev page");
+        return true;
       } else if (isHaveUrlGroup || isHaveUrlStory || isHaveUrlPost) {
         const JSSelector = await page.$(
           "div.m > div.m > div.fl.ac > div.native-text > span.f3"
@@ -256,14 +266,14 @@ export const viewNoti = (setting) => {
           await scrollSmoothIfElementNotExistOnScreens(notiSelectors[index]);
           await delay(getRandomIntBetween(1000, 3000));
           await notiSelectors[index].evaluate((b) => b.click());
-          logger("Da doc thong bao");
+          logger("Read notification");
           return true;
         } else if (notiSelectors1.length > 0) {
           const index = getRandomInt(notiSelectors1.length);
           await scrollSmoothIfElementNotExistOnScreens(notiSelectors1[index]);
           await delay(getRandomIntBetween(1000, 3000));
           await notiSelectors1[index].evaluate((b) => b.click());
-          logger("Da doc thong bao");
+          logger("Read notification");
           return true;
         } else {
           return false;
@@ -359,11 +369,12 @@ export const viewNoti = (setting) => {
           notiCount++;
         }
       } else {
-        logger("You need log in");
+        logger("Debug|ViewNotification|You need log in");
+        return;
       }
     }
   } catch (error) {
-    logger(error.message);
+    logger('Debug|ViewNotification|' + error.message);
   }
     `;
 };

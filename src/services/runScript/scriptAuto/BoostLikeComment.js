@@ -43,7 +43,12 @@ export const boostLikeComment = (setting) => {
             "Page Not Available",
             "h2.native-text > span.f2"
           );
-          if (notAvailableBtn) {
+          const notAvailableBtn1 = await findBtn(
+            page,
+            "Không thể hiển thị",
+            "h2.native-text > span.f2"
+          );
+          if (notAvailableBtn || notAvailableBtn1) {
             arrID.push(id);
             continue;
           }
@@ -62,7 +67,7 @@ export const boostLikeComment = (setting) => {
         }
       }
     } catch (error) {
-      logger("Runtest: No can access UID or Post UID of user");
+      logger("Debug|BoostLikeComment|No can access UID or Post UID of user");
     }
   };
   
@@ -90,7 +95,7 @@ export const boostLikeComment = (setting) => {
         logger("Done view post");
       }
     } catch (error) {
-      logger('Runtest: ' + error.message);
+      logger('Debug|BoostLikeComment|' + error.message);
     }
   };
   
@@ -103,6 +108,8 @@ export const boostLikeComment = (setting) => {
           "div.fl.ac.am > button.native-text > span"
         );
         if (likeBtn) {
+          await scrollSmoothIfNotExistOnScreens0(likeBtn);
+          await delay(3000);
           await clickElement(likeBtn);
           logger("Done like post");
         } else {
@@ -112,7 +119,7 @@ export const boostLikeComment = (setting) => {
         logger("Liked enough posts");
       }
     } catch (error) {
-      logger('Runtest: ' + error.message);
+      logger('Debug|BoostLikeComment|' + error.message);
     }
   };
   
@@ -181,7 +188,7 @@ export const boostLikeComment = (setting) => {
         logger("No comment content or enough comment");
       }
     } catch (error) {
-      logger(error.message);
+      logger('Debug|BoostLikeComment|' + error.message);
     }
   };
   
@@ -195,7 +202,7 @@ export const boostLikeComment = (setting) => {
           "div.fl.ac.am > button.native-text > span"
         );
         await delay(getRandomIntBetween(3000, 5000));
-        await scrollSmoothIfNotExistOnScreens0(page, shareBtn);
+        await scrollSmoothIfNotExistOnScreens0(shareBtn);
         await delay(getRandomIntBetween(3000, 5000));
         if (shareBtn) {
           await shareBtn.evaluate(b => b.click());
@@ -238,7 +245,7 @@ export const boostLikeComment = (setting) => {
         logger("shared enough posts");
       }
     } catch (error) {
-      logger(error.message);
+      logger('Debug|BoostLikeComment|' + error.message);
     }
   };
   
@@ -419,7 +426,7 @@ export const boostLikeComment = (setting) => {
         logger("cant navigate");
       }
     } catch (error) {
-      logger(error.message);
+      logger('Debug|BoostLikeComment|' + error.message);
     }
   };
     let boostObj = ${strSetting}
@@ -437,7 +444,7 @@ export const boostLikeComment = (setting) => {
         }
       }
     } catch (error) {
-      logger('Runtest: ' + error.message);
+      logger('Debug|BoostLikeComment|' + error.message);
       return;
     }
       `;

@@ -33,7 +33,7 @@ export const boostFollower = (setting) => {
         await delay(delayTime);
       }
     } catch (error) {
-      logger(error.message);
+      logger('Debug|BoostFollower|' + error.message);
     }
   };
   
@@ -61,7 +61,7 @@ export const boostFollower = (setting) => {
       }
       await delay(getRandomIntBetween(5000, 10000));
     } catch (error) {
-      logger(error.message);
+      logger('Debug|BoostFollower|' + error.message);
     }
   };
   
@@ -83,7 +83,7 @@ export const boostFollower = (setting) => {
         }
       }
     } catch (error) {
-      logger(error.message);
+      logger('Debug|BoostFollower|' + error.message);
     }
   };
   
@@ -163,7 +163,7 @@ export const boostFollower = (setting) => {
         logger("User is not select like or liked page");
       }
     } catch (error) {
-      logger(error.message);
+      logger('Debug|BoostFollower|' + error.message);
     }
   };
   
@@ -210,7 +210,7 @@ export const boostFollower = (setting) => {
         }
       }
     } catch (error) {
-      logger(error.message);
+      logger('Debug|BoostFollower|' + error.message);
     }
       `;
 };
