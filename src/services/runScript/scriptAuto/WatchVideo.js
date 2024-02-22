@@ -205,16 +205,20 @@ export const watchVideo = (setting) => {
       }
     } catch (error) {
       logger('Debug|WatchVideo|No access to video');
+      return;
     }
   };
   
   const scroll = async page => {
-    let randomScrollTime = getRandomIntBetween(7, 15);
+    let randomScrollTime = getRandomIntBetween(7, 10);
     try {
       while (randomScrollTime > 0) {
         await page.evaluate(async () => {
           const getRandomIntBetween = (min, max) => {
             return Math.floor(Math.random() * (max - min + 1)) + min;
+          };
+          const delay = async time => {
+            return new Promise(resolve => setTimeout(resolve, time));
           };
           const smoothScrollByStep = (targetPosition, duration) => {
             const startPosition = window.scrollY;
@@ -248,7 +252,7 @@ export const watchVideo = (setting) => {
               targetPosition
             );
             smoothScrollByStep(nextPosition, durationPerStep);
-            await new Promise(resolve => setTimeout(resolve, durationPerStep));
+            await delay(getRandomIntBetween(1000, 5000));
             currentPosition = nextPosition;
           }
         });
@@ -369,6 +373,25 @@ export const watchVideo = (setting) => {
       return false;
     }
   };
+
+  const checkDuplicate = async (arrID, ID, numsPostPerID) => {
+    // Đếm số lần xuất hiện của ID
+    const idCount = {};
+  
+    for (let i = 0; i < arrID.length; i++) {
+      const currentID = arrID[i];
+      // Tang số lần xuất hiện
+      idCount[currentID] = (idCount[currentID] || 0) + 1;
+  
+      // Neu vuot qua so bai post
+      if (idCount[currentID] > numsPostPerID && currentID === ID) {
+        return true;
+      }
+    }
+  
+    // Neu chua vuot qua
+    return false;
+  };
   
   let watchVideoObj = ${strSetting}
   try {
@@ -456,6 +479,7 @@ export const watchVideo = (setting) => {
       }
       await delay(getRandomIntBetween(3000, 5000));
       await scroll(page);
+      let arrIndexVideo = [];
       while (
         countVideo < numsVideo &&
         countLike < numsVideo &&
@@ -463,13 +487,15 @@ export const watchVideo = (setting) => {
         countComment < numsVideo
       ) {
         await scroll(page);
-        await delay(getRandomIntBetween(3000, 5000));
-        // const playElement = await page.$$(
-        //   '[class="spinner animated inline-video-spinner hidden"]'
-        // );
         const playVideoElement = await page.$$("div.inline-video-container");
         if (playVideoElement.length > 0) {
-          const index = getRandomIntBetween(7, playVideoElement.length);
+          let index = getRandomIntBetween(5, playVideoElement.length);
+          let isDuplicate = await checkDuplicate(arrIndexVideo, index, 0);
+          while (isDuplicate) {
+            index = getRandomIntBetween(5, playVideoElement.length);
+            isDuplicate = await checkDuplicate(arrIndexVideo, index, 0);
+          }
+          arrIndexVideo.push(index);
           await goToVideo(page, playVideoElement[index]);
           const timeViewVideo = getRandomIntBetween(
             watchVideoObj.delayTimeStart * 1000,
@@ -489,7 +515,7 @@ export const watchVideo = (setting) => {
                   await delay(getRandomIntBetween(3000, 5000));
                   await clickElement(likeBtn);
                   countLike++;
-                  logger("Done like video");
+                  logger("Done like video and count liked video " + countLike);
                 } else {
                   logger("No can find like button");
                 }
@@ -525,6 +551,7 @@ export const watchVideo = (setting) => {
                     await delay(getRandomIntBetween(3000, 5000));
                     await clickElement(returnBtn);
                     countComment++;
+                    logger("Count comment video " + countComment);
                   } else {
                     logger("No comment button")
                   }
@@ -571,6 +598,7 @@ export const watchVideo = (setting) => {
                     await delay(getRandomIntBetween(3000, 5000));
                     await clickElement(returnBtn);
                     countComment++;
+                    logger("Count comment video " + countComment);
                   } else {
                     logger("No can find comment button");
                   }
@@ -611,22 +639,21 @@ export const watchVideo = (setting) => {
                     "div.m > div.fl.ar.am > button.native-text.rtl > span.f2"
                   );
                   await clickElement(postBtn);
-                  logger("Done share video");
                 } else {
                   const postBtn = await page.$(
                     "div.fl.ac.am > button.native-text > span.f2"
                   );
                   await clickElement(postBtn);
-                  logger("share complete");
                 }
                 countShare++;
+                logger("Done share video and cound shared video " + countShare);
               }
             } catch (err) {
               logger("Debug|WatchVideo|No can find share button");
               return;
             }
           }
-          //return watch
+          //return watch video
           await delay(getRandomIntBetween(3000, 5000));
           await clickElementRandom(
             page,
@@ -635,6 +662,7 @@ export const watchVideo = (setting) => {
           );
           await delay(getRandomIntBetween(3000, 5000));
           countVideo++;
+          logger("Count watched video " + countVideo);
         }
       }
       logger("Complete watch video");
