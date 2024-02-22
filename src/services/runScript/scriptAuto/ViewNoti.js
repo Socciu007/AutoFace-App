@@ -154,13 +154,16 @@ export const viewNoti = (setting) => {
         logger("return prev page");
         return true;
       } else {
+        // const JSSelectors = await page.$$(
+        //   "div.m > div.m > div.native-text > span.f2"
+        // );
         const JSSelectors = await page.$$(
-          "div.m > div.m > div.native-text > span.f2"
+          "div.m > div.m > div.fl.ac > div.native-text > span.f3"
         );
-        const isExist = await checkExistElementOnScreens(JSSelectors[2]);
+        const isExist = await checkExistElementOnScreens(JSSelectors[0]); //0 or 2
         if (isExist) {
           await delay(getRandomIntBetween(3000, 5000));
-          await JSSelectors[2].evaluate(b => b.click());
+          await JSSelectors[0].evaluate(b => b.click()); //0 or 2
         } else {
           await delay(getRandomIntBetween(3000, 5000));
           await navigateToUrl(page, "https://m.facebook.com/notifications/");

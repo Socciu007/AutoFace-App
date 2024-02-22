@@ -65,13 +65,15 @@ const PopupDebug = ({ openDebug, handleCloseDebug, debugs }) => {
                 </div>
               </div>
             </div>
-            <div className="">
+            <div className="-layout-debug__container__debugs">
               {debugs && debugs.length ? (
                 debugs.map((e, index) => (
-                  <div key={index}>
-                    <p>{e.name}</p>
-                    <p>{e.script}</p>
-                    <p>{e.err}</p>
+                  <div className="contentDebugs" key={index}>
+                    <p style={{ fontWeight: '700' }}>{e.name}</p>
+                    {'   '}
+                    <p style={{ color: 'gray' }}>{e.script}</p>
+                    {'   '}
+                    <p style={{ color: 'red' }}>{e.err}</p>
                   </div>
                 ))
               ) : (
