@@ -73,7 +73,7 @@ export const getBrowserData = (id) =>
       window.electron.ipcRenderer.once('ipc-get-browser-data' + id, resolve);
       setTimeout(() => {
         resolve({ success: false, error: 'Timeout!' });
-      }, API_TIMEOUT);
+      }, 15000);
     } catch (error) {
       resolve({ success: false, error });
     }
@@ -125,7 +125,7 @@ export const getProxy = (proxy, id) =>
       window.electron.ipcRenderer.once(`ipc-convert-proxy${id ? id : ''}`, resolve);
       setTimeout(() => {
         resolve({ success: false, error: 'Timeout!' });
-      }, API_TIMEOUT);
+      }, 10000);
     } catch (error) {
       resolve({ success: false, error });
     }
@@ -164,7 +164,7 @@ export const getInformation = () =>
       window.electron.ipcRenderer.once(`ipc-get-information`, resolve);
       setTimeout(() => {
         resolve({ success: false, error: 'Timeout!' });
-      }, API_TIMEOUT);
+      }, 10000);
     } catch (error) {
       resolve({ success: false, error });
     }

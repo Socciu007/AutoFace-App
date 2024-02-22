@@ -853,8 +853,9 @@ const ProfilesPage = () => {
 
   const searchProfiles = (text) => {
     if (text == '') {
+      const newData = dataProfiles.sort((x, y) => Number(y.isPin) - Number(x.isPin));
       setDataSearch(
-        dataProfiles.map((e, index) => {
+        newData.map((e, index) => {
           return { ...e, key: index + 1 };
         }),
       );

@@ -68,17 +68,19 @@ const PopupDebug = ({ openDebug, handleCloseDebug, debugs }) => {
             <div className="-layout-debug__container__debugs">
               {debugs && debugs.length ? (
                 debugs.map((e, index) => (
-                  <div className="contentDebugs" key={index}>
+                  <div key={index}>
                     <p style={{ fontWeight: '700' }}>{e.name}</p>
-                    {'   '}
-                    <p style={{ color: 'gray' }}>{e.script}</p>
-                    {'   '}
-                    <p style={{ color: 'red' }}>{e.err}</p>
+                    <div className="contentDebugs" key={index}>
+                      <p style={{ color: 'gray' }}>{e.script ? e.script + ':' : ''}</p>
+                      <p style={{ color: 'red', marginLeft: 4 }}>{e.err}</p>
+                    </div>
                   </div>
                 ))
               ) : (
-                <div>
-                  <img className="imgNoBug" src={img_debug} alt="img debug" />
+                <div
+                  style={{ alignItems: 'center', justifyContent: 'center', display: 'flex', flexDirection: 'column' }}
+                >
+                  <img style={{ width: 200 }} className="imgNoBug" src={img_debug} alt="img debug" />
                   <p className="noBug">No bugs</p>
                 </div>
               )}
