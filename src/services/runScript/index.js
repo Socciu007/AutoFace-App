@@ -426,10 +426,11 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
               const stepSize =
                 getRandomIntBetween(200, 600) *
                 (currentPosition > targetPosition ? -1 : 1);
-              const durationPerStep = getRandomIntBetween(500, 2000);
+              const durationPerStep = getRandomIntBetween(1000, 2000);
               const nextPosition = currentPosition + stepSize;
     
               smoothScrollByStep(nextPosition, durationPerStep);
+              
               await new Promise((resolve) => setTimeout(resolve, durationPerStep));
               currentPosition = window.scrollY;
             }
