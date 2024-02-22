@@ -65,17 +65,18 @@ const PopupDebug = ({ openDebug, handleCloseDebug, debugs }) => {
                 </div>
               </div>
             </div>
-            <div className="scrollable-container">
+            <div className="">
               {debugs && debugs.length ? (
                 debugs.map((e, index) => (
                   <div key={index}>
-                    <p>{e}</p>
+                    <p>{e.name}</p>
+                    <p>{e.script}</p>
+                    <p>{e.err}</p>
                   </div>
                 ))
               ) : (
                 <div>
                   <img className="imgNoBug" src={img_debug} alt="img debug" />
-
                   <p className="noBug">No bugs</p>
                 </div>
               )}

@@ -56,22 +56,34 @@ const ProfilesPage = () => {
 
   if (!window.electron.ipcRenderer.eventNames().includes('ipc-logger')) {
     window.electron.ipcRenderer.on('ipc-logger', (...params) => {
-      if (params[0].length == 3 && params[0][1] && params[0][2].includes('Update name:')) {
+      if (params[0].length == 3 && params[0][1] && params[0][2] && params[0][2].includes('Update name:')) {
         const name = params[0][2].split('|')[0].replace('Update name:', '');
         const friend = params[0][2].split('|')[1] ? params[0][2].split('|')[1] : '';
         updateAccount(params[0][1], name, friend);
       }
 
       if (params[0][1] && params[0][1].toString().includes('Debug|')) {
-        const script = params[0][1].split('|')[1] ? params[0][1].split('|')[1] : '';
-        const err = params[0][1].split('|')[2] ? params[0][1].split('|')[2] : '';
-        const debug = script !== '' ? script + ': ' + err : err;
-        dispatch(setDebug(debug));
+        updateDebugLog(params[0][0], params[0][1]);
       }
 
       console.log(params[0]);
     });
   }
+
+  const updateDebugLog = async (uid, log) => {
+    const script = log.split('|')[1] ? log.split('|')[1] : '';
+    const err = log.split('|')[2] ? log.split('|')[2] : '';
+    const profiles = await dbGetLocally(storageProfiles);
+    const profile = profiles.find((e) => e.uid == uid);
+    const name = profile ? (profile.nameAccount ? profile.nameAccount : uid) : '';
+    dispatch(
+      setDebug({
+        name,
+        err,
+        script,
+      }),
+    );
+  };
 
   const updateAccount = async (id, accountName, friends) => {
     const newData = await dbGetLocally(storageProfiles);

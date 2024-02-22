@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 export const debugSlice = createSlice({
   name: 'debug',
-  initialState: '',
+  initialState: [{ name: 'Duy Kiên', script: 'NewFeeds', err: 'Log lỗi' }],
   reducers: {
     setDebug: (state, action) => {
       return [...state, action.payload];
