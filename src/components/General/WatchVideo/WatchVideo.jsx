@@ -20,11 +20,30 @@ const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
   const [values, setValues] = useState(DefaultSciptSettings['watchVideo']);
   const [textContent, setTextContent] = useState('');
 
+  // const { getRootProps, getInputProps } = useDropzone({
+  //   maxFiles: 10,
+  //   noClick: true,
+  //   accept: {
+  //     'image/png': ['.png', '.jpg', '.jpeg'],
+  //   },
+  //   onDrop: (acceptedFiles) => {
+  //     const newFiles = acceptedFiles.map((file) => {
+  //       console.log(file);
+  //       return file.path;
+  //     });
+
+  //     setValues({ ...values, photos: [...values.photos, ...newFiles] });
+  //   },
+  // });
   const { getRootProps, getInputProps } = useDropzone({
     maxFiles: 10,
     noClick: true,
     accept: {
-      'image/png': ['.png', '.jpg', '.jpeg'],
+      'image/png': ['.png'],
+      'image/jpeg': ['.jpg', '.jpeg'],
+      'image/bmp': ['.bmp'],
+      'image/gif': ['.gif'],
+      'image/tiff': ['.tif', '.tiff'],
     },
     onDrop: (acceptedFiles) => {
       const newFiles = acceptedFiles.map((file) => {
