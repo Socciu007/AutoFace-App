@@ -428,11 +428,14 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
           let temp = 0;
           for (let i = 0; i < numPosts * 2; i++) {
             try {
-             const likeBtns = await findBtn(page, "󰍸");
-              if (!likeBtns || likeBtns.length == 0) {
-               logger("Debug" + "|" + "addFriendByUIDList" + "|" + "Can't find any like buttons");
-               break;
-              };
+             let likeBtns = await findBtn(page, "󰍸");
+          if (!likeBtns || likeBtns.length == 0) {
+            likeBtns = await findBtn(page, "󰤥");
+            if(!likeBtns || likeBtns.length == 0){
+            logger("Debug" + "|" + "Add friend" + "|" + "Can't find any like buttons");
+            break;
+            }
+          };
               if(likeBtns.length < numPosts) numPosts = likeBtns.length;
               logger("có " + likeBtns.length + " nút like");
               const objLike = await randomLike(page, addFriendObject, likeBtns,temp);
@@ -472,10 +475,13 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
             logger("Debug"+"|"+"Add friend"+"|"+"Page is not alive!")
             return false;
           }
-              const commentBtns = await findBtn(page, "󰍹");
+              let commentBtns = await findBtn(page, "󰍹");
               if (!commentBtns || commentBtns.length == 0) {
-                logger("Debug" + "|" + "addFriendByUIDList" + "|" + "Can't find any comment buttons");
+               commentBtns = await findBtn(page, "󰤦");
+              if (!commentBtns || commentBtns.length == 0) {
+                logger("Debug" + "|" + "Add friend" + "|" + "Can't find any comment buttons");
                 return false;
+              }
               };
               logger("có " + commentBtns.length + " nút comment");
               if(commentBtns.length < numPosts) numPosts = commentBtns.length;
@@ -727,21 +733,14 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
   };
   const clickReturn = async (page) => {
   try {
-    let returnSelector =
-      "#screen-root > div > div.m.fixed-container.top > div > div.m.bg-s3 > div:nth-child(1)";
-    let returnBtn = await getElement(page, returnSelector);
-    await delay(1000);
-    if (!returnBtn) {
-      returnSelector =
-      "#screen-root > div > div.m.fixed-container.top > div > div.m.bg-s4 > div:nth-child(1)";
-      returnBtn = await getElement(page, returnSelector);
-      if (!returnBtn) {
+    let returnBtn = await findBtn(page, "󱜳");
+
+    if (!returnBtn || returnBtn.length == 0) {
         await page.goto(
         "https://m.facebook.com/friends/?target_pivot_link=friends"
       );
-      }
     }
-    await clickElement(returnBtn);
+    await clickElement(returnBtn[0]);
     await delay(1000);
   } catch (error) {
     logger(error);
@@ -799,6 +798,7 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
   
     if (addFriendObject.option == 'keywords') {
       let count = 0;
+      let arr = [];
       await returnHomePage(page);
       // click and search
       const searchSelector =
@@ -810,7 +810,14 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
       await clickElement(searchBtn);
       await delay(randomDelay);
       // Enter text
+      for(let i = 0; i < addFriendObject.text.length * 2; i++){
       const randomIndex = getRandomInt(addFriendObject.text.length);
+      let index = arr.indexOf(randomIndex);
+      if(index == -1){
+        arr.push(randomIndex);
+      } else {
+        continue;
+      }
       const keyword = addFriendObject.text[randomIndex];
       await page.keyboard.type(keyword, { delay: 100 });
       await delay(1000);
@@ -823,6 +830,15 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
       if (!peopleBtn) return false;
       await clickElement(peopleBtn);
       await delay(randomDelay);
+      const glassIcon = await findBtn(page, "󰛼");
+      if(glassIcon.length > 0){
+        await page.goto("https://m.facebook.com/search/");
+        await delay(2000);
+      } else {
+        break;
+      }
+      }
+      
       for (let i = 0; i < numsAdd * 2; i++) {
         try {
           const isLive = checkIsLive(page);

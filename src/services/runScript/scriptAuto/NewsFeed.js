@@ -55,10 +55,19 @@ export const newFeed = (setting) => {
         const randomIndex = getRandomIntBetween(temp, shareBtns.length);
         logger(randomIndex);
         await scrollSmoothIfElementNotExistOnScreen(page,shareBtns[randomIndex]);
+         temp = randomIndex;
         await delay(1000);
-        await clickElement(shareBtns[randomIndex])
-        temp = randomIndex;
-        await delay(randomDelay);
+              const rd = getRandomIntBetween(0,100);
+          if(rd < 50){
+              await clickElement(shareBtns[randomIndex])
+          }
+          else{
+            return {
+              isClick: false,
+              newIndex: temp
+            };
+          }
+      await delay(getRandomIntBetween(1000,3000));
           // choose share option
         const buttons = await getElements(page, '[class="native-text"]');
         for (let i = 0; i < buttons.length; i++) {
@@ -103,9 +112,18 @@ export const newFeed = (setting) => {
       logger(randomIndex);
       await scrollSmoothIfElementNotExistOnScreen(commentBtns[randomIndex]);
       await delay(1000);
-      await clickElement(commentBtns[randomIndex]);
       temp = randomIndex;
-        await delay(2000);
+      const rd = getRandomIntBetween(0,100);
+          if(rd < 50){
+             await clickElement(commentBtns[randomIndex]);
+          }
+          else{
+            return {
+              isClick: false,
+              newIndex: temp
+            };
+          }
+      await delay(getRandomIntBetween(1000,3000));
         // find comment area
         const commentAreaSelector = 'textarea[type="text"]';
         const commentArea = await getElement(page, commentAreaSelector, 10);
@@ -211,10 +229,13 @@ try {
         try {
           await returnHomePage(page);
           await delay(2000);
-          const likeBtns = await findBtn(page, "󰍸");
-          if (!likeBtns) {
+          let likeBtns = await findBtn(page, "󰍸");
+          if (!likeBtns || likeBtns.length == 0) {
+            likeBtns = await findBtn(page, "󰤥");
+            if(!likeBtns || likeBtns.length == 0){
             logger("Debug" + "|" + "NewsFeed" + "|" + "Can't find any like buttons");
             break;
+            }
           };
           logger("có " + likeBtns.length + " nút like")
           const objLike = await randomLike(page, news, likeBtns,temp);
@@ -223,6 +244,7 @@ try {
             logger('Đã like được '+ count + ' bài');
           } else {
             logger('Xem bài viết thành công');
+            i--;
           }
           if (count == numLikes) {
             logger('Xong like !');
@@ -248,13 +270,15 @@ try {
       }
       await delay(3000);
       let temp = 2;
-      logger("???");
       for (let i = 0; i < numShares * 2; i++) {
         try {
-          const shareBtns = await findBtn(page, "󰍺");
-          if (!shareBtns) {
-            logger("Debug" + "|" + "NewsFeed" + "|" + "Can't find any share buttons");
-            break;
+          let shareBtns = await findBtn(page, "󰍺");
+          if (!shareBtns || shareBtns.length == 0) {
+            shareBtns = await findBtn(page, "󰤧");
+             if (!shareBtns || shareBtns.length == 0) {
+              logger("Debug" + "|" + "NewsFeed" + "|" + "Can't find any share buttons");
+              break;
+             }
           };
           logger("có " + shareBtns.length + " nút share")
           await returnHomePage(page);
@@ -263,7 +287,8 @@ try {
             count++;
             logger('Đã share được ' + count + ' bài');
           } else {
-            logger('Share không thành công');
+            logger('Xem bài viết thành công');
+            i--;
           }
           if (count == numShares) {
             logger('Xong share!');
@@ -296,10 +321,13 @@ try {
       for (let i = 0; i < numComments * 2; i++) {
         try {
           await returnHomePage(page);
-          const commentBtns = await findBtn(page, "󰍹");
-          if (!commentBtns) {
-            logger("Debug" + "|" + "NewsFeed" + "|" + "Can't find any comment buttons");
-            return false;
+          let commentBtns = await findBtn(page, "󰍹");
+          if (!commentBtns || commentBtns.length == 0) {
+            commentBtns = await findBtn(page, "󰤦");
+             if (!commentBtns || commentBtns.length == 0) {
+              logger("Debug" + "|" + "NewsFeed" + "|" + "Can't find any comment buttons");
+              return false;
+             }
           };
           logger("có " + commentBtns.length + " nút comment");
           
@@ -309,7 +337,8 @@ try {
             count++;
             logger('Đã comment được ' + count + ' bài');
           } else {
-            logger('Comment không thành công');
+            logger('Xem bài viết thành công !');
+            i--;
           }
           if (count == numComments) {
             logger('Xong comment!');
