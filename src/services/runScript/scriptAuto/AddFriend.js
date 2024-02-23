@@ -37,18 +37,20 @@ export const addFriend = (setting) => {
         logger('Button not found.');
         return false;
     } else if (buttonPosition.top < 0) {
-        logger('Button is above the screen.');
         return true;
     } else if (!buttonPosition.isVisible) {
-        logger('Button is in the viewport, but not visible.');
         return false;
     } else {
-        logger('Button is in the viewport and visible.');
         return false;
     }
 }
   const addFriendBySuggest = async (page, addFriendObject) => {
     try {
+      const isLive = checkIsLive(page);
+          if (!isLive) {
+            logger("Debug"+"|"+"Add friend"+"|"+"Page is not alive!")
+            return false;
+      }
       let randomDelay = getRandomIntBetween(addFriendObject.delayTimeStart * 1000, addFriendObject.delayTimeEnd * 1000);
       // check mutual
     let mutualSelector =
@@ -65,6 +67,11 @@ export const addFriend = (setting) => {
     }
       let isAddMutual = false;
       for (let i = 0; i < mutualElement.length; i++) {
+        const isLive = checkIsLive(page);
+          if (!isLive) {
+            logger("Debug"+"|"+"Add friend"+"|"+"Page is not alive!")
+            return false;
+          }
         let randomIndex = getRandomInt(mutualElement.length);
         // add friend
         const addId = await page.evaluate((el) => {
@@ -75,6 +82,8 @@ export const addFriend = (setting) => {
         if (!addBtn) continue;
         if (addFriendObject.isOnlyAddFriend == true) {
           const isMutual = await page.evaluate((el) => {
+            if(!el) return 0;
+            if(!el.childNodes) return 0;
             return el.childNodes.length;
           }, mutualElement[randomIndex]);
           if (isMutual < 2) continue;
@@ -84,13 +93,14 @@ export const addFriend = (setting) => {
             if (Math.random() <= 0.2) { 
               await scrollSmoothIfNotExistOnScreen(page, 'div[data-action-id="'+addId+'"]');
             } else {
+              logger("Không click add!")
               continue;
             }
           } else {
             await scrollSmoothIfNotExistOnScreen(page, 'div[data-action-id="'+addId+'"]');
           }
           
-          await delay(1000);
+          await delay(getRandomIntBetween(2000,4000));
           await clickElement(addBtn);
           await delay(randomDelay);
           isAddMutual = true;
@@ -108,7 +118,7 @@ export const addFriend = (setting) => {
           } else {
             await scrollSmoothIfNotExistOnScreen(page, 'div[data-action-id="'+addId+'"]');
           }
-          await delay(1000);
+          await delay(getRandomIntBetween(2000,4000));
           await clickElement(addBtn);
           await delay(randomDelay);
           isAddMutual = true;
@@ -117,12 +127,17 @@ export const addFriend = (setting) => {
       }
       return isAddMutual;
     } catch (error) {
-      logger("Debug" + "|" + "Add friend" + "|" + "Add friend by suggest failed!");
+      logger(error);
       return false;
     }
   };
   const addFriendByKeyWord = async (page, addFriendObject) => {
   try {
+          const isLive = checkIsLive(page);
+          if (!isLive) {
+            logger("Debug"+"|"+"Add friend"+"|"+"Page is not alive!")
+            return false;
+      }
     let randomDelay = getRandomIntBetween(
       addFriendObject.delayTimeStart * 1000,
       addFriendObject.delayTimeEnd * 1000
@@ -142,6 +157,11 @@ export const addFriend = (setting) => {
     let arr = [];
     let newIndex = -1;
     for (let i = 0; i < addBtns.length; i++) {
+      const isLive = checkIsLive(page);
+          if (!isLive) {
+            logger("Debug"+"|"+"Add friend"+"|"+"Page is not alive!")
+            return false;
+          }
        if (newIndex > i) continue;
       addBtns = await getElements(page, addFriendSelector, 5);
       let randomIndex = getRandomInt(addBtns.length);
@@ -189,16 +209,39 @@ export const addFriend = (setting) => {
     isAdd = true;
     return isAdd;
   } catch (error) {
-    logger("Debug" + "|" + "Add friend" + "|" + "Add friend by keyword failed!");
+    logger(error);
     return false;
   }
 };
-  const addFriendByAcceptRequest = async (page, addFriendObject, mutualElements) => {
+  const addFriendByAcceptRequest = async (page, addFriendObject, mutualElements, listMutualFriend) => {
     try {
+      const isLive = checkIsLive(page);
+          if (!isLive) {
+            logger("Debug"+"|"+"Add friend"+"|"+"Page is not alive!")
+            return false;
+      }
       let randomDelay = getRandomIntBetween(addFriendObject.delayTimeStart * 1000, addFriendObject.delayTimeEnd * 1000);
-      
       let isAdd = false;
+      if (addFriendObject.isOnlyAddFriend == true) {
+          for(let i = 0; i < listMutualFriend.length; i++){
+             let randomMutual = getRandomInt(listMutualFriend.length)
+             let confirmId = await page.evaluate((el) => {
+              return el.parentNode.childNodes[4].getAttribute('data-action-id');
+             }, listMutualFriend[randomMutual]);
+             if (!confirmId) continue;
+             const confirmSelector = 'div[data-action-id="'+confirmId+'"]';
+             const confirmBtn = await getElement(page, confirmSelector, 10);
+             if (!confirmBtn) continue;
+             await scrollSmoothIfElementNotExistOnScreen(page, confirmBtn);
+             await delay(getRandomIntBetween(2000,4000));
+             await clickElement(confirmBtn);
+             await delay(randomDelay);
+             isAdd = true;
+             break;
+          }
+       }
       let arr = [];
+      if (addFriendObject.isOnlyAddFriend == false) {
       for (let i = 0; i < mutualElements.length; i++) {
         let randomIndex = getRandomInt(mutualElements.length);
         let index = arr.indexOf(randomIndex);
@@ -215,29 +258,14 @@ export const addFriend = (setting) => {
         const confirmSelector = 'div[data-action-id="'+confirmId+'"]';
         const confirmBtn = await getElement(page, confirmSelector, 10);
         if (!confirmBtn) continue;
-  
-        if (addFriendObject.isOnlyAddFriend == true) {
-          const isMutual = await page.evaluate((el) => {
-            return el.childNodes.length;
-          }, mutualElements[randomIndex]);
-          if (isMutual < 1) continue;
-          await scrollSmoothIfNotExistOnScreen(page, confirmSelector);
-          await delay(1000);
-          await clickElement(confirmBtn);
-          await delay(randomDelay);
-          isAdd = true;
-          break;
-        }
-  
-        if (addFriendObject.isOnlyAddFriend == false) {
-          await scrollSmoothIfNotExistOnScreen(page, confirmSelector);
-          await delay(1000);
-          await clickElement(confirmBtn);
-          await delay(randomDelay);
-          isAdd = true;
-          break;
-        }
+        await scrollSmoothIfNotExistOnScreen(page, confirmSelector);
+        await delay(getRandomIntBetween(2000,4000));
+        await clickElement(confirmBtn);
+        await delay(randomDelay);
+        isAdd = true;
+        break;
       }
+    }
       return isAdd;
     } catch (error) {
       logger(error);
@@ -347,7 +375,7 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
           isClick: isClick,
           newIndex: temp
         };
-        await delay(2000);
+       await delay(getRandomIntBetween(2000,4000));
         await clickElement(returnBtn);
         isClick = true;
         await delay(3000);
@@ -384,6 +412,11 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
   };
   const addFriendByUIDList = async (page, addFriendObject) => {
     try {
+            const isLive = checkIsLive(page);
+          if (!isLive) {
+            logger("Debug"+"|"+"Add friend"+"|"+"Page is not alive!")
+            return false;
+      }
       let randomDelay = getRandomIntBetween(addFriendObject.delayTimeStart * 1000, addFriendObject.delayTimeEnd * 1000);
       if (addFriendObject.isInteract == true) {
         let numPosts = getRandomIntBetween(addFriendObject.postStart, addFriendObject.postEnd);
@@ -434,6 +467,11 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
   
           for (let i = 0; i < numPosts * 2; i++) {
             try {
+              const isLive = checkIsLive(page);
+          if (!isLive) {
+            logger("Debug"+"|"+"Add friend"+"|"+"Page is not alive!")
+            return false;
+          }
               const commentBtns = await findBtn(page, "󰍹");
               if (!commentBtns || commentBtns.length == 0) {
                 logger("Debug" + "|" + "addFriendByUIDList" + "|" + "Can't find any comment buttons");
@@ -477,6 +515,11 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
   };
  const addFriendByGroupMember = async (page, addFriendObject) => {
   try {
+          const isLive = checkIsLive(page);
+          if (!isLive) {
+            logger("Debug"+"|"+"Add friend"+"|"+"Page is not alive!")
+            return false;
+      }
     let randomDelay = getRandomIntBetween(
       addFriendObject.delayTimeStart * 1000,
       addFriendObject.delayTimeEnd * 1000
@@ -525,6 +568,11 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
     let arr = []
     for (let i = 0; i < numsAdd * 2; i++) {
       // click member
+      const isLive = checkIsLive(page);
+          if (!isLive) {
+            logger("Debug"+"|"+"Add friend"+"|"+"Page is not alive!")
+            return false;
+          }
       const memberSelectors = "#screen-root > div > div:nth-child(2) > div > div > div:nth-child(2)";
       let allMember = await getElements(page, memberSelectors);
       if (!allMember) return false;
@@ -567,6 +615,11 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
 };
  const addFriendByFriendOfFriend = async (page, addFriendObject) => {
   try {
+          const isLive = checkIsLive(page);
+          if (!isLive) {
+            logger("Debug"+"|"+"Add friend"+"|"+"Page is not alive!")
+            return false;
+      }
     let randomDelay = getRandomIntBetween(
       addFriendObject.delayTimeStart * 1000,
       addFriendObject.delayTimeEnd * 1000
@@ -703,6 +756,7 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
     const isLive = checkIsLive(page);
     logger('Tình trạng trang web: ' + isLive);
     if (!isLive) {
+      logger("Debug"+"|"+"Add friend"+"|"+"Page is not alive!")
       return -1;
     }
 
@@ -719,10 +773,15 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
       await clickElement(friendRequestBtn);
       await delay(randomDelay);
             // scroll before click
-      let temp = getRandomIntBetween(10, 13);
+      let temp = getRandomIntBetween(2, 4);
       await scrollSmooth(page,temp)
       for (let i = 0; i < numsAdd * 2; i++) {
         try {
+          const isLive = checkIsLive(page);
+          if (!isLive) {
+            logger("Debug"+"|"+"Add friend"+"|"+"Page is not alive!")
+            return false;
+          }
           await delay(randomDelay);
           const isAddFriend = await addFriendBySuggest(page, addFriendObject);
           if (isAddFriend) {
@@ -766,6 +825,11 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
       await delay(randomDelay);
       for (let i = 0; i < numsAdd * 2; i++) {
         try {
+          const isLive = checkIsLive(page);
+          if (!isLive) {
+            logger("Debug"+"|"+"Add friend"+"|"+"Page is not alive!")
+            return false;
+          }
           const isAddFriend = await addFriendByKeyWord(page, addFriendObject);
           if (isAddFriend) {
             count++;
@@ -804,6 +868,7 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
       await delay(5000);
       const isMutualSelector = '#screen-root > div > div:nth-child(2) > div > div:nth-child(4)';
       const mutualElements = await getElements(page, isMutualSelector);
+      let listMutualFriend = [];
       if (!mutualElements)
       {
           logger("Debug" + "|" + "Add friend by accept request" + "|" + "Add friend failed!");
@@ -812,16 +877,22 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
       if(mutualElements.length < numsAdd) {
         numsAdd = mutualElements.length;
       }
+      
       if (addFriendObject.isOnlyAddFriend == true) { 
         let numsMutual = 0;
+        
         for( let i = 0 ; i < mutualElements.length; i++){
         const isMutual = await page.evaluate((el) => {
+          if(!el) return 0;
+          if(!el.childNodes) return 0;
             return el.childNodes.length;
           }, mutualElements[i]);
           if (isMutual < 1){
             continue;
           } else {
             numsMutual++;
+            listMutualFriend.push(mutualElements[i]);
+            logger("Add mutual to array");
           }
         }
       if(numsMutual == 0) {
@@ -835,14 +906,22 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
       logger("numsAdd " + numsAdd);
       for (let i = 0; i < numsAdd * 2; i++) {
         try {
-          const isAddFriend = await addFriendByAcceptRequest(page, addFriendObject, mutualElements);
+          const isLive = checkIsLive(page);
+          if (!isLive) {
+            logger("Debug"+"|"+"Add friend"+"|"+"Page is not alive!")
+            return false;
+          }
+          const isAddFriend = await addFriendByAcceptRequest(page, addFriendObject, mutualElements, listMutualFriend);
           if (isAddFriend) {
             count++;
             logger('Đã kết bạn với ' + count + ' người bằng accept request');
           } else {
             logger('Kết bạn không thành công');
           }
-          if (count == numsAdd) break;
+          if (count == numsAdd) {
+            await delay(2000);
+            break;
+          };
           await delay(3000);
         } catch (error) {
           logger(error);
@@ -858,6 +937,11 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
       }
       for (let i = 0; i < numsAdd; i++) {
         try {
+          const isLive = checkIsLive(page);
+          if (!isLive) {
+            logger("Debug"+"|"+"Add friend"+"|"+"Page is not alive!")
+            return false;
+          }
           await returnHomePage(page);
           let UID = UIDList[getRandomInt(UIDList.length)];
           await page.goto('https://m.facebook.com/profile.php/?id='+UID);
@@ -890,6 +974,11 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
       await returnHomePage(page);
       for (let i = 0; i < UIDList.length; i++) {
         try {
+          const isLive = checkIsLive(page);
+          if (!isLive) {
+            logger("Debug"+"|"+"Add friend"+"|"+"Page is not alive!")
+            return false;
+          }
           let UID = UIDList[i];
           await page.goto('https://m.facebook.com/groups/' + UID);
           await delay(randomDelay);
@@ -926,6 +1015,11 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
       let index = 0;
       for (let i = 0; i < numsAdd * 2; i++) {
         try {
+          const isLive = checkIsLive(page);
+          if (!isLive) {
+            logger("Debug"+"|"+"Add friend"+"|"+"Page is not alive!")
+            return false;
+          }
           const url = await page.url();
           if (
             url ===
@@ -1012,6 +1106,11 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
       let UIDList = addFriendObject.text;
       for (let i = 0; i < numsAdd * 2; i++) {
         try {
+          const isLive = checkIsLive(page);
+          if (!isLive) {
+            logger("Debug"+"|"+"Add friend"+"|"+"Page is not alive!")
+            return false;
+          }
           await returnHomePage(page);
           await delay(randomDelay);
           let UID = UIDList[getRandomInt(UIDList.length)];
