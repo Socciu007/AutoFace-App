@@ -68,6 +68,7 @@ export const boostLikeComment = (setting) => {
       }
     } catch (error) {
       logger("Debug|BoostLikeComment|No can access UID or Post UID of user");
+      return;
     }
   };
   
@@ -96,6 +97,7 @@ export const boostLikeComment = (setting) => {
       }
     } catch (error) {
       logger('Debug|BoostLikeComment|' + error.message);
+      return;
     }
   };
   
@@ -120,6 +122,7 @@ export const boostLikeComment = (setting) => {
       }
     } catch (error) {
       logger('Debug|BoostLikeComment|' + error.message);
+      return;
     }
   };
   
@@ -189,6 +192,7 @@ export const boostLikeComment = (setting) => {
       }
     } catch (error) {
       logger('Debug|BoostLikeComment|' + error.message);
+      return;
     }
   };
   
@@ -199,19 +203,24 @@ export const boostLikeComment = (setting) => {
         const shareBtn = await findBtn(
           page,
           "󰍺",
-          "div.fl.ac.am > button.native-text > span"
+          '[class="native-text"]'
         );
-        await delay(getRandomIntBetween(3000, 5000));
-        await scrollSmoothIfNotExistOnScreens0(shareBtn);
-        await delay(getRandomIntBetween(3000, 5000));
+        const shareBtn1 = await findBtn(
+          page,
+          "󰍺",
+          '[class="native-text"]'
+        );
         if (shareBtn) {
+          await delay(getRandomIntBetween(3000, 5000));
+          await scrollSmoothIfElementNotExistOnScreens(page, shareBtn);
+          await delay(getRandomIntBetween(3000, 5000));
           await shareBtn.evaluate(b => b.click());
           //click type of share
           await delay(getRandomIntBetween(3000, 5000));
           const typeShareBtn = await findBtn(
             page,
             "󱤱",
-            "div.m > div.fl.ac > div.native-text"
+            '[class="native-text"]'
           );
           await delay(getRandomIntBetween(3000, 5000));
           await clickElement(typeShareBtn);
@@ -240,12 +249,133 @@ export const boostLikeComment = (setting) => {
             await delay(getRandomIntBetween(3000, 5000));
             logger("Done share post");
           }
+        } else if (shareBtn1) {
+          await delay(getRandomIntBetween(3000, 5000));
+          await scrollSmoothIfElementNotExistOnScreens(page, shareBtn1);
+          await delay(getRandomIntBetween(3000, 5000));
+          await shareBtn1.evaluate(b => b.click());
+          //click type of share
+          await delay(getRandomIntBetween(3000, 5000));
+          const typeShareBtn = await findBtn(
+            page,
+            "󱤱",
+            '[class="native-text"]'
+          );
+          await delay(getRandomIntBetween(3000, 5000));
+          await clickElement(typeShareBtn);
+          await delay(getRandomIntBetween(3000, 5000));
+          //click share post
+          const isCheckClick = await checkExistElement(
+            page,
+            "div.m > div.fl.ar.am > button.native-text.rtl > span.f2",
+            3
+          );
+          await delay(getRandomIntBetween(3000, 5000));
+          if (isCheckClick === 1) {
+            const postBtn = await page.$(
+              "div.m > div.fl.ar.am > button.native-text.rtl > span.f2"
+            );
+            await delay(getRandomIntBetween(3000, 5000));
+            await clickElement(postBtn);
+            await delay(getRandomIntBetween(3000, 5000));
+            logger("Done share post");
+          } else {
+            const postBtn = await page.$(
+              "div.fl.ac.am > button.native-text > span.f2"
+            );
+            await delay(getRandomIntBetween(3000, 5000));
+            await clickElement(postBtn);
+            await delay(getRandomIntBetween(3000, 5000));
+            logger("Done share post");
+          }
+        } else {
+          logger('Debug|BoostLikeComment|No have button share');
+          return;
         }
       } else {
         logger("shared enough posts");
       }
     } catch (error) {
       logger('Debug|BoostLikeComment|' + error.message);
+      return;
+    }
+  };
+
+  const scrollSmoothIfElementNotExistOnScreens = async (page, element) => {
+    try {
+      await page.evaluate(async element => {
+        const getRandomIntBetween = (min, max) => {
+          return Math.floor(Math.random() * (max - min + 1)) + min;
+        };
+        const delay = async time => {
+          return new Promise(resolve => setTimeout(resolve, time));
+        };
+        const smoothScrollByStep = async (targetPosition, duration) => {
+          const startPosition = window.scrollY;
+          const distance = targetPosition - startPosition;
+          let startTime = null;
+  
+          const ease = (t, b, c, d) => {
+            t /= d / 2;
+            if (t < 1) return (c / 2) * t * t + b;
+            t--;
+            return (-c / 2) * (t * (t - 2) - 1) + b;
+          };
+  
+          const animation = currentTime => {
+            if (startTime === null) startTime = currentTime;
+            const timeElapsed = currentTime - startTime;
+            const run = ease(timeElapsed, startPosition, distance, duration);
+            window.scrollTo(0, run);
+            if (timeElapsed < duration) requestAnimationFrame(animation);
+          };
+  
+          requestAnimationFrame(animation);
+        };
+  
+        const isInViewport = elem => {
+          const bounding = elem.getBoundingClientRect();
+          return (
+            bounding.top >= 100 &&
+            bounding.left >= 0 &&
+            bounding.bottom - bounding.top <=
+              (window.innerHeight || document.documentElement.clientHeight) &&
+            bounding.right <=
+              (window.innerWidth || document.documentElement.clientWidth)
+          );
+        };
+  
+        if (element && !isInViewport(element)) {
+          const elementRect = element.getBoundingClientRect();
+          const viewportHeight =
+            window.innerHeight || document.documentElement.clientHeight;
+          const targetPosition =
+            window.scrollY +
+            elementRect.top -
+            (elementRect.top > viewportHeight ? viewportHeight : 0);
+  
+          let currentPosition = window.scrollY;
+          while (
+            Math.abs(currentPosition - targetPosition) > 0 &&
+            !isInViewport(element)
+          ) {
+            const stepSize =
+              getRandomIntBetween(200, 700) *
+              (currentPosition > targetPosition ? -1 : 1);
+            const durationPerStep = getRandomIntBetween(500, 2000);
+            const nextPosition = currentPosition + stepSize;
+            await smoothScrollByStep(nextPosition, durationPerStep);
+            await delay(getRandomIntBetween(1000, 2000));
+            currentPosition = window.scrollY;
+          }
+  
+          await delay(getRandomIntBetween(1000, 3000));
+        }
+      }, element);
+      return true;
+    } catch (error) {
+      logger(error);
+      return false;
     }
   };
   
@@ -427,6 +557,7 @@ export const boostLikeComment = (setting) => {
       }
     } catch (error) {
       logger('Debug|BoostLikeComment|' + error.message);
+      return;
     }
   };
     let boostObj = ${strSetting}

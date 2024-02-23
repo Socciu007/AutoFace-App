@@ -89,6 +89,7 @@ export const viewNoti = (setting) => {
       await delay(getRandomIntBetween(1000, 3000));
     } catch (error) {
       logger('Debug|ViewNotification|Error scroll video');
+      return;
     }
   };
   const checkExistElementOnScreens = async (JSSelector) => {
@@ -120,6 +121,7 @@ export const viewNoti = (setting) => {
       }
     } catch (error) {
       logger('Debug|ViewNotification|' + error.message);
+      return;
     }
   };
 
@@ -380,6 +382,7 @@ export const viewNoti = (setting) => {
     }
   } catch (error) {
     logger('Debug|ViewNotification|' + error.message);
+    return;
   }
     `;
 };

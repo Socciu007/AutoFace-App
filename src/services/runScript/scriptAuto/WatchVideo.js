@@ -431,11 +431,11 @@ export const watchVideo = (setting) => {
         0,
         "https://www.facebook.com/watch/"
       );
-
+      await delay(getRandomIntBetween(1000, 3000));
       const languageBtn = await findBtn(
         page,
         "English (US)",
-        "div.m > div.fl.ac > div.native-text"
+        '[class="native-text"]'
       );
       const languageBtn1 = await findBtn(
         page,
@@ -447,32 +447,34 @@ export const watchVideo = (setting) => {
       );
       const cfLanguageEle = await findBtn(
         page,
-        "Confirm languages",
+        'Confirm languages',
         '[class="f2"]'
       );
-      if (languageBtn && cfLanguageEle) {
+      if (languageBtn) {
         await clickElement(languageBtn);
         await delay(getRandomIntBetween(3000, 5000));
         if (cfLanguageEle) {
-          await clickElement(cfLanguageEle);
+          // await clickElement(cfLanguageEle);
+          await cfLanguageEle.evaluate(b => b.click());
         } else {
           await clickElementRandom(
             page,
             cfLanguageEle1,
-            5,
+            -1,
             "https://m.facebook.com/watch/"
           );
         }
-      } else if (languageBtn1 && cfLanguageEle) {
+      } else if (languageBtn1) {
         await clickElement(languageBtn1);
         await delay(getRandomIntBetween(3000, 5000));
         if (cfLanguageEle) {
-          await clickElement(cfLanguageEle);
+          // await clickElement(cfLanguageEle);
+          await cfLanguageEle.evaluate(b => b.click());
         } else {
           await clickElementRandom(
             page,
             cfLanguageEle1,
-            5,
+            -1,
             "https://m.facebook.com/watch/"
           );
         }
