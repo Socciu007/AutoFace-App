@@ -312,13 +312,14 @@ export const createPost = (setting) => {
             logger('Khong tag ban be');
           }
         } else {
+          await delay(5000);
           // Using background
           const background = await getElements(
             page,
             '#screen-root > div > div:nth-child(2) > div.m.hscroller.no-hscroller > div > div:nth-child(2)',
             5,
           );
-          await delay(2000);
+          await delay(3000);
           const listBackground = [6, 8, 9, 10];
           let randomBackground = getRandomIntBetween(1, background.length);
           while (listBackground.includes(randomBackground)) {

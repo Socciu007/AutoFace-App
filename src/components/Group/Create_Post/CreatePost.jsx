@@ -44,7 +44,11 @@ const CreatePostGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, 
     maxFiles: 10,
     noClick: true,
     accept: {
-      'image/png': ['.png', '.jpg', '.jpeg'],
+      'image/png': ['.png'],
+      'image/jpeg': ['.jpg', '.jpeg'],
+      'image/bmp': ['.bmp'],
+      'image/gif': ['.gif'],
+      'image/tiff': ['.tif', '.tiff'],
     },
     onDrop: (acceptedFiles) => {
       const newFiles = acceptedFiles.map((file) => {

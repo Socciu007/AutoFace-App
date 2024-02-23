@@ -38,12 +38,15 @@ export const viewNoti = (setting) => {
     }
   };
   const scroll = async page => {
-    let randomScrollTime = getRandomIntBetween(3, 5);
+    let randomScrollTime = getRandomIntBetween(2, 5);
     try {
       while (randomScrollTime > 0) {
         await page.evaluate(async () => {
           const getRandomIntBetween = (min, max) => {
             return Math.floor(Math.random() * (max - min + 1)) + min;
+          };
+          const delay = async time => {
+            return new Promise(resolve => setTimeout(resolve, time));
           };
           const smoothScrollByStep = (targetPosition, duration) => {
             const startPosition = window.scrollY;
@@ -77,7 +80,7 @@ export const viewNoti = (setting) => {
               targetPosition
             );
             smoothScrollByStep(nextPosition, durationPerStep);
-            await new Promise(resolve => setTimeout(resolve, durationPerStep));
+            await delay(getRandomIntBetween(1000, 5000));
             currentPosition = nextPosition;
           }
         });
@@ -242,8 +245,7 @@ export const viewNoti = (setting) => {
             const nextPosition = currentPosition + stepSize;
   
             smoothScrollByStep(nextPosition, durationPerStep);
-            await delay(getRandomIntBetween(1000, 2000));
-            await new Promise(resolve => setTimeout(resolve, durationPerStep));
+            await delay(getRandomIntBetween(1000, 5000));
             currentPosition = window.scrollY;
           }
         }
