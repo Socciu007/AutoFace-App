@@ -124,9 +124,7 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
 };
 
 const runCode = async (profile, profileSelected, index, dispatch, arrfunction, settings, indexThread, scriptDesign) => {
-  // --------------
   await delay(settings.delayThread && settings.delayThread > 0 ? index * settings.delayThread * 1000 : 1000);
-
   try {
     let proxyStr = '';
     let proxy;
@@ -161,10 +159,12 @@ const runCode = async (profile, profileSelected, index, dispatch, arrfunction, s
       mem = infor.mem;
       if (indexThread == 0) {
         if (cpu > settings.maxCpu) {
-          return console.log('MAX CPU');
+          console.log('MAX CPU');
+          return;
         }
         if (mem > settings.maxRam) {
-          return console.log('MAX RAM');
+          console.log('MAX RAM');
+          return;
         }
       }
       while (cpu > settings.maxCpu || mem > settings.maxRam) {
@@ -725,6 +725,12 @@ return new Promise(async (resolve) => {
     resolve('Time out');
   }, ${settings.maxTime} * 1000);
 
+  setTimeout(async () => {
+    if(!browser || !browser.isConnected()){
+      resolve('Cant open browser!');
+  }
+  },10000);
+
   browser = await puppeteer.launch({
     executablePath: "${browserData.executablePath}",
     devtools: false,
@@ -800,12 +806,16 @@ return new Promise(async (resolve) => {
         const result = await runProfile(strCode, profile.id);
         console.log(result);
       } else {
+        dispatch(updateProfile({ ...profile, script: scriptDesign.id, status: 'ready' }));
         console.log(`Can't get data Profile!`);
       }
     } else {
+      dispatch(updateProfile({ ...profile, script: scriptDesign.id, status: 'ready' }));
       console.log('Connect proxy Fail!');
+      return;
     }
   } catch (err) {
+    dispatch(updateProfile({ ...profile, script: scriptDesign.id, status: 'ready' }));
     console.log(err);
   }
 };

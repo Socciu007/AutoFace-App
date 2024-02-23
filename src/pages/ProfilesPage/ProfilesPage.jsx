@@ -362,24 +362,14 @@ const ProfilesPage = () => {
         dataIndex: 'status',
         width: 100,
         render: (status) => {
-          if (status === 'running') {
-            return <div className="-status-profiles">{status.charAt(0).toUpperCase() + status.slice(1)}</div>;
-          } else if (status === 'ready') {
+          if (status === 'ready') {
             return (
               <div className="-status-profiles -status-profiles-ready">
                 {status.charAt(0).toUpperCase() + status.slice(1)}
               </div>
             );
           } else {
-            return (
-              <>
-                {status ? (
-                  <div className="-status-profiles -status-profiles-used">
-                    {status.charAt(0).toUpperCase() + status.slice(1)}
-                  </div>
-                ) : null}
-              </>
-            );
+            return <div className="-status-profiles">{status.charAt(0).toUpperCase() + status.slice(1)}</div>;
           }
         },
       });
