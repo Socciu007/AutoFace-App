@@ -73,6 +73,7 @@ body {
           width: 65%;
         }
       }
+
       &__right {
         width: 100%;
         display: flex;
@@ -138,6 +139,11 @@ body {
       .scrollable-container::-webkit-scrollbar-track {
         background-color: #f0f0f0; /* Màu của phần bên dưới thanh cuộn */
         border-radius: 20px;
+      }
+      .ant-spin-container .ant-table-content table > thead.ant-table-thead {
+        z-index: 99 !important;
+        position: sticky;
+        top: 0px;
       }
       .left-content {
         border-radius: 15px;
@@ -264,6 +270,16 @@ body {
       .ant-table-thead > tr > th.ant-table-cell,
       .ant-table-thead > tr > td.ant-table-cell {
         background-color: #f2f8ff !important;
+      }
+      .ant-table-thead > tr > th.ant-table-cell {
+        font-size: 15px;
+        font-weight: 700;
+        line-height: normal;
+        background: #f2f8ff;
+        border-bottom: 1px solid #e0e0e0;
+        color: rgba(1, 22, 43, 0.6);
+        min-height: 50px;
+        vertical-align: middle;
       }
       .ant-table-wrapper .ant-table-column-sorter-up.active,
       .ant-table-wrapper .ant-table-column-sorter-down.active {

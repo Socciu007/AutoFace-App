@@ -98,6 +98,11 @@
       display: flex;
       gap: 10px;
       margin-bottom: 22px;
+      &__title {
+        display: flex;
+        gap: 4px;
+        color: #01162b;
+      }
     }
   }
   .-proxy-manage {
@@ -199,11 +204,24 @@
           }
         }
       }
+      .ant-table-thead > tr > th {
+        font-size: 15px;
+        font-weight: 700;
+        line-height: normal;
+        background: #f2f8ff;
+        border-bottom: 1px solid #e0e0e0;
+        color: rgba(1, 22, 43, 0.6);
+        min-height: 50px;
+        vertical-align: middle;
+      }
       .ant-spin-container .ant-table .ant-table-content table > tbody.ant-table-tbody tr.ant-table-row-selected {
         background-color: #fffbea !important;
       }
       .ant-table-tbody .ant-table-row.ant-table-row-selected.pinned-row > .ant-table-cell {
         background-color: #fffbea !important;
+      }
+      .ant-table-tbody .ant-table-row.pinned-row > .ant-table-cell-row-hover {
+        background: #fffbea !important;
       }
       .ant-table-content::-webkit-scrollbar {
         height: 5px;

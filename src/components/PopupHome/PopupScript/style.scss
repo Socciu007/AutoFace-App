@@ -406,6 +406,16 @@
       }
     }
   }
+  .ant-table-wrapper .ant-table-thead > tr > th {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: normal;
+    background: #f2f8ff;
+    border-bottom: 1px solid #e0e0e0;
+    color: rgba(1, 22, 43, 0.6);
+    min-height: 50px;
+    vertical-align: middle;
+  }
   .ant-table-wrapper
     .ant-table-thead
     > tr
