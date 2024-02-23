@@ -89,16 +89,17 @@ const ScriptManager = () => {
     setListScript(mapStatus(listScript));
   }, [profiles]);
 
-  useEffect(() => {
-    if (contentArray && contentArray.length) {
-      setListScript(mapStatus(listScript));
-    }
-  }, [contentArray]);
+  // useEffect(() => {
+  //   if (contentArray && contentArray.length) {
+  //     setListScript();
+  //   }
+  // }, [contentArray]);
 
   const mapStatus = (newList) => {
+    console.log(profiles);
     if (!profiles || profiles.length == 0) return newList;
     const newArr = [...newList];
-    contentArray.forEach((e, index) => {
+    newList.forEach((e, index) => {
       const total = profiles.filter((o) => o.script == e.id);
       const scriptDone = profiles.filter((o) => o.script == e.id && o.status == 'ready');
 
@@ -131,6 +132,7 @@ const ScriptManager = () => {
       return 0;
     });
     newList = newList.sort((x, y) => Number(y.isPin) - Number(x.isPin));
+    newList = mapStatus(newList);
     setListScript(newList);
   };
   let item;

@@ -109,8 +109,8 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
       async (result, index) => {
         for (let j = 0; j < result.length; j++) {
           const profile = result[j];
-          await runCode(profile, profileSelected, index, dispatch, arrfunction, settings, j);
-          dispatch(updateProfile({ ...profile, status: 'ready' }));
+          await runCode(profile, profileSelected, index, dispatch, arrfunction, settings, j, scriptDesign);
+          dispatch(updateProfile({ ...profile, script: scriptDesign.id, status: 'ready' }));
         }
       },
       { concurrency: results.length },
@@ -123,7 +123,7 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
   return;
 };
 
-const runCode = async (profile, profileSelected, index, dispatch, arrfunction, settings, indexThread) => {
+const runCode = async (profile, profileSelected, index, dispatch, arrfunction, settings, indexThread, scriptDesign) => {
   // --------------
   await delay(settings.delayThread && settings.delayThread > 0 ? index * settings.delayThread * 1000 : 1000);
 
@@ -176,7 +176,7 @@ const runCode = async (profile, profileSelected, index, dispatch, arrfunction, s
       }
       const browserData = await getBrowserData(profile.id);
       if (browserData && browserData.data) {
-        dispatch(updateProfile({ ...profile, status: 'running' }));
+        dispatch(updateProfile({ ...profile, script: scriptDesign.id, status: 'running' }));
         const positionBrowser = await getPosition(index);
         const strCode = `
 
