@@ -50,10 +50,12 @@ import { Store } from 'react-notifications-component';
 import notification from '../../resources/notification.json';
 import PopupChooseProfile from '../../components/PopupHome/PopupChooseProfile/PopupChooseProfile.jsx';
 import PopupDebug from '../../components/PopupHome/PopupDebug/PopupDebug.jsx';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { removeDebug } from '../../redux/debugSlice.js';
 const CreateScript = () => {
   const DnDFlowRef = useRef();
   const { state } = useLocation();
+  const dispatch = useDispatch();
   const [component, setComponent] = useState('default');
   const [nameScript, setNameScript] = useState('');
   const [noteScript, setNoteScript] = useState('');
@@ -70,8 +72,11 @@ const CreateScript = () => {
   const [activeCategory, setActiveCategory] = useState(1);
   const [openProfiles, setOpenProfiles] = useState(false);
   const navigate = useNavigate();
-
   const debugs = useSelector((state) => state.debug);
+
+  useEffect(() => {
+    dispatch(removeDebug());
+  }, []);
 
   useEffect(() => {
     setDefaultScript();

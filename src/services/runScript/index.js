@@ -1,6 +1,6 @@
 import { storageSettings } from '../../common/const.config';
 import { createPost } from './scriptAuto/CreatePost';
-import { dbGetLocally, getBrowserData, getInformation, getProxy, runProfile } from '../../sender';
+import { dbGetLocally, getBrowserData, getInformation, getProxy, getWindowsize, runProfile } from '../../sender';
 import { deletePost } from './scriptAuto/DeletePost';
 import { loginFacebook } from './scriptAuto/login';
 import { postInteract } from './scriptAuto/PostInteraction';
@@ -22,6 +22,7 @@ import { updateProfile, updateProfiles } from '../../redux/profileSlice';
 import { getInfor } from './scriptAuto/GetInfo';
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 const splitToChunks = (array, length, thread) => {
   const size = (length / thread) | 0;
   console.log(size);
@@ -47,16 +48,30 @@ const splitToChunks = (array, length, thread) => {
   return results;
 };
 
+const getPosition = async (index) => {
+  let x, y;
+  const browserWidth = 350;
+  const { width } = await getWindowsize();
+  let maxBrowserRow = (width / browserWidth) | 0;
+  const indexBrowser = index % maxBrowserRow;
+  const indexNewBrowser = index % (maxBrowserRow * 2);
+  x = indexBrowser * 450;
+  if (indexBrowser < maxBrowserRow && indexNewBrowser < maxBrowserRow) {
+    y = 0;
+  } else {
+    y = 760;
+  }
+
+  return `${x},${y}`;
+};
+
 export const runScript = async (profileSelected, scriptDesign, dispatch) => {
   // set all profiles selected to waiting status
-  let newProfileSelected = profileSelected.map((profile) => {
-    profile.script = scriptDesign.id;
-    profile.status = 'waiting';
-    return profile;
-  });
-  // dispatch(updateProfiles(newProfileSelected));
-  // ------
 
+  let newProfileSelected = profileSelected.map((profile) => {
+    return { ...profile, script: scriptDesign.id, status: 'waiting' };
+  });
+  dispatch(updateProfiles(newProfileSelected));
   const settings = await dbGetLocally(storageSettings);
   let thread = 1;
   if (!isNaN(settings.countProfile)) {
@@ -162,6 +177,7 @@ const runCode = async (profile, profileSelected, index, dispatch, arrfunction, s
       const browserData = await getBrowserData(profile.id);
       if (browserData && browserData.data) {
         dispatch(updateProfile({ ...profile, status: 'running' }));
+        const positionBrowser = await getPosition(index);
         const strCode = `
 
 let browser;
@@ -722,7 +738,9 @@ return new Promise(async (resolve) => {
       "--proxy-bypass-list=https://static.xx.fbcdn.net",
       "--flag-switches-begin",
       "--flag-switches-end",
-      "--window-size=360,760"
+      "--window-size=360,760",
+      "--force-device-scale-factor=0.8",
+      "--window-position=${positionBrowser}"
     ]
   });
 

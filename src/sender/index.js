@@ -169,3 +169,16 @@ export const getInformation = () =>
       resolve({ success: false, error });
     }
   });
+
+export const getWindowsize = () =>
+  new Promise((resolve) => {
+    try {
+      window.electron.ipcRenderer.sendMessage('ipc-getWindowSize');
+      window.electron.ipcRenderer.once(`ipc-getWindowSize`, resolve);
+      setTimeout(() => {
+        resolve({ success: false, error: 'Timeout!' });
+      }, 10000);
+    } catch (error) {
+      resolve({ success: false, error });
+    }
+  });
