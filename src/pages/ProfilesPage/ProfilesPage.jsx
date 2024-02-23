@@ -292,8 +292,8 @@ const ProfilesPage = () => {
       {
         title: '#',
         // dataIndex: 'key',
-        width: 50,
-        render: (text, record, index) => <div>{index + 1}</div>,
+        width: 100,
+        render: (text, record, index) => <div>{index}</div>,
       },
     ];
 
