@@ -141,11 +141,16 @@ export const watchVideo = (setting) => {
       if (selectors.length > 0) {
         const x = index !== undefined ? index : getRandomInt(selectors.length);
         await scrollSmoothIfNotExistOnScreens(selectors[x]);
-        await delay(getRandomIntBetween(3000, 5000));
+        await delay(getRandomIntBetween(1000, 3000));
         await clickElement(selectors[x]);
+        await delay(getRandomIntBetween(3000, 5000));
+        const isWatchVideo = await checkUrlPage(page, "m.facebook.com/watch");
+        if (!isWatchVideo) {
+          await navigateToUrl(page, urlPage);
+        }
         return true;
       } else {
-        await delay(getRandomIntBetween(3000, 5000));
+        await delay(getRandomIntBetween(1000, 3000));
         const isNavigate = await navigateToUrl(page, urlPage);
         if (isNavigate) return true;
         return false;
@@ -252,13 +257,16 @@ export const watchVideo = (setting) => {
               targetPosition
             );
             smoothScrollByStep(nextPosition, durationPerStep);
-            await delay(getRandomIntBetween(1000, 5000));
+            await delay(getRandomIntBetween(1000, 3000));
+            if(Math.random() < 0.3){
+              await delay(getRandomIntBetween(3000, 4000));
+            }
             currentPosition = nextPosition;
           }
         });
         randomScrollTime--;
       }
-      await delay(getRandomIntBetween(1000, 3000));
+      await delay(getRandomIntBetween(1000, 5000));
     } catch (error) {
       logger('Debug|WatchVideo|Error scroll video');
     }
@@ -333,7 +341,7 @@ export const watchVideo = (setting) => {
           return (
             bounding.top >= 100 &&
             bounding.left >= 0 &&
-            bounding.bottom - bounding.top <=
+            bounding.bottom - bounding.top - 200 <=
               (window.innerHeight || document.documentElement.clientHeight) &&
             bounding.right <=
               (window.innerWidth || document.documentElement.clientWidth)
@@ -361,6 +369,9 @@ export const watchVideo = (setting) => {
             const nextPosition = currentPosition + stepSize;
             await smoothScrollByStep(nextPosition, durationPerStep);
             await delay(getRandomIntBetween(1000, 3000));
+            if(Math.random() < 0.3){
+              await delay(getRandomIntBetween(3000, 4000));
+            }
             currentPosition = window.scrollY;
           }
   
@@ -431,7 +442,7 @@ export const watchVideo = (setting) => {
         0,
         "https://www.facebook.com/watch/"
       );
-      await delay(getRandomIntBetween(1000, 3000));
+      await delay(getRandomIntBetween(3000, 5000));
       const languageBtn = await findBtn(
         page,
         "English (US)",
@@ -442,44 +453,42 @@ export const watchVideo = (setting) => {
         "󰠂",
         '[class="native-text"]'
       );
-      const cfLanguageEle1 = await page.$(
-        "div.m > div.fl.ac > div.native-text > span.f2"
-      );
-      const cfLanguageEle = await findBtn(
-        page,
-        'Confirm languages',
-        '[class="f2"]'
-      );
+      
       if (languageBtn) {
         await clickElement(languageBtn);
-        await delay(getRandomIntBetween(3000, 5000));
-        if (cfLanguageEle) {
-          // await clickElement(cfLanguageEle);
-          await cfLanguageEle.evaluate(b => b.click());
-        } else {
-          await clickElementRandom(
-            page,
-            cfLanguageEle1,
-            -1,
-            "https://m.facebook.com/watch/"
-          );
-        }
       } else if (languageBtn1) {
         await clickElement(languageBtn1);
-        await delay(getRandomIntBetween(3000, 5000));
-        if (cfLanguageEle) {
-          // await clickElement(cfLanguageEle);
-          await cfLanguageEle.evaluate(b => b.click());
-        } else {
-          await clickElementRandom(
-            page,
-            cfLanguageEle1,
-            -1,
-            "https://m.facebook.com/watch/"
-          );
-        }
       }
-      await delay(getRandomIntBetween(3000, 5000));
+      await delay(getRandomIntBetween(1000, 3000));
+      const cfLanguageEle = await findBtn(
+        page,
+        "Confirm languages",
+        'div.m > div.fl.ac > div.native-text > span.f2'
+      );
+      const cfLanguageEle1 = await page.$('[aria-label="Confirm languages"]');
+      const cfLanguageEle0 = await findBtn(
+        page,
+        'Xác nhận ngôn ngữ',
+        'div.m > div.fl.ac > div.native-text > span.f2'
+      );
+      const cfLanguageEle2 = await page.$('[aria-label="Xác nhận ngôn ngữ"]');
+      if (cfLanguageEle) {
+        await clickElement(cfLanguageEle);
+      } else if (cfLanguageEle0) {
+        await clickElement(cfLanguageEle0);
+      } else if (cfLanguageEle1) {
+        await clickElement(cfLanguageEle1);
+      } else if (cfLanguageEle2) {
+        await clickElement(cfLanguageEle2);
+      } else if (cfLanguageEle == undefined && cfLanguageEle0 == undefined && cfLanguageEle1 == undefined && cfLanguageEle2 == undefined) {
+        await clickElementRandom(
+          page,
+          "div.m > div.fl.ac > div.native-text > span.f2",
+          -1,
+          "https://m.facebook.com/watch/"
+        );
+      }
+      await delay(getRandomIntBetween(1000, 3000));
       await scroll(page);
       let arrIndexVideo = [];
       while (
