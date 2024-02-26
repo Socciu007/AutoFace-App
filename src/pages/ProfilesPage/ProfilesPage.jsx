@@ -66,9 +66,26 @@ const ProfilesPage = () => {
         updateDebugLog(params[0][0], params[0][1]);
       }
 
+      if (params[0][1] && params[0][1].toString().includes('Delete Cookie|')) {
+        deleteCookie(params[0][1].split('|')[1]);
+      }
+
       console.log(params[0]);
     });
   }
+
+  const deleteCookie = async (cookies) => {
+    const profiles = await dbGetLocally(storageProfiles);
+    const index = profiles.findIndex((e) => e.cookies == cookies);
+    if (index >= 0) {
+      const profile = profiles[index];
+      profiles.splice(index, 1, {
+        ...profile,
+        cookies: '',
+      });
+      await dbSetLocally(storageProfiles, profiles);
+    }
+  };
 
   const updateDebugLog = async (uid, log) => {
     const script = log.split('|')[1] ? log.split('|')[1] : '';
@@ -670,6 +687,7 @@ const ProfilesPage = () => {
         });
 
         if (profiles && profiles.length) {
+          console.log(profiles);
           setDataProfiles(profiles);
           setDataSearch(
             profiles.map((e, index) => {
