@@ -863,15 +863,33 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
   
     if (addFriendObject.option == 'acceptFriendRequests') {
       let count = 0;
+      let attempt = true;
       await returnHomePage(page);
       const friendRequestSelector = '#screen-root > div > div:nth-child(1) > div:nth-child(4) > div:nth-child(2)';
-      const friendRequestBtn = await getElement(page, friendRequestSelector, 10);
-      if (!friendRequestBtn) return false;
-      await clickElement(friendRequestBtn);
-      await delay(3000);
+      let friendRequestBtn = await getElement(page, friendRequestSelector, 3);
+      if (!friendRequestBtn){
+        friendRequestBtn = await findBtn(page, "󰤼");
+        if(!friendRequestBtn || friendRequestBtn.length == 0){
+          friendRequestBtn = await findBtn(page, "󰎍");
+          if(!friendRequestBtn || friendRequestBtn.length == 0){
+          await page.goto(
+          "https://m.facebook.com/friends/?target_pivot_link=requests"
+          );
+          attempt = false;
+          } else {
+            await clickElement(friendRequestBtn[0]);
+          }
+        };
+        await clickElement(friendRequestBtn[0]);
+      } else {
+        await clickElement(friendRequestBtn);
+      };
+      if(attempt != false) {
+        await delay(3000);
            await page.goto(
         "https://m.facebook.com/friends/?target_pivot_link=requests"
       );
+      }
       await delay(5000);
       const check = await checkExistElement(
         page,

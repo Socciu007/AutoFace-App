@@ -100,7 +100,7 @@ export const newFeed = (setting) => {
       };
     } catch (error) {
      logger("Debug" + "|" + "NewsFeed" + "|" + "Sharing failed!");
-      return false;
+     return false;
     }
   };
   const randomComment = async (page, newsfeed, commentBtns, temp) => {
@@ -142,7 +142,6 @@ export const newFeed = (setting) => {
         await delay(2000);
         const postBtn = await findBtn(page, "󱛅");
         if (!postBtn || postBtn.length == 0) {
-                logger("Debug" + "|" + "addFriendByUIDList" + "|" + "Can't find post button");
                 return {
                   isClick: isClick,
                   newIndex: temp
@@ -171,7 +170,7 @@ export const newFeed = (setting) => {
     };
     } catch (error) {
      logger("Debug" + "|" + "NewsFeed" + "|" + "Comment failed!");
-      return false;
+     return false;
     }
   };
   const findBtn = async (page, content) => {
@@ -212,8 +211,9 @@ try {
   let loopShare = 0;
   while (scrollTime > 0) {
     try{
-
     let startTime = Date.now();
+    await scrollSmooth(page,1);
+    
     if (news.randomLike == true && loopLike == 0) {
       let count = 0;
       const homeSelector1 =
@@ -330,7 +330,6 @@ try {
              }
           };
           logger("có " + commentBtns.length + " nút comment");
-          
           const result = await randomComment(page, news, commentBtns, temp);
           await delay(randomDelay);
           if (result.isClick) {
@@ -354,6 +353,8 @@ try {
       logger('end');
     }
     if(news.randomLike == false && news.randomShare == false && news.randomComment == false) {
+        await returnHomePage(page);
+        await delay(1000);
         const result =  await scrollSmooth(page, 3);
         if(result == -2){
           break;
