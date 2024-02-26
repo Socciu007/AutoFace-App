@@ -348,7 +348,7 @@ const ProfilesPage = () => {
       settingsColumns.push({
         title: 'Name',
         dataIndex: 'nameAccount',
-        width: 150,
+        width: 200,
         render: (nameAccount) => (
           <Tooltip placement="topLeft" title={nameAccount}>
             {nameAccount}

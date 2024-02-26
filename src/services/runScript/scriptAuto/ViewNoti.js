@@ -80,7 +80,10 @@ export const viewNoti = (setting) => {
               targetPosition
             );
             smoothScrollByStep(nextPosition, durationPerStep);
-            await delay(getRandomIntBetween(1000, 5000));
+            await delay(getRandomIntBetween(1000, 3000));
+            if(Math.random() < 0.3){
+              await delay(getRandomIntBetween(2000, 4000));
+            }
             currentPosition = nextPosition;
           }
         });
@@ -247,7 +250,10 @@ export const viewNoti = (setting) => {
             const nextPosition = currentPosition + stepSize;
   
             smoothScrollByStep(nextPosition, durationPerStep);
-            await delay(getRandomIntBetween(1000, 5000));
+            await delay(getRandomIntBetween(1000, 3000));
+            if(Math.random() < 0.3){
+              await delay(getRandomIntBetween(3000, 4000));
+            }
             currentPosition = window.scrollY;
           }
         }
@@ -306,6 +312,12 @@ export const viewNoti = (setting) => {
           await scrollSmoothIfNotExistOnScreens(selectors[x]);
           await delay(getRandomIntBetween(3000, 5000));
           await selectors[x].evaluate((b) => b.click());
+          await delay(getRandomIntBetween(3000, 5000));
+        const isNotification = await checkUrlPage(page, "m.facebook.com/notifications");
+        if (!isNotification) {
+          await navigateToUrl(page, urlPage);
+        }
+        return true;
           return true;
         } else {
           await delay(getRandomIntBetween(3000, 5000));
