@@ -164,7 +164,11 @@ export const postInteract = (setting) => {
         ? post.UID.length
         : getRandomIntBetween(post.postStart, post.postEnd);
     logger('randomPost ' + randomPost);
+<<<<<<< HEAD
+    let randomViewTime = 1000;
+=======
     let randomViewTime = getRandomIntBetween(post.viewTimeStart, post.viewTimeEnd) * 1000;
+>>>>>>> 8de6f3adb32c9dcbf81efc0b918e27008798cfa9
     await delay(2000);
     let arrLink = [];
     let numLikes = getRandomIntBetween(post.likeStart, post.likeEnd);
