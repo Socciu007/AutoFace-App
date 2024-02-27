@@ -67,7 +67,7 @@ export const postInteract = (setting) => {
       await scrollSmoothIfElementNotExistOnScreen(page, likeBtns);
       await delay(5000);
       let isClick = false;
-      await likeBtns[i].evaluate((b) => b.click());
+      await likeBtns.evaluate((b) => b.click());
       await delay(randomDelay);
       isClick = true;
       return isClick;
@@ -154,6 +154,7 @@ export const postInteract = (setting) => {
   
   const PostInteract = ${strSetting}
   try {
+    logger(PostInteract);
     //Check obj start < end ? random(start,end) : random(end,start)
     let post = await checkObject(PostInteract);
     // check page is live reutrn -1, return 1, return 0
@@ -183,7 +184,8 @@ export const postInteract = (setting) => {
     let arrComment = [];
     let arrShare = [];
 
-    while (numLikes > 0) {
+    if(numLikes <= randomPost){
+       while (numLikes > 0) {
       const index = getRandomIntBetween(0, randomPost);
       if (arrLike.includes(index)) {
         continue;
@@ -192,8 +194,16 @@ export const postInteract = (setting) => {
       numLikes--;
       logger('numLikes', numLikes);
     }
+   
+    }
+    else {
+      for(let i=0; i < randomPost; i++ ){
+        arrLike.push(i);
+      }
+    }
     logger('arrLike', arrLike);
-
+   
+    if(numLikes <= randomPost){
     while (numShares > 0) {
       const index = getRandomIntBetween(0, randomPost);
       if (arrShare.includes(index)) {
@@ -203,8 +213,14 @@ export const postInteract = (setting) => {
       numShares--;
       logger('numShares', numShares);
     }
+  }
+  else{
+    for(let i=0; i < randomPost; i++ ){
+      arrShare.push(i);
+    }
+  }
     logger('arrShare', arrShare);
-
+    if(numLikes <= randomPost){
     while (numComments > 0) {
       const index = getRandomIntBetween(0, randomPost);
       if (arrComment.includes(index)) {
@@ -214,6 +230,11 @@ export const postInteract = (setting) => {
       numComments--;
       logger('numcomment', numComments);
     }
+  }else{
+    for(let i=0; i < randomPost; i++ ){
+      arrComment.push(i);
+    }
+  }
     logger('arrComment', arrComment);
 
     while (randomViewTime > 0 && randomPost > 0 && post.UID.length > 0) {
