@@ -85,7 +85,7 @@ const SeedingView = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
   };
   const onChangeLine = (e) => {
     const lines = e.target.value.split('\n');
-    setLine(lines.length);
+    setVideoView({ ...videoView, line: lines.length });
   };
   const handleOnchangeVideoID = (value) => {
     setUIDContent(value);
@@ -140,7 +140,7 @@ const SeedingView = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
             </div>
             <div className="-option-boost-like -option-boost-comment">
               <p style={{ width: '100%' }}>
-                Video ID: <span style={{ float: 'inline-end' }}>({line})</span>
+                Video ID: <span style={{ float: 'inline-end' }}>({videoView.line})</span>
               </p>
               <div className="-option-boost-comment__wrapper">
                 <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">

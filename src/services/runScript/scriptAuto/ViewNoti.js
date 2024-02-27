@@ -92,7 +92,7 @@ export const viewNoti = (setting) => {
       await delay(getRandomIntBetween(1000, 3000));
     } catch (error) {
       logger('Debug|ViewNotification|Error scroll video');
-      return;
+      return 0;
     }
   };
   const checkExistElementOnScreens = async (JSSelector) => {
@@ -124,7 +124,7 @@ export const viewNoti = (setting) => {
       }
     } catch (error) {
       logger('Debug|ViewNotification|' + error.message);
-      return;
+      return 0;
     }
   };
 
@@ -382,19 +382,18 @@ export const viewNoti = (setting) => {
       
             await returnPages(page, browser, lengthPage);
             await delay(getRandomIntBetween(3000, 5000));
-  
           }
 
           notiCount++;
         }
       } else {
         logger("Debug|ViewNotification|You need log in");
-        return;
+        return 0;
       }
     }
   } catch (error) {
     logger('Debug|ViewNotification|' + error.message);
-    return;
+    return 0;
   }
     `;
 };

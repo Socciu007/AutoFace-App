@@ -195,6 +195,7 @@
     "shareToFeedEnd": 5,
     "postQuantityStart": 0,
     "postQuantityEnd": 0,
+    "line": 0,
     "postID": [],
     "isComment": false,
     "photoVideoQuantityStart": 1,
@@ -211,7 +212,8 @@
     "selectTypeFollow": "profile",
     "UIDList": [],
     "isLike": false,
-    "isFollow": false
+    "isFollow": false,
+    "line": 0
   },
-  "viewVideo": { "viewTimeStart": 30, "viewTimeEnd": 50, "videoID": [] }
+  "viewVideo": { "viewTimeStart": 30, "viewTimeEnd": 50, "videoID": [], "line": 0 }
 }

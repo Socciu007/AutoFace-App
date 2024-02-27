@@ -90,7 +90,7 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
   };
   const onChangeLine = (e) => {
     const lines = e.target.value.split('\n');
-    setLine(lines.length);
+    setLikeComment({ ...likeComment, line: lines.length });
   };
   const handleOnchangePostID = (value) => {
     setUIDPost(value);
@@ -574,7 +574,7 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
             </div>
             <div className="-option-boost-like -option-boost-comment">
               <p style={{ width: '100%' }}>
-                Post ID: <span style={{ float: 'inline-end' }}>({line})</span>
+                Post ID: <span style={{ float: 'inline-end' }}>({likeComment.line})</span>
               </p>
               <div className="-option-boost-comment__wrapper">
                 <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
