@@ -140,7 +140,7 @@ export const createPost = (setting) => {
         getRandomIntBetween(CreatePost.photoStart, CreatePost.photoEnd) > CreatePost.photos.length
           ? CreatePost.photos.length
           : getRandomIntBetween(CreatePost.photoStart, CreatePost.photoEnd);
-  
+
       if (CreatePost.photos.length > 0 && numberPhoto > 0) {
         if (
           (await checkExistElementOnScreen(
@@ -148,33 +148,35 @@ export const createPost = (setting) => {
             '#screen-root > div > div:nth-child(2) > div:nth-child(7) > div:nth-child(1)',
           )) === 0
         ) {
-          const select = await getElement(
+          let select = await getElement(
             page,
             '#screen-root > div > div:nth-child(2) > div:nth-child(7) > div:nth-child(1)',
             5,
           );
-          const arrImg = [];
+          let arrImg = [];
           for (let i = 0; i < numberPhoto; i++) {
             let randomImg = getRandomIntBetween(0, CreatePost.photos.length);
+
+          
             arrImg.push(CreatePost.photos[randomImg]);
+
+            if (select) {
+              const [fileChooser] = await Promise.all([page.waitForFileChooser(), await clickElement(select)]);
+              await delay(getRandomIntBetween(5000, 12000));
+              await fileChooser.accept(arrImg);
+              await delay(8000);
+              arrImg = [];
+            } else {
+              return false;
+            }
           }
-          logger(arrImg);
-          CreatePost.photos.length = numberPhoto;
-          logger('CreatePost.photos.length', CreatePost.photos.length);
-          if (select) {
-            const [fileChooser] = await Promise.all([page.waitForFileChooser(), await clickElement(select)]);
-            await delay(getRandomIntBetween(5000, 12000));
-            await fileChooser.accept(arrImg);
-            await delay(8000);
-          } else {
-            return false;
-          }
+        
         } else {
-          logger("Debug" + "|" + "Create post" + "|" + "Can't find click photo btn!");
+          logger('Debug' + '|' + 'Create post' + '|' + "Can't find click photo btn!");
           return false;
         }
       } else {
-        logger("Debug" + "|" + "Create post" + "|" + "So anh random khong hop le!");
+        logger('Debug' + '|' + 'Create post' + '|' + 'So anh random khong hop le!');
         return false;
       }
       return true;
@@ -183,6 +185,8 @@ export const createPost = (setting) => {
       return false;
     }
   };
+  
+
   
   
   const inputContent = async (page, CreatePost) => {
