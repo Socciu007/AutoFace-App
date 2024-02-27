@@ -339,7 +339,7 @@ export const watchVideo = (setting) => {
         const isInViewport = elem => {
           const bounding = elem.getBoundingClientRect();
           return (
-            bounding.top >= 50 &&
+            bounding.top >= 80 &&
             bounding.left >= 0 &&
             bounding.bottom - bounding.top - 200 <=
               (window.innerHeight || document.documentElement.clientHeight) &&

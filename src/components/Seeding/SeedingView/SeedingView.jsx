@@ -165,11 +165,11 @@ const SeedingView = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
                 >
                   <p style={{ width: '51%' }}>
                     <span>1</span>
-                    <div>Enter the UID|Video ID here</div>
+                    <div>Enter the Video ID here</div>
                   </p>
                   <p>
                     <span>2</span>
-                    <div>Each UID|Video ID/line</div>
+                    <div>Each Video ID/line</div>
                   </p>
                 </div>
               </div>
