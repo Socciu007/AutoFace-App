@@ -339,7 +339,7 @@ export const watchVideo = (setting) => {
         const isInViewport = elem => {
           const bounding = elem.getBoundingClientRect();
           return (
-            bounding.top >= 100 &&
+            bounding.top >= 50 &&
             bounding.left >= 0 &&
             bounding.bottom - bounding.top - 200 <=
               (window.innerHeight || document.documentElement.clientHeight) &&
@@ -439,7 +439,7 @@ export const watchVideo = (setting) => {
         page,
         'div[data-comp-id="6"]',
         0,
-        "https://www.facebook.com/watch/"
+        "https://m.facebook.com/watch/"
       );
       await delay(getRandomIntBetween(3000, 5000));
       const languageBtn = await findBtn(
