@@ -35,7 +35,11 @@ const inviteGroupBySuggest = async (page, inviteGroupObject) => {
         "#screen-root > div > div:nth-child(2) > div > div:nth-child(3) > div.m";
     let inviteButtons = await getElements(page, invite, 10);
     if (!inviteButtons) {
+<<<<<<< HEAD
+      logger("Can't find any invite buttons");
+=======
       logger("Can not find any invite buttons");
+>>>>>>> eb98e989eee1b0b0cf700deed924fc3c77d664ce
       return false;
     };
     let arr = [];

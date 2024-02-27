@@ -188,12 +188,6 @@ event.reply("ipc-logger",[${profile.uid},...params]);
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const getRandomIntBetween = (min, max) => {
-  let rdMin = min;
-  let rdMax = max;
-  if(max < min){
-    rdMin = max;
-    rdMax = min;
-  }
 min = Math.ceil(min);
 max = Math.floor(max);
 return Math.floor(Math.random() * (max - min) + min);
@@ -771,8 +765,6 @@ return new Promise(async (resolve) => {
   const session = await page.target().createCDPSession();
   await session.send("Page.enable");
   await session.send("Page.setWebLifecycleState", { state: "active" });
-  await page.bringToFront();
-  await delay(2000);
   let interval;
   const proxy = ${
     proxyConvert && proxyConvert.host
@@ -822,7 +814,7 @@ return new Promise(async (resolve) => {
         console.log(result);
       } else {
         dispatch(updateProfile({ ...profile, script: scriptDesign.id, status: 'ready' }));
-        console.log(`Can not get data Profile!`);
+        console.log(`Can't get data Profile!`);
       }
     } else {
       dispatch(updateProfile({ ...profile, script: scriptDesign.id, status: 'ready' }));
@@ -920,6 +912,6 @@ const convertToFunc = (script) => {
                 }`;
 
     default:
-      return `logger("Can not find func");`;
+      return `logger("Can't find func");`;
   }
 };

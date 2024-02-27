@@ -53,7 +53,7 @@ export const createPost = (setting) => {
         if (url == 'https://m.facebook.com/') {
           if (CreatePost.typeTag === 'UIDList') {
             // Tag UID
-            logger("Debug" + "|" + "Create post" + "|" + "Can not tag friend by UID!");
+            logger("Debug" + "|" + "Create post" + "|" + "Can't tag friend by UID!");
             // await tagFriendsByUIDList(page, CreatePost);
           } else {
             // tag random
@@ -81,11 +81,11 @@ export const createPost = (setting) => {
           await delay(6000);
           return true;
         } else {
-          logger("Debug" + "|" + "Create post" + "|" + "Can not find done tag!");
+          logger("Debug" + "|" + "Create post" + "|" + "Can't find done tag!");
           return false;
         }
       } else {
-        logger("Debug" + "|" + "Create post" + "|" + "Do not tag friend!");
+        logger("Debug" + "|" + "Create post" + "|" + "Don't tag friend!");
       }
       return true;
     } catch (error) {
@@ -170,11 +170,11 @@ export const createPost = (setting) => {
             return false;
           }
         } else {
-          logger("Debug" + "|" + "Create post" + "|" + "Can not find click photo btn!");
+          logger("Debug" + "|" + "Create post" + "|" + "Can't find click photo btn!");
           return false;
         }
       } else {
-        logger("Debug" + "|" + "Create post" + "|" + "Can not find Image");
+        logger("Debug" + "|" + "Create post" + "|" + "So anh random khong hop le!");
         return false;
       }
       return true;
@@ -208,7 +208,7 @@ export const createPost = (setting) => {
           return -1;
         }
       } else {
-        logger("Debug" + "|" + "Create post" + "|" + "Can not input content!");
+        logger("Debug" + "|" + "Create post" + "|" + "Can't input content!");
         return -1;
       }
     } catch (error) {
@@ -278,7 +278,7 @@ export const createPost = (setting) => {
           if (inputContentResult != -1) {
             logger('Done input content');
           } else {
-            logger("Debug" + "|" + "Create post" + "|" + "Can not input content!");
+            logger("Debug" + "|" + "Create post" + "|" + "Can't input content!");
             return 0;
           }
 
@@ -287,7 +287,7 @@ export const createPost = (setting) => {
           if (uploadImgResult && checkImg != null) {
             logger('Upload image successful');
           } else {
-            logger("Debug" + "|" + "Create post" + "|" + "Can not upload image");
+            logger("Debug" + "|" + "Create post" + "|" + "Can't upload image");
 
             countUploadImg++;
             if(countUploadImg >= 3) return 0;
@@ -339,7 +339,7 @@ export const createPost = (setting) => {
           if (inputContentResult != -1) {
             logger('Done input content');
           } else {
-            logger("Debug" + "|" + "Create post" + "|" + "Can not input content!");
+            logger("Debug" + "|" + "Create post" + "|" + "Can't input content!");
 
             return 0;
           }
@@ -374,7 +374,7 @@ export const createPost = (setting) => {
           return 0;
         }
       } else {
-        logger("Can not post status");
+        logger("Can't post status");
         break;
       }
 

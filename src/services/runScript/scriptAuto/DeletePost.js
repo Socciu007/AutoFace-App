@@ -39,11 +39,11 @@ export const deletePost = (setting) => {
           await delay(5000);
           return true;
         } else {
-          logger("Debug" + "|" + "Delete post" + "|" + "Can not find confirm delete button!");
+          logger("Debug" + "|" + "Delete post" + "|" + "Can't find confirm delete button!");
           return false;
         }
       } else {
-        logger("Debug" + "|" + "Delete post" + "|" + "Can not find delete button!");
+        logger("Debug" + "|" + "Delete post" + "|" + "Can't find delete button!");
 
         return false;
       }

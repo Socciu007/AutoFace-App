@@ -185,7 +185,11 @@ export const addFriend = (setting) => {
       }
     }
      if (arr.length == 0){
+<<<<<<< HEAD
+      logger("Can't click friend element!");
+=======
       logger("Can not click friend element!");
+>>>>>>> eb98e989eee1b0b0cf700deed924fc3c77d664ce
       return false;
     } 
     let randomIndex = getRandomInt(arr.length);
@@ -432,7 +436,11 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
           if (!likeBtns || likeBtns.length == 0) {
             likeBtns = await findBtn(page, "󰤥");
             if(!likeBtns || likeBtns.length == 0){
+<<<<<<< HEAD
+            logger("Can't find any like buttons");
+=======
             logger("Can not find any like buttons");
+>>>>>>> eb98e989eee1b0b0cf700deed924fc3c77d664ce
             break;
             }
           };
@@ -479,7 +487,11 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
               if (!commentBtns || commentBtns.length == 0) {
                commentBtns = await findBtn(page, "󰤦");
               if (!commentBtns || commentBtns.length == 0) {
+<<<<<<< HEAD
+                logger("Can't find any comment buttons");
+=======
                 logger("Can not find any comment buttons");
+>>>>>>> eb98e989eee1b0b0cf700deed924fc3c77d664ce
                 break;
               }
               };
@@ -555,11 +567,19 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
         await delay(3000);
         const iconSelector = "#screen-root > div > div:nth-child(2) > div:nth-child(3) > div:nth-child(2) > div:nth-child(1) > div > div"
         let icon = await getElement(page, iconSelector, 10);
-        if(!icon) {logger("Không tìm thấy group icon"); return false};
-        const isPrivate = await page.evaluate((el) => {
+        if(!icon) {
+          icon = await findBtn(page,"󱚼");
+          if(icon || icon.length > 0){
+          logger("Group private ! Không kết bạn..."); 
+          return false; 
+          }
+        } else {
+          const isPrivate = await page.evaluate((el) => {
           return el.innerHTML.includes('󱚼');
-        }, icon);
-        if(isPrivate) {logger("Group private ! Không kết bạn..."); return false }
+          }, icon);
+          if(isPrivate) {logger("Group private ! Không kết bạn..."); return false }
+        };
+
         let numsMemberSelector =
           "#screen-root > div > div:nth-child(2) > div:nth-child(4) > div:nth-child(3) > div";
         let member = await getElement(page, numsMemberSelector, 10);

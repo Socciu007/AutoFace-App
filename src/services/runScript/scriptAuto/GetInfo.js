@@ -38,10 +38,10 @@ export const getInfor = (profile) => {
                         break;
                     }
                 }
-                logger('Update name|' + ${profile.id}" + name + "|" + textFriends);
+                logger('${profile.id}','Update name:' + name + "|" + textFriends);
             }
             else{
-                logger('Update name|' + "${profile.id}" + name);
+                logger('${profile.id}','Update name:' + name);
             }
            
          }
