@@ -57,8 +57,7 @@ export const postInteract = (setting) => {
       let randomDelay = getRandomIntBetween(3 * 1000, 5 * 1000);
       let likeBtns = await findBtn(page, '󱍸');
       if (!likeBtns) {
-        logger('Debug' + '|' + 'Post interaction' + '|' + "Can't find like button.");
-  
+        logger('Debug|Post interaction|' + "Can't find like button.");
         return false;
       }
       await scrollSmoothIfElementNotExistOnScreen(page, likeBtns);
@@ -79,7 +78,6 @@ export const postInteract = (setting) => {
       let shareBtns = await findBtn(page, '󰍺 ');
       if (!shareBtns) {
         logger('Debug' + '|' + 'Post interaction' + '|' + "Can't find share button.");
-  
         return false;
       }
       await scrollSmoothIfElementNotExistOnScreen(page, shareBtns);
@@ -158,9 +156,9 @@ export const postInteract = (setting) => {
     logger('Tình trạng trang web:', isLive);
     if (!isLive) return -1;
     // check is login: get cookie return -1, return 1, return 0
-    const isLoggedIn = await checkLogin(page);
-    logger('Tình trạng đăng nhập:', isLoggedIn);
-    if (!isLoggedIn) return -1;
+    const {isLogin} = await checkLogin(page);
+    logger('Tình trạng đăng nhập:', isLogin);
+    if (!isLogin) return -1;
     let randomPost =
       getRandomIntBetween(post.postStart, post.postEnd) > post.UID.length
         ? post.UID.length
