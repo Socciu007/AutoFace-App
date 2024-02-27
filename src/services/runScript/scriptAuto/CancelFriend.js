@@ -49,7 +49,7 @@ export const cancelFriend = (setting) => {
       const confirmBtn = await getElement(page, "#screen-root > div.dialog-screen > div.dialog-vscroller > div > div > div > div > div:nth-child(4)");
       if(!confirmBtn) return false;
       await clickElement(confirmBtn) ;
-      await delay(1000);
+      await delay(3000);
       return true;
     }
   } else {
@@ -113,7 +113,7 @@ export const cancelFriend = (setting) => {
         return false;
       }
       await clickElement(confirmBtn);
-      await delay(1000);
+      await delay(3000);
       return true;
     } catch (error) {
       logger(error);
@@ -232,7 +232,7 @@ export const cancelFriend = (setting) => {
             logger('Hủy kết bạn không thành công');
           }
           if (count == numCancel) {
-            await delay(1000);
+            await delay(getRandomIntBetween(3000,5000));
             break;
           };
           await delay(randomDelay);
@@ -281,7 +281,10 @@ export const cancelFriend = (setting) => {
             } else {
               logger('Hủy kết bạn không thành công');
             }
-            if (count == numCancel) break;
+            if (count == numCancel) {
+              await delay(getRandomIntBetween(3000,5000));
+              break;
+            };
             await delay(5000);
           } catch (error) {
             logger(error);
@@ -305,7 +308,10 @@ export const cancelFriend = (setting) => {
           } else {
             logger("Hủy kết bạn không thành công");
           }
-          if (count == cancelObj.UID.length) break;
+          if (count == cancelObj.UID.length){
+            await delay(getRandomIntBetween(3000,5000));
+            break;
+          };
           await delay(5000);
         } catch (error) {
           logger(error);

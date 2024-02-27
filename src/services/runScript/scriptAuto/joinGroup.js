@@ -32,7 +32,7 @@ export const joinGroup = (setting) => {
     const findBtns = async (page, content) => {
     try {
       let arr = [];
-      const buttons = await getElements(page, '[class="native-text"]');
+      let buttons = await getElements(page, '[class="native-text"]');
       for (let i = 0; i < buttons.length; i++) {
         const btn = await page.evaluate((el) => {
           return el.innerHTML;
@@ -40,6 +40,17 @@ export const joinGroup = (setting) => {
         if (btn.includes(content)) {
           arr.push( buttons[i]);
         }
+      }
+      if(arr.length == 0){
+        buttons = await getElements(page, '[class="internal-input native-text native-text non-native-input"]');
+        for (let i = 0; i < buttons.length; i++) {
+        const btn = await page.evaluate((el) => {
+          return el.innerHTML;
+        }, buttons[i]);
+        if (btn.includes(content)) {
+          arr.push( buttons[i]);
+        }
+      }
       }
       return arr;
     } catch (err) {
@@ -143,6 +154,7 @@ const answerGroupQuestion = async (page, joinGroupObject) => {
     // click radio button
     const radioBtns = await findBtns(page, "󰞰");
     for(let i = 0 ; i < radioBtns.length; i++){
+      logger(radioBtns);
       if(i % 2 == 0){
         await scrollSmoothIfElementNotExistOnScreen(page,radioBtns[i]);
         await delay(1000);
