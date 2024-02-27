@@ -54,10 +54,10 @@ export const postInteract = (setting) => {
   };
   const randomLike = async (page) => {
     try {
-      let randomDelay = getRandomIntBetween(3 * 1000, 5 * 1000);
+      let randomDelay = getRandomIntBetween(3000, 5000);
       let likeBtns = await findBtn(page, '󱍸');
       if (!likeBtns) {
-        logger('Debug|Post interaction|' + "Can't find like button.");
+        logger("Can't find like button.");
         return false;
       }
       await scrollSmoothIfElementNotExistOnScreen(page, likeBtns);
@@ -74,10 +74,10 @@ export const postInteract = (setting) => {
   };
   const randomShare = async (page) => {
     try {
-      let randomDelay = getRandomIntBetween(3 * 1000, 5 * 1000);
+      let randomDelay = getRandomIntBetween(3000, 5000);
       let shareBtns = await findBtn(page, '󰍺 ');
       if (!shareBtns) {
-        logger('Debug' + '|' + 'Post interaction' + '|' + "Can't find share button.");
+        logger("Can't find share button.");
         return false;
       }
       await scrollSmoothIfElementNotExistOnScreen(page, shareBtns);
@@ -106,11 +106,11 @@ export const postInteract = (setting) => {
     }
   };
   const randomComment = async (page, PostInteract) => {
-    let randomDelay = getRandomIntBetween(3 * 1000, 5 * 1000);
+    let randomDelay = getRandomIntBetween(3000, 5000);
   
     let commentBtns = await findBtn(page, '󰍹 ');
     if (!commentBtns) {
-      logger('Debug' + '|' + 'Post interaction' + '|' + "Can't find comment button.");
+      logger("Can't find comment button.");
   
       return false;
     }
@@ -164,7 +164,7 @@ export const postInteract = (setting) => {
         ? post.UID.length
         : getRandomIntBetween(post.postStart, post.postEnd);
     logger('randomPost ' + randomPost);
-    let randomViewTime = getRandomIntBetween(post.viewTimeStart * 1000, post.viewTimeEnd * 1000);
+    let randomViewTime = getRandomIntBetween(post.viewTimeStart, post.viewTimeEnd) * 1000;
     await delay(2000);
     let arrLink = [];
     let numLikes = getRandomIntBetween(post.likeStart, post.likeEnd);
@@ -274,7 +274,6 @@ export const postInteract = (setting) => {
       if (post.isComment == true && post.isText == true && arrComment.includes(randomLink)) {
         if (!post.text.length) {
           logger('Debug' + '|' + 'Post interaction' + '|' + "Can't comment with empty text.");
-
           return 0;
         }
         try {
@@ -293,13 +292,11 @@ export const postInteract = (setting) => {
 
       const endTime = Date.now();
       randomViewTime = randomViewTime - (endTime - startTime);
-      let randomDelay = getRandomIntBetween(post.delayTimeStart * 1000, post.delayTimeEnd * 1000);
+      let randomDelay = getRandomIntBetween(post.delayTimeStart, post.delayTimeEnd) * 1000;
       await delay(randomDelay);
-      logger('randomViewTime ' + randomViewTime);
-      logger('Timing running ' + (endTime - startTime));
-      logger('Số post còn lại ' + randomPost);
     }
   } catch (error) {
+    logger('Debug|Post interaction|' + "Post interaction failed!");
     logger(error);
   }
     `;
