@@ -427,8 +427,6 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
       let randomDelay = getRandomIntBetween(addFriendObject.delayTimeStart * 1000, addFriendObject.delayTimeEnd * 1000);
       if (addFriendObject.isInteract == true) {
         let numPosts = getRandomIntBetween(addFriendObject.postStart, addFriendObject.postEnd);
-        let isReactLike = false;
-        let isComment = false;
         if (addFriendObject.isLiked == true) {
           logger('Cần like ' + numPosts + ' bài');
           let count = 0;
@@ -462,9 +460,6 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
               logger(error);
             }
           }
-          isReactLike = true;
-        } else {
-          isReactLike = true;
         }
         if (addFriendObject.isComment == true) {
           let count = 0;
@@ -478,14 +473,14 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
           for (let i = 0; i < numPosts * 2; i++) {
             try {
               const isLive = checkIsLive(page);
-          if (!isLive) {
-            logger("Debug"+"|"+"Add friend"+"|"+"Page is not alive!")
-            return false;
-          }
+              if (!isLive) {
+                logger("Debug"+"|"+"Add friend"+"|"+"Page is not alive!")
+                return false;
+              }
               let commentBtns = await findBtn(page, "󰍹");
               if (!commentBtns || commentBtns.length == 0) {
                commentBtns = await findBtn(page, "󰤦");
-              if (!commentBtns || commentBtns.length == 0) {
+                if (!commentBtns || commentBtns.length == 0) {
                 logger("Can not find any comment buttons");
                 break;
               }
@@ -509,12 +504,6 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
               logger(error);
             }
           }
-          isComment = true;
-        } else {
-          isComment = true;
-        }
-        if ((isReactLike = false || isComment == false)) {
-          return false;
         }
       }
       const rs = await clickAddBtn(page);
