@@ -185,11 +185,7 @@ export const addFriend = (setting) => {
       }
     }
      if (arr.length == 0){
-<<<<<<< HEAD
-      logger("Can't click friend element!");
-=======
       logger("Can not click friend element!");
->>>>>>> eb98e989eee1b0b0cf700deed924fc3c77d664ce
       return false;
     } 
     let randomIndex = getRandomInt(arr.length);
@@ -436,11 +432,7 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
           if (!likeBtns || likeBtns.length == 0) {
             likeBtns = await findBtn(page, "󰤥");
             if(!likeBtns || likeBtns.length == 0){
-<<<<<<< HEAD
-            logger("Can't find any like buttons");
-=======
             logger("Can not find any like buttons");
->>>>>>> eb98e989eee1b0b0cf700deed924fc3c77d664ce
             break;
             }
           };
@@ -487,11 +479,7 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
               if (!commentBtns || commentBtns.length == 0) {
                commentBtns = await findBtn(page, "󰤦");
               if (!commentBtns || commentBtns.length == 0) {
-<<<<<<< HEAD
-                logger("Can't find any comment buttons");
-=======
                 logger("Can not find any comment buttons");
->>>>>>> eb98e989eee1b0b0cf700deed924fc3c77d664ce
                 break;
               }
               };
