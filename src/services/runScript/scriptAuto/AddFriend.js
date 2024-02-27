@@ -143,14 +143,14 @@ export const addFriend = (setting) => {
       addFriendObject.delayTimeEnd * 1000
     );
     const addFriendSelector =
-      "#screen-root > div > div:nth-child(2) > div > div.m.bg-s5 > div > div > div:nth-child(2)";
+      "#screen-root > div > div:nth-child(2) > div > div > div > div > div:nth-child(2)";
       // scroll before click more button
     let temp = getRandomIntBetween(1, 3);
     logger("số lần scroll " + temp);
     await scrollSmooth(page, temp);
     let addBtns = await getElements(page, addFriendSelector, 5);
     if (!addBtns) {
-      logger("Debug" + "|" + "Add friend" + "|" + "Can not find any add buttons!");
+      logger("Can not find any add buttons!");
       return false;
     }
     let isAdd = false;
@@ -184,7 +184,7 @@ export const addFriend = (setting) => {
         logger("push to array");
       }
     }
-     if (arr.length == 0){
+    if (arr.length == 0){
       logger("Can not click friend element!");
       return false;
     } 
@@ -192,10 +192,14 @@ export const addFriend = (setting) => {
     await delay(1000);
     await scrollSmoothIfElementNotExistOnScreen(page, arr[randomIndex]);
     await delay(1000);
+    const url = await page.url();
+    await delay(1000);
     await clickElement(arr[randomIndex]);
     await delay(randomDelay);
-    const rs = await clickAddBtn(page);
-    if (!rs) {
+    const urlAfter = await page.url();
+    if(url !== urlAfter) {
+      const rs = await clickAddBtn(page);
+      if (!rs) {
       await delay(3000);
       await clickReturn(page);
       logger("click return 1")
@@ -207,6 +211,9 @@ export const addFriend = (setting) => {
     logger("click return 2")
     await delay(2000);
     isAdd = true;
+    }
+
+
     return isAdd;
   } catch (error) {
     logger(error);

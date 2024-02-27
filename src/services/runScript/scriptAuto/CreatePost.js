@@ -148,13 +148,14 @@ export const createPost = (setting) => {
             '#screen-root > div > div:nth-child(2) > div:nth-child(7) > div:nth-child(1)',
           )) === 0
         ) {
-          let select = await getElement(
-            page,
-            '#screen-root > div > div:nth-child(2) > div:nth-child(7) > div:nth-child(1)',
-            5,
-          );
+           let select = await findBtn(page, "󱢻");
+          if(!select || select.length == 0) return false;
           let arrImg = [];
           for (let i = 0; i < numberPhoto; i++) {
+                        const isLive = checkIsLive(page);
+            if (!isLive) {
+            return false;
+            }
             let randomImg = getRandomIntBetween(0, CreatePost.photos.length);
 
           
@@ -162,9 +163,8 @@ export const createPost = (setting) => {
 
             if (select) {
               const [fileChooser] = await Promise.all([page.waitForFileChooser(), await clickElement(select)]);
-              await delay(getRandomIntBetween(5000, 12000));
               await fileChooser.accept(arrImg);
-              await delay(8000);
+              await delay(10000);
               arrImg = [];
             } else {
               return false;

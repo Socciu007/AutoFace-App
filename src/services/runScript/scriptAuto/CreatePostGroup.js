@@ -32,6 +32,10 @@ const tagFriendsRandomly = async (page, numberFriendTag) => {
     }
     let temp = [];
     for (let i = 0; i < numberFriendTag * 2; i++) {
+      const isLive = checkIsLive(page);
+          if (!isLive) {   
+            return false;
+          }
       // Chọn một bạn bè ngẫu nhiên từ danh sách và click vào
       let randomFriend = getRandomIntBetween(0, listFriend.length);
       let index = temp.indexOf(randomFriend);
@@ -131,7 +135,7 @@ const uploadImg = async (page, CreatePost) => {
           : getRandomIntBetween(CreatePost.photoStart, CreatePost.photoEnd);
       logger(numberPhoto);
       if(CreatePost.photos.length == 0) {
-        logger("Không thấy nguồn ảnh.");
+        logger("Không thấy nguồn ảnh");
         return true;
       }
       if (CreatePost.photos.length > 0 && numberPhoto > 0) {
@@ -141,20 +145,20 @@ const uploadImg = async (page, CreatePost) => {
             '#screen-root > div > div:nth-child(2) > div:nth-child(7) > div:nth-child(1)',
           )) === 0
         ) {
-          let select = await getElement(
-            page,
-            '#screen-root > div > div:nth-child(2) > div:nth-child(7) > div:nth-child(1)',
-            5,
-          );
+          let select = await findBtn(page, "󰘄");
+          if(!select || select.length == 0) return false;
           let arrImg = [];
           for (let i = 0; i < numberPhoto; i++) {
+            const isLive = checkIsLive(page);
+            if (!isLive) {
+            return false;
+            }
             let randomImg = getRandomIntBetween(0, CreatePost.photos.length);
             arrImg.push(CreatePost.photos[randomImg]);
             if (select) {
-              const [fileChooser] = await Promise.all([page.waitForFileChooser(), await clickElement(select)]);
-              await delay(getRandomIntBetween(5000, 12000));
+              const [fileChooser] = await Promise.all([page.waitForFileChooser(), clickElement(select)]);
               await fileChooser.accept(arrImg);
-              await delay(8000);
+              await delay(10000);
               arrImg = [];
             } else {
               return false;
@@ -238,7 +242,10 @@ const createPost = async (page, CreatePost) => {
     );
     logger("Cần đăng " + numberOfPost + " bài");
     for (let i = 0; i < numberOfPost * 2; i++) {
-      
+            const isLive = checkIsLive(page);
+          if (!isLive) {
+            return false;
+      }
       // click post area in group
       let postAreaSelector =
         "#screen-root > div > div:nth-child(2) > div:nth-child(6) > div:nth-child(2) > div";
@@ -385,6 +392,11 @@ const createPost = async (page, CreatePost) => {
     let UIDList = CreatePost.UIDGroup;
     for (let i = 0; i < UIDList.length; i++) {
       try {
+        const isLive = checkIsLive(page);
+          if (!isLive) {
+            logger("Debug"+"|"+"Create post group"+"|"+"Page is not alive!")
+            return false;
+        }
         let UID = UIDList[i];
         await page.goto('https://m.facebook.com/groups/' + UID);
         await delay(5000);
