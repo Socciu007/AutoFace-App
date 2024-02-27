@@ -1,5 +1,4 @@
 export const getInfor = (profile) => {
-  console.log(profile);
   if (!profile.nameAccount || !profile.friends) {
     return `{
             try{

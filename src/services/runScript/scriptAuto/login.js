@@ -12,7 +12,6 @@ export const loginFacebook = (account) => {
   return `
   try {
     const account = ${accountStr};
-
     const checkPageIsLive = checkIsLive(page);
     if (!checkPageIsLive) {
       logger("Page null!");
@@ -21,7 +20,7 @@ export const loginFacebook = (account) => {
     await returnHomePage(page);
     await delay(2000);
     let loginDone = false;
-    let errLogin = '';
+    let errLogin = "";
     const checkpoint956 = async () => {
       await page.goto("https://mbasic.facebook.com/", {
         waitUntil: "networkidle2",
@@ -105,7 +104,7 @@ export const loginFacebook = (account) => {
                       await delay(5000);
                       for (let i = 0; i < 3; i++) {
                         const btnConfirm = await getElement(page, "a > span", 10);
-                        if(btnConfirm){
+                        if (btnConfirm) {
                           await btnConfirm.click();
                           await delay(7000);
                         }
@@ -138,6 +137,10 @@ export const loginFacebook = (account) => {
       if (!isLogin) {
         return { isLogin, error };
       }
+      if(account.cookies){
+        logger('Delete Cookie|'+account.cookies);
+      }
+      
     } else if (!isLogin) {
       if (
         account.cookies &&
@@ -194,9 +197,10 @@ export const loginFacebook = (account) => {
         if (!isLogin) {
           return { isLogin, error };
         }
-      }
-  
-      else if (
+        if(account.cookies){
+          logger('Delete Cookie|'+account.cookies);
+        }
+      } else if (
         !loginDone &&
         ((account.twoFA && account.twoFA.length > 5) ||
           (account.uid &&
@@ -380,11 +384,13 @@ export const loginFacebook = (account) => {
       if (!isLogin) {
         return { isLogin, error };
       }
+      if(account.cookies){
+        logger('Delete Cookie|'+account.cookies);
+      }
     }
   } catch (err) {
     logger(err);
     return false;
-  }
-  
+  }  
   `;
 };
