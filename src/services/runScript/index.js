@@ -174,7 +174,7 @@ const runCode = async (profile, profileSelected, index, dispatch, arrfunction, s
         cpu = infor.cpu;
         mem = infor.mem;
       }
-      const browserData = await getBrowserData(profile.id);
+      const browserData = await getBrowserData(profile.id, proxyConvert);
       if (browserData && browserData.data) {
         dispatch(updateProfile({ ...profile, script: scriptDesign.id, status: 'running' }));
         const positionBrowser = await getPosition(index);
@@ -275,7 +275,6 @@ const checkLogin = async (page, url) => {
 
 try {
   const cookies = await page.cookies(url ? url : page.url());
-  logger(cookies)
   if (cookies) {
     const c_user = cookies.find((e) => e.name == "c_user");
     const checkpoint = cookies.find((e) => e.name == "checkpoint");
@@ -787,6 +786,14 @@ return new Promise(async (resolve) => {
 },2000);
 
   {${loginFacebook(profile)}}
+  for(let i=0 ;i < 4;i++){
+    let elNext = await getElement(page,'[id="nux-nav-button"]', 5);
+        if(elNext){
+            await elNext.click();
+            await delay(7000);
+        }
+        else break;
+    }
   ${getInfor(profile)}
   ${getAllFunc(arrfunction)}
 

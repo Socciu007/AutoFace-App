@@ -31,44 +31,32 @@ const inviteGroupBySuggest = async (page, inviteGroupObject) => {
     await delay(randomDelay);
     let count = 0;
     let isInvite = false;
-    for (let i = 0; i < numFriends * 2; i++) {
-      // scroll before click
-      let temp = getRandomIntBetween(1, 3);
-      logger("số lần scroll " + temp);
-      await scrollSmooth(page,temp);
-      let invite =
+    let invite =
         "#screen-root > div > div:nth-child(2) > div > div:nth-child(3) > div.m";
-      let inviteButtons = await getElements(page, invite, 10);
-      if (!inviteButtons) continue;
-      let arr = [];
-      let newIndex = -1;
-      for (let i = 1; i < inviteButtons.length; i++) {
-        if (newIndex > i) continue;
-        inviteButtons = await getElements(page, invite, 10);
-        const inviteId = await page.evaluate((el) => {
-          return el.getAttribute("data-action-id");
-        }, inviteButtons[i]);
-        if (!inviteId) continue;
-        // click group on the screen
-        const invSelector = 'div[data-action-id="' + inviteId + '"]';
-        const inviteButton = await getElement(page, invSelector, 10);
-        if (!inviteButton) continue;
-        const isOnScreen = await checkExistElementOnScreen(page, invSelector);
-        if (isOnScreen == 0) {
-          if (arr.length == 3) {
-            newIndex = i;
-            break;
-          }
-          arr.push(inviteButtons[i]);
-          logger("push to array");
-        }
+    let inviteButtons = await getElements(page, invite, 10);
+    if (!inviteButtons) {
+      logger("Can't find any invite buttons");
+      return false;
+    };
+    let arr = [];
+    for (let i = 0; i < numFriends * 2; i++) {
+      const isLive = checkIsLive(page);
+      if (!isLive) {
+        logger("Page is not alive");
+        break;
       }
-      if (arr.length == 0) return false;
-      let randomIndex = getRandomInt(arr.length);
-      await delay(1000);
-      await scrollSmoothIfElementNotExistOnScreen(page, arr[randomIndex]);
-      await delay(1000);
-      await clickElement(arr[randomIndex]);
+        inviteButtons = await getElements(page, invite, 10);
+        await delay(1000);
+        let randomIndex = getRandomInt(inviteButtons.length);
+        let index = arr.indexOf(randomIndex);
+        if(index == -1){
+          arr.push(randomIndex);
+        } else {
+          continue;
+        }
+        await scrollSmoothIfElementNotExistOnScreen(page, inviteButtons[randomIndex]);
+        await delay(2000);
+      await clickElement(inviteButtons[randomIndex]);
       count++;
       logger("Mời thành công " + count + " người");
       await delay(randomDelay);
@@ -116,6 +104,11 @@ const findBtn = async (page, content) => {
     let UIDList = inviteGroupObject.text;
     for (let i = 0; i < UIDList.length; i++) {
       try {
+                const isLive = checkIsLive(page);
+        if (!isLive) {
+        logger("Debug" +"|" + "invite group" +"|" + "Page is not alive!");
+        return false;
+        }
         let UID = UIDList[i];
         await page.goto('https://m.facebook.com/groups/' + UID );
         const rs = await inviteGroupBySuggest(page, inviteGroupObject);

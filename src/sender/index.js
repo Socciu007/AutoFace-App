@@ -66,14 +66,14 @@ export const getProfilesMarco = () =>
     }
   });
 
-export const getBrowserData = (id) =>
+export const getBrowserData = (id, proxy) =>
   new Promise((resolve) => {
     try {
-      window.electron.ipcRenderer.sendMessage('ipc-get-browser-data', { id });
+      window.electron.ipcRenderer.sendMessage('ipc-get-browser-data', { id, proxy });
       window.electron.ipcRenderer.once('ipc-get-browser-data' + id, resolve);
       setTimeout(() => {
         resolve({ success: false, error: 'Timeout!' });
-      }, 15000);
+      }, API_TIMEOUT);
     } catch (error) {
       resolve({ success: false, error });
     }
