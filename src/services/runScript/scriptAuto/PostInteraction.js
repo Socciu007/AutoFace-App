@@ -56,9 +56,13 @@ export const postInteract = (setting) => {
     try {
       let randomDelay = getRandomIntBetween(3000, 5000);
       let likeBtns = await findBtn(page, '󱍸');
+       
       if (!likeBtns) {
-        logger("Can't find like button.");
-        return false;
+        likeBtns = await findBtn(page, "󰍸");
+        if(!likeBtns){
+          logger("Can't find like button.");
+          return false;
+        }
       }
       await scrollSmoothIfElementNotExistOnScreen(page, likeBtns);
       await delay(5000);
@@ -107,12 +111,13 @@ export const postInteract = (setting) => {
   };
   const randomComment = async (page, PostInteract) => {
     let randomDelay = getRandomIntBetween(3000, 5000);
-  
-    let commentBtns = await findBtn(page, '󰍹 ');
+    let commentBtns = await findBtn(page, '󰍹');
     if (!commentBtns) {
-      logger("Can't find comment button.");
-  
-      return false;
+      commentBtns = await findBtn(page, "󰤦");
+      if (!commentBtns){
+        logger("Can't find comment button.");
+        return false;
+      }
     }
   
     await scrollSmoothIfElementNotExistOnScreen(page, commentBtns);
