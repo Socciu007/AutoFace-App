@@ -85,7 +85,7 @@ const PopupChooseProfile = ({ openProfiles, handleCloseProfiles, designScript })
   const columns = [
     {
       title: '#',
-      width: 100,
+      width: 40,
       render: (text, record, index) => <div>{index + 1}</div>,
     },
     {

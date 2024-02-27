@@ -292,7 +292,7 @@ const ProfilesPage = () => {
       {
         title: '#',
         // dataIndex: 'key',
-        width: 100,
+        width: 50,
         render: (text, record, index) => <div>{index + 1}</div>,
       },
     ];
@@ -567,9 +567,8 @@ const ProfilesPage = () => {
           >
             <Popover
               open={rowID == profile.id}
-              trigger="click"
+              trigger="hover"
               onOpenChange={handleCloseAction}
-              onClose={handleCloseAction}
               placement="rightTop"
               content={
                 <div className="-popover-options">

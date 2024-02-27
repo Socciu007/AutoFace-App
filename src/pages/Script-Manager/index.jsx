@@ -291,7 +291,7 @@ const ScriptManager = () => {
   const columns = [
     {
       title: '#',
-      width: 100,
+      width: 30,
       render: (text, record, index) => <div style={{ textAlign: 'center' }}>{index + 1}</div>,
     },
     {
@@ -331,6 +331,7 @@ const ScriptManager = () => {
                 dispatch(setScriptAuto(script.name));
                 setItemSelect(script);
                 setIsRunScript(true);
+                setAnchorEl(null);
               }}
             >
               {status && status.total ? (
@@ -485,7 +486,12 @@ const ScriptManager = () => {
 
   return (
     <>
-      <div className="wrapper">
+      <div
+        className="wrapper"
+        style={{
+          opacity: isRunScript ? 0.3 : 1,
+        }}
+      >
         <div className="script-manager">
           <div className="script-manager__header">
             <h1>FACEBOOK AUTOMATION</h1>

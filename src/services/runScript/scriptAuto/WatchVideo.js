@@ -257,9 +257,9 @@ export const watchVideo = (setting) => {
               targetPosition
             );
             smoothScrollByStep(nextPosition, durationPerStep);
-            await delay(getRandomIntBetween(1000, 3000));
+            await delay(getRandomIntBetween(1000, 2000));
             if(Math.random() < 0.3){
-              await delay(getRandomIntBetween(3000, 4000));
+              await delay(getRandomIntBetween(2000, 4000));
             }
             currentPosition = nextPosition;
           }
@@ -368,14 +368,13 @@ export const watchVideo = (setting) => {
             const durationPerStep = getRandomIntBetween(500, 2000);
             const nextPosition = currentPosition + stepSize;
             await smoothScrollByStep(nextPosition, durationPerStep);
-            await delay(getRandomIntBetween(1000, 3000));
+            await delay(getRandomIntBetween(1000, 2000));
             if(Math.random() < 0.3){
-              await delay(getRandomIntBetween(3000, 4000));
+              await delay(getRandomIntBetween(2000, 4000));
             }
             currentPosition = window.scrollY;
           }
-  
-          await delay(getRandomIntBetween(1000, 3000));
+          await delay(getRandomIntBetween(2000, 3000));
         }
       }, element);
       return true;
@@ -480,7 +479,7 @@ export const watchVideo = (setting) => {
         await clickElement(cfLanguageEle1);
       } else if (cfLanguageEle2) {
         await clickElement(cfLanguageEle2);
-      } else if (cfLanguageEle == undefined && cfLanguageEle0 == undefined && cfLanguageEle1 == undefined && cfLanguageEle2 == undefined) {
+      } else if (languageBtn || languageBtn1) {
         await clickElementRandom(
           page,
           "div.m > div.fl.ac > div.native-text > span.f2",

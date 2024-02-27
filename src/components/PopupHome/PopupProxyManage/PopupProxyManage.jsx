@@ -133,6 +133,7 @@ const PopupProxyManage = ({
   const columnsProxys = [
     {
       title: '#',
+      width: 50,
       dataIndex: 'key',
     },
     {
