@@ -50,7 +50,7 @@ const splitToChunks = (array, length, thread) => {
 
 const getPosition = async (index) => {
   let x, y;
-  const browserWidth = 350;
+  const browserWidth = 450;
   const { width } = await getWindowsize();
   let maxBrowserRow = (width / browserWidth) | 0;
   const indexBrowser = index % maxBrowserRow;
@@ -765,6 +765,8 @@ return new Promise(async (resolve) => {
   const session = await page.target().createCDPSession();
   await session.send("Page.enable");
   await session.send("Page.setWebLifecycleState", { state: "active" });
+  await page.bringToFront();
+  await delay(1000);
   let interval;
   const proxy = ${
     proxyConvert && proxyConvert.host
