@@ -45,7 +45,7 @@ const tagFriendsRandomly = async (page, numberFriendTag) => {
       await clickElement(listFriend[randomFriend]);
       logger("Tag thành công");
       count++;
-      await delay(5000);
+      await delay(3000);
       if (count == numberFriendTag) {
         return true;
       }
@@ -124,51 +124,54 @@ const tagFriend = async (page, CreatePost) => {
   }
 };
 const uploadImg = async (page, CreatePost) => {
-  try {
-    const numberPhoto =
-      getRandomIntBetween(CreatePost.photoStart, CreatePost.photoEnd) >
-      CreatePost.photos.length
-        ? CreatePost.photos.length
-        : getRandomIntBetween(CreatePost.photoStart, CreatePost.photoEnd);
-    if (CreatePost.photos.length > 0 && numberPhoto > 0) {
-      if (
-        (await checkExistElementOnScreen(
-          page,
-          "#screen-root > div > div:nth-child(2) > div:nth-child(7) > div:nth-child(1)"
-        )) === 0
-      ) {
-        const select = await getElement(
-          page,
-          "#screen-root > div > div:nth-child(2) > div:nth-child(7) > div:nth-child(1)",
-          5
-        );
-        CreatePost.photos.length = numberPhoto;
-        if (select) {
-          const [fileChooser] = await Promise.all([
-            page.waitForFileChooser(),
-            await clickElement(select),
-          ]);
-          await delay(3000);
-          // Accept multiple files
-          await fileChooser.accept(CreatePost.photos);
-          await delay(8000);
+    try {
+      const numberPhoto =
+        getRandomIntBetween(CreatePost.photoStart, CreatePost.photoEnd) > CreatePost.photos.length
+          ? CreatePost.photos.length
+          : getRandomIntBetween(CreatePost.photoStart, CreatePost.photoEnd);
+      logger(numberPhoto);
+      if(CreatePost.photos.length == 0) {
+        logger("Không thấy nguồn ảnh.");
+        return true;
+      }
+      if (CreatePost.photos.length > 0 && numberPhoto > 0) {
+        if (
+          (await checkExistElementOnScreen(
+            page,
+            '#screen-root > div > div:nth-child(2) > div:nth-child(7) > div:nth-child(1)',
+          )) === 0
+        ) {
+          let select = await getElement(
+            page,
+            '#screen-root > div > div:nth-child(2) > div:nth-child(7) > div:nth-child(1)',
+            5,
+          );
+          let arrImg = [];
+          for (let i = 0; i < numberPhoto; i++) {
+            let randomImg = getRandomIntBetween(0, CreatePost.photos.length);
+            arrImg.push(CreatePost.photos[randomImg]);
+            if (select) {
+              const [fileChooser] = await Promise.all([page.waitForFileChooser(), await clickElement(select)]);
+              await delay(getRandomIntBetween(5000, 12000));
+              await fileChooser.accept(arrImg);
+              await delay(8000);
+              arrImg = [];
+            } else {
+              return false;
+            }
+          }
         } else {
+          logger('Debug' + '|' + 'Create post' + '|' + "Can't find click photo btn!");
           return false;
         }
-      } else {
-        logger("Can not find click photo btn");
-        return false;
       }
-    } else {
-      logger("So anh random khong hop le");
+      return true;
+    } catch (error) {
+      logger(error);
       return false;
     }
-    return true;
-  } catch (error) {
-    logger(error);
-    return false;
-  }
-};
+  };
+  
 const inputContent = async (page, CreatePost) => {
   try {
     // Input text
@@ -256,7 +259,7 @@ const createPost = async (page, CreatePost) => {
       await scrollSmoothIfElementNotExistOnScreen(page, postArea);
       await delay(1000);
       await clickElement(postArea);
-      await delay(1000);
+      await delay(3000);
         // Text/photo
         if (CreatePost.option === "text/photo") {
           const rs = await inputContent(page, CreatePost);
