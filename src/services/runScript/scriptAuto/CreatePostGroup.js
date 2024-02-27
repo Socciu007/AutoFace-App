@@ -156,7 +156,7 @@ const uploadImg = async (page, CreatePost) => {
           return false;
         }
       } else {
-        logger("Can't find click photo btn");
+        logger("Can not find click photo btn");
         return false;
       }
     } else {
@@ -247,7 +247,7 @@ const createPost = async (page, CreatePost) => {
         if(!postArea) {
           postArea = await findBtn(page, "...");
           if(postArea == false) {
-            logger("Debug" + "|" + "Create post group" + "|" + "Can't find post area!");
+            logger("Debug" + "|" + "Create post group" + "|" + "Can not find post area!");
             return false;
           }
         }

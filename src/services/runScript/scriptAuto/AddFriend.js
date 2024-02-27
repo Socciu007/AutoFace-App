@@ -61,7 +61,7 @@ export const addFriend = (setting) => {
         "#screen-root > div > div:nth-child(2) > div> div.m.bg-s4 > div:nth-child(3)";
       mutualElement = await getElements(page, mutualSelector, 10);
       if (!mutualElement){
-        logger("Debug" + "|" + "Add friend" + "|" + "Can't find friend button");
+        logger("Debug" + "|" + "Add friend" + "|" + "Can not find friend button");
         return false;
       } 
     }
@@ -150,7 +150,7 @@ export const addFriend = (setting) => {
     await scrollSmooth(page, temp);
     let addBtns = await getElements(page, addFriendSelector, 5);
     if (!addBtns) {
-      logger("Debug" + "|" + "Add friend" + "|" + "Can't find any add buttons!");
+      logger("Debug" + "|" + "Add friend" + "|" + "Can not find any add buttons!");
       return false;
     }
     let isAdd = false;
@@ -185,7 +185,7 @@ export const addFriend = (setting) => {
       }
     }
      if (arr.length == 0){
-      logger("Can't click friend element!");
+      logger("Can not click friend element!");
       return false;
     } 
     let randomIndex = getRandomInt(arr.length);
@@ -358,7 +358,7 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
         await delay(2000);
         const postBtn = await findBtn(page, "󱛅");
         if (!postBtn || postBtn.length == 0) {
-                logger("Debug" + "|" + "addFriendByUIDList" + "|" + "Can't find post button");
+                logger("Debug" + "|" + "addFriendByUIDList" + "|" + "Can not find post button");
                 return {
                   isClick: isClick,
                   newIndex: temp
@@ -432,7 +432,7 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
           if (!likeBtns || likeBtns.length == 0) {
             likeBtns = await findBtn(page, "󰤥");
             if(!likeBtns || likeBtns.length == 0){
-            logger("Can't find any like buttons");
+            logger("Can not find any like buttons");
             break;
             }
           };
@@ -479,7 +479,7 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
               if (!commentBtns || commentBtns.length == 0) {
                commentBtns = await findBtn(page, "󰤦");
               if (!commentBtns || commentBtns.length == 0) {
-                logger("Can't find any comment buttons");
+                logger("Can not find any comment buttons");
                 break;
               }
               };
@@ -645,7 +645,7 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
     const fofElements = await getElements(page, fofSelector, 3);
     await delay(2000);
     if (!fofElements) {
-      logger("Can't find friend !");
+      logger("Can not find friend !");
       return false
     };
     for(let i = 3; i <= fofElements.length; i++){
@@ -1102,7 +1102,7 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
               "#screen-root > div > div:nth-child(2) > div > div.m.bg-s4";
             friendBtns = await getElements(page, friendSelector);
             if (!friendBtns) {
-              logger("can't find friend buttons")
+              logger("Can not find friend buttons")
               return false;
             }
           }

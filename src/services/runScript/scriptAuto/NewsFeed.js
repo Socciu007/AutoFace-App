@@ -233,7 +233,7 @@ try {
           if (!likeBtns || likeBtns.length == 0) {
             likeBtns = await findBtn(page, "󰤥");
             if(!likeBtns || likeBtns.length == 0){
-            logger("Debug" + "|" + "NewsFeed" + "|" + "Can't find any like buttons");
+            logger("Debug" + "|" + "NewsFeed" + "|" + "Can not find any like buttons");
             break;
             }
           };
@@ -276,7 +276,7 @@ try {
           if (!shareBtns || shareBtns.length == 0) {
             shareBtns = await findBtn(page, "󰤧");
              if (!shareBtns || shareBtns.length == 0) {
-              logger("Debug" + "|" + "NewsFeed" + "|" + "Can't find any share buttons");
+              logger("Debug" + "|" + "NewsFeed" + "|" + "Can not find any share buttons");
               break;
              }
           };
@@ -325,7 +325,7 @@ try {
           if (!commentBtns || commentBtns.length == 0) {
             commentBtns = await findBtn(page, "󰤦");
              if (!commentBtns || commentBtns.length == 0) {
-              logger("Debug" + "|" + "NewsFeed" + "|" + "Can't find any comment buttons");
+              logger("Debug" + "|" + "NewsFeed" + "|" + "Can not find any comment buttons");
               return false;
              }
           };

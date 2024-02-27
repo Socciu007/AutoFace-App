@@ -56,10 +56,11 @@ const ProfilesPage = () => {
 
   if (!window.electron.ipcRenderer.eventNames().includes('ipc-logger')) {
     window.electron.ipcRenderer.on('ipc-logger', (...params) => {
-      if (params[0].length == 3 && params[0][1] && params[0][2] && params[0][2].includes('Update name:')) {
-        const name = params[0][2].split('|')[0].replace('Update name:', '');
-        const friend = params[0][2].split('|')[1] ? params[0][2].split('|')[1] : '';
-        updateAccount(params[0][1], name, friend);
+      if (params[0][1] && params[0][1].toString().includes('Update name|')) {
+        const id = params[0][1].split('|')[0];
+        const name = params[0][1].split('|')[1] ? params[0][1].split('|')[1] : '';
+        const friend = params[0][1].split('|')[2] ? params[0][1].split('|')[2] : '';
+        updateAccount(id, name, friend);
       }
 
       if (params[0][1] && params[0][1].toString().includes('Debug|')) {

@@ -66,7 +66,7 @@ class HttpService {
         return {
           success: false,
           data: undefined,
-          errors: "Can't connect to server!",
+          errors: 'Can not connect to server!',
         };
       });
     this.removeItem(path);
