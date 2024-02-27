@@ -35,8 +35,7 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
         console.log(file);
         return file.path;
       });
-
-      setValues({ ...values, photos: [...values.photos, ...newFiles] });
+      setLikeComment({ ...likeComment, file: [...likeComment.file, ...newFiles] });
     },
   });
 

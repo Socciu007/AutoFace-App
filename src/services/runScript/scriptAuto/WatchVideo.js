@@ -421,18 +421,17 @@ export const watchVideo = (setting) => {
         watchVideoObj.videoStart,
         watchVideoObj.videoEnd
       );
-      const numsLike = getRandomIntBetween(
+      const numsLikes = getRandomIntBetween(
         watchVideoObj.likeStart,
         watchVideoObj.likeEnd
       );
-      const numsShare = getRandomIntBetween(
+      const numsShares = getRandomIntBetween(
         watchVideoObj.shareStart,
         watchVideoObj.shareEnd
       );
-      const numsComment = getRandomIntBetween(
-        watchVideoObj.commentStart,
-        watchVideoObj.commentEnd
-      );
+      const numsLike = numsLikes > numsVideo ? numsVideo : numsLikes;
+      const numsShare = numsShares > numsVideo ? numsVideo : numsShares;
+
       //navigate video page
       await delay(getRandomIntBetween(1000, 3000));
       await clickElementRandom(
@@ -517,7 +516,7 @@ export const watchVideo = (setting) => {
           //like video
           if (watchVideoObj.isLike) {
             try {
-              if (countLike <= numsLike && getRandomIntBetween(0, 2) == 1) {
+              if (countLike < numsLike && getRandomIntBetween(0, 2) == 1) {
                 await delay(getRandomIntBetween(3000, 5000));
                 const likeBtn = await findBtn(page, '󰍸', '[class="native-text"]');
                 if (likeBtn) {
@@ -538,7 +537,7 @@ export const watchVideo = (setting) => {
           //comment video
           if (watchVideoObj.isComment) {
             try {
-              if (countComment <= numsComment && watchVideoObj.option == "all") {
+              if (watchVideoObj.option == "all") {
                 if (getRandomIntBetween(0, 2) == 1) {          
                   const button = await findBtn(
                     page,
@@ -563,13 +562,10 @@ export const watchVideo = (setting) => {
                     countComment++;
                     logger("Count comment video " + countComment);
                   } else {
-                    logger("No comment button")
+                    logger("No comment button");
                   }
                 }
-              } else if (
-                countComment <= numsComment &&
-                watchVideoObj.option == "text"
-              ) {
+              } else if (watchVideoObj.option == "text") {
                 if (
                   getRandomIntBetween(0, 2) == 1 &&
                   watchVideoObj.text.length > 0
@@ -622,7 +618,7 @@ export const watchVideo = (setting) => {
           //share video
           if (watchVideoObj.isShare) {
             try {
-              if (countShare <= numsShare && getRandomIntBetween(0, 2) == 1) {
+              if (countShare < numsShare && getRandomIntBetween(0, 2) == 1) {
                 const shareBtn = await findBtn(
                   page,
                   "󰍺",
