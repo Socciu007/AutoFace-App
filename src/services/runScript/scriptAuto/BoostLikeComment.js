@@ -26,15 +26,17 @@ export const boostLikeComment = (setting) => {
         boostObj.tagFriendStart,
         boostObj.tagFriendEnd
       );
-      const numsPostPerID = getRandomIntBetween(
+      let numsPostPerID = getRandomIntBetween(
         boostObj.postQuantityStart,
         boostObj.postQuantityEnd
       );
+      let arrPostID = boostObj.postID.sort(() => Math.random() - 0.5);
+      numsPostPerID = arrPostID.length > numsPostPerID ? numsPostPerID : arrPostID.length;
       let arrID = [];
-      for (let i = 0; i < boostObj.postID.length; i++) {
-        const [id, fbid] = boostObj.postID[i].split("|");
-        const isDuplicate = await checkDuplicate(arrID, id, numsPostPerID);
-        if (!isDuplicate) {
+      for (let i = 0; i < numsPostPerID; i++) {
+        const [id, fbid] = arrPostID[i].split("|");
+        // const isDuplicate = await checkDuplicate(arrID, id, numsPostPerID);
+        // if (!isDuplicate) {
           const urlPost = 'https://m.facebook.com/story.php/?id='+id+'&story_fbid='+fbid;
           await navigateToUrl(page, urlPost);
           await delay(getRandomIntBetween(3000, 5000));
@@ -60,11 +62,11 @@ export const boostLikeComment = (setting) => {
           await delay(getRandomIntBetween(3000, 5000));
           await sharePost(page, boostObj);
           await delay(getRandomIntBetween(3000, 5000));
-          arrID.push(id);
-        } else {
-          logger("Exceeds posts per uid, go to new uid");
-          continue;
-        }
+        //   arrID.push(id);
+        // } else {
+        //   logger("Exceeds posts per uid, go to new uid");
+        //   continue;
+        // }
       }
     } catch (error) {
       logger("Debug|BoostLikeComment|No can access UID or Post UID of user");
@@ -336,7 +338,7 @@ export const boostLikeComment = (setting) => {
         const isInViewport = elem => {
           const bounding = elem.getBoundingClientRect();
           return (
-            bounding.top >= 100 &&
+            bounding.top >= 50 &&
             bounding.left >= 0 &&
             bounding.bottom - bounding.top <=
               (window.innerHeight || document.documentElement.clientHeight) &&
