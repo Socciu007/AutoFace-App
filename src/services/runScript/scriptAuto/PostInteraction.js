@@ -149,6 +149,17 @@ export const postInteract = (setting) => {
     isClick = true;
     return isClick;
   };
+
+  const shuffle = (array) =>{
+    let currentIndex = array.length,  randomIndex;
+    while (currentIndex > 0) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+    return array;
+  }
   
   
   
@@ -237,22 +248,21 @@ export const postInteract = (setting) => {
   }
     logger('arrComment', arrComment);
 
-    while (randomViewTime > 0 && randomPost > 0 && post.UID.length > 0) {
+    const newUID = shuffle(post.UID);
+    const arrPost = [];
+    for(let i=0;i<randomPost;i++){
+      if(i == post.UID.length) break;
+      arrPost.push(newUID[i]);
+    }
+
+
+    for (let i=0;i<arrPost.length; i++) {
+      if(randomViewTime < 0) break;
       let randomLink = getRandomIntBetween(0, post.UID.length);
-      logger('randomLink', randomLink);
-      logger('arrLink', arrLink);
-      logger('arrLink.length', arrLink.length);
-      if (arrLink.length === randomPost) break;
-      if (arrLink.includes(randomLink)) {
-        logger('Đã hiển thị bài trước đó');
-        continue;
-      }
-      arrLink.push(randomLink);
-      const [id, fbid] = post.UID[randomLink].split('|');
+      const [id, fbid] = arrPost[i].split('|');
       await page.goto('https://m.facebook.com/story.php/?id=' + id + '&story_fbid=' + fbid);
       await delay(2000);
-      randomPost--;
-
+   
       if (
         (await checkExistElementOnScreen(
           page,
@@ -265,7 +275,10 @@ export const postInteract = (setting) => {
 
       const startTime = Date.now();
 
-      if (post.isLiked == true && arrLike.includes(randomLink)) {
+      let randomDelay = getRandomIntBetween(post.delayTimeStart, post.delayTimeEnd) * 1000;
+      await delay(randomDelay);
+
+      if (post.isLiked == true && arrLike.includes(i)) {
         try {
           await returnProfilePage(page, id, fbid);
           const result = await randomLike(page);
@@ -279,9 +292,9 @@ export const postInteract = (setting) => {
           logger(error);
         }
       }
-      await delay(getRandomIntBetween(4, 8) * 1000);
+      await delay(getRandomIntBetween(2, 5) * 1000);
 
-      if (post.isShare == true && arrShare.includes(randomLink)) {
+      if (post.isShare == true && arrShare.includes(i)) {
         try {
           await returnProfilePage(page, id, fbid);
           const result = await randomShare(page);
@@ -295,9 +308,9 @@ export const postInteract = (setting) => {
           logger(error);
         }
       }
-      await delay(getRandomIntBetween(4, 8) * 1000);
+      await delay(getRandomIntBetween(2, 5) * 1000);
 
-      if (post.isComment == true && post.isText == true && arrComment.includes(randomLink)) {
+      if (post.isComment == true && post.isText == true && arrComment.includes(i)) {
         if (!post.text.length) {
           logger('Debug' + '|' + 'Post interaction' + '|' + "Can't comment with empty text.");
           return 0;
@@ -310,7 +323,7 @@ export const postInteract = (setting) => {
           } else {
             logger('Comment không thành công');
           }
-          await delay(getRandomIntBetween(3, 5) * 1000);
+          await delay(getRandomIntBetween(2, 5) * 1000);
         } catch (error) {
           logger(error);
         }
@@ -318,8 +331,7 @@ export const postInteract = (setting) => {
 
       const endTime = Date.now();
       randomViewTime = randomViewTime - (endTime - startTime);
-      let randomDelay = getRandomIntBetween(post.delayTimeStart, post.delayTimeEnd) * 1000;
-      await delay(randomDelay);
+     
     }
   } catch (error) {
     logger('Debug|Post interaction|' + "Post interaction failed!");

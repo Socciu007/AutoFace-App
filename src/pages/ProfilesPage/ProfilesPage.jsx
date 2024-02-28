@@ -794,6 +794,8 @@ const ProfilesPage = () => {
   const handleReloadPage = async () => {
     await getProfiles();
     await getUser();
+    setProfilesSelected([]);
+    setSelectedRowKeys([]);
     Store.addNotification({
       ...notification,
       type: 'success',
