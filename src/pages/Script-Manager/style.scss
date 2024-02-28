@@ -271,6 +271,15 @@ body {
       .ant-table-thead > tr > td.ant-table-cell {
         background-color: #f2f8ff !important;
       }
+      .ant-table-tbody > tr > td.ant-table-cell {
+        padding: 10px 16px !important;
+        div {
+          height: 30px !important;
+          display: flex;
+          align-items: center;
+        }
+      }
+
       .ant-table-thead > tr > th.ant-table-cell {
         font-size: 15px;
         font-weight: 700;
@@ -295,7 +304,8 @@ body {
           td.ant-table-cell {
             font-size: 15px;
             font-weight: 700;
-            line-height: normal;
+            line-height: 20px;
+            // line-height: normal;
             background: #f2f8ff !important;
             border-bottom: 1px solid #e0e0e0;
             color: rgba(1, 22, 43, 0.6);
@@ -344,6 +354,7 @@ body {
       font-weight: 700;
       img {
         padding: 0 10px;
+        height: 15px;
       }
       .runScript {
         border-radius: 5px;
@@ -400,6 +411,10 @@ body {
 .MenuScript {
   .MuiMenu-paper.MuiPopover-paper {
     background-color: transparent !important;
+  }
+  .MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded {
+    // top: 446px !important;
+    // left: 931px !important;
   }
   .dropList {
     max-width: 250px;

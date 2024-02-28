@@ -33,6 +33,8 @@ const ScriptManager = () => {
 
   // for style menu materials UI
   const menuStyle = {
+    marginTop: '-15px',
+    marginLeft: '-8px',
     boxShadow:
       '0px 5px 5px -3px rgb(233 232 232 / 20%), 0px 8px 10px 1px rgb(255 255 255 / 14%), 0px 3px 14px 2px rgb(241 232 232 / 12%)',
   };
@@ -246,11 +248,11 @@ const ScriptManager = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const generateNoteStr = (note, shot = true) => {
+  const generateNoteStr = (note, shot = true, length = 75) => {
     let noteStr = note && note.length ? `${note}` : '';
 
-    if (noteStr.length > 75 && shot) {
-      noteStr = `${note.slice(0, 75)}...`;
+    if (noteStr.length > length && shot) {
+      noteStr = `${note.slice(0, length)}...`;
     }
     return noteStr;
   };
@@ -269,7 +271,7 @@ const ScriptManager = () => {
         .split(',')
         .map((e) => {
           if (e && e.length && !e.startsWith('#')) {
-            return '#' + e;
+            return '#' + e.toString().trim();
           }
           return e;
         });
@@ -297,22 +299,22 @@ const ScriptManager = () => {
     {
       title: 'Name',
       width: 230,
-      render: (script) => {
-        return (
-          <div className="pin">
-            <span>{script.name}</span>
-            {script.isPin ? <img src={pin} alt="Pin" className={'show'} /> : null}
-          </div>
-        );
-      },
+      render: (script) => (
+        <div className="pin">
+          <Tooltip placement="topLeft" title={generateNoteStr(script.name, false)}>
+            {generateNoteStr(script.name, true, 50)}
+          </Tooltip>
+          {script.isPin ? <img src={pin} alt="Pin" className={'show'} /> : null}
+        </div>
+      ),
     },
     {
       title: 'Status',
       dataIndex: 'status',
       sorter: (a, b) => {
         if (!a.isPin && !b.isPin) {
-          const nameA = a.status.toUpperCase();
-          const nameB = b.status.toUpperCase();
+          const nameA = a.status ? a.status.toString().toUpperCase() : '';
+          const nameB = b.status ? b.status.toString().toUpperCase() : '';
           if (nameA < nameB) {
             return -1;
           }
@@ -489,7 +491,7 @@ const ScriptManager = () => {
       <div
         className="wrapper"
         style={{
-          opacity: isRunScript ? 0.3 : 1,
+          opacity: isRunScript ? 0.1 : 1,
         }}
       >
         <div className="script-manager">

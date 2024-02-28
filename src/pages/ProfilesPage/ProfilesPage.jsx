@@ -9,9 +9,11 @@ import settings from '../../assets/pictures/icon-settings.png';
 import plus from '../../assets/pictures/icon-plus.png';
 import options from '../../assets/pictures/icon-options.png';
 import addProxy from '../../assets/pictures/icon-addProxy.png';
-import deleted from '../../assets/pictures/icon-delete.svg';
+// import deleted from '../../assets/pictures/icon-delete.svg';
+import deleted from '../../assets/icon/icon-Delete.svg';
 import yourScript from '../../assets/pictures/icon-yourScripts.svg';
-import pin from '../../assets/pictures/icon-pin.svg';
+import pin from '../../assets/icon/icon-pin.svg';
+import pinBlack from '../../assets/icon/icon-pinBlack.svg';
 import avatar from '../../assets/icon/icon-avatar.svg';
 import activeProfile from '../../assets/icon/icon-profileTotal.svg';
 import logout from '../../assets/icon/icon-logOut.svg';
@@ -348,8 +350,8 @@ const ProfilesPage = () => {
         width: 200,
         sorter: (a, b) => {
           if (!a.isPin && !b.isPin) {
-            const nameA = a.uid.toUpperCase();
-            const nameB = b.uid.toUpperCase();
+            const nameA = a.uid ? a.uid.toUpperCase() : '';
+            const nameB = b.uid ? b.uid.toUpperCase() : '';
             if (nameA < nameB) {
               return -1;
             }
@@ -468,8 +470,8 @@ const ProfilesPage = () => {
         },
         sorter: (a, b) => {
           if (!a.isPin && !b.isPin) {
-            const nameA = a.recoveryEmail.toUpperCase();
-            const nameB = b.recoveryEmail.toUpperCase();
+            const nameA = a.recoveryEmail ? a.recoveryEmail.toUpperCase() : '';
+            const nameB = b.recoveryEmail ? b.recoveryEmail.toUpperCase() : '';
             if (nameA < nameB) {
               return -1;
             }
@@ -596,7 +598,7 @@ const ProfilesPage = () => {
                     }}
                     className="-popover-options__attribute border-bottom"
                   >
-                    <img src={pin} alt="icon-pin"></img>
+                    <img src={pinBlack} alt="icon-pin"></img>
                     {!profile.isPin ? <p>Pin</p> : <p>Unpin</p>}
                   </div>
                   <div
@@ -757,7 +759,7 @@ const ProfilesPage = () => {
         .split(',')
         .map((e) => {
           if (e && e.length && !e.startsWith('#')) {
-            return '#' + e;
+            return '#' + e.toString().trim();
           }
           return e;
         });
@@ -874,15 +876,18 @@ const ProfilesPage = () => {
         const mail = e.recoveryEmail ? e.recoveryEmail.toLowerCase() : '';
         const name = e.nameAccount ? e.nameAccount.toLowerCase() : '';
         const tags = e.tag ? e.tag.join(',').toLowerCase() : '';
+        const proxy = generateProxyStr(e.proxy, false).toLowerCase();
         return (
           profile.includes(text.toLowerCase()) ||
           name.includes(text.toLowerCase()) ||
           mail.includes(text.toLowerCase()) ||
-          tags.includes(text.toLowerCase())
+          tags.includes(text.toLowerCase()) ||
+          proxy.includes(text.toLowerCase())
         );
       });
+      const newData = newProfiles.sort((x, y) => Number(y.isPin) - Number(x.isPin));
       setDataSearch(
-        newProfiles.map((e, index) => {
+        newData.map((e, index) => {
           return { ...e, key: index + 1 };
         }),
       );
@@ -939,7 +944,7 @@ const ProfilesPage = () => {
       style={{
         opacity:
           openAddProxy || openDeleteProfile || openScripts || openProfiles || openProxyManage || openDisplaySetting
-            ? 0.3
+            ? 0.1
             : 1,
       }}
     >

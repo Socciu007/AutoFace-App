@@ -82,6 +82,15 @@ const PopupChooseProfile = ({ openProfiles, handleCloseProfiles, designScript })
     await getProfiles(true);
   };
 
+  const generateNoteStr = (note, shot = true, length = 75) => {
+    let noteStr = note && note.length ? `${note}` : '';
+
+    if (noteStr.length > length && shot) {
+      noteStr = `${note.slice(0, length)}...`;
+    }
+    return noteStr;
+  };
+
   const columns = [
     {
       title: '#',
@@ -101,8 +110,8 @@ const PopupChooseProfile = ({ openProfiles, handleCloseProfiles, designScript })
       width: 120,
       sorter: (a, b) => {
         if (!a.isPin && !b.isPin) {
-          const nameA = a.uid.toUpperCase();
-          const nameB = b.uid.toUpperCase();
+          const nameA = a.uid ? a.uid.toUpperCase() : '';
+          const nameB = b.uid ? b.uid.toUpperCase() : '';
           if (nameA < nameB) {
             return -1;
           }
@@ -126,7 +135,7 @@ const PopupChooseProfile = ({ openProfiles, handleCloseProfiles, designScript })
     {
       title: 'Status',
       dataIndex: 'status',
-      width: 50,
+      width: 70,
       render: (status) => {
         if (status === 'ready') {
           return (
@@ -142,7 +151,7 @@ const PopupChooseProfile = ({ openProfiles, handleCloseProfiles, designScript })
     {
       title: 'Proxy',
       dataIndex: 'proxy',
-      width: 100,
+      width: 120,
       ellipsis: {
         showTitle: false,
       },
@@ -157,8 +166,8 @@ const PopupChooseProfile = ({ openProfiles, handleCloseProfiles, designScript })
       },
       sorter: (a, b) => {
         if (!a.isPin && !b.isPin) {
-          const nameA = a.name.toUpperCase();
-          const nameB = b.name.toUpperCase();
+          const nameA = a.name ? a.name.toUpperCase() : '';
+          const nameB = b.name ? b.name.toUpperCase() : '';
           if (nameA < nameB) {
             return -1;
           }
@@ -173,9 +182,11 @@ const PopupChooseProfile = ({ openProfiles, handleCloseProfiles, designScript })
       title: 'Tag',
       dataIndex: 'tag',
       width: 150,
-      render: (tag) => {
-        return <p className="-tag-script">{tag}</p>;
-      },
+      render: (tag) => (
+        <Tooltip placement="topLeft" title={generateNoteStr(tag, false)}>
+          <p className="-tag-script">{generateNoteStr(tag, true, 2)}</p>
+        </Tooltip>
+      ),
       sorter: (a, b) => {
         if (!a.isPin && !b.isPin) {
           const tagsA = a.tag ? a.tag.join(',').toLowerCase() : '';
@@ -276,8 +287,9 @@ const PopupChooseProfile = ({ openProfiles, handleCloseProfiles, designScript })
 
   const searchProfiles = (text) => {
     if (text == '') {
+      const newData = dataProfiles.sort((x, y) => Number(y.isPin) - Number(x.isPin));
       setDataSearch(
-        dataProfiles.map((e, index) => {
+        newData.map((e, index) => {
           return { ...e, key: index + 1 };
         }),
       );
@@ -287,15 +299,18 @@ const PopupChooseProfile = ({ openProfiles, handleCloseProfiles, designScript })
         const mail = e.recoveryEmail ? e.recoveryEmail.toLowerCase() : '';
         const name = e.nameAccount ? e.nameAccount.toLowerCase() : '';
         const tags = e.tag ? e.tag.join(',').toLowerCase() : '';
+        const proxy = generateProxyStr(e.proxy, false).toLowerCase();
         return (
           profile.includes(text.toLowerCase()) ||
           name.includes(text.toLowerCase()) ||
           mail.includes(text.toLowerCase()) ||
-          tags.includes(text.toLowerCase())
+          tags.includes(text.toLowerCase()) ||
+          proxy.includes(text.toLowerCase())
         );
       });
+      const newData = newProfiles.sort((x, y) => Number(y.isPin) - Number(x.isPin));
       setDataSearch(
-        newProfiles.map((e, index) => {
+        newData.map((e, index) => {
           return { ...e, key: index + 1 };
         }),
       );

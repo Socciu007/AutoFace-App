@@ -86,7 +86,7 @@ const PopupRunScript = ({ openRunScript, handleCloseRunScript }) => {
         return (
           <div className="-text-profile">
             <span>{profile.uid}</span>
-            {profile.isPin && <img src={pin} alt="icon-pin"></img>}
+            {/* {profile.isPin && <img src={pin} alt="icon-pin"></img>} */}
           </div>
         );
       },
@@ -104,6 +104,7 @@ const PopupRunScript = ({ openRunScript, handleCloseRunScript }) => {
     {
       title: 'Status',
       dataIndex: 'status',
+      width: 120,
       sorter: (a, b) => a.status.length - b.status.length,
       sortDirections: 'descend',
       // defaultSortOrder: 'descend',
@@ -122,7 +123,7 @@ const PopupRunScript = ({ openRunScript, handleCloseRunScript }) => {
     {
       title: 'Proxy',
       dataIndex: 'proxy',
-      width: 200,
+      width: 220,
       ellipsis: {
         showTitle: false,
       },
@@ -139,9 +140,27 @@ const PopupRunScript = ({ openRunScript, handleCloseRunScript }) => {
     {
       title: 'Tag',
       dataIndex: 'tag',
-      sorter: (a, b) => a.tag.length - b.tag.length,
-      sortDirections: 'descend',
-      render: (tag) => {},
+      width: 200,
+      sorter: (a, b) => {
+        if (!a.isPin && !b.isPin) {
+          const tagsA = a.tag ? a.tag.join(',').toLowerCase() : '';
+          const tagsB = b.tag ? b.tag.join(',').toLowerCase() : '';
+          if (tagsA < tagsB) {
+            return -1;
+          }
+          if (tagsA > tagsB) {
+            return 1;
+          }
+          return 0;
+        }
+      },
+      render: (tag) => {
+        return (
+          <div name="tag" className="-tag-profiles">
+            {tag}
+          </div>
+        );
+      },
     },
   ];
   return (
@@ -172,13 +191,14 @@ const PopupRunScript = ({ openRunScript, handleCloseRunScript }) => {
             <div className="layout-run-script__container__name">
               <div className="layout-run-script__container__name__title">
                 <img src={yourScript} alt="img-yourScript" />
+
                 <div>Script:</div>
               </div>
               <div>{scriptName}</div>
             </div>
             <div className="-container-scripts -proxy-manage__content">
               <Table
-                rowClassName={(profile) => (profile.isPin ? 'editable-row pinned-row' : 'editable-row')}
+                rowClassName={(profile) => (profile.isPin ? 'editable-row' : 'editable-row')}
                 columns={columnsProxys}
                 dataSource={dataSearch}
                 pagination={false}

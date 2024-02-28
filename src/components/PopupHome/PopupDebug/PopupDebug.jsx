@@ -9,7 +9,7 @@ const PopupDebug = ({ openDebug, handleCloseDebug, debugs }) => {
   const makeCopyDebug = {
     position: 'fixed',
     maxWidth: '100%',
-    width: '1163px',
+    width: '1050px',
     height: 'auto',
     top: '50%',
     left: '50%',
@@ -27,10 +27,10 @@ const PopupDebug = ({ openDebug, handleCloseDebug, debugs }) => {
     background: 'rgba(255,255,255,0.9)',
   };
   const MuiDialogPaperDebug = {
-    width: '1163px',
+    width: '1050px',
     height: 'auto',
     maxHeight: '679px !important',
-    minWidth: '1163px !important',
+    minWidth: '1050px !important',
     color: '#01162b !important',
   };
   const MuiDialogContainerDebug = {

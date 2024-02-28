@@ -229,14 +229,15 @@
           }
 
           .editor #codeArea,
+          .editor #postID,
           .editor #proxyString {
             outline: none;
-            padding-left: 7% !important;
-            padding-top: 2.5% !important;
+            padding-left: 10% !important;
+            padding-top: 2.3% !important;
           }
 
           .editor pre {
-            padding-top: 2.5% !important;
+            padding-top: 2.3% !important;
             padding-left: 7% !important;
           }
 
@@ -332,7 +333,7 @@
             margin-right: 20px;
             .ant-switch-handle {
               position: absolute;
-              top: 0.5px;
+              top: -0.05px;
               inset-inline-start: 0px;
               width: 14.668px;
               height: 14.668px;

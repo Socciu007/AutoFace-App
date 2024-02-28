@@ -71,7 +71,13 @@ const SettingProxy = ({
                           <div className="-action-proxys -action-proxys-active">
                             <span>{generateProxyStr(proxy)}</span>
                             <div className="-action-icon-proxys">
-                              <div className="-action-icon" onClick={() => handleCloseEdit()}>
+                              <div
+                                className="-action-icon"
+                                onClick={() => {
+                                  handleCloseEdit();
+                                  setProxyString('');
+                                }}
+                              >
                                 <img src={x} alt="icon-x"></img>
                               </div>
                             </div>
@@ -104,7 +110,7 @@ const SettingProxy = ({
           </div>
 
           <div className="-add-Listproxys" style={{ marginLeft: '1.5rem' }}>
-            <p>Add proxy</p>
+            <p>{keyList ? 'Edit proxy' : 'Add proxy'}</p>
             <div className="-add-proxys">
               <div className="-type-proxys">
                 <div className="-type-proxys__nav">
@@ -215,7 +221,6 @@ const SettingProxy = ({
                 </button>
                 <div className="-setting-proxys">
                   <Switch checked={settings.assignProxy} onChange={onChangeAssignProxy} width={32} height={20} />
-
                   <p>Assign proxy here to all selected profiles </p>
                   <div className="-hover-question">
                     <img src={question} alt="question"></img>

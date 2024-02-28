@@ -102,12 +102,13 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
       }
     });
 
-    if (accounts.length > proxies.length && values.isProxy) {
+    if (proxies.length == 0 && values.isProxy) {
       Store.addNotification({
         ...notification,
         type: 'warning',
         message: 'The Proxy field is required',
       });
+      return;
     }
 
     if (accounts.length) {

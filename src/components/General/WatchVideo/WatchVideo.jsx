@@ -317,7 +317,7 @@ const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                       src={iconIncrease}
                       alt="Increase icon"
                       onClick={() => {
-                        changeLikeEnd(values.likeEnd - 1);
+                        changeLikeEnd(values.likeEnd + 1);
                       }}
                     />
                     <img
