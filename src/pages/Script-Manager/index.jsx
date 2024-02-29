@@ -98,7 +98,6 @@ const ScriptManager = () => {
   // }, [contentArray]);
 
   const mapStatus = (newList) => {
-    console.log(profiles);
     if (!profiles || profiles.length == 0) return newList;
     const newArr = [...newList];
     newList.forEach((e, index) => {
@@ -191,7 +190,7 @@ const ScriptManager = () => {
     if (script) {
       const newList = [...contentArray];
       const newListScript = [...listScript];
-      const newItem = { ...script, name, id: uuidv4(), isPin: false };
+      const newItem = { ...script, name, id: uuidv4(), isPin: false, status: '' };
       newListScript.push(newItem);
       setListScript(newListScript);
       newList.push(newItem);
@@ -233,6 +232,7 @@ const ScriptManager = () => {
       newArr[index].isPin = !newArr[index].isPin;
       setContentArray(newArr);
       setListScript(newArr);
+      newArr[index].status = '';
       await dbSetLocally(storageScripts, JSON.stringify(newArr));
     }
     setItemSelect(null);
@@ -280,6 +280,7 @@ const ScriptManager = () => {
       });
       setContentArray(newScript);
       setListScript(newScript);
+      newScript[index].status = '';
       await dbSetLocally(storageScripts, JSON.stringify(newScript));
     }
   };
