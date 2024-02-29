@@ -338,6 +338,9 @@
                 .ant-table-tbody .ant-table-row.pinned-row.ant-table-row-selected > .ant-table-cell-row-hover {
                   background: #fffbea !important;
                 }
+                .ant-table-tbody .ant-table-row.ant-table-row-selected > .ant-table-cell {
+                  background: #f2f8ff !important;
+                }
               }
               .ant-table-row.pinned-row > .ant-table-cell-row-hover {
                 background: #fffbea !important;
@@ -431,11 +434,11 @@
   }
   .ant-table-tbody > tr > td.ant-table-cell {
     padding: 10px 16px !important;
-    div {
-      height: 30px !important;
-      // display: flex;
-      // align-items: center;
-    }
+    // div {
+    //   height: 30px !important;
+    //   display: flex;
+    //   align-items: center;
+    // }
   }
 }
 .-style-source-profile {

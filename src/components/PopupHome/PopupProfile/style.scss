@@ -200,6 +200,12 @@
                 display: none;
               }
             }
+            .ProxyType:hover,
+            .ProxyType:active,
+            .ProxyType:target,
+            .ProxyType:focus-visible {
+              border: none;
+            }
             .css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root.Mui-focused
               .MuiOutlinedInput-notchedOutline,
             .css-1d3z3hw-MuiOutlinedInput-notchedOutline {
@@ -207,7 +213,12 @@
               border-radius: 5px;
             }
           }
-
+          .selectProxy:hover,
+          .selectProxy:target,
+          .selectProxy:active,
+          .selectProxy:focus-visible {
+            border: none;
+          }
           .textProxy {
             margin: 1% 0;
             position: relative;

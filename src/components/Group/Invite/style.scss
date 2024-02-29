@@ -156,6 +156,12 @@
             display: none;
           }
         }
+        .InviteType:hover,
+        .InviteType:active,
+        .InviteType:focus,
+        .InviteType:target {
+          border: none !important;
+        }
         .css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root.Mui-focused
           .MuiOutlinedInput-notchedOutline,
         .css-1d3z3hw-MuiOutlinedInput-notchedOutline {

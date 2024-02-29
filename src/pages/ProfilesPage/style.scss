@@ -44,7 +44,6 @@
           }
 
           table > colgroup {
-            // background: #f2f8ff;
             opacity: 0.3;
           }
 
@@ -97,18 +96,18 @@
           }
           .ant-table-tbody > tr > td.ant-table-cell {
             padding: 10px 16px !important;
-            div {
-              height: 30px !important;
-              display: flex;
-              align-items: center;
-            }
-            div.ant-table-expanded-row-fixed {
-              height: 100% !important;
-              justify-content: center !important;
-              .ant-empty.ant-empty-normal {
-                flex-direction: column !important;
-              }
-            }
+            // div {
+            //   height: 30px !important;
+            //   display: flex;
+            //   align-items: center;
+            // }
+            // div.ant-table-expanded-row-fixed {
+            //   height: 100% !important;
+            //   justify-content: center !important;
+            //   .ant-empty.ant-empty-normal {
+            //     flex-direction: column !important;
+            //   }
+            // }
           }
           .ant-table-thead > tr > th.ant-table-cell {
             padding: 10px 16px !important;

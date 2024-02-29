@@ -766,15 +766,15 @@ export const watchVideo = (setting) => {
             i--;
           }
         }
-          //return watch video
-          await delay(getRandomIntBetween(3000, 5000));
-          await clickElementRandom(
-            page,
-            "div.m > div.fl.ac > div.native-text > span.f3",
-            0,
-            "https://m.facebook.com/watch/"
-          );
-          await delay(getRandomIntBetween(3000, 5000));
+        //return watch video
+        await delay(getRandomIntBetween(3000, 5000));
+        await clickElementRandom(
+          page,
+          "div.m > div.fl.ac > div.native-text > span.f3",
+          0,
+          "https://m.facebook.com/watch/"
+        );
+        await delay(getRandomIntBetween(3000, 5000));
         
         logger("Complete watch video");
       }
