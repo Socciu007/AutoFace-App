@@ -280,8 +280,9 @@ const SignUp = () => {
                       <p>{t('By clicking here, I state that I have read and understood the ')}</p>
                       <div className="text-policy">
                         <p className="policy" onClick={() => {}}>
-                          {t('Terms of Service, ')}
+                          {t('Terms of Service ')}
                         </p>
+                        ,{' '}
                         <p className="policy" onClick={() => {}}>
                           {t(' Privacy Policy ')}
                         </p>

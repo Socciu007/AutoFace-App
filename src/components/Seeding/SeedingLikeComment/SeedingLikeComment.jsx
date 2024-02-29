@@ -781,7 +781,7 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
               style={{ display: likeComment.isComment ? 'block' : 'none' }}
             >
               <h1>Photo/Video</h1>
-              <div className="-option-boost-like">
+              {/* <div className="-option-boost-like">
                 <p>Quantity:</p>
                 <div className="-option-boost-like__number">
                   <div className="-option-boost-like__number__icon">
@@ -816,7 +816,7 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
                     onChange={onChangePhotoVideoEnd}
                   />
                 </div>
-              </div>
+              </div> */}
             </div>
             {/* <div className="-option-boost-like dragVideoOrPhoto" onClick={handleFile}> */}
             <div

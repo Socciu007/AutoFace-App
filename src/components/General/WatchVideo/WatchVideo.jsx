@@ -507,7 +507,7 @@ const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                 {(values.option === 'photoOrVideo' || values.option === 'all') && (
                   <div className="photoOrVideo">
                     <p className="component-item__header">Photo/video</p>
-                    <div className="component-item numberOfVideo">
+                    {/* <div className="component-item numberOfVideo">
                       <p className="component-item__header numberOfVideoText">Number of photo/video:</p>
                       <div className="component-item__number">
                         <div className="component-item__number__icon">
@@ -558,7 +558,7 @@ const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                           onChange={(event) => changePhotoEnd(event.target.value)}
                         />
                       </div>
-                    </div>
+                    </div> */}
 
                     {values.photos.length === 0 ? (
                       <div {...getRootProps({ className: 'component-item dragVideoOrPhoto' })}>

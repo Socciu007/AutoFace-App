@@ -197,10 +197,8 @@ const PopupRunScript = ({ openRunScript, handleCloseRunScript, script }) => {
             <div className="layout-run-script__container__name">
               <div className="layout-run-script__container__name__title">
                 <img src={yourScript} alt="img-yourScript" />
-
                 <div>
-                  <p style={{ color: 'rgb(1 22 43 / 50%)', display: 'inline', fontWeight: '600' }}>Script:</p>{' '}
-                  {scriptName}
+                  <p style={{ display: 'inline', fontWeight: '600' }}>Script:</p> {scriptName}
                 </div>
               </div>
             </div>
