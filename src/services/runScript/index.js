@@ -755,11 +755,21 @@ return new Promise(async (resolve) => {
   });
 
   const pages = await browser.pages();
+  if(!page.length){
+    if(browser){
+      await browser.close();
+    }
+    logger("Debug||Page is Error")
+    resolve('Page is Error');
+  }
+
   for(let i=1;i<pages.length;i++){
     logger('Close page ' + i);
     await closePage(pages[i]);
   }
+
   let page = pages[0];
+
   await page.setBypassCSP(true);
   await page.setCacheEnabled(false);
   const session = await page.target().createCDPSession();

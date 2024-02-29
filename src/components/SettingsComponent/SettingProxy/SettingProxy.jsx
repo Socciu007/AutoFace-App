@@ -204,7 +204,7 @@ const SettingProxy = ({
                     </p>
                     <p>
                       <span>2</span>
-                      <b>Proxy format:</b> Host:Port:Username:Passwords
+                      <b>Proxy format:</b> Host:Port:Username:Password
                     </p>
                   </div>
                 </div>

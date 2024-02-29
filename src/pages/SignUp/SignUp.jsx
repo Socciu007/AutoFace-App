@@ -62,7 +62,7 @@ const SignUp = () => {
         Store.addNotification({
           ...notification,
           type: 'warning',
-          message: 'Passwords does not match.',
+          message: 'Password does not match.',
         });
       }
       if (password.length >= 6 && password.length <= 32) {

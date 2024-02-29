@@ -350,7 +350,7 @@ const ForgotPassword = () => {
                     Store.addNotification({
                       ...notification,
                       type: 'warning',
-                      message: 'Passwords do not match.',
+                      message: 'Password do not match.',
                     });
                     return;
                   }

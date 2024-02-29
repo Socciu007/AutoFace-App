@@ -203,7 +203,6 @@ export const postInteract = (setting) => {
       }
       arrLike.push(index);
       numLikes--;
-      logger('numLikes', numLikes);
     }
    
     }
@@ -212,9 +211,8 @@ export const postInteract = (setting) => {
         arrLike.push(i);
       }
     }
-    logger('arrLike', arrLike);
    
-    if(numLikes <= randomPost){
+    if(numShares <= randomPost){
     while (numShares > 0) {
       const index = getRandomIntBetween(0, randomPost);
       if (arrShare.includes(index)) {
@@ -222,7 +220,6 @@ export const postInteract = (setting) => {
       }
       arrShare.push(index);
       numShares--;
-      logger('numShares', numShares);
     }
   }
   else{
@@ -230,8 +227,7 @@ export const postInteract = (setting) => {
       arrShare.push(i);
     }
   }
-    logger('arrShare', arrShare);
-    if(numLikes <= randomPost){
+    if(numComments <= randomPost){
     while (numComments > 0) {
       const index = getRandomIntBetween(0, randomPost);
       if (arrComment.includes(index)) {
@@ -246,8 +242,6 @@ export const postInteract = (setting) => {
       arrComment.push(i);
     }
   }
-    logger('arrComment', arrComment);
-
     const newUID = shuffle(post.UID);
     const arrPost = [];
     for(let i=0;i<randomPost;i++){
