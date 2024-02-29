@@ -270,6 +270,7 @@ body {
       .ant-table-thead > tr > th.ant-table-cell,
       .ant-table-thead > tr > td.ant-table-cell {
         background-color: #f2f8ff !important;
+        border-bottom: 1px solid #e0e0e0;
       }
       .ant-table-tbody > tr > td.ant-table-cell {
         padding: 10px 16px !important;
@@ -277,6 +278,9 @@ body {
           height: 30px !important;
           display: flex;
           align-items: center;
+        }
+        div.stt {
+          justify-content: center;
         }
       }
 
@@ -344,14 +348,6 @@ body {
       cursor: pointer;
     }
     .-expand-icon {
-      display: flex;
-      gap: 10px;
-      text-align: center;
-      justify-content: center;
-      color: #fff;
-      font-family: 'Visby Round CF Bold';
-      font-size: 12px;
-      font-weight: 700;
       img {
         padding: 0 10px;
         height: 15px;

@@ -118,11 +118,11 @@ const PopupScript = ({ openScripts, handleCloseScripts, profilesSelected }) => {
     newScripts = newScripts.sort((x, y) => Number(y.isPin) - Number(x.isPin));
     setListScript(newScripts);
   };
-  const generateNoteStr = (note, shot = true) => {
+  const generateNoteStr = (note, shot = true, length = 75) => {
     let noteStr = note && note.length ? `${note}` : '';
 
-    if (noteStr.length > 100 && shot) {
-      noteStr = `${note.slice(0, 100)}...`;
+    if (noteStr.length > length && shot) {
+      noteStr = `${note.slice(0, length)}...`;
     }
     return noteStr;
   };
@@ -134,7 +134,9 @@ const PopupScript = ({ openScripts, handleCloseScripts, profilesSelected }) => {
       render: (script) => {
         return (
           <div className="pin">
-            <span>{script.name}</span>
+            <Tooltip placement="topLeft" title={generateNoteStr(script.name, false)}>
+              {generateNoteStr(script.name, true, 50)}
+            </Tooltip>
             {script.isPin ? <img src={pin} alt="Pin" className={'show'} /> : null}
           </div>
         );
@@ -143,7 +145,7 @@ const PopupScript = ({ openScripts, handleCloseScripts, profilesSelected }) => {
     {
       title: 'Notes',
       dataIndex: 'note',
-
+      width: 700,
       render: (note) => (
         <Tooltip placement="topLeft" title={generateNoteStr(note, false)}>
           {generateNoteStr(note)}

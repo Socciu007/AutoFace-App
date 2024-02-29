@@ -286,7 +286,7 @@
                   background: #f2f8ff;
                   z-index: 99 !important;
                   position: sticky;
-                  top: 0px;
+                  top: -1px;
                   tr {
                     background: #f2f8ff;
                     th.ant-table-cell {
@@ -297,7 +297,7 @@
                       font-weight: 700;
                       line-height: normal;
                       background: #f2f8ff;
-
+                      border-bottom: 1px solid #e0e0e0;
                       color: rgba(1, 22, 43, 0.6);
                       font-family: 'GoogleSans';
                       min-height: 50px;
@@ -428,6 +428,14 @@
   }
   .ant-table-wrapper .ant-table-tbody .ant-table-row.ant-table-row-selected > .ant-table-cell-row-hover {
     background-color: #f2f8ff !important;
+  }
+  .ant-table-tbody > tr > td.ant-table-cell {
+    padding: 10px 16px !important;
+    div {
+      height: 30px !important;
+      // display: flex;
+      // align-items: center;
+    }
   }
 }
 .-style-source-profile {

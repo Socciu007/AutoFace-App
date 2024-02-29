@@ -294,7 +294,7 @@ const ScriptManager = () => {
     {
       title: '#',
       width: 30,
-      render: (text, record, index) => <div style={{ textAlign: 'center' }}>{index + 1}</div>,
+      render: (text, record, index) => <div className="stt">{index + 1}</div>,
     },
     {
       title: 'Name',
@@ -398,7 +398,7 @@ const ScriptManager = () => {
       width: 100,
     },
     {
-      width: 40,
+      width: 30,
       fixed: 'right',
       render: (script) => {
         return (
