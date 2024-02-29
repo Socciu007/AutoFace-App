@@ -8,7 +8,7 @@ import yourScript from '../../../assets/pictures/icon-yourScripts1.svg';
 // import yourScript from '../../../assets/pictures/icon-yourScripts.svg';
 
 import { useSelector } from 'react-redux';
-const PopupRunScript = ({ openRunScript, handleCloseRunScript }) => {
+const PopupRunScript = ({ openRunScript, handleCloseRunScript, script }) => {
   const profiles = useSelector((state) => state.profile);
   const scriptName = useSelector((state) => state.scriptAuto);
   const [dataProfiles, setDataProfiles] = useState(profiles);
@@ -16,8 +16,9 @@ const PopupRunScript = ({ openRunScript, handleCloseRunScript }) => {
   const [textSearch, setTextSearch] = useState('');
 
   useEffect(() => {
-    setDataSearch(profiles);
-    setDataProfiles(profiles);
+    const newData = profiles.filter((e) => e.script == script);
+    setDataSearch(newData);
+    setDataProfiles(newData);
   }, [profiles]);
 
   const generateProxyStr = (proxy, shot = true) => {

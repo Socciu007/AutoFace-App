@@ -351,6 +351,7 @@ const ScriptManager = () => {
               ) : null}
             </div>
             <PopupRunScript
+              script={script.id}
               openRunScript={itemSelect && itemSelect.id === script.id && isRunScript}
               handleCloseRunScript={() => setIsRunScript(false)}
             ></PopupRunScript>
