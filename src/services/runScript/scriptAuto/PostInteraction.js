@@ -60,8 +60,12 @@ export const postInteract = (setting) => {
       if (!likeBtns) {
         likeBtns = await findBtn(page, "󰍸");
         if(!likeBtns){
-          logger("Can't find like button.");
-          return false;
+          likeBtns = await findBtn(page, "󰤥");
+          if(!likeBtns){
+            logger("Can't find like button.");
+            return false;
+          }
+          
         }
       }
       await scrollSmoothIfElementNotExistOnScreen(page, likeBtns);
@@ -79,10 +83,14 @@ export const postInteract = (setting) => {
   const randomShare = async (page) => {
     try {
       let randomDelay = getRandomIntBetween(3000, 5000);
-      let shareBtns = await findBtn(page, '󰍺 ');
+      let shareBtns = await findBtn(page, '󰍺');
       if (!shareBtns) {
-        logger("Can't find share button.");
-        return false;
+        shareBtns = await findBtn(page, '󰤧');
+        if(!shareBtns){
+           logger("Can't find share button.");
+          return false;
+        }
+       
       }
       await scrollSmoothIfElementNotExistOnScreen(page, shareBtns);
       await delay(5000);
@@ -165,6 +173,7 @@ export const postInteract = (setting) => {
   
   const PostInteract = ${strSetting}
   try {
+  
     logger(PostInteract);
     //Check obj start < end ? random(start,end) : random(end,start)
     let post = await checkObject(PostInteract);
@@ -185,11 +194,11 @@ export const postInteract = (setting) => {
     await delay(2000);
     let arrLink = [];
     let numLikes = getRandomIntBetween(post.likeStart, post.likeEnd);
-    logger('Cần like', numLikes, 'bài');
+ 
     let numShares = getRandomIntBetween(post.shareStart, post.shareEnd);
-    logger('Cần share', numShares, 'bài');
+
     let numComments = getRandomIntBetween(post.commentStart, post.commentEnd);
-    logger('Cần comment', numComments, 'bài');
+
 
     let arrLike = [];
     let arrComment = [];
@@ -211,7 +220,7 @@ export const postInteract = (setting) => {
         arrLike.push(i);
       }
     }
-   
+    logger('Cần like', arrLike.length, 'bài');
     if(numShares <= randomPost){
     while (numShares > 0) {
       const index = getRandomIntBetween(0, randomPost);
@@ -227,6 +236,9 @@ export const postInteract = (setting) => {
       arrShare.push(i);
     }
   }
+
+  logger('Cần share', arrShare.length, 'bài');
+
     if(numComments <= randomPost){
     while (numComments > 0) {
       const index = getRandomIntBetween(0, randomPost);
@@ -235,13 +247,13 @@ export const postInteract = (setting) => {
       }
       arrComment.push(index);
       numComments--;
-      logger('numcomment', numComments);
     }
   }else{
     for(let i=0; i < randomPost; i++ ){
       arrComment.push(i);
     }
   }
+  logger('Cần comment', arrComment.length, 'bài');
     const newUID = shuffle(post.UID);
     const arrPost = [];
     for(let i=0;i<randomPost;i++){
@@ -249,14 +261,16 @@ export const postInteract = (setting) => {
       arrPost.push(newUID[i]);
     }
 
-
     for (let i=0;i<arrPost.length; i++) {
-      if(randomViewTime < 0) break;
+      if(randomViewTime < 0){
+        logger('Hết thời gian');
+        break;
+      }
+    
       let randomLink = getRandomIntBetween(0, post.UID.length);
       const [id, fbid] = arrPost[i].split('|');
       await page.goto('https://m.facebook.com/story.php/?id=' + id + '&story_fbid=' + fbid);
       await delay(2000);
-   
       if (
         (await checkExistElementOnScreen(
           page,
@@ -288,6 +302,24 @@ export const postInteract = (setting) => {
       }
       await delay(getRandomIntBetween(2, 5) * 1000);
 
+      if (post.isComment == true && post.isText == true && arrComment.includes(i)) {
+        if (!post.text.length) {
+          logger("Can't comment with empty text.");
+        }
+        try {
+          await returnProfilePage(page, id, fbid);
+          const result = await randomComment(page, post);
+          if (result) {
+            logger('Da comment');
+          } else {
+            logger('Comment không thành công');
+          }
+          await delay(getRandomIntBetween(2, 5) * 1000);
+        } catch (error) {
+          logger(error);
+        }
+      }
+
       if (post.isShare == true && arrShare.includes(i)) {
         try {
           await returnProfilePage(page, id, fbid);
@@ -304,24 +336,7 @@ export const postInteract = (setting) => {
       }
       await delay(getRandomIntBetween(2, 5) * 1000);
 
-      if (post.isComment == true && post.isText == true && arrComment.includes(i)) {
-        if (!post.text.length) {
-          logger('Debug' + '|' + 'Post interaction' + '|' + "Can't comment with empty text.");
-          return 0;
-        }
-        try {
-          await returnProfilePage(page, id, fbid);
-          const result = await randomComment(page, post);
-          if (result) {
-            logger('Da comment');
-          } else {
-            logger('Comment không thành công');
-          }
-          await delay(getRandomIntBetween(2, 5) * 1000);
-        } catch (error) {
-          logger(error);
-        }
-      }
+
 
       const endTime = Date.now();
       randomViewTime = randomViewTime - (endTime - startTime);
