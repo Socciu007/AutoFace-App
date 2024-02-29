@@ -5,8 +5,21 @@ export const profileSlice = createSlice({
   initialState: [],
   reducers: {
     updateProfiles: (state, action) => {
-      // action.payload is an array of profiles to be updated
-      return action.payload;
+      let newArr = [];
+      if (state && state.length) {
+        newArr = [...state];
+        action.payload.forEach((profile) => {
+          const index = state.findIndex((e) => e.id == profile.id);
+          if (index >= 0) {
+            newArr[index] = profile;
+          } else {
+            newArr.push(profile);
+          }
+        });
+      } else {
+        newArr = action.payload;
+      }
+      return newArr;
     },
     updateProfile: (state, action) => {
       const index = state.findIndex((e) => e.id == action.payload.id);
