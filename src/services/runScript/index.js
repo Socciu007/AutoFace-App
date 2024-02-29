@@ -59,7 +59,7 @@ const getPosition = async (index) => {
   if (indexBrowser < maxBrowserRow && indexNewBrowser < maxBrowserRow) {
     y = 0;
   } else {
-    y = 760;
+    y = 660;
   }
 
   return `${x},${y}`;

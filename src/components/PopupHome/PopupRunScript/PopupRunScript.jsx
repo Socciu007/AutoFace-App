@@ -5,7 +5,7 @@ import PopupComponent from '../PopupComponent/PopupComponent';
 import closePopup from '../../../assets/pictures/icon-x.svg';
 import search from '../../../assets/pictures/icon-search.svg';
 import yourScript from '../../../assets/pictures/icon-yourScripts1.svg';
-import pin from '../../../assets/icon/icon-pin.svg';
+// import yourScript from '../../../assets/pictures/icon-yourScripts.svg';
 
 import { useSelector } from 'react-redux';
 const PopupRunScript = ({ openRunScript, handleCloseRunScript }) => {
@@ -192,9 +192,8 @@ const PopupRunScript = ({ openRunScript, handleCloseRunScript }) => {
               <div className="layout-run-script__container__name__title">
                 <img src={yourScript} alt="img-yourScript" />
 
-                <div>Script:</div>
+                <div>Script: {scriptName}</div>
               </div>
-              <div>{scriptName}</div>
             </div>
             <div className="-container-scripts -proxy-manage__content">
               <Table

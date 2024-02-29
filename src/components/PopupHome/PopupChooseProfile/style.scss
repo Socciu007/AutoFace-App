@@ -92,6 +92,7 @@
       .ant-spin-container .ant-table-content {
         height: 558px;
         overflow: auto auto !important;
+        padding-right: 2px;
         table > thead.ant-table-thead {
           z-index: 99 !important;
           position: sticky;

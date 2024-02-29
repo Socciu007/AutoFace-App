@@ -282,6 +282,14 @@ body {
         div.stt {
           justify-content: center;
         }
+        .ant-empty.ant-empty-normal {
+          height: 100% !important;
+          justify-content: center !important;
+          flex-direction: column !important;
+          // .ant-empty.ant-empty-normal {
+          //   flex-direction: column !important;
+          // }
+        }
       }
 
       .ant-table-thead > tr > th.ant-table-cell {

@@ -342,7 +342,10 @@ const ScriptManager = () => {
                   <img src={running} alt="run profile icon" />
                   <span>
                     <span className="profileRunning">{status.done}</span>
-                    <span className="totalProfile"> / {status.total} profiles</span>
+                    <span className="totalProfile">
+                      {' '}
+                      / {status.total} {status.total == 1 ? 'profile' : 'profiles'}
+                    </span>
                   </span>
                 </div>
               ) : null}
