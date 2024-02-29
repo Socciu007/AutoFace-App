@@ -86,7 +86,10 @@ const tagFriend = async (page, CreatePost) => {
       CreatePost.numberFriendTagEnd
     );
     if (numberFriendTag > 0) {
-      const tagBtn = await findBtn(page, "󰤇");
+      let tagBtn = await findBtn(page, "󰤇");
+      if(!tagBtn || tagBtn.length == 0) {
+        tagBtn = await findBtn(page, "󱤇");
+      }
       await scrollSmoothIfElementNotExistOnScreen(page, tagBtn);
       await delay(1000);
       await clickElement(tagBtn);
@@ -283,7 +286,7 @@ const createPost = async (page, CreatePost) => {
             logger("Không thể tải ảnh lên");
             break;
           }
-          await delay(randomDelay);
+          await delay(4000);
           // TAG
           if (CreatePost.isTag) {
             const rs = await tagFriend(page, CreatePost);

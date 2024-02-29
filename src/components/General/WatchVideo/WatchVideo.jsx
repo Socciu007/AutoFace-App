@@ -306,7 +306,7 @@ const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                   <input
                     type="text"
                     name="Start"
-                    value={values.likeStart}
+                    value={!values.isLiked ? 0 : values.likeStart}
                     onChange={(event) => changeLikeStart(event.target.value)}
                   />
                 </div>
@@ -331,7 +331,7 @@ const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                   <input
                     type="text"
                     name="End"
-                    value={values.likeEnd}
+                    value={!values.isLiked ? 0 : values.likeEnd}
                     onChange={(event) => changeLikeEnd(event.target.value)}
                   />
                 </div>
@@ -372,7 +372,7 @@ const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                   <input
                     type="text"
                     name="Start"
-                    value={values.shareStart}
+                    value={!values.isShare ? 0 : values.shareStart}
                     onChange={(event) => changeShareStart(event.target.value)}
                   />
                 </div>
@@ -385,7 +385,7 @@ const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                   <input
                     type="text"
                     name="End"
-                    value={values.shareEnd}
+                    value={!values.isShare ? 0 : values.shareEnd}
                     onChange={(event) => changeShareEnd(event.target.value)}
                   />
                 </div>
@@ -427,7 +427,7 @@ const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                       <input
                         type="text"
                         name="Start"
-                        value={values.commentStart}
+                        value={!values.isComment ? 0 : values.commentStart}
                         onChange={(event) => changeCommentStart(event.target.value)}
                       />
                     </div>
@@ -452,7 +452,7 @@ const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                       <input
                         type="text"
                         name="End"
-                        value={values.commentEnd}
+                        value={!values.isComment ? 0 : values.commentEnd}
                         onChange={(event) => changeCommentEnd(event.target.value)}
                       />
                     </div>

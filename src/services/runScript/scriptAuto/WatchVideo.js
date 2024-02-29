@@ -124,11 +124,9 @@ export const watchVideo = (setting) => {
           await delay(getRandomIntBetween(3000, 5000));
           await clickElement(sendBtn);
           await delay(getRandomIntBetween(3000, 5000));
-          logger("comment complete");
         } else if (sendBtn1) {
           await delay(getRandomIntBetween(3000, 5000));
           await clickElement(sendBtn1);
-          logger("comment complete");
         }
       }
       return true;
@@ -146,7 +144,7 @@ export const watchVideo = (setting) => {
         await scrollSmoothIfNotExistOnScreens(selectors[x]);
         await delay(getRandomIntBetween(1000, 3000));
         await clickElement(selectors[x]);
-        await delay(getRandomIntBetween(3000, 5000));
+        await delay(getRandomIntBetween(1000, 3000));
         const isWatchVideo = await checkUrlPage(page, "m.facebook.com/watch");
         if (!isWatchVideo) {
           await navigateToUrl(page, urlPage);
@@ -491,12 +489,21 @@ export const watchVideo = (setting) => {
   
       //navigate video page
       await delay(getRandomIntBetween(1000, 3000));
-      await clickElementRandom(
+      const videoIcon = await findBtn(
         page,
-        'div[data-comp-id="6"]',
-        0,
-        "https://m.facebook.com/watch/"
-      );
+        "󰤹",
+        '[class="f3"]'
+      ); 
+      if(videoIcon) {
+        await clickElement(videoIcon);
+      } else {
+        await clickElementRandom(
+          page,
+          'div[data-comp-id="7"]',
+          0,
+          "https://m.facebook.com/watch/"
+        );
+      }
       await delay(getRandomIntBetween(3000, 5000));
       const languageBtn = await findBtn(
         page,
@@ -616,6 +623,39 @@ export const watchVideo = (setting) => {
                   logger("Đã comment " + countComment + " video");
                 } else {
                   i--;
+                  const returnIcon = await findBtn(
+                    page,
+                    "󱜳",
+                    '[class="f3"]'
+                  ); 
+                  if(returnIcon) {
+                    await scrollSmoothIfNotExistOnScreens(returnIcon);
+          await delay(getRandomIntBetween(3000, 5000));
+          await clickElement(returnIcon);
+                  } else {
+                    await clickElementRandom(
+                      page,
+                      "div.m > div.fl.ac > div.native-text > span.f3",
+                      0,
+                      "https://m.facebook.com/watch/"
+                    );
+                  }
+                  await delay(getRandomIntBetween(1000, 3000));
+                  continue;
+                }
+              } else {
+                i--;
+                const returnIcon = await findBtn(
+                  page,
+                  "󱜳",
+                  '[class="f3"]'
+                ); 
+                if(returnIcon) {
+                  await delay(getRandomIntBetween(3000, 5000));
+                  await scrollSmoothIfNotExistOnScreens(returnIcon);
+          await delay(getRandomIntBetween(3000, 5000));
+          await clickElement(returnIcon);
+                } else {
                   await delay(getRandomIntBetween(3000, 5000));
                   await clickElementRandom(
                     page,
@@ -623,19 +663,8 @@ export const watchVideo = (setting) => {
                     0,
                     "https://m.facebook.com/watch/"
                   );
-                  await delay(getRandomIntBetween(3000, 5000));
-                  continue;
                 }
-              } else {
-                i--;
-                await delay(getRandomIntBetween(3000, 5000));
-                await clickElementRandom(
-                  page,
-                  "div.m > div.fl.ac > div.native-text > span.f3",
-                  0,
-                  "https://m.facebook.com/watch/"
-                );
-                await delay(getRandomIntBetween(3000, 5000));
+                await delay(getRandomIntBetween(1000, 3000));
                 continue;
               }
             } else if (watchVideoObj.option == "text") {
@@ -663,7 +692,6 @@ export const watchVideo = (setting) => {
                   );
                   await delay(getRandomIntBetween(3000, 5000));
                   await clickElement(sendBtn);
-                  logger("Done comment video");
                   //return page
                   await delay(getRandomIntBetween(3000, 5000));
                   const returnBtn = await findBtn(
@@ -678,6 +706,41 @@ export const watchVideo = (setting) => {
                     logger("Đã Comment " + countComment + " video ");
                   } else {
                     i--;
+                    const returnIcon = await findBtn(
+                      page,
+                      "󱜳",
+                      '[class="f3"]'
+                    ); 
+                    if(returnIcon) {
+                      await delay(getRandomIntBetween(3000, 5000));
+                      await scrollSmoothIfNotExistOnScreens(returnIcon);
+          await delay(getRandomIntBetween(3000, 5000));
+          await clickElement(returnIcon);
+                    } else {
+                      await delay(getRandomIntBetween(3000, 5000));
+                      await clickElementRandom(
+                        page,
+                        "div.m > div.fl.ac > div.native-text > span.f3",
+                        0,
+                        "https://m.facebook.com/watch/"
+                      );
+                    }
+                    await delay(getRandomIntBetween(3000, 5000));
+                    continue;
+                  }
+                } else {
+                  i--;
+                  const returnIcon = await findBtn(
+                    page,
+                    "󱜳",
+                    '[class="f3"]'
+                  ); 
+                  if(returnIcon) {
+                    await delay(getRandomIntBetween(3000, 5000));
+                    await scrollSmoothIfNotExistOnScreens(returnIcon);
+                    await delay(getRandomIntBetween(3000, 5000));
+                    await clickElement(returnIcon);
+                  } else {
                     await delay(getRandomIntBetween(3000, 5000));
                     await clickElementRandom(
                       page,
@@ -685,18 +748,7 @@ export const watchVideo = (setting) => {
                       0,
                       "https://m.facebook.com/watch/"
                     );
-                    await delay(getRandomIntBetween(3000, 5000));
-                    continue;
                   }
-                } else {
-                  i--;
-                  await delay(getRandomIntBetween(3000, 5000));
-                  await clickElementRandom(
-                    page,
-                    "div.m > div.fl.ac > div.native-text > span.f3",
-                    0,
-                    "https://m.facebook.com/watch/"
-                  );
                   await delay(getRandomIntBetween(3000, 5000));
                   continue;
                 }
@@ -706,13 +758,25 @@ export const watchVideo = (setting) => {
             }
           } catch (err) {
             i--;
-            await delay(getRandomIntBetween(3000, 5000));
-            await clickElementRandom(
+            const returnIcon = await findBtn(
               page,
-              "div.m > div.fl.ac > div.native-text > span.f3",
-              0,
-              "https://m.facebook.com/watch/"
-            );
+              "󱜳",
+              '[class="f3"]'
+            ); 
+            if(returnIcon) {
+              await delay(getRandomIntBetween(3000, 5000));
+              await scrollSmoothIfNotExistOnScreens(returnIcon);
+          await delay(getRandomIntBetween(3000, 5000));
+          await clickElement(returnIcon);
+            } else {
+              await delay(getRandomIntBetween(3000, 5000));
+              await clickElementRandom(
+                page,
+                "div.m > div.fl.ac > div.native-text > span.f3",
+                0,
+                "https://m.facebook.com/watch/"
+              );
+            }
             await delay(getRandomIntBetween(3000, 5000));
             continue;
           }
@@ -768,16 +832,30 @@ export const watchVideo = (setting) => {
         }
         //return watch video
         await delay(getRandomIntBetween(3000, 5000));
-        await clickElementRandom(
+        const returnIcon = await findBtn(
           page,
-          "div.m > div.fl.ac > div.native-text > span.f3",
-          0,
-          "https://m.facebook.com/watch/"
-        );
+          "󱜳",
+          '[class="f3"]'
+        ); 
+        if(returnIcon) {
+          await delay(getRandomIntBetween(3000, 5000));
+          await scrollSmoothIfNotExistOnScreens(returnIcon);
+          await delay(getRandomIntBetween(3000, 5000));
+          await clickElement(returnIcon);
+        } else {
+          await delay(getRandomIntBetween(3000, 5000));
+          await clickElementRandom(
+            page,
+            "div.m > div.fl.ac > div.native-text > span.f3",
+            0,
+            "https://m.facebook.com/watch/"
+          );
+        }
         await delay(getRandomIntBetween(3000, 5000));
-        
-        logger("Complete watch video");
+        countVideo++;
+        logger("Complete watch video " + countVideo);
       }
+      await delay(getRandomIntBetween(3000, 5000));
     }
   } catch (error) {
     logger("Debug|WatchVideo|" + error.message);

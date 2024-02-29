@@ -517,7 +517,7 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
   };
  const addFriendByGroupMember = async (page, addFriendObject) => {
   try {
-          const isLive = checkIsLive(page);
+      const isLive = checkIsLive(page);
           if (!isLive) {
             logger("Debug"+"|"+"Add friend"+"|"+"Page is not alive!")
             return false;
@@ -530,7 +530,7 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
       addFriendObject.requestsStart,
       addFriendObject.requestsEnd
     );
-    
+    let urlPrev = await page.url();
     let groupSelector =
       "#screen-root > div > div:nth-child(2) > div:nth-child(4) > div.m.bg-s4 > div:nth-child(1)";
     let groupBtn = await getElement(page, groupSelector, 3);
@@ -546,14 +546,23 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
         let selectorGroup =
           "#screen-root > div > div:nth-child(2) > div:nth-child(4) > div:nth-child(2)";
         let groupInfor = await getElement(page, selectorGroup, 3);
-        if(!groupInfor) { logger("Không tìm thấy group infor"); return false};
-        await clickElement(groupInfor);
-        await delay(3000);
+        if(!groupInfor) { 
+          groupInfor = await findBtn(page, "󱙺");
+          if(!groupInfor || groupInfor.length == 0) {
+            await page.goto(urlPrev + "info");
+          } else {
+            await clickElement(groupInfor[0]);
+            await delay(3000);
+          }
+         } else {
+          await clickElement(groupInfor);
+          await delay(3000);
+         };
         const iconSelector = "#screen-root > div > div:nth-child(2) > div:nth-child(3) > div:nth-child(2) > div:nth-child(1) > div > div"
         let icon = await getElement(page, iconSelector, 10);
         if(!icon) {
           icon = await findBtn(page,"󱚼");
-          if(icon || icon.length > 0){
+          if(icon.length > 0){
           logger("Group private ! Không kết bạn..."); 
           return false; 
           }
@@ -572,11 +581,30 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
       }
     } else {
       await clickElement(groupBtn);
-        await delay(randomDelay);
+      await delay(randomDelay);
     }
     let count = 0;
     let isAdd = false;
-    let arr = []
+    let arr = [];
+    let urlAfter = await page.url();
+    await delay(2000);
+    if(urlAfter === urlPrev){
+      logger("không chuyển trang");
+      await page.goto(urlAfter + "info");
+      await delay(2000);
+      let icon = await findBtn(page,"󱚼");
+          if(icon.length > 0){
+          logger("Group private ! Không kết bạn..."); 
+          return false; 
+          } else {
+            logger("Group public !")
+            await page.goto(urlAfter + "members");
+            await delay(2000);
+          }
+      
+    }
+
+    var url = urlPrev;
     for (let i = 0; i < numsAdd * 2; i++) {
       // click member
       const isLive = checkIsLive(page);
@@ -584,11 +612,15 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
             logger("Debug"+"|"+"Add friend"+"|"+"Page is not alive!")
             return false;
       }
+      const pageUrl = await page.url();
+      if(!pageUrl.includes("members")){
+         await page.goto(url + "members");
+         await delay(3000);
+      }
       const memberSelectors = "#screen-root > div > div:nth-child(2) > div > div > div:nth-child(2)";
       let allMember = await getElements(page, memberSelectors);
       if (!allMember) return false;
       logger("Member length: " + allMember.length);
-      
         let randomIndex = getRandomIntBetween(1, allMember.length);
         let index1 = arr.indexOf(randomIndex);
         if (index1 == -1) {
@@ -823,12 +855,21 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
       // click and search
       const searchSelector =
         '#screen-root > div > div:nth-child(1) > div:nth-child(3) > div > div > div:nth-child(2) > div > div';
-      const searchBtn = await getElement(page, searchSelector, 10);
-      if (!searchBtn) return false;
-      await scrollSmoothIfNotExistOnScreen(page, searchSelector);
-      await delay(1000);
+      let searchBtn = await getElement(page, searchSelector, 10);
+      if (!searchBtn){
+        searchBtn = await findBtn(page, "󱥊");
+        if(!searchBtn || searchBtn.length == 0){
+          await page.goto("https://m.facebook.com/search/");
+          await delay(randomDelay);
+        } else {
+          await clickElement(searchBtn[0]);
+          await delay(randomDelay);
+        }
+      } else {
       await clickElement(searchBtn);
       await delay(randomDelay);
+      }
+      
       // Enter text
       for(let i = 0; i < addFriendObject.text.length * 2; i++){
       const randomIndex = getRandomInt(addFriendObject.text.length);
@@ -1035,7 +1076,7 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
           }
           let UID = UIDList[i];
           await page.goto('https://m.facebook.com/groups/' + UID);
-          await delay(randomDelay);
+          await delay(4000);
           const isAddFriend = await addFriendByGroupMember(page, addFriendObject);
           if (isAddFriend) {
             count++;
@@ -1043,7 +1084,10 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
           } else {
             logger('Kết bạn không thành công');
           }
-          if (count == UIDList.length) break;
+          if (count == UIDList.length) {
+            await delay(2000);
+            break;
+          };
           await delay(3000);
         } catch (error) {
           logger(error);
