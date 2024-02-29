@@ -53,7 +53,14 @@ const PopupRunScript = ({ openRunScript, handleCloseRunScript }) => {
       );
     }
   }, [dataProfiles]);
+  const generateNoteStr = (note, shot = true, length = 75) => {
+    let noteStr = note && note.length ? `${note}` : '';
 
+    if (noteStr.length > length && shot) {
+      noteStr = `${note.slice(0, length)}...`;
+    }
+    return noteStr;
+  };
   const searchProfiles = (text) => {
     setTextSearch(text);
     if (text == '') {
@@ -154,13 +161,11 @@ const PopupRunScript = ({ openRunScript, handleCloseRunScript }) => {
           return 0;
         }
       },
-      render: (tag) => {
-        return (
-          <div name="tag" className="-tag-profiles">
-            {tag}
-          </div>
-        );
-      },
+      render: (tag) => (
+        <Tooltip placement="topLeft" title={generateNoteStr(tag, false)}>
+          <p className="-tag-profiles">{generateNoteStr(tag, true, 2)}</p>
+        </Tooltip>
+      ),
     },
   ];
   return (
@@ -192,7 +197,10 @@ const PopupRunScript = ({ openRunScript, handleCloseRunScript }) => {
               <div className="layout-run-script__container__name__title">
                 <img src={yourScript} alt="img-yourScript" />
 
-                <div>Script: {scriptName}</div>
+                <div>
+                  <p style={{ color: 'rgb(1 22 43 / 50%)', display: 'inline', fontWeight: '600' }}>Script:</p>{' '}
+                  {scriptName}
+                </div>
               </div>
             </div>
             <div className="-container-scripts -proxy-manage__content">
