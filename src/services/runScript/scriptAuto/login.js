@@ -208,7 +208,10 @@ export const loginFacebook = (account) => {
             account.password &&
             account.password.length))
       ) {
-        await returnHomePage(page);
+        await page.goto("https://m.facebook.com/login/?ref=dbl&fl&login_from_aymh=1", {
+          waitUntil: "networkidle2",
+          timeout: 60000,
+        });
         const email = await getElementEmail(page);
         const password = await getElementPassword(page);
         if (email && password) {
