@@ -541,7 +541,7 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
       if (groupBtn) {
         await clickElement(groupBtn);
         logger("Click vào group")
-        await delay(randomDelay);
+        await delay(3000);
       } else {
         let selectorGroup =
           "#screen-root > div > div:nth-child(2) > div:nth-child(4) > div:nth-child(2)";
@@ -549,17 +549,22 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
         if(!groupInfor) { 
           groupInfor = await findBtn(page, "󱙺");
           if(!groupInfor || groupInfor.length == 0) {
-            await page.goto(urlPrev + "info");
+          await page.goto(urlPrev + "info", {
+          waitUntil: 'networkidle2',
+          timeout: 60000,
+        });
           } else {
+            await delay(1000);
             await clickElement(groupInfor[0]);
             await delay(3000);
           }
          } else {
+          await delay(1000);
           await clickElement(groupInfor);
           await delay(3000);
          };
         const iconSelector = "#screen-root > div > div:nth-child(2) > div:nth-child(3) > div:nth-child(2) > div:nth-child(1) > div > div"
-        let icon = await getElement(page, iconSelector, 10);
+        let icon = await getElement(page, iconSelector, 3);
         if(!icon) {
           icon = await findBtn(page,"󱚼");
           if(icon.length > 0){
@@ -575,11 +580,13 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
 
         let numsMemberSelector =
           "#screen-root > div > div:nth-child(2) > div:nth-child(4) > div:nth-child(3) > div";
-        let member = await getElement(page, numsMemberSelector, 10);
+        let member = await getElement(page, numsMemberSelector, 3);
+        await delay(1000);
         await clickElement(member);
-        await delay(randomDelay);
+        await delay(3000);
       }
     } else {
+      await delay(1000);
       await clickElement(groupBtn);
       await delay(randomDelay);
     }
@@ -587,10 +594,13 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
     let isAdd = false;
     let arr = [];
     let urlAfter = await page.url();
-    await delay(2000);
+    await delay(3000);
     if(urlAfter === urlPrev){
       logger("không chuyển trang");
-      await page.goto(urlAfter + "info");
+      await page.goto(urlAfter + "info", {
+          waitUntil: 'networkidle2',
+          timeout: 60000,
+        });
       await delay(2000);
       let icon = await findBtn(page,"󱚼");
           if(icon.length > 0){
@@ -598,7 +608,10 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
           return false; 
           } else {
             logger("Group public !")
-            await page.goto(urlAfter + "members");
+            await page.goto(urlAfter + "members", {
+          waitUntil: 'networkidle2',
+          timeout: 60000,
+        });
             await delay(2000);
           }
       
@@ -614,12 +627,18 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
       }
       const pageUrl = await page.url();
       if(!pageUrl.includes("members")){
-         await page.goto(url + "members");
-         await delay(3000);
+         await page.goto(url + "members", {
+          waitUntil: 'networkidle2',
+          timeout: 60000,
+        });
       }
+       await delay(4000);
       const memberSelectors = "#screen-root > div > div:nth-child(2) > div > div > div:nth-child(2)";
       let allMember = await getElements(page, memberSelectors);
-      if (!allMember) return false;
+      if (!allMember) {
+        logger("Không có thành viên để kết bạn");
+        return false;
+      }
       logger("Member length: " + allMember.length);
         let randomIndex = getRandomIntBetween(1, allMember.length);
         let index1 = arr.indexOf(randomIndex);
@@ -629,11 +648,12 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
         } else {
           continue;
         }
+        await delay(4000);
         await scrollSmoothIfElementNotExistOnScreen(page,allMember[randomIndex])
-        await delay(1000);
+        await delay(3000);
         const urlPrev = await page.url();
         await clickElement(allMember[randomIndex]);
-        await delay(1000);
+        await delay(2000);
         const urlAfter = await page.url();
         if(urlPrev === urlAfter){
           i--;
@@ -643,9 +663,9 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
       const rs = await clickAddBtn(page);
       if (!rs) {
         logger("Không click được nút add");
-        await delay(1000);
+        await delay(3000);
         await clickReturn(page);
-        await delay(1000);
+        await delay(2000);
         i--;
         continue;
       }
@@ -655,7 +675,7 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
         isAdd = true;
         break;
       }
-      await delay(1000);
+      await delay(3000);
       await clickReturn(page);
       await delay(2000);
     }
@@ -745,9 +765,11 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
       const isBtnAdd = await findBtn(page, "󱤇");
       logger(isBtnAdd);
       if(isBtnAdd.length != 0) {
+        await delay(2000);
         await scrollSmoothIfElementNotExistOnScreen(isBtnAdd[0]);
+        await delay(2000);
         await clickElement(isBtnAdd[0]);
-        await delay(1000);
+        await delay(2000);
         logger('Add thành công');
         await delay(1000);
         return true;
@@ -755,17 +777,25 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
         const moreBtn = await findBtn(page, "󰟝");
         if(moreBtn.length != 0) {
           if(moreBtn.length == 1){
+          await delay(2000);
           await scrollSmoothIfElementNotExistOnScreen(moreBtn[0]);
+          await delay(2000);
           await clickElement(moreBtn[0]);
+          await delay(2000);
           } else {
+          await delay(2000);
           await scrollSmoothIfElementNotExistOnScreen(moreBtn[1]);
+          await delay(2000);
           await clickElement(moreBtn[1]);
+          await delay(2000);
           }
           
           await delay(1000);
           const addBtn = await findBtn(page, "󱤇");
           if(addBtn.length != 0) {
+            await delay(2000);
             await scrollSmoothIfElementNotExistOnScreen(addBtn[0]);
+            await delay(2000);
             await clickElement(addBtn[0]);
             await delay(1000);
             logger('Add thành công');
@@ -773,6 +803,7 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
             await clickReturn(page);
             return true;
           } else {
+            await delay(1000);
             await clickReturn(page);
             return false;
           }
@@ -789,7 +820,10 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
 
     if (!returnBtn || returnBtn.length == 0) {
         await page.goto(
-        "https://m.facebook.com/friends/?target_pivot_link=friends"
+        "https://m.facebook.com/friends/?target_pivot_link=friends", {
+          waitUntil: 'networkidle2',
+          timeout: 60000,
+        }
       );
     }
     await clickElement(returnBtn[0]);
@@ -859,7 +893,10 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
       if (!searchBtn){
         searchBtn = await findBtn(page, "󱥊");
         if(!searchBtn || searchBtn.length == 0){
-          await page.goto("https://m.facebook.com/search/");
+          await page.goto("https://m.facebook.com/search/", {
+          waitUntil: 'networkidle2',
+          timeout: 60000,
+        });
           await delay(randomDelay);
         } else {
           await clickElement(searchBtn[0]);
@@ -893,7 +930,10 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
       await delay(randomDelay);
       const glassIcon = await findBtn(page, "󰛼");
       if(glassIcon.length > 0){
-        await page.goto("https://m.facebook.com/search/");
+        await page.goto("https://m.facebook.com/search/", {
+          waitUntil: 'networkidle2',
+          timeout: 60000,
+        });
         await delay(2000);
       } else {
         break;
@@ -934,7 +974,10 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
           friendRequestBtn = await findBtn(page, "󰎍");
           if(!friendRequestBtn || friendRequestBtn.length == 0){
           await page.goto(
-          "https://m.facebook.com/friends/?target_pivot_link=requests"
+          "https://m.facebook.com/friends/?target_pivot_link=requests", {
+          waitUntil: 'networkidle2',
+          timeout: 60000,
+        }
           );
           attempt = false;
           } else {
@@ -948,7 +991,10 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
       if(attempt != false) {
         await delay(3000);
            await page.goto(
-        "https://m.facebook.com/friends/?target_pivot_link=requests"
+        "https://m.facebook.com/friends/?target_pivot_link=requests", {
+          waitUntil: 'networkidle2',
+          timeout: 60000,
+        }
       );
       }
       await delay(5000);
