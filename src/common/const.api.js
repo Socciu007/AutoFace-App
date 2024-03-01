@@ -1,6 +1,5 @@
 // export const URL_API = 'http://localhost:3003';
-export const URL_API = 'http://45.76.152.20:3003';
-
+export const URL_API = 'https://api-dev.autoface.io';
 export const USERS = '/users';
 export const EMAIL = '/users/email';
 export const CODE = '/users/code';

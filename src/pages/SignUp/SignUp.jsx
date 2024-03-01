@@ -123,7 +123,7 @@ const SignUp = () => {
       <div className="signup__content">
         <div className="signup__content-header">
           <p className="tool-name">AUTOFACE</p>
-          <div className="signup__content_switch-language">
+          {/* <div className="signup__content_switch-language">
             <Select
               name="languageOption"
               className="LanguageType"
@@ -143,7 +143,7 @@ const SignUp = () => {
                 <span style={{ marginLeft: '5px' }}>VNI</span>
               </MenuItem>
             </Select>
-          </div>
+          </div> */}
         </div>
         <div className="signup__content-form">
           <h1 className="signup__content-form-title">{t('Sign up')}</h1>

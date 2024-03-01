@@ -148,6 +148,7 @@ const ProfilesPage = () => {
   const getUser = async () => {
     let userProfile;
     userProfile = storageService.getSessionObject('user');
+    console.log('userProfile ' + userProfile);
     if (!userProfile || userProfile.code !== 1) userProfile = await getMe();
     if (userProfile && userProfile.code == 1) {
       storageService.setSessionObject('user', userProfile);

@@ -87,7 +87,7 @@ const Login = () => {
       <div className="login__content">
         <div className="login__content-header">
           <p className="tool-name">AUTOFACE</p>
-          <div className="login__content_switch-language">
+          {/* <div className="login__content_switch-language">
             <Select
               name="languageOption"
               className="LanguageType"
@@ -107,7 +107,7 @@ const Login = () => {
                 <span style={{ marginLeft: '5px' }}>VNI</span>
               </MenuItem>
             </Select>
-          </div>
+          </div> */}
         </div>
         <div className="login__content-form">
           <h1 className="login__content-form-title">{t('Welcome back')}!</h1>

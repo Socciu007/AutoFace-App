@@ -185,7 +185,7 @@ const ForgotPassword = () => {
       <div className="forgotPass__content">
         <div className="forgotPass__content-header">
           <p className="tool-name">AUTOFACE</p>
-          <div className="forgotPass__content_switch-language">
+          {/* <div className="forgotPass__content_switch-language">
             <Select
               name="languageOption"
               className="LanguageType"
@@ -205,7 +205,7 @@ const ForgotPassword = () => {
                 <span style={{ marginLeft: '5px' }}>VNI</span>
               </MenuItem>
             </Select>
-          </div>
+          </div> */}
         </div>
         <div className="forgotPass__content-form">
           <h1 className="forgotPass__content-form-title">{t('Forgot password')}?</h1>
