@@ -257,11 +257,12 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
             </div>
             <div className="scrollable-container">
               <p style={{ marginLeft: '1%' }}>
-                UID|Password|2FA|Recovery email|Recovery email’s password|Cookie|Date of birth
+                <strong>Account format:</strong> UID|Password|2FA|Recovery email|Recovery email’s password|Cookie|Date
+                of birth
               </p>
               <div className="newProfile-content">
                 <div className="Textarea" style={{ position: 'relative' }}>
-                  <div style={{ width: '99%', height: 419, overflow: 'auto' }} className="text">
+                  <div style={{ width: '100%', height: 419, overflow: 'auto' }} className="text">
                     <Editor
                       value={textContent}
                       onValueChange={(text) => {
@@ -332,7 +333,7 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
                         </Select>
                       </div>
                       <div className="textProxy">
-                        <div style={{ width: '99.5%', height: 166, overflow: 'auto' }} className="text">
+                        <div style={{ width: '100%', height: 166, overflow: 'auto' }} className="text">
                           <Editor
                             value={proxyContent}
                             onValueChange={(text) => {
