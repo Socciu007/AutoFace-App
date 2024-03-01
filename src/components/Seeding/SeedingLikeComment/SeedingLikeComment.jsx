@@ -831,9 +831,9 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
               <div className="folderPhoto">
                 <p>
                   <span>Folder:</span>
-                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', color: 'black' }}>
                     {likeComment.file.map((filePath, index) => (
-                      <span key={index}>{filePath.replace(/^.*[\\/]/, '')}</span>
+                      <p key={index}>{filePath.replace(/^.*[\\/]/, '')}</p>
                     ))}
                   </div>
                 </p>

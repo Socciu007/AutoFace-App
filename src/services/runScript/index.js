@@ -59,7 +59,7 @@ const getPosition = async (index) => {
   if (indexBrowser < maxBrowserRow && indexNewBrowser < maxBrowserRow) {
     y = 0;
   } else {
-    y = 660;
+    y = 460;
   }
 
   return `${x},${y}`;
@@ -110,7 +110,13 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
         for (let j = 0; j < result.length; j++) {
           const profile = result[j];
           await runCode(profile, profileSelected, index, dispatch, arrfunction, settings, j, scriptDesign);
-          dispatch(updateProfile({ ...profile, script: scriptDesign.id, status: 'ready' }));
+          dispatch(
+            updateProfile({
+              ...profile,
+              script: scriptDesign.id,
+              status: i == settings.countLoop - 1 ? 'ready' : 'waiting',
+            }),
+          );
         }
       },
       { concurrency: results.length },
@@ -174,7 +180,15 @@ const runCode = async (profile, profileSelected, index, dispatch, arrfunction, s
         cpu = infor.cpu;
         mem = infor.mem;
       }
-      const browserData = await getBrowserData(profile.id, proxyConvert);
+      let browserData = await getBrowserData(profile.id, proxyConvert);
+      for (let i = 0; i < 5; i++) {
+        if (browserData && browserData.data) {
+          break;
+        } else {
+          await delay(1000);
+          browserData = await getBrowserData(profile.id, proxyConvert);
+        }
+      }
       if (browserData && browserData.data) {
         dispatch(updateProfile({ ...profile, script: scriptDesign.id, status: 'running' }));
         const positionBrowser = await getPosition(index);
@@ -726,10 +740,10 @@ return new Promise(async (resolve) => {
 
   setTimeout(async () => {
     if(!browser || !browser.isConnected()){
-      resolve('Cant open browser!');
+      logger('open browser fail!');
+      resolve('Cant open browser');
   }
-  },10000);
-
+  },5000);
   browser = await puppeteer.launch({
     executablePath: "${browserData.executablePath}",
     devtools: false,
@@ -756,8 +770,8 @@ return new Promise(async (resolve) => {
 
   const pages = await browser.pages();
   if(!pages.length){
-    logger("Debug||Page is Error")
-    resolve('Page is Error');
+    logger('Page snap error!')
+    resolve('Cant open browser');
   }
 
   for(let i=1;i<pages.length;i++){
@@ -819,19 +833,20 @@ return new Promise(async (resolve) => {
   resolve('Done');
 });
 `;
-        const result = await runProfile(strCode, profile.id);
-        console.log(result);
+        for (let i = 0; i < 5; i++) {
+          const result = await runProfile(strCode, profile.id);
+          if (result !== 'Cant open browser') {
+            break;
+          }
+        }
       } else {
-        dispatch(updateProfile({ ...profile, script: scriptDesign.id, status: 'ready' }));
         console.log(`Can't get data Profile!`);
       }
     } else {
-      dispatch(updateProfile({ ...profile, script: scriptDesign.id, status: 'ready' }));
       console.log('Connect proxy Fail!');
       return;
     }
   } catch (err) {
-    dispatch(updateProfile({ ...profile, script: scriptDesign.id, status: 'ready' }));
     console.log(err);
   }
 };
