@@ -78,7 +78,7 @@
         width: 100%;
         position: relative;
         border-radius: 8px;
-        border: 1px dashed rgba(1, 22, 43, 0.2);
+        border: 1px dashed rgba(1, 22, 43, 0.3);
         scrollbar-width: none;
         &::-webkit-scrollbar {
           display: none;
@@ -104,6 +104,7 @@
         .editor pre {
           color: #01162b !important;
           padding-left: 5.6% !important;
+          padding-top: 1.6% !important;
           width: 100%;
         }
 
