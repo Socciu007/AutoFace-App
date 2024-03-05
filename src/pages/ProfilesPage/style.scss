@@ -95,7 +95,7 @@
             }
           }
           .ant-table-tbody > tr > td.ant-table-cell {
-            padding: 10px 16px !important;
+            padding: 10px 4px !important;
             // div {
             //   height: 30px !important;
             //   display: flex;
@@ -109,8 +109,20 @@
             //   }
             // }
           }
+          .ant-table-tbody > tr > td.key {
+            div {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
+          }
           .ant-table-thead > tr > th.ant-table-cell {
-            padding: 10px 16px !important;
+            padding: 10px 4px !important;
+          }
+          .ant-table-thead > tr > th.key {
+            display: flex;
+            justify-content: center;
+            align-items: center;
           }
         }
         .ant-table-content::-webkit-scrollbar {

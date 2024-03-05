@@ -15,6 +15,7 @@ import Select from '@mui/material/Select';
 import { apiCreateAccount } from '../../services/api_helper';
 import { Store } from 'react-notifications-component';
 import notification from '../../resources/notification.json';
+import { openURL } from '../../sender';
 const SignUp = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -279,15 +280,30 @@ const SignUp = () => {
                     <div>
                       <p>{t('By clicking here, I state that I have read and understood the ')}</p>
                       <div className="text-policy">
-                        <p className="policy" onClick={() => {}}>
+                        <p
+                          className="policy"
+                          onClick={() => {
+                            openURL('https://autoface.io/term-of-service');
+                          }}
+                        >
                           {t('Terms of Service ')}
                         </p>
                         ,{' '}
-                        <p className="policy" onClick={() => {}}>
+                        <p
+                          className="policy"
+                          onClick={() => {
+                            openURL('https://autoface.io/private-policy');
+                          }}
+                        >
                           {t(' Privacy Policy ')}
                         </p>
                         <p>{t(' and ')}</p>
-                        <p className="policy" onClick={() => {}}>
+                        <p
+                          className="policy"
+                          onClick={() => {
+                            openURL('https://autoface.io/refund-policy');
+                          }}
+                        >
                           {t(' Refund Policy. ')}
                         </p>
                       </div>

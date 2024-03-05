@@ -135,9 +135,9 @@ const runCode = async (profile, profileSelected, index, dispatch, arrfunction, s
     let proxyStr = '';
     let proxy;
     let proxyConvert;
+    const indexProfile = profileSelected.findIndex((e) => e.id == profile.id);
     if (settings.assignProxy) {
       if (settings.proxies.length) {
-        const indexProfile = profileSelected.findIndex((e) => e.id == profile.id);
         proxy = settings.proxies[indexProfile % settings.proxies.length];
       } else {
         proxy = profile.proxy;
@@ -145,7 +145,6 @@ const runCode = async (profile, profileSelected, index, dispatch, arrfunction, s
     } else {
       proxy = profile.proxy;
       if (settings.proxies.length && (!proxy.host || !proxy.host.length)) {
-        const indexProfile = index + j * results.length;
         proxy = settings.proxies[indexProfile % settings.proxies.length];
       }
     }

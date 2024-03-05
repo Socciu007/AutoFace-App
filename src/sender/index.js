@@ -92,6 +92,20 @@ export const deleteProfile = (id) =>
     }
   });
 
+export const openURL = (url) =>
+  new Promise((resolve) => {
+    try {
+      console.log(url);
+      window.electron.ipcRenderer.sendMessage('ipc-open-url', { url });
+      window.electron.ipcRenderer.once('ipc-open-url', resolve);
+      setTimeout(() => {
+        resolve({ success: false, error: 'Timeout!' });
+      }, API_TIMEOUT);
+    } catch (error) {
+      resolve({ success: false, error });
+    }
+  });
+
 export const createProfile = (name, proxy) =>
   new Promise((resolve) => {
     try {

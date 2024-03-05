@@ -312,7 +312,8 @@ const ProfilesPage = () => {
       {
         title: '#',
         // dataIndex: 'key',
-        width: 50,
+        width: 40,
+        className: 'key',
         render: (text, record, index) => <div>{index + 1}</div>,
       },
     ];
