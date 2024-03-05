@@ -51,7 +51,6 @@ const ProfilesPage = () => {
   const [openProfiles, setOpenProfiles] = useState(false);
   const [openAddProxy, setOpenAddProxy] = useState(false);
   const [openDeleteProfile, setOpenDeleteProfile] = useState(false);
-  const [openProxyManage, setOpenProxyManage] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
@@ -812,6 +811,12 @@ const ProfilesPage = () => {
       message: 'Reloaded Profiles',
     });
   };
+  const reloadProfiles = async () => {
+    await getProfiles();
+    await getUser();
+    setProfilesSelected([]);
+    setSelectedRowKeys([]);
+  };
   //scripts
   const handleOpenScripts = () => {
     if (profilesSelected.length > 0) {
@@ -855,14 +860,7 @@ const ProfilesPage = () => {
     setDisplaySettings(settings);
     renderColumns(settings);
   };
-  //proxy
-  const handleOpenProxyManage = () => {
-    setOpenProxyManage(true);
-  };
-  const handleCloseProxyManage = () => {
-    setOpenAddProxy(true);
-    setOpenProxyManage(false);
-  };
+
   const handleCloseAdd = () => {
     setOpenAddProxy(false);
   };
@@ -950,10 +948,7 @@ const ProfilesPage = () => {
     <div
       className="layout-profiles"
       style={{
-        opacity:
-          openAddProxy || openDeleteProfile || openScripts || openProfiles || openProxyManage || openDisplaySetting
-            ? 0.1
-            : 1,
+        opacity: openAddProxy || openDeleteProfile || openScripts || openProfiles || openDisplaySetting ? 0.1 : 1,
       }}
     >
       <div className="-container-profiles">
@@ -1104,20 +1099,12 @@ const ProfilesPage = () => {
             ) : null}
             <PopupAddProxy
               profilesSelected={profilesSelected}
-              getProfiles={getProfiles}
+              reloadProfiles={reloadProfiles}
               dataProfiles={dataProfiles}
               openAddProxy={openAddProxy}
               handleCloseAdd={handleCloseAdd}
-              handleOpenProxyManage={handleOpenProxyManage}
             ></PopupAddProxy>
-            <PopupProxyManage
-              startScreen={'Home'}
-              profilesSelected={profilesSelected}
-              getProfiles={getProfiles}
-              dataProfiles={dataProfiles}
-              openProxyManage={openProxyManage}
-              handleCloseProxyManage={handleCloseProxyManage}
-            ></PopupProxyManage>
+
             {profilesSelected.length ? (
               <div
                 className="-select-profile"

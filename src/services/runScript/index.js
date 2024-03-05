@@ -124,7 +124,7 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
               updateProfile({
                 ...profile,
                 script: scriptDesign.id,
-                status: i == settings.countLoop - 1 ? 'Error Proxy' : 'waiting',
+                status: i == settings.countLoop - 1 ? 'Proxy Error' : 'waiting',
               }),
             );
           } else {
@@ -163,9 +163,6 @@ const runCode = async (profile, profileSelected, index, dispatch, arrfunction, s
       }
     } else {
       proxy = profile.proxy;
-      if (settings.proxies.length && (!proxy.host || !proxy.host.length)) {
-        proxy = settings.proxies[indexProfile % settings.proxies.length];
-      }
     }
 
     if (proxy.host && proxy.host.length) {
@@ -848,6 +845,7 @@ return new Promise(async (resolve) => {
   ${getAllFunc(arrfunction)}
 
 } catch (error) {
+  logger(proxy)
   if(error && proxy && error.toString().includes('ERR_CONNECTION')){
     resolve('ERR_CONNECTION');
   }
