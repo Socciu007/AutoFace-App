@@ -208,7 +208,7 @@ export const loginFacebook = (account) => {
             account.password &&
             account.password.length))
       ) {
-        await page.goto("https://m.facebook.com/login/?ref=dbl&fl&login_from_aymh=1", {
+        await page.goto("https://m.facebook.com/login/", {
           waitUntil: "networkidle2",
           timeout: 60000,
         });
@@ -253,6 +253,15 @@ export const loginFacebook = (account) => {
   
           await page.keyboard.press("Enter");
           await delay(10000);
+
+          const urlLogin = page.url();
+
+          if(urlLogin.includes('https://m.facebook.com/error')){
+            await page.goto("https://m.facebook.com/", {
+              waitUntil: "networkidle2",
+              timeout: 60000,
+            });
+          }
           const login = await checkLogin(page);
           if (!login.isLogin) {
             const inputCode = await getElement(page, '[id="approvals_code"]', 20);

@@ -109,23 +109,42 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
       async (result, index) => {
         for (let j = 0; j < result.length; j++) {
           const profile = result[j];
-          await runCode(profile, profileSelected, index, dispatch, arrfunction, settings, j, scriptDesign);
-          dispatch(
-            updateProfile({
-              ...profile,
-              script: scriptDesign.id,
-              status: i == settings.countLoop - 1 ? 'ready' : 'waiting',
-            }),
+          const resultRun = await runCode(
+            profile,
+            profileSelected,
+            index,
+            dispatch,
+            arrfunction,
+            settings,
+            j,
+            scriptDesign,
           );
+          if (resultRun && resultRun.includes('ERR_CONNECTION')) {
+            dispatch(
+              updateProfile({
+                ...profile,
+                script: scriptDesign.id,
+                status: i == settings.countLoop - 1 ? 'Error Proxy' : 'waiting',
+              }),
+            );
+          } else {
+            dispatch(
+              updateProfile({
+                ...profile,
+                script: scriptDesign.id,
+                status: i == settings.countLoop - 1 ? 'ready' : 'waiting',
+              }),
+            );
+          }
         }
       },
       { concurrency: results.length },
     );
   }
-  newProfileSelected = profileSelected.map((profile) => {
-    return { ...profile, script: scriptDesign.id, status: 'ready' };
-  });
-  dispatch(updateProfiles(newProfileSelected));
+  // newProfileSelected = profileSelected.map((profile) => {
+  //   return { ...profile, script: scriptDesign.id, status: 'ready' };
+  // });
+  // dispatch(updateProfiles(newProfileSelected));
   return;
 };
 
@@ -194,6 +213,7 @@ const runCode = async (profile, profileSelected, index, dispatch, arrfunction, s
         const strCode = `
 
 let browser;
+let proxy;
 const logger = (...params) => {
 event.reply("ipc-logger",[${profile.uid},...params]);
 };
@@ -773,10 +793,13 @@ return new Promise(async (resolve) => {
     resolve('Cant open browser');
   }
 
-  for(let i=1;i<pages.length;i++){
+  if(pages.length > 2){
+    for(let i=1;i<pages.length;i++){
     logger('Close page ' + i);
     await closePage(pages[i]);
   }
+  }
+  
 
   let page = pages[0];
   
@@ -788,7 +811,7 @@ return new Promise(async (resolve) => {
   await page.bringToFront();
   await delay(1000);
   let interval;
-  const proxy = ${
+  proxy = ${
     proxyConvert && proxyConvert.host
       ? `{
     host:${JSON.stringify(proxyConvert.host)},
@@ -807,6 +830,11 @@ return new Promise(async (resolve) => {
  }
 },2000);
 
+  await page.goto('https://m.facebook.com/', {
+    waitUntil: 'networkidle2',
+    timeout: 30000,
+  });
+
   {${loginFacebook(profile)}}
   for(let i=0 ;i < 4;i++){
     let elNext = await getElement(page,'[id="nux-nav-button"]', 5);
@@ -820,10 +848,9 @@ return new Promise(async (resolve) => {
   ${getAllFunc(arrfunction)}
 
 } catch (error) {
-  if(error.includes('Failed to launch the browser process')){
-    logger('Failed to launch the browser process!!!!!!!');
+  if(error && proxy && error.toString().includes('ERR_CONNECTION')){
+    resolve('ERR_CONNECTION');
   }
-  else logger(error);
   } finally {
     if(browser){
         await browser.close();
@@ -832,12 +859,14 @@ return new Promise(async (resolve) => {
   resolve('Done');
 });
 `;
+        let result;
         for (let i = 0; i < 5; i++) {
-          const result = await runProfile(strCode, profile.id);
+          result = await runProfile(strCode, profile.id);
           if (result !== 'Cant open browser') {
             break;
           }
         }
+        return result;
       } else {
         console.log(`Can't get data Profile!`);
       }
