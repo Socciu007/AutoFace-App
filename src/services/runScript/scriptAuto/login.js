@@ -266,8 +266,16 @@ export const loginFacebook = (account) => {
           if (!login.isLogin) {
             const inputCode = await getElement(page, '[id="approvals_code"]', 20);
             if (inputCode) {
-              const code = await toOTPCode(account.twoFA, proxy);
-              await delay(2000);
+              let code;
+              for(let j=0;j<5;j++){
+                code = await toOTPCode(account.twoFA, proxy);
+                if (code && code.length){
+                  break;
+                }
+                else
+                await delay(2000);
+              }
+               
               if (code && code.length) {
                 await inputCode.type(code, { delay: 100 });
                 await delay(1000);
@@ -288,7 +296,6 @@ export const loginFacebook = (account) => {
               }
             } else {
               const allText = await getAllText(page);
-  
               if (!allText.includes(account.recoveryEmail.split("@")[1])) {
                 const confirmButton = await getElement(
                   page,
