@@ -11,6 +11,7 @@ export const loginFacebook = (account) => {
 
   return `
   try {
+
     const account = ${accountStr};
     const checkPageIsLive = checkIsLive(page);
     if (!checkPageIsLive) {
@@ -212,9 +213,29 @@ export const loginFacebook = (account) => {
           waitUntil: "networkidle2",
           timeout: 60000,
         });
-        const email = await getElementEmail(page);
-        const password = await getElementPassword(page);
-        if (email && password) {
+        await delay(2000);
+        let email = await getElementEmail(page, 15);
+        let password = await getElementPassword(page);
+        if(!email && !password){
+          const btnTryAnothers = await getElements(page,'[role="button"]', 5);
+          if(btnTryAnothers && btnTryAnothers.length > 2){
+            await btnTryAnothers[btnTryAnothers.length - 3].click();
+            await delay(5000);
+            const inputPass = await getElement(page,'input');
+            if(inputPass){
+              
+            await inputPass.type(account.password, { delay: 100 });
+            await delay(1000);
+            const btnLogins = await getElements(page,'[role="button"]');
+            if(btnLogins && btnLogins.length > 2){
+              await btnLogins[btnLogins.length - 2].click();
+              await delay(5000);
+            }
+            }
+          }
+       
+        }
+        else if (email && password) {
           await email.type(account.uid, { delay: 100 });
           await delay(1000);
           await password.type(account.password, { delay: 100 });
@@ -268,7 +289,7 @@ export const loginFacebook = (account) => {
             if (inputCode) {
               let code;
               for(let j=0;j<5;j++){
-                code = await toOTPCode(account.twoFA, proxy);
+                code = await toOTPCode(account.twoFA, j%2 == 0 ? proxy : null);
                 if (code && code.length){
                   break;
                 }
@@ -295,6 +316,47 @@ export const loginFacebook = (account) => {
                 return { isLogin: false, error: "Dont get 2FA code" };
               }
             } else {
+
+
+            if(page.url() == 'https://m.facebook.com/login/#'){
+              const btnTryAnothers = await getElements(page,'[role="button"]');
+              if(btnTryAnothers && btnTryAnothers.length == 2){
+                  await btnTryAnothers[1].click();
+                  await delay(5000);
+                  const btn2Fa= await getElements(page,'[role="button"]');
+                  if(btn2Fa && btn2Fa.length > 2){
+                    await btn2Fa[2].click();
+                    await delay(2000);
+                    await btn2Fa[btn2Fa.length - 1].click();
+                    await delay(5000);
+                   
+                    const inputCode = await getElement(page,'[type="number"]');
+                    if(inputCode){
+                     
+                      let code;
+              for(let j=0;j<5;j++){
+                code = await toOTPCode(account.twoFA, j%2 == 0 ? proxy : null);
+                logger('Code ' + code);
+                if (code && code.length){
+                  break;
+                }
+                else
+                await delay(2000);
+              }
+               
+              if (code && code.length){
+                await inputCode.type(code);
+               const btnContinues = await getElement(page, '[role="button"]');
+               if(btnContinues && btnContinues.length > 2){
+                 await btnContinues[btnContinues.length - 2].click();
+                 await delay(5000);
+               }
+              }
+                    }
+                  }
+
+              }
+            }
               const allText = await getAllText(page);
               if (!allText.includes(account.recoveryEmail.split("@")[1])) {
                 const confirmButton = await getElement(

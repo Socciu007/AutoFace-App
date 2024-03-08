@@ -693,8 +693,8 @@ for (let i = 0; i < loop; i++) {
 }
 };
 
-const getElementEmail = async (page) => {
-for (let i = 0; i < 60; i++) {
+const getElementEmail = async (page, round = 30) => {
+for (let i = 0; i < round; i++) {
   logger("GET Email");
   let email;
   email = await getElementByID(page, "m_login_email", 1);
