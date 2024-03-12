@@ -20,6 +20,7 @@ import { joinGroup } from './scriptAuto/joinGroup';
 import { leftGroup } from './scriptAuto/leaveGroup';
 import { updateProfile, updateProfiles } from '../../redux/profileSlice';
 import { getInfor } from './scriptAuto/GetInfo';
+import { removeProfile } from '../../redux/debugSlice';
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -119,7 +120,7 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
             j,
             scriptDesign,
           );
-          if (resultRun && resultRun.includes('ERR_CONNECTION')) {
+          if (resultRun && resultRun.toString().includes('ERR_CONNECTION')) {
             dispatch(
               updateProfile({
                 ...profile,
@@ -149,6 +150,7 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
 };
 
 const runCode = async (profile, profileSelected, index, dispatch, arrfunction, settings, indexThread, scriptDesign) => {
+  const funcLogin = arrfunction.find((e) => e.type == 'login');
   await delay(settings.delayThread && settings.delayThread > 0 ? index * settings.delayThread * 1000 : 1000);
   try {
     let proxyStr = '';
@@ -206,6 +208,8 @@ const runCode = async (profile, profileSelected, index, dispatch, arrfunction, s
       }
       if (browserData && browserData.data) {
         dispatch(updateProfile({ ...profile, script: scriptDesign.id, status: 'running' }));
+        dispatch(removeProfile(profile));
+        removeProfile;
         const positionBrowser = await getPosition(index);
         const strCode = `
 
@@ -831,18 +835,23 @@ return new Promise(async (resolve) => {
     waitUntil: 'networkidle2',
     timeout: 30000,
   });
-
-  {${loginFacebook(profile)}}
-  for(let i=0 ;i < 4;i++){
-    let elNext = await getElement(page,'[id="nux-nav-button"]', 5);
-        if(elNext){
-            await elNext.click();
-            await delay(7000);
-        }
-        else break;
+  ${
+    funcLogin
+      ? ''
+      : `
+      await returnHomePage(page);
+  const { isLogin } = await checkLogin(page);
+  if(!isLogin){
+    logger("Debug||Not logged into Facebook yet");
+    resolve('Not login!');
+    if(browser){
+      await browser.close();
     }
-  ${getInfor(profile)}
-  ${getAllFunc(arrfunction)}
+    return;
+  }
+  `
+  }
+  ${getAllFunc(arrfunction, profile)}
 
 } catch (error) {
   logger(proxy)
@@ -860,6 +869,7 @@ return new Promise(async (resolve) => {
         let result;
         for (let i = 0; i < 5; i++) {
           result = await runProfile(strCode, profile.id);
+          console.log(result);
           if (result !== 'Cant open browser') {
             break;
           }
@@ -877,16 +887,20 @@ return new Promise(async (resolve) => {
   }
 };
 
-const getAllFunc = (arrfunction) => {
+const getAllFunc = (arrfunction, profile) => {
   let funcStr = '';
   arrfunction.forEach((e) => {
-    funcStr += convertToFunc(e);
+    funcStr += convertToFunc(e, profile);
   });
   return funcStr;
 };
 
-const convertToFunc = (script) => {
+const convertToFunc = (script, profile) => {
   switch (script.type) {
+    case 'login':
+      return `${loginFacebook(script, profile)}
+      ${getInfor(profile)}
+      `;
     case 'newsFeed':
       return `{
         ${newFeed(script)}

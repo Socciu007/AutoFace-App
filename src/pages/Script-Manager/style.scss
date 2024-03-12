@@ -3,6 +3,18 @@ body {
   margin: 0;
   font-family: 'GoogleSansBold', sans-serif;
 }
+
+.debug {
+  padding: 0 0px;
+  border: none;
+  height: 50px;
+  background-color: transparent;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  cursor: pointer;
+}
+
 .wrapper {
   height: 100vh;
   .script-manager {

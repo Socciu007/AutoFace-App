@@ -7,12 +7,14 @@ import back from '../../assets/icon/icon-back.svg';
 import pin from '../../assets/icon/icon-pin.svg';
 import pinBlack from '../../assets/icon/icon-pinBlack.svg';
 import iconEdit from '../../assets/icon/icon-editBlack.svg';
+import debug from '../../assets/icon/icon-debug.svg';
 import iconDuplicate from '../../assets/icon/icon-duplicate.svg';
 import iconDelete from '../../assets/icon/icon-Delete.svg';
 import option from '../../assets/icon/icon-options.svg';
 import close from '../../assets/icon/icon-close.svg';
 import yourScript from '../../assets/pictures/icon-yourScripts.svg';
 import yourScriptBlue from '../../assets/icon/icon-yourScriptsBlue.svg';
+import PopupDebug from '../../components/PopupHome/PopupDebug/PopupDebug.jsx';
 import plus from '../../assets/pictures/icon-plus.png';
 import iconCheck from '../../assets/icon/icon-checkBlue.svg';
 import systemScript from '../../assets/icon/icon-systemScript.svg';
@@ -81,11 +83,21 @@ const ScriptManager = () => {
   const [itemSelect, setItemSelect] = useState(null);
   const [nameCoppy, setNameCoppy] = useState('');
   const [isRunScript, setIsRunScript] = useState(false);
+  const [openDebug, setOpenDebug] = useState(false);
+  const [profileDebug, setProfilesDebug] = useState(null);
   const profiles = useSelector((state) => state.profile);
+  const debugs = useSelector((state) => state.debug);
   const dispatch = useDispatch();
   useEffect(() => {
     getScripts();
   }, []);
+
+  const handleOpenDebug = () => {
+    setOpenDebug(true);
+  };
+  const handleCloseDebug = () => {
+    setOpenDebug(false);
+  };
 
   useEffect(() => {
     setListScript(mapStatus(listScript));
@@ -106,7 +118,7 @@ const ScriptManager = () => {
 
       newArr[index] = {
         ...newArr[index],
-        status: total.length > 0 ? { done: scriptDone.length, total: total.length } : null,
+        status: total.length > 0 ? { done: scriptDone, total: total } : null,
       };
     });
     return newArr;
@@ -332,19 +344,20 @@ const ScriptManager = () => {
             <div
               onClick={() => {
                 dispatch(setScriptAuto(script.name));
+
                 setItemSelect(script);
                 setIsRunScript(true);
                 setAnchorEl(null);
               }}
             >
-              {status && status.total ? (
+              {status && status.total && status.total.length ? (
                 <div className="statusRunning">
                   <img src={running} alt="run profile icon" />
                   <span>
-                    <span className="profileRunning">{status.done}</span>
+                    <span className="profileRunning">{status.done.length}</span>
                     <span className="totalProfile">
                       {' '}
-                      / {status.total} {status.total == 1 ? 'profile' : 'profiles'}
+                      / {status.total.length} {status.total.length == 1 ? 'profile' : 'profiles'}
                     </span>
                   </span>
                 </div>
@@ -408,10 +421,26 @@ const ScriptManager = () => {
       render: (script) => {
         return (
           <div>
-            <div className="-expand-icon">
-              {/* <p className="runScript">Run</p> */}
-              {/* <p className="stopScript">Stop</p> */}
+            <div style={{ width: 40 }}>
+              <button
+                className="debug"
+                onClick={() => {
+                  setProfilesDebug(script.status && script.status.total ? script.status.total : null);
+                  handleOpenDebug();
+                }}
+              >
+                <img
+                  style={{
+                    height: '35px',
+                    marginRight: '30px',
+                  }}
+                  src={debug}
+                  alt="Debug"
+                />
+              </button>
+
               <img
+                className="-expand-icon"
                 src={option}
                 alt="image-option"
                 id={`basic-menu-${script.id}`}
@@ -602,7 +631,13 @@ const ScriptManager = () => {
               </div>
             </div>
           </Dialog>
-
+          <PopupDebug
+            debugs={debugs}
+            openDebug={openDebug}
+            debugScript={true}
+            handleCloseDebug={handleCloseDebug}
+            profiles={profileDebug}
+          ></PopupDebug>
           <Dialog
             open={deleteDialogOpen}
             onClose={() => handleCloseDialog('delete')}

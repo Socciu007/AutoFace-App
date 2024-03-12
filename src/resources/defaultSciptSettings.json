@@ -215,5 +215,10 @@
     "isFollow": false,
     "line": 0
   },
+  "login": {
+    "typeLogin": "cookies",
+    "delayTimeStart": 3,
+    "delayTimeEnd": 5
+  },
   "viewVideo": { "viewTimeStart": 30, "viewTimeEnd": 50, "videoID": [], "line": 0 }
 }

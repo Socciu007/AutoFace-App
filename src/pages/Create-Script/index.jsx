@@ -11,16 +11,14 @@ import CreatePost from '../../components/General/CreatePost/CreatePost.jsx';
 import Post_Interaction from '../../components/General/Post_Interaction/Post_Interaction.jsx';
 import Delete_Post from '../../components/General/Delete_Post/Delete_Post.jsx';
 import View_Notifications from '../../components/General/View_Notifications/View_Notifications.jsx';
-import Send_Message from '../../components/General/Send_Message/Send_Message.jsx';
-import Reply_Message from '../../components/General/Reply_Message/Reply_Message.jsx';
 import AddFriend from '../../components/General/Add_Friends/AddFriend.jsx';
 import JoinGroup from '../../components/Group/Join_Group/JoinGroup.jsx';
 import LeaveGroup from '../../components/Group/Leave_Group/LeaveGroup.jsx';
 import Invite from '../../components/Group/Invite/Invite.jsx';
+import Login from '../../components/Account/Login/Login.jsx';
 import SeedingLikeComment from '../../components/Seeding/SeedingLikeComment/SeedingLikeComment.jsx';
 import SeedingFollower from '../../components/Seeding/SeedingFollower/SeedingFollower.jsx';
 import SeedingView from '../../components/Seeding/SeedingView/SeedingView.jsx';
-
 import search from '../../assets/icon/icon-search.svg';
 import back from '../../assets/icon/icon-back.svg';
 import newNote from '../../assets/icon/icon-newNote.svg';
@@ -42,6 +40,7 @@ import invite from '../../assets/icon/icon-inviteGroup.svg';
 import likeComment from '../../assets/icon/icon-likeComment.svg';
 import follower from '../../assets/icon/icon-follower.svg';
 import viewVideo from '../../assets/icon/icon-viewVideo.svg';
+import iconLogin from '../../assets/icon/icon-login.svg';
 import CreatePostGroup from '../../components/Group/Create_Post/CreatePost.jsx';
 import { storageScripts } from '../../common/const.config.js';
 import DefaultSciptSettings from '../../resources/defaultSciptSettings.json';
@@ -50,12 +49,10 @@ import { Store } from 'react-notifications-component';
 import notification from '../../resources/notification.json';
 import PopupChooseProfile from '../../components/PopupHome/PopupChooseProfile/PopupChooseProfile.jsx';
 import PopupDebug from '../../components/PopupHome/PopupDebug/PopupDebug.jsx';
-import { useSelector, useDispatch } from 'react-redux';
-import { removeDebug } from '../../redux/debugSlice.js';
+import { useSelector } from 'react-redux';
 const CreateScript = () => {
   const DnDFlowRef = useRef();
   const { state } = useLocation();
-  const dispatch = useDispatch();
   const [component, setComponent] = useState('default');
   const [nameScript, setNameScript] = useState('');
   const [noteScript, setNoteScript] = useState('');
@@ -73,10 +70,6 @@ const CreateScript = () => {
   const [openProfiles, setOpenProfiles] = useState(false);
   const navigate = useNavigate();
   const debugs = useSelector((state) => state.debug);
-
-  useEffect(() => {
-    dispatch(removeDebug());
-  }, []);
 
   useEffect(() => {
     setDefaultScript();
@@ -287,26 +280,6 @@ const CreateScript = () => {
             updateDesignScript={updateDesignScript}
           />
         );
-      // case 'sendMsg':
-      //   return (
-      //     <Send_Message
-      //       currentSetup={currentSetup}
-      //       component={component}
-      //       id={currentComponent}
-      //       updateDesignScript={updateDesignScript}
-      //       onGoBackClick={handleGoBackClick}
-      //     />
-      //   );
-      // case 'replyMsg':
-      //   return (
-      //     <Reply_Message
-      //       currentSetup={currentSetup}
-      //       updateDesignScript={updateDesignScript}
-      //       component={component}
-      //       id={currentComponent}
-      //       onGoBackClick={handleGoBackClick}
-      //     />
-      //   );
       case 'addFriend':
         return (
           <AddFriend
@@ -397,6 +370,16 @@ const CreateScript = () => {
             onGoBackClick={handleGoBackClick}
           />
         );
+      case 'login':
+        return (
+          <Login
+            currentSetup={currentSetup}
+            component={component}
+            updateDesignScript={updateDesignScript}
+            id={currentComponent}
+            onGoBackClick={handleGoBackClick}
+          />
+        );
       default:
         return (
           <div className={'scrollable-container'}>
@@ -425,6 +408,13 @@ const CreateScript = () => {
                   onClick={() => handleCategoryClick(3)}
                 >
                   Seeding
+                </button>
+
+                <button
+                  className={activeCategory === 4 ? 'categoryActive' : 'categoryBtn'}
+                  onClick={() => handleCategoryClick(4)}
+                >
+                  Account
                 </button>
                 <hr />
               </div>
@@ -458,14 +448,6 @@ const CreateScript = () => {
                     <img src={viewNoti} alt="watch newsfeed General" />
                     <p>View notifications</p>
                   </div>
-                  {/* <div className="card" onDragStart={(event) => onDragStart(event, 'sendMsg')} draggable>
-                    <img src={sendMsg} alt="watch newsfeed General" />
-                    <p>Send message</p>
-                  </div>
-                  <div className="card" onDragStart={(event) => onDragStart(event, 'replyMsg')} draggable>
-                    <img src={reply} alt="watch newsfeed General" />
-                    <p>Reply message</p>
-                  </div> */}
                   <div className="card" onDragStart={(event) => onDragStart(event, 'addFriend')} draggable>
                     <img src={addFriend} alt="watch newsfeed General" />
                     <p>Add friend</p>
@@ -505,6 +487,12 @@ const CreateScript = () => {
                   <div className="card" onDragStart={(event) => onDragStart(event, 'viewVideo')} draggable>
                     <img src={viewVideo} alt="View Video" />
                     <p>View video</p>
+                  </div>
+                </div>
+                <div className={activeCategory === 4 ? 'grid-container' : 'hide'}>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'login')} draggable>
+                    <img src={iconLogin} alt="Login" />
+                    <p>Login</p>
                   </div>
                 </div>
               </div>

@@ -30,6 +30,7 @@ import likeCommentNode from '../nodes/likeComment';
 import followerNode from '../nodes/follower';
 import viewVideoNode from '../nodes/viewVideo';
 import createPostGroupNode from '../nodes/createPostGroup';
+import loginNode from '../nodes/login';
 const initialNodes = [
   {
     id: '1',
@@ -58,6 +59,7 @@ const nodeTypes = {
   likeComment: likeCommentNode,
   follower: followerNode,
   viewVideo: viewVideoNode,
+  login: loginNode,
 };
 const nodeMessage = {
   watchStory: 'watchStory',
@@ -78,6 +80,7 @@ const nodeMessage = {
   likeComment: 'likeComment',
   follower: 'follower',
   viewVideo: 'viewVideo',
+  login: 'login',
 };
 
 const getId = () => `dndnode_${+new Date()}`;
@@ -146,9 +149,7 @@ const DnDFlow = forwardRef(({ onMessageChange, handleDeleteNode, addNewNode, ite
   const onDrop = useCallback(
     (event) => {
       event.preventDefault();
-
       const type = event.dataTransfer.getData('application/reactflow');
-
       if (typeof type === 'undefined' || !type) {
         return;
       }
