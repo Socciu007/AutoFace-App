@@ -77,7 +77,7 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
           tag:
             values.isTag && values.tag.split(',').length
               ? values.tag.split(',').map((e) => {
-                  if (!e.startsWith('#')) {
+                  if (e && e.toString().trim().length && !e.startsWith('#')) {
                     return '#' + e;
                   }
                   return e;
