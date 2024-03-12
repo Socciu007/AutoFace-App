@@ -839,7 +839,7 @@ return new Promise(async (resolve) => {
     funcLogin
       ? ''
       : `
-      await returnHomePage(page);
+  await returnHomePage(page);
   const { isLogin } = await checkLogin(page);
   if(!isLogin){
     logger("Debug||Not logged into Facebook yet");
@@ -913,14 +913,6 @@ const convertToFunc = (script, profile) => {
       return `{
         ${viewNoti(script)}
       }`;
-    // case 'replyMsg':
-    //   return `{
-    //     ${replyMsg(script)}
-    //   }`;
-    // case 'sendMsg':
-    //   return `{
-    //     ${sendMsg(script)}
-    //   }`;
     case 'deletePost':
       return `{
         ${deletePost(script)}

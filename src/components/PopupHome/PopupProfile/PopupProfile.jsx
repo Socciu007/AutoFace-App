@@ -278,16 +278,29 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
                       }}
                     />
                   </div>
-                  <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
-                    <p>
-                      <span>1</span>Enter the account information here, each account/line
-                    </p>
-                    <p>
-                      <span>2</span>
-                      <strong>Account format:</strong> UID|Password|2FA|Recovery email|Recovery email’s
-                      password|Cookie|Date of birth
-                    </p>
-                  </div>
+                  {textContent ? (
+                    <div onClick={handleDivClick} className={`placeholder hide`}>
+                      <p>
+                        <span>1</span>Enter the account information here, each account/line
+                      </p>
+                      <p>
+                        <span>2</span>
+                        <strong>Account format:</strong> UID|Password|2FA|Recovery email|Recovery email’s
+                        password|Cookie|Date of birth
+                      </p>
+                    </div>
+                  ) : (
+                    <div onClick={handleDivClick} className={`placeholder`}>
+                      <p>
+                        <span>1</span>Enter the account information here, each account/line
+                      </p>
+                      <p>
+                        <span>2</span>
+                        <strong>Account format:</strong> UID|Password|2FA|Recovery email|Recovery email’s
+                        password|Cookie|Date of birth
+                      </p>
+                    </div>
+                  )}
                 </div>
                 <div className="chooseOption">
                   <div className="chooseOption__item tag">
@@ -349,21 +362,36 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
                             }}
                           />
                         </div>
-                        <div
-                          onClick={handleDivClickProxy}
-                          className={`placeholder placehoderProxy ${proxyContent ? 'hide' : ''}`}
-                        >
-                          <p>
-                            <span>1</span>Enter the proxy here
-                          </p>
-                          <p>
-                            <span>2</span>
-                            <strong>Proxy format:</strong> Host:Port:Username:Password
-                          </p>
-                          <p>
-                            <span>3</span>
-                            Proxy will be assigned to the new profiles in turn from top to bottom
-                          </p>
+                        <div className="example">
+                          {proxyContent ? (
+                            <div onClick={handleDivClickProxy} className={`placeholder placehoderProxy hide`}>
+                              <p>
+                                <span>1</span>Enter the proxy here
+                              </p>
+                              <p>
+                                <span>2</span>
+                                <strong>Proxy format:</strong> Host:Port:Username:Password
+                              </p>
+                              <p>
+                                <span>3</span>
+                                Proxy will be assigned to the new profiles in turn from top to bottom
+                              </p>
+                            </div>
+                          ) : (
+                            <div onClick={handleDivClickProxy} className={`placeholder placehoderProxy`}>
+                              <p>
+                                <span>1</span>Enter the proxy here
+                              </p>
+                              <p>
+                                <span>2</span>
+                                <strong>Proxy format:</strong> Host:Port:Username:Password
+                              </p>
+                              <p>
+                                <span>3</span>
+                                Proxy will be assigned to the new profiles in turn from top to bottom
+                              </p>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>

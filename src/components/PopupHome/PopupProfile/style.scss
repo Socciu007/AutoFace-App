@@ -76,7 +76,7 @@
       margin: 1%;
       .text {
         width: 100%;
-        position: relative;
+        // position: relative;
         border-radius: 8px;
         border: 1px dashed rgba(1, 22, 43, 0.3);
         scrollbar-width: none;
@@ -133,9 +133,15 @@
           }
         }
       }
-      .placehoderProxy {
-        top: 18%;
-        transform: translate(0, -18%);
+      .hide {
+        display: none;
+      }
+      .example {
+        position: relative;
+        .placehoderProxy {
+          top: 18%;
+          transform: translate(0, -222%);
+        }
       }
 
       .chooseOption {
@@ -222,7 +228,7 @@
           }
           .textProxy {
             margin: 1% 0;
-            position: relative;
+            // position: relative;
           }
         }
       }

@@ -434,7 +434,21 @@ export const loginFacebook = (script, account) => {
         if (account.cookies) {
           logger("Delete Cookie|" + account.cookies);
         }
+        await page.goto('https://m.facebook.com/', {
+    waitUntil: 'networkidle2',
+    timeout: 60000,
+  });
         if(rdTime > 0) await delay(rdTime);
+
+        for(let i=0 ;i < 4;i++){
+          let elNext = await getElement(page,'[id="nux-nav-button"]', 5);
+              if(elNext){
+                  await elNext.click();
+                  await delay(7000);
+              }
+              else break;
+          }
+
         return true;
       } 
       else if (!loginDone && errLogin == "Checkpoint" && page.url().includes("956")) {
@@ -456,7 +470,20 @@ export const loginFacebook = (script, account) => {
         if (account.cookies) {
           logger("Delete Cookie|" + account.cookies);
         }
+        await page.goto('https://m.facebook.com/', {
+    waitUntil: 'networkidle2',
+    timeout: 60000,
+  });
         if(rdTime > 0) await delay(rdTime);
+
+        for(let i=0 ;i < 4;i++){
+          let elNext = await getElement(page,'[id="nux-nav-button"]', 5);
+              if(elNext){
+                  await elNext.click();
+                  await delay(7000);
+              }
+              else break;
+          }
       } 
     }
   } catch (err) {
