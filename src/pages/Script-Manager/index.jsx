@@ -7,7 +7,7 @@ import back from '../../assets/icon/icon-back.svg';
 import pin from '../../assets/icon/icon-pin.svg';
 import pinBlack from '../../assets/icon/icon-pinBlack.svg';
 import iconEdit from '../../assets/icon/icon-editBlack.svg';
-import debug from '../../assets/icon/icon-debug.svg';
+import debug from '../../assets/icon/debug_icon.svg';
 import iconDuplicate from '../../assets/icon/icon-duplicate.svg';
 import iconDelete from '../../assets/icon/icon-Delete.svg';
 import option from '../../assets/icon/icon-options.svg';
@@ -427,83 +427,74 @@ const ScriptManager = () => {
       fixed: 'right',
       render: (script) => {
         return (
-          <div>
-            <div style={{ width: 40 }}>
-              <button
-                className="debug"
-                onClick={() => {
-                  setProfilesDebug(script.status && script.status.total ? script.status.total : null);
-                  handleOpenDebug();
+          <div style={{ width: 10 }}>
+            <img
+              className="-expand-icon"
+              src={option}
+              alt="image-option"
+              id={`basic-menu-${script.id}`}
+              onClick={(event) => {
+                handleClick(event, script);
+              }}
+              aria-haspopup="true"
+            ></img>
+            <div className={itemSelect && itemSelect.id === script.id ? 'script selected' : 'script'}>
+              <Menu
+                anchorEl={anchorEl}
+                id={`basic-menu-${script.id}`}
+                open={itemSelect && itemSelect.id === script.id && anchorEl ? true : false}
+                onClose={() => {
+                  setItemSelect(null);
+                }}
+                className="MenuScript"
+                MenuListProps={{
+                  'aria-labelledby': 'basic-button',
+                }}
+                sx={{
+                  '& .MuiPaper-root': menuStyle,
+                  '& .MuiButtonBase-root': liStyle,
+                }}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'left',
                 }}
               >
-                <img
-                  style={{
-                    height: '35px',
-                    marginRight: '30px',
-                  }}
-                  src={debug}
-                  alt="Debug"
-                />
-              </button>
+                <div className="d-flex MuiBox-root css-0">
+                  <div className="dropList">
+                    <ul>
+                      <li id={script.id} onClick={() => handleTogglePin(script.id)}>
+                        <img src={pinBlack} alt="icon pin" />
+                        {!script.isPin ? <p>Pin</p> : <p>Unpin</p>}
+                      </li>
+                      <li onClick={handleEditClick}>
+                        <img src={iconEdit} alt="icon edit" />
+                        Edit
+                      </li>
 
-              <img
-                className="-expand-icon"
-                src={option}
-                alt="image-option"
-                id={`basic-menu-${script.id}`}
-                onClick={(event) => {
-                  handleClick(event, script);
-                }}
-                // aria-expanded={open ? 'true' : 'false'}
-                // aria-controls={open ? `basic-menu-${script.id}` : undefined}
-                aria-haspopup="true"
-              ></img>
-              <div className={itemSelect && itemSelect.id === script.id ? 'script selected' : 'script'}>
-                <Menu
-                  anchorEl={anchorEl}
-                  id={`basic-menu-${script.id}`}
-                  open={itemSelect && itemSelect.id === script.id && anchorEl ? true : false}
-                  onClose={() => {
-                    setItemSelect(null);
-                  }}
-                  className="MenuScript"
-                  MenuListProps={{
-                    'aria-labelledby': 'basic-button',
-                  }}
-                  sx={{
-                    '& .MuiPaper-root': menuStyle,
-                    '& .MuiButtonBase-root': liStyle,
-                  }}
-                  anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                  }}
-                >
-                  <div className="d-flex MuiBox-root css-0">
-                    <div className="dropList">
-                      <ul>
-                        <li id={script.id} onClick={() => handleTogglePin(script.id)}>
-                          <img src={pinBlack} alt="icon pin" />
-                          {!script.isPin ? <p>Pin</p> : <p>Unpin</p>}
-                        </li>
-                        <li onClick={handleEditClick}>
-                          <img src={iconEdit} alt="icon edit" />
-                          Edit
-                        </li>
-                        <li onClick={() => handleOptionClick('makeCopy', script)}>
-                          <img src={iconDuplicate} alt="icon duplicate" />
-                          Duplicate
-                        </li>
-                        <li onClick={() => handleOptionClick('delete', script)}>
-                          <img src={iconDelete} alt="icon delete" />
-                          Delete
-                        </li>
-                      </ul>
-                    </div>
-                    <div style={{ width: '60px', background: 'tranparent !important', display: 'inherit' }}></div>
+                      <li
+                        onClick={() => {
+                          setProfilesDebug(script.status && script.status.total ? script.status.total : null);
+                          handleClose();
+                          handleOpenDebug();
+                        }}
+                      >
+                        <img style={{ width: 10 }} src={debug} alt="icon edit" />
+                        Debug
+                      </li>
+
+                      <li onClick={() => handleOptionClick('makeCopy', script)}>
+                        <img src={iconDuplicate} alt="icon duplicate" />
+                        Duplicate
+                      </li>
+                      <li onClick={() => handleOptionClick('delete', script)}>
+                        <img src={iconDelete} alt="icon delete" />
+                        Delete
+                      </li>
+                    </ul>
                   </div>
-                </Menu>
-              </div>
+                  <div style={{ width: '60px', background: 'tranparent !important', display: 'inherit' }}></div>
+                </div>
+              </Menu>
             </div>
           </div>
         );
