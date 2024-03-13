@@ -270,7 +270,7 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
                       }}
                       highlight={(text) => hightlightWithLineNumbers(text, languages.js, textContent)}
                       padding={15}
-                      className="editor"
+                      className="editorText"
                       textareaId="codeArea"
                       style={{
                         background: '#fff',
@@ -280,7 +280,8 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
                   </div>
                   <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
                     <p>
-                      <span>1</span>Enter the account information here, each account/line
+                      <span style={{ paddingRight: '2px' }}>1</span>Enter the account information here, each
+                      account/line
                     </p>
                     <p>
                       <span>2</span>
@@ -336,13 +337,12 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
                         <div style={{ width: '100%', height: 166, overflow: 'auto' }} className="text">
                           <Editor
                             value={proxyContent}
-                            spellCheck="true"
                             onValueChange={(text) => {
                               setProxyContent(text);
                             }}
                             highlight={(text) => hightlightWithLineNumbers(text, languages.js, proxyContent)}
                             padding={15}
-                            className="editor"
+                            className="editorText"
                             textareaId="textareaProxy"
                             style={{
                               background: '#fff',
@@ -350,22 +350,23 @@ const PopupProfile = ({ openProfiles, handleCloseProfiles, onAddProfile }) => {
                             }}
                           />
                         </div>
-                        {/* <div className="example"> */}
-                        {/* {proxyContent ? null : ( */}
-                        <div onClick={handleDivClickProxy} className={`placehoderProxy ${proxyContent ? 'hide' : ''}`}>
-                          <p>
-                            <span>1</span>Enter the proxy here
-                          </p>
-                          <p>
-                            <span>2</span>
-                            <strong>Proxy format:</strong> Host:Port:Username:Password
-                          </p>
-                          <p>
-                            <span>3</span>
-                            Proxy will be assigned to the new profiles in turn from top to bottom
-                          </p>
-                          {/* </div> */}
-                          {/* )} */}
+                        <div className="example">
+                          <div
+                            onClick={handleDivClickProxy}
+                            className={`placeholder placehoderProxy ${proxyContent ? 'hide' : ''}`}
+                          >
+                            <p>
+                              <span style={{ marginRight: '22px' }}>1</span>Enter the proxy here
+                            </p>
+                            <p>
+                              <span>2</span>
+                              <strong>Proxy format:</strong> Host:Port:Username:Password
+                            </p>
+                            <p>
+                              <span>3</span>
+                              Proxy will be assigned to the new profiles in turn from top to bottom
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </div>
