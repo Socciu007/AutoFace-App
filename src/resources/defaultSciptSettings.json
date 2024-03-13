@@ -239,5 +239,11 @@
     "emailList": [],
     "line": 0
   },
-  "name": {}
+  "name": {
+    "changeName": "fullName",
+    "nameList": [],
+    "firstName": [],
+    "midleName": [],
+    "surName": []
+  }
 }

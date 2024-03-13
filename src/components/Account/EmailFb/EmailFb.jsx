@@ -51,6 +51,10 @@ const EmailFb = ({ onGoBackClick, id, updateDesignScript, currentSetup, componen
     setValues({ ...values, typeLogin: type });
   };
 
+  const changeTypeMail = (type) => {
+    setValues({ ...values, typeEmail: type });
+  };
+
   const changeWaitTimeOTP = (value) => {
     setValues({ ...values, waitTimeOTP: parseToNumber(value) });
   };
@@ -137,13 +141,14 @@ const EmailFb = ({ onGoBackClick, id, updateDesignScript, currentSetup, componen
                       className="LoginType"
                     >
                       <MenuItem value="https://m.facebook.com">m.facebook.com</MenuItem>
-                      <MenuItem value="facebook.com/hacked">facebook.com/hacked</MenuItem>
+                      <MenuItem value="https://facebook.com">facebook.com</MenuItem>
+                      <MenuItem value="https://facebook.com/hacked">facebook.com/hacked</MenuItem>
                     </Select>
                   </div>
                 </div>
               </div>
             )}
-            {values.isDelete && values.typeLogin === 'facebook.com/hacked' && (
+            {(values.isDelete || values.isAdd) && values.typeLogin === 'https://facebook.com/hacked' && (
               <div className="component-item Notification">
                 <div className="component-item__header">
                   <p>New password</p>
@@ -154,6 +159,7 @@ const EmailFb = ({ onGoBackClick, id, updateDesignScript, currentSetup, componen
                       onChange={(event) => {
                         changeNewPass(event.target.value);
                       }}
+                      bordered={false}
                       placeholder="Enter new password here"
                       className="editor"
                     ></Input>
@@ -172,10 +178,11 @@ const EmailFb = ({ onGoBackClick, id, updateDesignScript, currentSetup, componen
                     <div className="component-item loginOption">
                       <Select
                         value={values.typeEmail}
-                        onChange={(event) => changeTypeLogin(event.target.value)}
+                        onChange={(event) => changeTypeMail(event.target.value)}
                         className="LoginType"
                       >
-                        <MenuItem value="https://mbasic.facebook.com">mbasic.facebook.com</MenuItem>
+                        <MenuItem value="hotmail">Hotmail</MenuItem>
+                        <MenuItem value="mail.tm">mail.tm</MenuItem>
                       </Select>
                     </div>
                   </div>

@@ -134,41 +134,44 @@ export const boostLikeComment = (setting) => {
       if (boostObj.isComment && boostObj.file.length > 0) {
         await uploadImg(page, boostObj);
       } else if (boostObj.isComment && boostObj.textComment.length > 0) {
-        const element = await checkExistElement(
-          page,
-          "textarea.internal-input.input-box.native-input",
-          3
-        );
-        if (element === 1) {
-          while (countTag < numsTag) {
-            const randomLetter = await getRandomLetter();
-            const tag = '@'+randomLetter;
-            await page.type(
-              "textarea.internal-input.input-box.native-input",
-              tag
-            );
-            await delay(getRandomIntBetween(3000, 5000));
-            const listTag1 = await page.$$(
-              "div.mentions-suggestion-row native-text"
-            );
-            const listTag = await page.$$('div[data-testid="tag_name"]');
-            await delay(getRandomIntBetween(3000, 5000));
-            if (listTag.length > 0) {
-              const elementTag = await listTag[getRandomInt(listTag.length)];
-              await scrollSmoothIfNotExistOnScreens0(elementTag);
+        if (boostObj.isTag) {
+          const element = await checkExistElement(
+            page,
+            "textarea.internal-input.input-box.native-input",
+            3
+          );
+          if (element === 1) {
+            while (countTag < numsTag) {
+              const randomLetter = await getRandomLetter();
+              const tag = '@'+randomLetter;
+              await page.type(
+                "textarea.internal-input.input-box.native-input",
+                tag
+              );
               await delay(getRandomIntBetween(3000, 5000));
-              await clickElement(elementTag);
+              const listTag1 = await page.$$(
+                "div.mentions-suggestion-row native-text"
+              );
+              const listTag = await page.$$('div[data-testid="tag_name"]');
               await delay(getRandomIntBetween(3000, 5000));
-            } else if (listTag1.length) {
-              const elementTag = await listTag1[getRandomInt(listTag1.length)];
-              await scrollSmoothIfNotExistOnScreens0(elementTag);
-              await delay(getRandomIntBetween(3000, 5000));
-              await clickElement(elementTag);
-              await delay(getRandomIntBetween(3000, 5000));
+              if (listTag.length > 0) {
+                const elementTag = await listTag[getRandomInt(listTag.length)];
+                await scrollSmoothIfNotExistOnScreens0(elementTag);
+                await delay(getRandomIntBetween(3000, 5000));
+                await clickElement(elementTag);
+                await delay(getRandomIntBetween(3000, 5000));
+              } else if (listTag1.length) {
+                const elementTag = await listTag1[getRandomInt(listTag1.length)];
+                await scrollSmoothIfNotExistOnScreens0(elementTag);
+                await delay(getRandomIntBetween(3000, 5000));
+                await clickElement(elementTag);
+                await delay(getRandomIntBetween(3000, 5000));
+              }
+              countTag++;
             }
-            countTag++;
+            logger("Done tag friend");
           }
-          logger("Done tag friend");
+        }
           const commentBtn = await page.$(
             "textarea.internal-input.input-box.native-input"
           );

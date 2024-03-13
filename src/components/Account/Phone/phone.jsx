@@ -5,7 +5,6 @@ import backButton from '../../../assets/icon/icon-back.svg';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
-import { Input } from 'antd';
 const DeletePhone = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
   const [values, setValues] = useState(DefaultSciptSettings['deletePhone']);
 
