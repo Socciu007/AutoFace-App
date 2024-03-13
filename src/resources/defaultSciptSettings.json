@@ -220,5 +220,12 @@
     "delayTimeStart": 3,
     "delayTimeEnd": 5
   },
+  "password": {
+    "url": "https://mbasic.facebook.com",
+    "newPassword": ""
+  },
+  "deletePhone": {
+    "url": "https://mbasic.facebook.com"
+  },
   "viewVideo": { "viewTimeStart": 30, "viewTimeEnd": 50, "videoID": [], "line": 0 }
 }

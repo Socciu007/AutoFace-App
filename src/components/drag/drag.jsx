@@ -29,8 +29,10 @@ import inviteGroupNode from '../nodes/invite';
 import likeCommentNode from '../nodes/likeComment';
 import followerNode from '../nodes/follower';
 import viewVideoNode from '../nodes/viewVideo';
+import passwordNode from '../nodes/password';
 import createPostGroupNode from '../nodes/createPostGroup';
 import loginNode from '../nodes/login';
+import phoneNode from '../nodes/phone';
 const initialNodes = [
   {
     id: '1',
@@ -60,6 +62,8 @@ const nodeTypes = {
   follower: followerNode,
   viewVideo: viewVideoNode,
   login: loginNode,
+  password: passwordNode,
+  deletePhone: phoneNode,
 };
 const nodeMessage = {
   watchStory: 'watchStory',
@@ -81,6 +85,8 @@ const nodeMessage = {
   follower: 'follower',
   viewVideo: 'viewVideo',
   login: 'login',
+  password: 'password',
+  deletePhone: 'deletePhone',
 };
 
 const getId = () => `dndnode_${+new Date()}`;

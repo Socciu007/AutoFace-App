@@ -21,6 +21,7 @@ import { leftGroup } from './scriptAuto/leaveGroup';
 import { updateProfile, updateProfiles } from '../../redux/profileSlice';
 import { getInfor } from './scriptAuto/GetInfo';
 import { removeProfile } from '../../redux/debugSlice';
+import { chnagePassword } from './scriptAuto/ChangePass';
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -109,26 +110,36 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
       results,
       async (result, index) => {
         for (let j = 0; j < result.length; j++) {
-          const profile = result[j];
-          const resultRun = await runCode(
-            profile,
-            profileSelected,
-            index,
-            dispatch,
-            arrfunction,
-            settings,
-            j,
-            scriptDesign,
-          );
-          if (resultRun && resultRun.toString().includes('ERR_CONNECTION')) {
-            dispatch(
-              updateProfile({
-                ...profile,
-                script: scriptDesign.id,
-                status: i == settings.countLoop - 1 ? 'Proxy Error' : 'waiting',
-              }),
+          try {
+            const profile = result[j];
+            const resultRun = await runCode(
+              profile,
+              profileSelected,
+              index,
+              dispatch,
+              arrfunction,
+              settings,
+              j,
+              scriptDesign,
             );
-          } else {
+            if (resultRun && resultRun.toString().includes('ERR_CONNECTION')) {
+              dispatch(
+                updateProfile({
+                  ...profile,
+                  script: scriptDesign.id,
+                  status: i == settings.countLoop - 1 ? 'Proxy Error' : 'waiting',
+                }),
+              );
+            } else {
+              dispatch(
+                updateProfile({
+                  ...profile,
+                  script: scriptDesign.id,
+                  status: i == settings.countLoop - 1 ? 'ready' : 'waiting',
+                }),
+              );
+            }
+          } catch (err) {
             dispatch(
               updateProfile({
                 ...profile,
@@ -142,10 +153,6 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
       { concurrency: results.length },
     );
   }
-  // newProfileSelected = profileSelected.map((profile) => {
-  //   return { ...profile, script: scriptDesign.id, status: 'ready' };
-  // });
-  // dispatch(updateProfiles(newProfileSelected));
   return;
 };
 
@@ -904,6 +911,10 @@ const convertToFunc = (script, profile) => {
     case 'newsFeed':
       return `{
         ${newFeed(script)}
+      }`;
+    case 'password':
+      return `{
+        ${chnagePassword(script, profile)}
       }`;
     case 'createPost':
       return `{

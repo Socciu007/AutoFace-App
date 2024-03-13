@@ -16,25 +16,6 @@ import { useDropzone } from 'react-dropzone';
 import { parseToNumber } from '../../../services/utils';
 import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
 const CreatePostGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
-  const initialValues = {
-    postStart: 1,
-    postEnd: 2,
-    delayTimeStart: 5,
-    delayTimeEnd: 10,
-    option: 'text/photo',
-    text: [],
-    photos: [],
-    photoStart: 1,
-    photoEnd: 2,
-    isTag: false,
-    typeTag: 'random',
-    numberFriendTagStart: 1,
-    numberFriendTagEnd: 2,
-    UID: [],
-    UIDGroup: [],
-    lineCount: 0,
-  };
-
   const [values, setValues] = useState(DefaultSciptSettings['createPostGroup']);
   const [textContent, setTextContent] = useState('');
   const [UIDContent, setUIDContent] = useState('');

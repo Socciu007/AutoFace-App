@@ -41,6 +41,8 @@ import likeComment from '../../assets/icon/icon-likeComment.svg';
 import follower from '../../assets/icon/icon-follower.svg';
 import viewVideo from '../../assets/icon/icon-viewVideo.svg';
 import iconLogin from '../../assets/icon/icon-login.svg';
+import iconPassword from '../../assets/icon/icon-password.svg';
+import iconPhone from '../../assets/icon/icon-phone.svg';
 import CreatePostGroup from '../../components/Group/Create_Post/CreatePost.jsx';
 import { storageScripts } from '../../common/const.config.js';
 import DefaultSciptSettings from '../../resources/defaultSciptSettings.json';
@@ -50,6 +52,8 @@ import notification from '../../resources/notification.json';
 import PopupChooseProfile from '../../components/PopupHome/PopupChooseProfile/PopupChooseProfile.jsx';
 import PopupDebug from '../../components/PopupHome/PopupDebug/PopupDebug.jsx';
 import { useSelector } from 'react-redux';
+import Password from '../../components/Account/Password/Password.jsx';
+import DeletePhone from '../../components/Account/Phone/phone.jsx';
 const CreateScript = () => {
   const DnDFlowRef = useRef();
   const { state } = useLocation();
@@ -380,6 +384,26 @@ const CreateScript = () => {
             onGoBackClick={handleGoBackClick}
           />
         );
+      case 'password':
+        return (
+          <Password
+            currentSetup={currentSetup}
+            component={component}
+            updateDesignScript={updateDesignScript}
+            id={currentComponent}
+            onGoBackClick={handleGoBackClick}
+          ></Password>
+        );
+      case 'deletePhone':
+        return (
+          <DeletePhone
+            currentSetup={currentSetup}
+            component={component}
+            updateDesignScript={updateDesignScript}
+            id={currentComponent}
+            onGoBackClick={handleGoBackClick}
+          ></DeletePhone>
+        );
       default:
         return (
           <div className={'scrollable-container'}>
@@ -493,6 +517,14 @@ const CreateScript = () => {
                   <div className="card" onDragStart={(event) => onDragStart(event, 'login')} draggable>
                     <img src={iconLogin} alt="Login" />
                     <p>Login</p>
+                  </div>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'password')} draggable>
+                    <img src={iconPassword} alt="Password" />
+                    <p>Change password</p>
+                  </div>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'deletePhone')} draggable>
+                    <img src={iconPhone} alt="Password" />
+                    <p>Phone number</p>
                   </div>
                 </div>
               </div>
