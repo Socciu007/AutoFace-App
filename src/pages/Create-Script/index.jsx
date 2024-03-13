@@ -54,6 +54,8 @@ import PopupDebug from '../../components/PopupHome/PopupDebug/PopupDebug.jsx';
 import { useSelector } from 'react-redux';
 import Password from '../../components/Account/Password/Password.jsx';
 import DeletePhone from '../../components/Account/Phone/phone.jsx';
+import EmailFb from '../../components/Account/EmailFb/EmailFb.jsx';
+import Name from '../../components/Account/Name/Name.jsx';
 const CreateScript = () => {
   const DnDFlowRef = useRef();
   const { state } = useLocation();
@@ -404,6 +406,26 @@ const CreateScript = () => {
             onGoBackClick={handleGoBackClick}
           ></DeletePhone>
         );
+      case 'email':
+        return (
+          <EmailFb
+            currentSetup={currentSetup}
+            component={component}
+            updateDesignScript={updateDesignScript}
+            id={currentComponent}
+            onGoBackClick={handleGoBackClick}
+          ></EmailFb>
+        );
+      case 'name':
+        return (
+          <Name
+            currentSetup={currentSetup}
+            component={component}
+            updateDesignScript={updateDesignScript}
+            id={currentComponent}
+            onGoBackClick={handleGoBackClick}
+          ></Name>
+        );
       default:
         return (
           <div className={'scrollable-container'}>
@@ -525,6 +547,14 @@ const CreateScript = () => {
                   <div className="card" onDragStart={(event) => onDragStart(event, 'deletePhone')} draggable>
                     <img src={iconPhone} alt="Password" />
                     <p>Phone number</p>
+                  </div>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'email')} draggable>
+                    <img src={iconPassword} alt="email" />
+                    <p>Email</p>
+                  </div>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'name')} draggable>
+                    <img src={iconPassword} alt="name" />
+                    <p>Name</p>
                   </div>
                 </div>
               </div>

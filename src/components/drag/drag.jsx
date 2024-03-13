@@ -33,6 +33,8 @@ import passwordNode from '../nodes/password';
 import createPostGroupNode from '../nodes/createPostGroup';
 import loginNode from '../nodes/login';
 import phoneNode from '../nodes/phone';
+import emailNode from '../nodes/email';
+import nameNode from '../nodes/name';
 const initialNodes = [
   {
     id: '1',
@@ -64,6 +66,8 @@ const nodeTypes = {
   login: loginNode,
   password: passwordNode,
   deletePhone: phoneNode,
+  email: emailNode,
+  name: nameNode,
 };
 const nodeMessage = {
   watchStory: 'watchStory',
@@ -87,6 +91,8 @@ const nodeMessage = {
   login: 'login',
   password: 'password',
   deletePhone: 'deletePhone',
+  email: 'email',
+  name: 'name',
 };
 
 const getId = () => `dndnode_${+new Date()}`;

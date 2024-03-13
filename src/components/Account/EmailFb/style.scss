@@ -124,6 +124,59 @@
             padding: 15px 10px 15px 20px;
           }
         }
+        .placeholder {
+          position: absolute;
+          width: 100%;
+          top: 10%;
+          transform: translate(0, -10%);
+          p {
+            font-size: 15px;
+            font-weight: 400;
+            opacity: 0.5;
+            margin-left: 5%;
+            span {
+              margin-right: 3%;
+            }
+          }
+        }
+        .text {
+          border-radius: 5px;
+          border: 1px dashed rgba(1, 22, 43, 0.2);
+          scrollbar-width: none;
+          &::-webkit-scrollbar {
+            display: none;
+          }
+          .editor {
+            font-family: 'GoogleSans';
+            min-width: 100%;
+            min-height: 100%;
+            max-width: 100%;
+            float: left;
+            -webkit-text-fill-color: #333;
+          }
+
+          .editor #Email {
+            outline: none;
+            padding-left: 9% !important;
+            padding-top: 4% !important;
+          }
+
+          .editor pre {
+            padding-left: 9% !important;
+            padding-top: 4% !important;
+            width: 100%;
+          }
+
+          .editor .editorLineNumber {
+            position: absolute;
+            left: 0px;
+            color: #cccccc;
+            text-align: right;
+            width: 6%;
+            font-weight: 100;
+            opacity: 0.5 !important;
+          }
+        }
       }
       .numberOfNotification {
         margin-top: 0;
@@ -176,6 +229,35 @@
       .Notification,
       .Notification .NotificationContent {
         display: block;
+      }
+      .Logintype {
+        margin-bottom: -1%;
+      }
+      .Email {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        .EmailType {
+          width: 50%;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          .component-item__header {
+            width: 100%;
+          }
+          .EmailContent {
+            width: 100%;
+          }
+          .EmailOTP {
+            width: 100% !important;
+            .numberOTP {
+              width: 100% !important;
+              margin: 5% 0;
+              margin-bottom: 2%;
+              height: 40px;
+            }
+          }
+        }
       }
     }
   }
