@@ -9,7 +9,6 @@ import settings from '../../assets/pictures/icon-settings.png';
 import plus from '../../assets/pictures/icon-plus.png';
 import options from '../../assets/pictures/icon-options.png';
 import addProxy from '../../assets/pictures/icon-addProxy.png';
-// import deleted from '../../assets/pictures/icon-delete.svg';
 import deleted from '../../assets/icon/icon-Delete.svg';
 import yourScript from '../../assets/pictures/icon-yourScripts.svg';
 import pin from '../../assets/icon/icon-pin.svg';
@@ -22,7 +21,6 @@ import defaultDisplaySettings from '../../resources/defaultDisplaySettings.json'
 import { EditableCell, EditableRow } from '../../components/EditableTable/EditableTable';
 import PopupProfile from '../../components/PopupHome/PopupProfile/PopupProfile';
 import PopupAddProxy from '../../components/PopupHome/PopupAddProxy/PopupAddProxy';
-import PopupProxyManage from '../../components/PopupHome/PopupProxyManage/PopupProxyManage';
 import PopupDeleteProfile from '../../components/PopupHome/PopupDeleteProfile/PopupDeleteProfile';
 import PopupScript from '../../components/PopupHome/PopupScript/PopupScript';
 import { accessToken, storageDisplaySettings, storageProfiles, storageSettings } from '../../common/const.config';
@@ -71,9 +69,26 @@ const ProfilesPage = () => {
         deleteCookie(params[0][1].split('|')[1]);
       }
 
+      if (params[0][1] && params[0][1].toString().includes('ChangePass|')) {
+        changePass(params[0][1].split('|')[1], params[0][1].split('|')[2]);
+      }
+
       console.log(params[0]);
     });
   }
+
+  const changePass = async (oldPass, newPass) => {
+    const profiles = await dbGetLocally(storageProfiles);
+    const index = profiles.findIndex((e) => e.password == oldPass);
+    if (index >= 0) {
+      const profile = profiles[index];
+      profiles.splice(index, 1, {
+        ...profile,
+        password: newPass,
+      });
+      await dbSetLocally(storageProfiles, profiles);
+    }
+  };
 
   const deleteCookie = async (cookies) => {
     const profiles = await dbGetLocally(storageProfiles);

@@ -1,4 +1,4 @@
-export const chnagePassword = (script, account) => {
+export const changePassword = (script, account) => {
   const accountStr = `{
         uid: ${JSON.stringify(account.uid)},
         password:${JSON.stringify(account.password)},
@@ -36,29 +36,31 @@ export const chnagePassword = (script, account) => {
         waitUntil: "networkidle2",
         timeout: 60000,
       });
-  
+      await delay(2000);
       const elLinks = await getElements(page, "a");
-  
+     
       if (elLinks && elLinks.length) {
         for (let i = 0; i < elLinks.length; i++) {
           const href = await elLinks[i].evaluate((element) => element.href);
-          if (href && href.toString().includes("security_login/password")) {
+          if (href && href.toString().includes("security/password")) {
             await elLinks[i].click();
             await delay(7000);
+            break;
           }
         }
       }
-      if (!page.url().includes("security_login/password")) {
+      if (!page.url().includes("security/password")) {
         await page.goto(
-          "https://mbasic.facebook.com/settings/security_login/password",
+          "https://mbasic.facebook.com/settings/security/password",
           {
             waitUntil: "networkidle2",
             timeout: 60000,
           }
         );
+        await delay(2000);
       }
-  
-      const elOldPass = await getElement(page, '[name="password_old"]', 15);
+      
+      const elOldPass = await getElement(page, '[name="password_old"]');
       const elNewPass = await getElement(page, '[name="password_new"]');
       const elConfirm = await getElement(page, '[name="password_confirm"]');
       if (elOldPass && elNewPass && elConfirm) {
@@ -71,12 +73,16 @@ export const chnagePassword = (script, account) => {
         const btnSubmit = await getElement(page, '[type="submit"]');
         if (btnSubmit) {
           await btnSubmit.click();
-          await delay(getRandomIntBetween(30000, 50000));
+          await delay(getRandomIntBetween(5000, 7000));
+          if(!page.url().includes("security/password") || page.url().includes("https://mbasic.facebook.com/home.php")){
+            logger("ChangePass|" + account.password + "|" + script.newPassword);
+          }
         } else {
           logger("Debug|Change password|Change password Fail");
         }
       }
     } catch (e) {
+        logger(e);
       logger("Debug|Change password|Change password Fail");
     }
   }`;

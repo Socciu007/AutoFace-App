@@ -21,7 +21,8 @@ import { leftGroup } from './scriptAuto/leaveGroup';
 import { updateProfile, updateProfiles } from '../../redux/profileSlice';
 import { getInfor } from './scriptAuto/GetInfo';
 import { removeProfile } from '../../redux/debugSlice';
-import { chnagePassword } from './scriptAuto/ChangePass';
+import { changePassword } from './scriptAuto/ChangePass';
+import { DeletePhone } from './scriptAuto/DeletePhone';
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -914,8 +915,12 @@ const convertToFunc = (script, profile) => {
       }`;
     case 'password':
       return `{
-        ${chnagePassword(script, profile)}
+        ${changePassword(script, profile)}
       }`;
+    case 'deletePhone':
+      return `{
+          ${DeletePhone(script)}
+        }`;
     case 'createPost':
       return `{
         ${createPost(script)}
