@@ -123,6 +123,7 @@ const Name = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }
                 value={values.changeName}
                 bordered={false}
               >
+                <MenuItem value="randomly">Randomly</MenuItem>
                 <MenuItem value="fullName">List (Full name)</MenuItem>
                 <MenuItem value="unFullName">List (First name, middle name, surname)</MenuItem>
               </Select>
