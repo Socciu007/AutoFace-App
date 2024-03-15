@@ -70,13 +70,31 @@ export const changePassword = (script, account) => {
         await delay(getRandomIntBetween(1000, 2000));
         await elConfirm.type(script.newPassword, { delay: 100 });
         await delay(getRandomIntBetween(1000, 2000));
-        const btnSubmit = await getElement(page, '[type="submit"]');
+        const btnSubmit = await getElement(page,'[id="objects_container"] [type="submit"]');
         if (btnSubmit) {
           await btnSubmit.click();
           await delay(getRandomIntBetween(5000, 7000));
-          if(!page.url().includes("security/password") || page.url().includes("https://mbasic.facebook.com/home.php")){
-            logger("ChangePass|" + account.password + "|" + script.newPassword);
-          }
+            const elOptions = await getElements(page,'[name="session_invalidation_options"]');
+            if(elOptions && elOptions.length > 1){
+                await elOptions[1].click();
+                await delay(1000);
+            }
+            else if(elOptions){
+                await elOptions[0].click();
+                await delay(1000);
+            }
+        
+            const submitAction = await getElement(page,'[name="submit_action"]');
+
+            if(submitAction){
+                await submitAction.click();
+                await delay(getRandomIntBetween(5000, 7000));
+                if(!page.url().includes("account/password")){
+                    logger("ChangePass|" + account.password + "|" + script.newPassword);
+                }
+            }
+
+            
         } else {
           logger("Debug|Change password|Change password Fail");
         }

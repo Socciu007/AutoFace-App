@@ -23,6 +23,7 @@
     "crypto-js": "^4.1.1",
     "file-system": "^2.2.2",
     "formik": "^2.4.5",
+    "full-name-generator": "^0.1.4",
     "i18next": "^23.7.7",
     "moment": "^2.29.4",
     "node-sass": "^9.0.0",

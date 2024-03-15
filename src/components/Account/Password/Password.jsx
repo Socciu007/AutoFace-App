@@ -66,7 +66,7 @@ const Password = ({ onGoBackClick, id, updateDesignScript, currentSetup, compone
                     onChange={(event) => {
                       changeNewPass(event.target.value);
                     }}
-                    bordered={false}
+                    value={values.newPassword}
                     placeholder="Enter new password here"
                     className="editor"
                   ></Input>

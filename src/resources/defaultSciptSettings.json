@@ -232,10 +232,11 @@
     "isAdd": false,
     "isDelete": false,
     "isHide": false,
-    "typeLogin": "https://m.facebook.com",
+    "urlAddMail": "https://mbasic.facebook.com",
+    "urlDeleteMail": "https://mbasic.facebook.com",
     "typeEmail": "hotmail",
     "newPassword": "",
-    "waitTimeOTP": 60,
+    "waitTimeOTP": 30,
     "emailList": [],
     "line": 0
   },
@@ -245,5 +246,42 @@
     "firstName": [],
     "midleName": [],
     "surName": []
+  },
+  "infomation": {
+    "isBio": false,
+    "bio": [],
+    "isWork": false,
+    "work": [],
+    "isHighSchool": false,
+    "highSchool": [],
+    "isColege": false,
+    "colege": [],
+    "isCity": false,
+    "city": [],
+    "isHometown": false,
+    "hometown": [],
+    "isRelationship": false,
+    "relationship": "random",
+    "isGender": false,
+    "gender": "random",
+    "isBirthday": false,
+    "birthday": {
+      "type": "random",
+      "day": [],
+      "month": [],
+      "year": []
+    },
+    "isNickname": false,
+    "nickname": []
+  },
+  "avatar": {
+    "folder": "",
+    "isDelete": false,
+    "isSkip": false
+  },
+  "cover": {
+    "folder": "",
+    "isDelete": false,
+    "isSkip": false
   }
 }

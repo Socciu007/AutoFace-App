@@ -16,7 +16,7 @@ import storageService from '../../../services/storage.service';
 import { useSelector } from 'react-redux';
 import { runScript } from '../../../services/runScript';
 import { useDispatch } from 'react-redux';
-const PopupChooseProfile = ({ openProfiles, handleCloseProfiles, designScript }) => {
+const PopupChooseProfile = ({ openProfiles, handleCloseProfiles, designScript, selectProfile }) => {
   const dispatch = useDispatch();
   const makeCopyProfile = {
     position: 'fixed',
@@ -334,6 +334,7 @@ const PopupChooseProfile = ({ openProfiles, handleCloseProfiles, designScript })
       if (!check) {
         handleCloseProfiles();
         setSelectedRowKeys([]);
+        selectProfile(profilesSelected);
         await runScript(profilesSelected, designScript, dispatch);
       } else {
         Store.addNotification({

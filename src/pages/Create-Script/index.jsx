@@ -42,6 +42,8 @@ import follower from '../../assets/icon/icon-follower.svg';
 import viewVideo from '../../assets/icon/icon-viewVideo.svg';
 import iconLogin from '../../assets/icon/icon-login.svg';
 import iconPassword from '../../assets/icon/icon-password.svg';
+import iconEmail from '../../assets/icon/icon-email.svg';
+import iconName from '../../assets/icon/icon-name.svg';
 import iconPhone from '../../assets/icon/icon-phone.svg';
 import CreatePostGroup from '../../components/Group/Create_Post/CreatePost.jsx';
 import { storageScripts } from '../../common/const.config.js';
@@ -74,6 +76,7 @@ const CreateScript = () => {
   const [currentSetup, setCurrentSetup] = useState(null);
   const [activeCategory, setActiveCategory] = useState(1);
   const [openProfiles, setOpenProfiles] = useState(false);
+  const [profileSelected, setProfileSelected] = useState(null);
   const navigate = useNavigate();
   const debugs = useSelector((state) => state.debug);
 
@@ -86,6 +89,10 @@ const CreateScript = () => {
       setNameScript(state.name ? state.name : '');
       setNoteScript(state.note ? state.note : '');
     }
+  };
+
+  const selectProfile = (profiles) => {
+    setProfileSelected(profiles);
   };
 
   const handleMessageChange = (component, id) => {
@@ -549,11 +556,11 @@ const CreateScript = () => {
                     <p>Phone number</p>
                   </div>
                   <div className="card" onDragStart={(event) => onDragStart(event, 'email')} draggable>
-                    <img src={iconPassword} alt="email" />
+                    <img src={iconEmail} alt="email" />
                     <p>Email</p>
                   </div>
                   <div className="card" onDragStart={(event) => onDragStart(event, 'name')} draggable>
-                    <img src={iconPassword} alt="name" />
+                    <img src={iconName} alt="name" />
                     <p>Name</p>
                   </div>
                 </div>
@@ -622,18 +629,22 @@ const CreateScript = () => {
                   <button className="debug" onClick={handleOpenDebug}>
                     <img src={debug} alt="Debug" />
                   </button>
-                  <PopupDebug debugs={debugs} openDebug={openDebug} handleCloseDebug={handleCloseDebug}></PopupDebug>
+                  <PopupDebug
+                    profiles={profileSelected}
+                    debugs={debugs}
+                    openDebug={openDebug}
+                    debugScript={true}
+                    handleCloseDebug={handleCloseDebug}
+                  ></PopupDebug>
                   <button className="test" onClick={handleOpenProfiles}>
                     <img src={runTest} alt="run test" />
                   </button>
                   <PopupChooseProfile
+                    selectProfile={selectProfile}
                     designScript={designScript}
                     openProfiles={openProfiles}
                     handleCloseProfiles={handleCloseProfiles}
                   ></PopupChooseProfile>
-                  {/* <button className="more">
-                    <img src={option} alt="More" />
-                  </button> */}
                   <button
                     onClick={() => {
                       onSave();

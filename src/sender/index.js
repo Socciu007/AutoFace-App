@@ -132,10 +132,10 @@ export const updateProfile = (id, proxy) =>
     }
   });
 
-export const getProxy = (proxy, id) =>
+export const getProxy = (proxy, timeout, id) =>
   new Promise((resolve) => {
     try {
-      window.electron.ipcRenderer.sendMessage('ipc-convert-proxy', { id, proxy });
+      window.electron.ipcRenderer.sendMessage('ipc-convert-proxy', { id, proxy, timeout });
       window.electron.ipcRenderer.once(`ipc-convert-proxy${id ? id : ''}`, resolve);
       setTimeout(() => {
         resolve({ success: false, error: 'Timeout!' });

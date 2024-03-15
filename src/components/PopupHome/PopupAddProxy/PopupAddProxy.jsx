@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import closePopup from '../../../assets/pictures/icon-x.svg';
-import PopupComponent from '../PopupComponent/PopupComponent';
 import './style.scss';
 import { storageProfiles } from '../../../common/const.config';
 import Editor from 'react-simple-code-editor';
@@ -120,7 +119,7 @@ const PopupAddProxy = ({ profilesSelected, openAddProxy, handleCloseAdd, dataPro
     background: '#fff',
     position: 'fixed',
     maxWidth: '100% !important',
-    width: '1163px',
+    width: '996px',
     height: '679px',
     top: '50%',
     left: '50%',
@@ -137,10 +136,10 @@ const PopupAddProxy = ({ profilesSelected, openAddProxy, handleCloseAdd, dataPro
     background: 'rgba(255,255,255,0.9)',
   };
   const MuiDialogPaper = {
-    width: '1163px',
+    width: '996px',
     height: '679px',
     maxHeight: '679px !important',
-    minWidth: '1163px !important',
+    minWidth: '996px !important',
     color: '#01162b !important',
   };
   const MuiDialogContainerProxy = {

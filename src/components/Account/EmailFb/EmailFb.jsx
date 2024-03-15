@@ -19,7 +19,9 @@ const EmailFb = ({ onGoBackClick, id, updateDesignScript, currentSetup, componen
       if (currentSetup.emailList && currentSetup.emailList.length) {
         setTextContent(currentSetup.emailList.join('\n'));
       }
-      setValues(currentSetup);
+      setTimeout(() => {
+        setValues(currentSetup);
+      }, 50);
     }
   }, [currentSetup]);
 
@@ -37,18 +39,22 @@ const EmailFb = ({ onGoBackClick, id, updateDesignScript, currentSetup, componen
 
   const changeEmail = (value, type) => {
     if (type === 'add') {
-      setValues({ ...values, isAdd: value });
+      setValues({ ...values, isAdd: value, isDelete: false, isHide: false });
     }
     if (type === 'delete') {
-      setValues({ ...values, isDelete: value });
+      setValues({ ...values, isDelete: value, isAdd: false, isHide: false });
     }
     if (type === 'hide') {
-      setValues({ ...values, isHide: value });
+      setValues({ ...values, isHide: value, isAdd: false, isDelete: false });
     }
   };
 
-  const changeTypeLogin = (type) => {
-    setValues({ ...values, typeLogin: type });
+  const changeTypeLogin = (url) => {
+    setValues({ ...values, urlAddMail: url });
+  };
+
+  const changeUrl = (url) => {
+    setValues({ ...values, urlDeleteMail: url });
   };
 
   const changeTypeMail = (type) => {
@@ -97,10 +103,10 @@ const EmailFb = ({ onGoBackClick, id, updateDesignScript, currentSetup, componen
                 <input
                   type="checkbox"
                   name="randomLike"
-                  checked={values.isLiked}
+                  checked={values.isAdd}
                   onChange={(event) => changeEmail(event.target.checked, 'add')}
                 />
-                <span>Add email:</span>
+                <span>Add email</span>
               </div>
             </div>
 
@@ -109,10 +115,10 @@ const EmailFb = ({ onGoBackClick, id, updateDesignScript, currentSetup, componen
                 <input
                   type="checkbox"
                   name="randomLike"
-                  checked={values.isLiked}
+                  checked={values.isDelete}
                   onChange={(event) => changeEmail(event.target.checked, 'delete')}
                 />
-                <span>Delete email:</span>
+                <span>Delete email</span>
               </div>
             </div>
 
@@ -121,14 +127,14 @@ const EmailFb = ({ onGoBackClick, id, updateDesignScript, currentSetup, componen
                 <input
                   type="checkbox"
                   name="randomLike"
-                  checked={values.isLiked}
+                  checked={values.isHide}
                   onChange={(event) => changeEmail(event.target.checked, 'hide')}
                 />
-                <span>Hide email:</span>
+                <span>Hide email</span>
               </div>
             </div>
 
-            {(values.isAdd || values.isDelete) && (
+            {values.isAdd && (
               <div className="component-item Notification Logintype">
                 <div className="component-item__header">
                   <p>Select URL</p>
@@ -136,13 +142,30 @@ const EmailFb = ({ onGoBackClick, id, updateDesignScript, currentSetup, componen
                 <div className="NotificationContent">
                   <div className="component-item loginOption">
                     <Select
-                      value={values.typeLogin}
+                      value={values.urlAddMail}
                       onChange={(event) => changeTypeLogin(event.target.value)}
                       className="LoginType"
                     >
-                      <MenuItem value="https://m.facebook.com">m.facebook.com</MenuItem>
-                      <MenuItem value="https://facebook.com">facebook.com</MenuItem>
-                      <MenuItem value="https://facebook.com/hacked">facebook.com/hacked</MenuItem>
+                      <MenuItem value="https://mbasic.facebook.com">mbasic.facebook.com</MenuItem>
+                    </Select>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {values.isDelete && (
+              <div className="component-item Notification Logintype">
+                <div className="component-item__header">
+                  <p>Select URL</p>
+                </div>
+                <div className="NotificationContent">
+                  <div className="component-item loginOption">
+                    <Select
+                      value={values.urlDeleteMail}
+                      onChange={(event) => changeUrl(event.target.value)}
+                      className="LoginType"
+                    >
+                      <MenuItem value="https://mbasic.facebook.com">mbasic.facebook.com</MenuItem>
                     </Select>
                   </div>
                 </div>
@@ -182,7 +205,7 @@ const EmailFb = ({ onGoBackClick, id, updateDesignScript, currentSetup, componen
                         className="LoginType"
                       >
                         <MenuItem value="hotmail">Hotmail</MenuItem>
-                        <MenuItem value="mail.tm">mail.tm</MenuItem>
+                        {/* <MenuItem value="mail.tm">mail.tm</MenuItem> */}
                       </Select>
                     </div>
                   </div>

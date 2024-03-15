@@ -48,7 +48,7 @@ function nameNode({ data: { label, onButtonClick, onDeleteNode }, isConnectable,
           <img src={passIcon} alt="createPost" />
           <div className="content-right">
             <div className="right-top">
-              <p>Name</p>
+              <p>Change name</p>
               <img src={optionNode} alt="More" onClick={handleClick} />
               <Menu
                 id="basic-menu"

@@ -23,6 +23,8 @@ import { getInfor } from './scriptAuto/GetInfo';
 import { removeProfile } from '../../redux/debugSlice';
 import { changePassword } from './scriptAuto/ChangePass';
 import { DeletePhone } from './scriptAuto/DeletePhone';
+import { changeName } from './scriptAuto/ChangeName';
+import { changeEmail } from './scriptAuto/Email';
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -176,7 +178,8 @@ const runCode = async (profile, profileSelected, index, dispatch, arrfunction, s
     }
 
     if (proxy.host && proxy.host.length) {
-      proxyConvert = await getProxy(proxy, profile.id);
+      proxyConvert = await getProxy(proxy, (settings.maxTime + 10) * 1000, profile.id);
+      console.log('proxyConvert: ' + JSON.stringify(proxyConvert));
       if (proxyConvert && proxyConvert.host && proxyConvert.port) {
         proxyStr = `"--proxy-server=${proxyConvert.mode}://${proxyConvert.host}:${proxyConvert.port}",`;
       } else {
@@ -802,7 +805,7 @@ return new Promise(async (resolve) => {
     resolve('Cant open browser');
   }
 
-  if(pages.length > 2){
+  if(pages.length > 1){
     for(let i=1;i<pages.length;i++){
     logger('Close page ' + i);
     await closePage(pages[i]);
@@ -810,7 +813,7 @@ return new Promise(async (resolve) => {
   }
   
 
-  let page = pages[0];
+  let page = await browser.newPage();
   
   await page.setBypassCSP(true);
   await page.setCacheEnabled(false);
@@ -839,13 +842,14 @@ return new Promise(async (resolve) => {
  }
 },2000);
 
+  await delay(2000);
   await page.goto('https://m.facebook.com/', {
     waitUntil: 'networkidle2',
     timeout: 30000,
   });
   ${
     funcLogin
-      ? ''
+      ? ``
       : `
   await returnHomePage(page);
   const { isLogin } = await checkLogin(page);
@@ -857,15 +861,24 @@ return new Promise(async (resolve) => {
     }
     return;
   }
+  ${getInfor(profile)}
   `
   }
+
   ${getAllFunc(arrfunction, profile)}
 
 } catch (error) {
-  logger(proxy)
-  if(error && proxy && error.toString().includes('ERR_CONNECTION')){
-    resolve('ERR_CONNECTION');
+  logger(error)
+  ${
+    proxyConvert && proxyConvert.host
+      ? `
+    if(error && proxy && error.toString().includes('ERR_CONNECTION')){
+      resolve('ERR_CONNECTION');
+    }
+    `
+      : ``
   }
+  
   } finally {
     if(browser){
         await browser.close();
@@ -917,9 +930,19 @@ const convertToFunc = (script, profile) => {
       return `{
         ${changePassword(script, profile)}
       }`;
+
+    case 'name':
+      return `{
+          ${changeName(script, profile)}
+        }`;
+
+    case 'email':
+      return `{
+          ${changeEmail(script, profile)}
+        }`;
     case 'deletePhone':
       return `{
-          ${DeletePhone(script)}
+          ${DeletePhone(script, profile)}
         }`;
     case 'createPost':
       return `{

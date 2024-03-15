@@ -6,7 +6,6 @@ import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
-import { parseToNumber } from '../../../services/utils';
 import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
 import { MenuItem, Select } from '@mui/material';
 
@@ -31,7 +30,9 @@ const Name = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }
       if (currentSetup.surName && currentSetup.surName.length) {
         setSurNameContent(currentSetup.surName.join('\n'));
       }
-      setValues(currentSetup);
+      setTimeout(() => {
+        setValues(currentSetup);
+      }, 50);
     }
   }, [currentSetup]);
 
@@ -121,7 +122,6 @@ const Name = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }
                 className="component-item PostType"
                 onChange={(event) => changeOption(event.target.value)}
                 value={values.changeName}
-                bordered={false}
               >
                 <MenuItem value="randomly">Randomly</MenuItem>
                 <MenuItem value="fullName">List (Full name)</MenuItem>

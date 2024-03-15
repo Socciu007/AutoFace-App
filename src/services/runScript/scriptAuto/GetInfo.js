@@ -8,7 +8,7 @@ export const getInfor = (profile) => {
       return false;
     }
 
-    await page.goto('https://mbasic.facebook.com/me', {
+    await page.goto('https://mbasic.facebook.com/profile.php', {
           waitUntil: 'networkidle2',
           timeout: 60000,
         });
@@ -16,13 +16,14 @@ export const getInfor = (profile) => {
          const elName = await getElement(page,'span strong');
          if(elName){
             const name = await getText(page, elName);
-            await page.goto('https://mbasic.facebook.com/me/friends', {
+
+            await page.goto('https://mbasic.facebook.com/profile.php?v=friends', {
                     waitUntil: 'networkidle2',
                     timeout: 60000,
                   });
-            const more = await getElement(page,'[id="m_more_friends"]', 15);
+            const more = await getElement(page,'[id="m_more_friends"]', 10);
 
-            if(!page.url().includes("/friends"))
+            if(!page.url().includes("friends"))
             {
                 logger('${profile.id}','Update name:' + name + "|0");
             }

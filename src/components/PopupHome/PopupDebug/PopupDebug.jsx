@@ -41,15 +41,13 @@ const PopupDebug = ({ openDebug, handleCloseDebug, debugs, profiles, debugScript
   };
 
   useEffect(() => {
-    console.log(profiles);
-    console.log(debugs);
     const arrDebug = [];
     if (debugs && debugs.length) {
       let newDebugs = debugs;
       if (debugScript) {
         if (profiles) {
           newDebugs = debugs.filter((e) => {
-            const check = profiles.find((o) => o.uid.toString() == e.name.toString());
+            const check = profiles.find((o) => o.id.toString() == e.id.toString());
             if (check) return true;
             return false;
           });
