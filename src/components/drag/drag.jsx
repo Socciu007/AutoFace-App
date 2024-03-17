@@ -35,6 +35,11 @@ import loginNode from '../nodes/login';
 import phoneNode from '../nodes/phone';
 import emailNode from '../nodes/email';
 import nameNode from '../nodes/name';
+import informationNode from '../nodes/information';
+import avatarNode from '../nodes/avatar';
+import coverNode from '../nodes/cover';
+import trustedDevicesNode from '../nodes/trustedDevices';
+import twoFANode from '../nodes/twoFA';
 const initialNodes = [
   {
     id: '1',
@@ -68,6 +73,11 @@ const nodeTypes = {
   deletePhone: phoneNode,
   email: emailNode,
   name: nameNode,
+  information: informationNode,
+  avatar: avatarNode,
+  cover: coverNode,
+  trustedDevices: trustedDevicesNode,
+  twoFA: twoFANode,
 };
 const nodeMessage = {
   watchStory: 'watchStory',
@@ -93,6 +103,11 @@ const nodeMessage = {
   deletePhone: 'deletePhone',
   email: 'email',
   name: 'name',
+  information: 'information',
+  avatar: 'avatar',
+  cover: 'cover',
+  trustedDevices: 'trustedDevices',
+  twoFA: '2FA',
 };
 
 const getId = () => `dndnode_${+new Date()}`;

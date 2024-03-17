@@ -62,12 +62,16 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
   useEffect(() => {
     if (textComment.length) {
       setLikeComment({ ...likeComment, textComment: textComment.split('\n') });
+    } else {
+      setLikeComment({ ...likeComment, textComment: [] });
     }
   }, [textComment]);
 
   useEffect(() => {
     if (UIDPost.length) {
       setLikeComment({ ...likeComment, postID: UIDPost.split('\n') });
+    } else {
+      setLikeComment({ ...likeComment, postID: [] });
     }
   }, [UIDPost]);
 
@@ -107,92 +111,11 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
     setLikeComment({ ...likeComment, isLike: value });
   };
 
-  // const handleLikeStart = (type) => {
-  //   if (type === 'increase') {
-  //     setLikeComment({
-  //       ...likeComment,
-  //       likeStart: likeComment.likeStart + 1,
-  //     });
-  //   } else {
-  //     setLikeComment({
-  //       ...likeComment,
-  //       likeStart: likeComment.likeStart > 0 ? likeComment.likeStart - 1 : 0,
-  //     });
-  //   }
-  // };
-  // const onChangeLikeStart = (e) => {
-  //   const decimalRegex = /^[+-]?\d*\.?\d+$/;
-  //   const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
-  //   if (!isNaN(value) && decimalRegex.test(value)) {
-  //     setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
-  //   }
-  // };
-
-  // const handleLikeEnd = (type) => {
-  //   if (type === 'increase') {
-  //     setLikeComment({
-  //       ...likeComment,
-  //       likeEnd: likeComment.likeEnd + 1,
-  //     });
-  //   } else {
-  //     setLikeComment({
-  //       ...likeComment,
-  //       likeEnd: likeComment.likeEnd > 0 ? likeComment.likeEnd - 1 : 0,
-  //     });
-  //   }
-  // };
-  // const onChangeLikeEnd = (e) => {
-  //   const decimalRegex = /^[+-]?\d*\.?\d+$/;
-  //   const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
-  //   if (!isNaN(value) && decimalRegex.test(value)) {
-  //     setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
-  //   }
-  // };
   //share to feed
   const changeShare = (value) => {
     setLikeComment({ ...likeComment, isShare: value });
   };
 
-  // const handleShareToFeedStart = (type) => {
-  //   if (type === 'increase') {
-  //     setLikeComment({
-  //       ...likeComment,
-  //       shareToFeedStart: likeComment.shareToFeedStart + 1,
-  //     });
-  //   } else {
-  //     setLikeComment({
-  //       ...likeComment,
-  //       shareToFeedStart: likeComment.shareToFeedStart > 0 ? likeComment.shareToFeedStart - 1 : 0,
-  //     });
-  //   }
-  // };
-  // const onChangeShareToFeedStart = (e) => {
-  //   const decimalRegex = /^[+-]?\d*\.?\d+$/;
-  //   const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
-  //   if (!isNaN(value) && decimalRegex.test(value)) {
-  //     setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
-  //   }
-  // };
-  // const handleShareToFeedEnd = (type) => {
-  //   if (type === 'increase') {
-  //     setLikeComment({
-  //       ...likeComment,
-  //       shareToFeedEnd: likeComment.shareToFeedEnd + 1,
-  //     });
-  //   } else {
-  //     setLikeComment({
-  //       ...likeComment,
-  //       shareToFeedEnd: likeComment.shareToFeedEnd > 0 ? likeComment.shareToFeedEnd - 1 : 0,
-  //     });
-  //   }
-  // };
-  // const onChangeShareToFeedEnd = (e) => {
-  //   const decimalRegex = /^[+-]?\d*\.?\d+$/;
-  //   const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
-  //   if (!isNaN(value) && decimalRegex.test(value)) {
-  //     setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
-  //   }
-  // };
   //Post view time
   const handleViewTimeStart = (type) => {
     if (type === 'increase') {
@@ -574,7 +497,7 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
             </div>
             <div className="-option-boost-like -option-boost-comment">
               <p style={{ width: '100%' }}>
-                Post ID: <span style={{ float: 'inline-end' }}>({likeComment.line})</span>
+                Post ID: <span style={{ float: 'right' }}>({likeComment.postID.length})</span>
               </p>
               <div className="-option-boost-comment__wrapper">
                 <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
@@ -598,7 +521,7 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
                   style={{ display: UIDPost ? 'none' : 'inline' }}
                 >
                   <p style={{ width: '51%' }}>
-                    <span>1</span>
+                    <span style={{ marginRight: '2px' }}>1</span>
                     <div>Enter the UID|Post UID here</div>
                   </p>
                   <p>
@@ -618,34 +541,6 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
                 />
                 <p>Like</p>
               </div>
-              {/* <div
-                className="-option-boost-like__header__content"
-                style={{ display: likeComment.isLike ? 'flex' : 'none' }}
-              >
-                <div className="-option-boost-like__number">
-                  <div className="-option-boost-like__number__icon">
-                    <div style={{ marginBottom: '2px' }} onClick={() => handleLikeStart('increase')}>
-                      <img src={up} alt="up" width={10} height={7} />
-                    </div>
-                    <div style={{ marginTop: '2px' }} onClick={() => handleLikeStart('des')}>
-                      <img src={down} alt="down" width={10} height={7} />
-                    </div>
-                  </div>
-                  <input type="text" name="likeStart" value={likeComment.likeStart} onChange={onChangeLikeStart} />
-                </div>
-                <span>to</span>
-                <div className="-option-boost-like__number">
-                  <div className="-option-boost-like__number__icon">
-                    <div style={{ marginBottom: '2px' }} onClick={() => handleLikeEnd('increase')}>
-                      <img src={up} alt="up" width={10} height={7} />
-                    </div>
-                    <div style={{ marginTop: '2px' }} onClick={() => handleLikeEnd('des')}>
-                      <img src={down} alt="down" width={10} height={7} />
-                    </div>
-                  </div>
-                  <input type="text" name="likeEnd" value={likeComment.likeEnd} onChange={onChangeLikeEnd} />
-                </div>
-              </div> */}
             </div>
             <div className="-option-boost-like">
               <div className="-option-boost-like__header">
@@ -657,44 +552,6 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
                 />
                 <p>Share to Feed</p>
               </div>
-              {/* <div
-                className="-option-boost-like__header__content"
-                style={{ display: likeComment.isShare ? 'flex' : 'none' }}
-              >
-                <div className="-option-boost-like__number">
-                  <div className="-option-boost-like__number__icon">
-                    <div style={{ marginBottom: '2px' }} onClick={() => handleShareToFeedStart('increase')}>
-                      <img src={up} alt="up" width={10} height={7} />
-                    </div>
-                    <div style={{ marginTop: '2px' }} onClick={() => handleShareToFeedStart('des')}>
-                      <img src={down} alt="down" width={10} height={7} />
-                    </div>
-                  </div>
-                  <input
-                    type="text"
-                    name="shareToFeedStart"
-                    value={likeComment.shareToFeedStart}
-                    onChange={onChangeShareToFeedStart}
-                  />
-                </div>
-                <span>to</span>
-                <div className="-option-boost-like__number">
-                  <div className="-option-boost-like__number__icon">
-                    <div style={{ marginBottom: '2px' }} onClick={() => handleShareToFeedEnd('increase')}>
-                      <img src={up} alt="up" width={10} height={7} />
-                    </div>
-                    <div style={{ marginTop: '2px' }} onClick={() => handleShareToFeedEnd('des')}>
-                      <img src={down} alt="down" width={10} height={7} />
-                    </div>
-                  </div>
-                  <input
-                    type="text"
-                    name="shareToFeedEnd"
-                    value={likeComment.shareToFeedEnd}
-                    onChange={onChangeShareToFeedEnd}
-                  />
-                </div>
-              </div> */}
             </div>
             <div className="-option-boost-like">
               <div className="-option-boost-like__header">
@@ -706,39 +563,6 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
                 />
                 <p>Comment</p>
               </div>
-              {/* <div
-                className="-option-boost-like__header__content"
-                style={{ display: likeComment.isComment ? 'flex' : 'none' }}
-              >
-                <div className="-option-boost-like__number">
-                  <div className="-option-boost-like__number__icon">
-                    <div style={{ marginBottom: '2px' }} onClick={() => handleCommentStart('increase')}>
-                      <img src={up} alt="up" width={10} height={7} />
-                    </div>
-                    <div style={{ marginTop: '2px' }} onClick={() => handleCommentStart('des')}>
-                      <img src={down} alt="down" width={10} height={7} />
-                    </div>
-                  </div>
-                  <input
-                    type="text"
-                    name="commentStart"
-                    value={likeComment.commentStart}
-                    onChange={onChangeCommentStart}
-                  />
-                </div>
-                <span>to</span>
-                <div className="-option-boost-like__number">
-                  <div className="-option-boost-like__number__icon">
-                    <div style={{ marginBottom: '2px' }} onClick={() => handleCommentEnd('increase')}>
-                      <img src={up} alt="up" width={10} height={7} />
-                    </div>
-                    <div style={{ marginTop: '2px' }} onClick={() => handleCommentEnd('des')}>
-                      <img src={down} alt="down" width={10} height={7} />
-                    </div>
-                  </div>
-                  <input type="text" name="commentEnd" value={likeComment.commentEnd} onChange={onChangeCommentEnd} />
-                </div>
-              </div> */}
             </div>
             <div
               className="-option-boost-like -option-boost-comment"
@@ -766,7 +590,7 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
                   style={{ display: textComment ? 'none' : 'inline' }}
                 >
                   <p>
-                    <span>1</span>
+                    <span style={{ marginRight: '2px' }}>1</span>
                     <div>Enter the content here</div>
                   </p>
                   <p>

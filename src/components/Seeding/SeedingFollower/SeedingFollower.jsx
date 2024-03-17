@@ -201,7 +201,7 @@ const SeedingFollower = ({ onGoBackClick, id, currentSetup, component, updateDes
                   style={{ display: UIDContent ? 'none' : 'inline' }}
                 >
                   <p>
-                    <span>1</span>
+                    <span style={{ marginRight: '2px' }}>1</span>
                     <div>Enter the UID here</div>
                   </p>
                   <p>

@@ -249,6 +249,7 @@
   },
   "infomation": {
     "isBio": false,
+    "typeBio": "line",
     "bio": [],
     "isWork": false,
     "work": [],
@@ -277,6 +278,7 @@
   "avatar": {
     "folder": "",
     "isDelete": false,
+    "isAddFrame": false,
     "isSkip": false
   },
   "cover": {

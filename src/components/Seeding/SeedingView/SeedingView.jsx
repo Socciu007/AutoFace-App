@@ -30,6 +30,8 @@ const SeedingView = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
   useEffect(() => {
     if (UIDContent.length) {
       setVideoView({ ...videoView, videoID: UIDContent.split('\n') });
+    } else {
+      setVideoView({ ...videoView, videoID: [] });
     }
   }, [UIDContent]);
 
@@ -140,7 +142,7 @@ const SeedingView = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
             </div>
             <div className="-option-boost-like -option-boost-comment">
               <p style={{ width: '100%' }}>
-                Video ID: <span style={{ float: 'inline-end' }}>({videoView.line})</span>
+                Video ID <span style={{ float: 'right' }}>({videoView.videoID.length})</span>
               </p>
               <div className="-option-boost-comment__wrapper">
                 <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
@@ -164,7 +166,7 @@ const SeedingView = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
                   style={{ display: UIDContent ? 'none' : 'inline' }}
                 >
                   <p style={{ width: '51%' }}>
-                    <span>1</span>
+                    <span style={{ marginRight: '2px' }}>1</span>
                     <div>Enter the Video ID here</div>
                   </p>
                   <p>

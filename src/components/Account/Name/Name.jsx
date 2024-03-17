@@ -32,7 +32,7 @@ const Name = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }
       }
       setTimeout(() => {
         setValues(currentSetup);
-      }, 50);
+      }, 20);
     }
   }, [currentSetup]);
 

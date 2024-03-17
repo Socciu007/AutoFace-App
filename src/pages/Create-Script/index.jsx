@@ -45,6 +45,11 @@ import iconPassword from '../../assets/icon/icon-password.svg';
 import iconEmail from '../../assets/icon/icon-email.svg';
 import iconName from '../../assets/icon/icon-name.svg';
 import iconPhone from '../../assets/icon/icon-phone.svg';
+import iconInformation from '../../assets/icon/icon-information.svg';
+import iconAvatar from '../../assets/icon/icon-avatars.svg';
+import iconCover from '../../assets/icon/icon-cover.svg';
+import iconTrusted from '../../assets/icon/icon-device.svg';
+import icon2FA from '../../assets/icon/icon-2FA.png';
 import CreatePostGroup from '../../components/Group/Create_Post/CreatePost.jsx';
 import { storageScripts } from '../../common/const.config.js';
 import DefaultSciptSettings from '../../resources/defaultSciptSettings.json';
@@ -58,6 +63,8 @@ import Password from '../../components/Account/Password/Password.jsx';
 import DeletePhone from '../../components/Account/Phone/phone.jsx';
 import EmailFb from '../../components/Account/EmailFb/EmailFb.jsx';
 import Name from '../../components/Account/Name/Name.jsx';
+import Information from '../../components/Account/Information/information.jsx';
+import Avatar from '../../components/Account/Avatar/Avatar.jsx';
 const CreateScript = () => {
   const DnDFlowRef = useRef();
   const { state } = useLocation();
@@ -433,6 +440,56 @@ const CreateScript = () => {
             onGoBackClick={handleGoBackClick}
           ></Name>
         );
+      case 'information':
+        return (
+          <Information
+            currentSetup={currentSetup}
+            component={component}
+            updateDesignScript={updateDesignScript}
+            id={currentComponent}
+            onGoBackClick={handleGoBackClick}
+          ></Information>
+        );
+      case 'avatar':
+        return (
+          <Avatar
+            currentSetup={currentSetup}
+            component={component}
+            updateDesignScript={updateDesignScript}
+            id={currentComponent}
+            onGoBackClick={handleGoBackClick}
+          ></Avatar>
+        );
+      case 'cover':
+        return (
+          <Name
+            currentSetup={currentSetup}
+            component={component}
+            updateDesignScript={updateDesignScript}
+            id={currentComponent}
+            onGoBackClick={handleGoBackClick}
+          ></Name>
+        );
+      case 'trustedDevices':
+        return (
+          <Name
+            currentSetup={currentSetup}
+            component={component}
+            updateDesignScript={updateDesignScript}
+            id={currentComponent}
+            onGoBackClick={handleGoBackClick}
+          ></Name>
+        );
+      case '2FA':
+        return (
+          <Name
+            currentSetup={currentSetup}
+            component={component}
+            updateDesignScript={updateDesignScript}
+            id={currentComponent}
+            onGoBackClick={handleGoBackClick}
+          ></Name>
+        );
       default:
         return (
           <div className={'scrollable-container'}>
@@ -562,6 +619,26 @@ const CreateScript = () => {
                   <div className="card" onDragStart={(event) => onDragStart(event, 'name')} draggable>
                     <img src={iconName} alt="name" />
                     <p>Name</p>
+                  </div>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'information')} draggable>
+                    <img src={iconInformation} alt="information" />
+                    <p>Information</p>
+                  </div>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'avatar')} draggable>
+                    <img src={iconAvatar} alt="avatar" />
+                    <p>Avatar</p>
+                  </div>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'cover')} draggable>
+                    <img src={iconCover} alt="cover" />
+                    <p>Cover</p>
+                  </div>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'trustedDevices')} draggable>
+                    <img src={iconTrusted} alt="devices" />
+                    <p>Trusted devices</p>
+                  </div>
+                  <div className="card" onDragStart={(event) => onDragStart(event, '2FA')} draggable>
+                    <img src={icon2FA} alt="sercure" />
+                    <p>2FA</p>
                   </div>
                 </div>
               </div>
