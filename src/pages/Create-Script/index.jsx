@@ -65,6 +65,7 @@ import EmailFb from '../../components/Account/EmailFb/EmailFb.jsx';
 import Name from '../../components/Account/Name/Name.jsx';
 import Information from '../../components/Account/Information/information.jsx';
 import Avatar from '../../components/Account/Avatar/Avatar.jsx';
+import Cover from '../../components/Account/Cover/Cover.jsx';
 const CreateScript = () => {
   const DnDFlowRef = useRef();
   const { state } = useLocation();
@@ -462,13 +463,13 @@ const CreateScript = () => {
         );
       case 'cover':
         return (
-          <Name
+          <Cover
             currentSetup={currentSetup}
             component={component}
             updateDesignScript={updateDesignScript}
             id={currentComponent}
             onGoBackClick={handleGoBackClick}
-          ></Name>
+          ></Cover>
         );
       case 'trustedDevices':
         return (

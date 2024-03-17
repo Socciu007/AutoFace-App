@@ -111,6 +111,23 @@
 
       .-list-proxys {
         position: relative;
+        .birthday {
+          width: 223px;
+          height: 383px;
+          margin-top: 18px;
+          p {
+            color: #01162b;
+            font-size: 15px;
+            font-weight: 400;
+            margin-bottom: 10px;
+          }
+          .placeholderBirthday {
+            position: absolute;
+            width: 100%;
+            top: 14%;
+            transform: translate(2%, 0%);
+          }
+        }
         .keywordText {
           scrollbar-width: none;
           &::-webkit-scrollbar {
@@ -132,7 +149,8 @@
             font-family: 'GoogleSans';
           }
 
-          .editor #contentBio {
+          .editor #contentBio,
+          .editor #contentWork {
             outline: none;
             padding-left: 4.5% !important;
             padding-top: 2% !important;
@@ -152,6 +170,109 @@
             width: 5.5%;
             font-weight: 100;
           }
+
+          .editorBirthday #day,
+          .editorBirthday #month,
+          .editorBirthday #year {
+            outline: none;
+            padding-left: 2% !important;
+            padding-top: 3% !important;
+          }
+
+          .editorBirthday pre {
+            padding-left: 2% !important;
+            padding-top: 3% !important;
+            width: 100%;
+          }
+
+          .editorBirthday .editorLineNumber {
+            position: absolute;
+            left: -23px;
+            color: #cccccc;
+            text-align: right;
+            width: 5.5%;
+            font-weight: 100;
+          }
+
+          .token {
+            color: #01162b !important;
+          }
+          .hide {
+            display: none !important;
+          }
+        }
+        .informationMore {
+          margin-top: 21px;
+          scrollbar-width: none;
+          &::-webkit-scrollbar {
+            display: none;
+          }
+          padding-left: 10px;
+          position: relative;
+          height: 407px;
+          width: 100%;
+          overflow: auto;
+          background: #f5f5f5;
+          border-radius: 5px;
+          border: 1px dashed rgba(1, 22, 43, 0.2);
+          .editor {
+            min-width: 100%;
+            min-height: 100%;
+            float: left;
+
+            font-family: 'GoogleSans';
+          }
+
+          .editor #contentBio,
+          .editor #contentWork,
+          .editor #contentHighSchool,
+          .editor #contentColege,
+          .editor #contentCity,
+          .editor #contentHometown,
+          .editor #contentNickName {
+            outline: none;
+            padding-left: 4.5% !important;
+            padding-top: 2% !important;
+          }
+
+          .editor pre {
+            padding-left: 4.5% !important;
+            padding-top: 2% !important;
+            width: 100%;
+          }
+
+          .editor .editorLineNumber {
+            position: absolute;
+            left: -23px;
+            color: #cccccc;
+            text-align: right;
+            width: 5.5%;
+            font-weight: 100;
+          }
+
+          .editorBirthday #day,
+          .editorBirthday #month,
+          .editorBirthday #year {
+            outline: none;
+            padding-left: 2% !important;
+            padding-top: 3% !important;
+          }
+
+          .editorBirthday pre {
+            padding-left: 2% !important;
+            padding-top: 3% !important;
+            width: 100%;
+          }
+
+          .editorBirthday .editorLineNumber {
+            position: absolute;
+            left: -23px;
+            color: #cccccc;
+            text-align: right;
+            width: 5.5%;
+            font-weight: 100;
+          }
+
           .token {
             color: #01162b !important;
           }
@@ -182,6 +303,9 @@
               width: 2%;
             }
           }
+        }
+        .more {
+          top: 9% !important;
         }
         &__save {
           margin: auto;

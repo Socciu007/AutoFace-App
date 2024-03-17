@@ -1,18 +1,15 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from 'react';
 import './style.scss';
-import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
-import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/themes/prism.css';
-import PopupInformation from '../../PopupHome/PopupInformation/PopupInformation.jsx';
 import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
 import { Button, Upload } from 'antd';
 
-const Avatar = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
-  const [values, setValues] = useState(DefaultSciptSettings['avatar']);
+const Cover = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
+  const [values, setValues] = useState(DefaultSciptSettings['cover']);
 
   useEffect(() => {
     if (currentSetup) {
@@ -23,10 +20,6 @@ const Avatar = ({ onGoBackClick, id, updateDesignScript, currentSetup, component
   useEffect(() => {
     updateDesignScript(values, component, id);
   }, [values]);
-
-  const handleChangeAddFrame = (value) => {
-    setValues({ ...values, isAddFrame: value });
-  };
 
   const handleChangeDelete = (value) => {
     setValues({ ...values, isDelete: value });
@@ -45,9 +38,8 @@ const Avatar = ({ onGoBackClick, id, updateDesignScript, currentSetup, component
       setValues({ ...values, folder: '' });
     }, 20);
   };
-
   return (
-    <div className="avatar">
+    <div className="cover">
       <div className="component_container">
         <div className="scrollable-container">
           <div className="component-left">
@@ -59,7 +51,7 @@ const Avatar = ({ onGoBackClick, id, updateDesignScript, currentSetup, component
                   onGoBackClick(values, component, id);
                 }}
               />
-              <p>Avatar</p>
+              <p>Cover</p>
             </div>
             <div className="component-item information">
               <div className="component-item__header image">
@@ -92,17 +84,7 @@ const Avatar = ({ onGoBackClick, id, updateDesignScript, currentSetup, component
                 <p>Delete used images</p>
               </div>
             </div>
-            <div className="component-item information">
-              <div className="component-item__header">
-                <input
-                  type="checkbox"
-                  name="isAddFrame"
-                  checked={values.isAddFrame}
-                  onChange={(event) => handleChangeAddFrame(event.target.checked)}
-                />
-                <p>Add frame</p>
-              </div>
-            </div>
+
             <div className="component-item information">
               <div className="component-item__header">
                 <input
@@ -111,7 +93,7 @@ const Avatar = ({ onGoBackClick, id, updateDesignScript, currentSetup, component
                   checked={values.isSkip}
                   onChange={(event) => handleChangeSkip(event.target.checked)}
                 />
-                <p>Skip if the account already has an avatar</p>
+                <p>Skip if the account already has a cover</p>
               </div>
             </div>
           </div>
@@ -121,4 +103,4 @@ const Avatar = ({ onGoBackClick, id, updateDesignScript, currentSetup, component
   );
 };
 
-export default Avatar;
+export default Cover;
