@@ -106,7 +106,7 @@ const Information = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
     setOpenNickname(false);
   };
 
-  const changeTypeBirthday = (value) => {
+  const changeTypeBirthday = async (value) => {
     setValues({ ...values, birthday: { ...values.birthday, type: value } });
     if (value === 'specific') {
       setOpenBirthday(true);
@@ -221,17 +221,19 @@ const Information = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
                 <div className="component-item__number">
                   <button onClick={() => setOpenHighSchool(true)}>Add +</button>
                 </div>
-                <PopupInformation
-                  type="highSchool"
-                  open={openHighSchool}
-                  handleClose={handleCloseHighSchool}
-                  handleSave={handleSave}
-                  data={values}
-                  id={id}
-                  currentSetup={currentSetup}
-                  updateDesignScript={updateDesignScript}
-                  component={component}
-                />
+                {values.isHighSchool && (
+                  <PopupInformation
+                    type="highSchool"
+                    open={openHighSchool}
+                    handleClose={handleCloseHighSchool}
+                    handleSave={handleSave}
+                    data={values}
+                    id={id}
+                    currentSetup={currentSetup}
+                    updateDesignScript={updateDesignScript}
+                    component={component}
+                  />
+                )}
               </div>
             </div>
 
@@ -250,17 +252,19 @@ const Information = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
                 <div className="component-item__number">
                   <button onClick={() => setOpenCollege(true)}>Add +</button>
                 </div>
-                <PopupInformation
-                  type="colege"
-                  open={openCollege}
-                  handleClose={handleCloseCollege}
-                  handleSave={handleSave}
-                  data={values}
-                  id={id}
-                  currentSetup={currentSetup}
-                  updateDesignScript={updateDesignScript}
-                  component={component}
-                />
+                {values.isColege && (
+                  <PopupInformation
+                    type="colege"
+                    open={openCollege}
+                    handleClose={handleCloseCollege}
+                    handleSave={handleSave}
+                    data={values}
+                    id={id}
+                    currentSetup={currentSetup}
+                    updateDesignScript={updateDesignScript}
+                    component={component}
+                  />
+                )}
               </div>
             </div>
 
@@ -279,17 +283,19 @@ const Information = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
                 <div className="component-item__number">
                   <button onClick={() => setOpenCity(true)}>Add +</button>
                 </div>
-                <PopupInformation
-                  type="city"
-                  open={openCity}
-                  handleSave={handleSave}
-                  handleClose={handleCloseCity}
-                  data={values}
-                  id={id}
-                  currentSetup={currentSetup}
-                  updateDesignScript={updateDesignScript}
-                  component={component}
-                />
+                {values.isCity && (
+                  <PopupInformation
+                    type="city"
+                    open={openCity}
+                    handleSave={handleSave}
+                    handleClose={handleCloseCity}
+                    data={values}
+                    id={id}
+                    currentSetup={currentSetup}
+                    updateDesignScript={updateDesignScript}
+                    component={component}
+                  />
+                )}
               </div>
             </div>
 
@@ -308,17 +314,19 @@ const Information = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
                 <div className="component-item__number">
                   <button onClick={() => setOpenHometown(true)}>Add +</button>
                 </div>
-                <PopupInformation
-                  type="hometown"
-                  open={openHometown}
-                  handleClose={handleCloseHometown}
-                  handleSave={handleSave}
-                  data={values}
-                  id={id}
-                  currentSetup={currentSetup}
-                  updateDesignScript={updateDesignScript}
-                  component={component}
-                />
+                {values.isBirthday && (
+                  <PopupInformation
+                    type="hometown"
+                    open={openHometown}
+                    handleClose={handleCloseHometown}
+                    handleSave={handleSave}
+                    data={values}
+                    id={id}
+                    currentSetup={currentSetup}
+                    updateDesignScript={updateDesignScript}
+                    component={component}
+                  />
+                )}
               </div>
             </div>
 
@@ -413,7 +421,7 @@ const Information = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
                     type="birthday"
                     open={openBirthday}
                     handleClose={handleCloseBirthday}
-                    handleSave={handleSave(values)}
+                    handleSave={handleSave}
                     data={values}
                     id={id}
                     currentSetup={currentSetup}
@@ -439,17 +447,19 @@ const Information = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
                 <div className="component-item__number">
                   <button onClick={() => setOpenNickname(true)}>Add +</button>
                 </div>
-                <PopupInformation
-                  type="nickName"
-                  open={openNickname}
-                  handleSave={handleSave}
-                  handleClose={handleCloseNickname}
-                  data={values}
-                  id={id}
-                  currentSetup={currentSetup}
-                  updateDesignScript={updateDesignScript}
-                  component={component}
-                />
+                {values.isNickname && (
+                  <PopupInformation
+                    type="nickName"
+                    open={openNickname}
+                    handleSave={handleSave}
+                    handleClose={handleCloseNickname}
+                    data={values}
+                    id={id}
+                    currentSetup={currentSetup}
+                    updateDesignScript={updateDesignScript}
+                    component={component}
+                  />
+                )}
               </div>
             </div>
           </div>

@@ -225,7 +225,9 @@ const PopupInformation = ({
   };
 
   const handleClick = async () => {
-    handleSave(values);
+    setTimeout(() => {
+      handleSave(values);
+    }, 20);
     handleClose();
   };
 
@@ -518,7 +520,7 @@ const PopupInformation = ({
                 <>
                   <div className="birthday">
                     <p>Date</p>
-                    <div className="keywordText">
+                    <div className="keywordText" style={{ height: 383 }}>
                       <Editor
                         value={day}
                         onValueChange={(text) => {
@@ -541,7 +543,7 @@ const PopupInformation = ({
                   </div>
                   <div className="birthday">
                     <p>Month</p>
-                    <div className="keywordText">
+                    <div className="keywordText" style={{ height: 383 }}>
                       <Editor
                         value={month}
                         onValueChange={(text) => {
@@ -570,7 +572,7 @@ const PopupInformation = ({
                   </div>
                   <div className="birthday">
                     <p>Year</p>
-                    <div className="keywordText">
+                    <div className="keywordText" style={{ height: 383 }}>
                       <Editor
                         value={year}
                         onValueChange={(text) => {
