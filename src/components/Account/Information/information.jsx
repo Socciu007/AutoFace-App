@@ -9,6 +9,7 @@ import 'prismjs/components/prism-javascript';
 import 'prismjs/themes/prism.css';
 import PopupInformation from '../../PopupHome/PopupInformation/PopupInformation.jsx';
 import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
+import { MenuItem, Select } from '@mui/material';
 
 const Information = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
   const [openBio, setOpenBio] = useState(false);
@@ -16,12 +17,9 @@ const Information = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
   const [openBirthday, setOpenBirthday] = useState(false);
   const [openCity, setOpenCity] = useState(false);
   const [openCollege, setOpenCollege] = useState(false);
-  const [openGender, setOpenGender] = useState(false);
   const [openHighSchool, setOpenHighSchool] = useState(false);
   const [openHometown, setOpenHometown] = useState(false);
   const [openNickname, setOpenNickname] = useState(false);
-  const [openRelationship, setOpenRelationship] = useState(false);
-  const [textContent, setTextContent] = useState('');
   const [values, setValues] = useState(DefaultSciptSettings['infomation']);
 
   useEffect(() => {
@@ -36,19 +34,18 @@ const Information = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
     updateDesignScript(values, component, id);
   }, [values]);
 
+  const handleSave = (values) => {
+    setValues(values);
+  };
   const handleChangeWork = (value) => {
-    setTimeout(() => {
-      setValues({ ...values, isWork: value });
-    }, 20);
+    setValues({ ...values, isWork: value });
   };
   const handleCloseWork = () => {
     setOpenWork(false);
   };
 
   const handleChangeBio = (value) => {
-    setTimeout(() => {
-      setValues({ ...values, isBio: value });
-    }, 20);
+    setValues({ ...values, isBio: value });
   };
 
   const handleCloseBio = () => {
@@ -56,9 +53,7 @@ const Information = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
   };
 
   const handleChangeBirthday = (value) => {
-    setTimeout(() => {
-      setValues({ ...values, isBirthday: value });
-    }, 20);
+    setValues({ ...values, isBirthday: value });
   };
   const handleCloseBirthday = () => {
     setOpenBirthday(false);
@@ -81,8 +76,13 @@ const Information = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
   const handleChangeGender = (value) => {
     setValues({ ...values, isGender: value });
   };
-  const handleCloseGender = () => {
-    setOpenGender(false);
+
+  const changeTypeGender = (value) => {
+    setValues({ ...values, gender: value });
+  };
+
+  const changeTypeRelationship = (value) => {
+    setValues({ ...values, relationship: value });
   };
 
   const handleChangeHighSchool = (value) => {
@@ -106,16 +106,28 @@ const Information = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
     setOpenNickname(false);
   };
 
+  const changeTypeBirthday = (value) => {
+    setValues({ ...values, birthday: { ...values.birthday, type: value } });
+    if (value === 'specific') {
+      setOpenBirthday(true);
+    }
+  };
+
   const handleChangeRelationship = (value) => {
     setValues({ ...values, isRelationship: value });
   };
-  const handleCloseRelationship = () => {
-    setOpenRelationship(false);
+
+  const handleClick = (type) => {
+    if (type === 'bio') {
+      setValues(values);
+      setOpenBio(true);
+    }
+    if (type === 'work') {
+      setValues(values);
+      setOpenWork(true);
+    }
   };
 
-  const handleSave = (values) => {
-    setValues(values);
-  };
   console.log('data', values);
 
   return (
@@ -144,9 +156,9 @@ const Information = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
                 <p>Bio</p>
               </div>
               <div className={`component-item__content ${values.isBio ? 'show' : 'hide'}`}>
-                <span>({values.bio.length})</span>
+                <span>({values?.bio?.length})</span>
                 <div className="component-item__number">
-                  <button onClick={() => setOpenBio(true)}>Add +</button>
+                  <button onClick={() => handleClick('bio')}>Add +</button>
                 </div>
                 {values.isBio && (
                   <PopupInformation
@@ -176,19 +188,21 @@ const Information = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
               <div className={`component-item__content ${values.isWork ? 'show' : 'hide'}`}>
                 <span>({values.work.length})</span>
                 <div className="component-item__number">
-                  <button onClick={() => setOpenWork(true)}>Add +</button>
+                  <button onClick={() => handleClick('work')}>Add +</button>
                 </div>
-                <PopupInformation
-                  type="work"
-                  open={openWork}
-                  handleClose={handleCloseWork}
-                  handleSave={handleSave}
-                  data={values}
-                  id={id}
-                  currentSetup={currentSetup}
-                  updateDesignScript={updateDesignScript}
-                  component={component}
-                />
+                {values.isWork && (
+                  <PopupInformation
+                    type="work"
+                    open={openWork}
+                    handleClose={handleCloseWork}
+                    handleSave={handleSave}
+                    data={values}
+                    id={id}
+                    currentSetup={currentSetup}
+                    updateDesignScript={updateDesignScript}
+                    component={component}
+                  />
+                )}
               </div>
             </div>
 
@@ -319,8 +333,27 @@ const Information = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
                 <p>Relationship</p>
               </div>
               <div className={`component-item__content ${values.isRelationship ? 'show' : 'hide'}`}>
-                <div className="component-item__number">
-                  <button onClick={() => setOpenBio(true)}>Add +</button>
+                <div className="EmailContent">
+                  <div className="loginOption">
+                    <Select
+                      value={values.relationship}
+                      onChange={(event) => changeTypeRelationship(event.target.value)}
+                      className="LoginType"
+                    >
+                      <MenuItem value="random">Random</MenuItem>
+                      <MenuItem value="single">Single</MenuItem>
+                      <MenuItem value="couple">In a relationship</MenuItem>
+                      <MenuItem value="engaged">Engaged</MenuItem>
+                      <MenuItem value="married">Married</MenuItem>
+                      <MenuItem value="civilUnion">In a civil union</MenuItem>
+                      <MenuItem value="partnership">In a domestic partnership</MenuItem>
+                      <MenuItem value="openRelationship">In an open relationship</MenuItem>
+                      <MenuItem value="complicated">It's complicated</MenuItem>
+                      <MenuItem value="separated">Separated</MenuItem>
+                      <MenuItem value="divorced">Divorced</MenuItem>
+                      <MenuItem value="windowed">Widowed</MenuItem>
+                    </Select>
+                  </div>
                 </div>
               </div>
             </div>
@@ -336,8 +369,18 @@ const Information = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
                 <p>Gender</p>
               </div>
               <div className={`component-item__content ${values.isGender ? 'show' : 'hide'}`}>
-                <div className="component-item__number">
-                  <button onClick={() => setOpenBio(true)}>Add +</button>
+                <div className="EmailContent">
+                  <div className="loginOption">
+                    <Select
+                      value={values.gender}
+                      onChange={(event) => changeTypeGender(event.target.value)}
+                      className="LoginType"
+                    >
+                      <MenuItem value="male">Male</MenuItem>
+                      <MenuItem value="female">Female</MenuItem>
+                      <MenuItem value="random">Random</MenuItem>
+                    </Select>
+                  </div>
                 </div>
               </div>
             </div>
@@ -353,16 +396,24 @@ const Information = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
                 <p>Birthday</p>
               </div>
               <div className={`component-item__content ${values.isBirthday ? 'show' : 'hide'}`}>
-                <span>({values.bio.length})</span>
-                <div className="component-item__number">
-                  <button onClick={() => setOpenBirthday(true)}>Add +</button>
+                <div className="EmailContent">
+                  <div className="loginOption">
+                    <Select
+                      value={values.birthday.type}
+                      onChange={(event) => changeTypeBirthday(event.target.value)}
+                      className="LoginType"
+                    >
+                      <MenuItem value="specific">Specific date</MenuItem>
+                      <MenuItem value="random">Random (18+ yo)</MenuItem>
+                    </Select>
+                  </div>
                 </div>
                 {values.isBirthday && (
                   <PopupInformation
                     type="birthday"
                     open={openBirthday}
                     handleClose={handleCloseBirthday}
-                    handleSave={handleSave}
+                    handleSave={handleSave(values)}
                     data={values}
                     id={id}
                     currentSetup={currentSetup}

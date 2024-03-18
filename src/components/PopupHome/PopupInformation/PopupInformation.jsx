@@ -76,8 +76,10 @@ const PopupInformation = ({
   }, [values]);
 
   useEffect(() => {
-    if (contentBio.length) {
+    if (contentBio.length && values.typeBio === 'line') {
       setValues({ ...values, bio: contentBio.split('\n') });
+    } else if (contentBio.length && values.typeBio === 'moreLine') {
+      setValues({ ...values, bio: contentBio.split('|') });
     } else {
       setValues({ ...values, bio: [] });
     }
@@ -161,6 +163,17 @@ const PopupInformation = ({
       .split('\n')
       .map((line, i) => `<span class='editorLineNumber ${content ? '' : 'hide'}'>${i + 1}</span>${line}`)
       .join('\n');
+  const hightlightWithLineNumbersMore = (input, language, content) =>
+    highlight(input, language)
+      .split('|')
+      .map(
+        (line, i) =>
+          `<span class='editorLineNumber ${content ? '' : 'hide'}'>${content && i === 0 ? '' : '<br />'}${
+            i + 1
+          }</span>${line}`,
+      )
+      .join('|');
+
   const handleWriteBio = () => {
     document.getElementById('contentBio').focus();
   };
@@ -310,24 +323,37 @@ const PopupInformation = ({
                       onValueChange={(text) => {
                         setContentBio(text);
                       }}
-                      highlight={(text) => hightlightWithLineNumbers(text, languages.js, contentBio)}
+                      highlight={(text) => hightlightWithLineNumbersMore(text, languages.js, contentBio)}
                       padding={15}
                       className="editor"
                       textareaId="contentBio1"
                     />
                   </div>
                   <div
-                    className="placeholder"
+                    className="placeholder placeholderMore"
                     onClick={handleWriteBioMore}
                     style={{ display: contentBio ? 'none' : 'inline' }}
                   >
                     <p>
+                      <span>*</span>
+                      Enter bio here, each bio is separated by “|”
+                    </p>
+                    <p>For examples:</p>
+                    <p>
                       <span>1</span>
-                      Enter bio here, each bio/line.
+                      I love my family. <br />
+                      Jace, Micheal and July. <br />|
                     </p>
                     <p>
                       <span>2</span>
-                      If each bio has more lines, you should choose “Content has more lines”.
+                      Life is a maze. <br />
+                      And love is a riddle. <br />|
+                    </p>
+                    <p>
+                      <span>3</span>
+                      So cut the headlights, summer's a knife
+                      <br />
+                      I'm always waiting for you just to cut to the bone
                     </p>
                   </div>
                 </>
@@ -562,11 +588,11 @@ const PopupInformation = ({
                       style={{ display: year ? 'none' : 'inline' }}
                     >
                       <p>
-                        <span>1</span>
+                        {/* <span>1</span> */}
                         Enter year here
                       </p>
                       <p>
-                        <span>2</span>
+                        {/* <span>2</span> */}
                         Each year/line.
                       </p>
                     </div>

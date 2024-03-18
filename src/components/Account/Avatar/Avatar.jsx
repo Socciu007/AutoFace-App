@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import './style.scss';
 import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
+import DeleteButton from '../../../assets/icon/icon-Delete.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
@@ -63,22 +64,28 @@ const Avatar = ({ onGoBackClick, id, updateDesignScript, currentSetup, component
             </div>
             <div className="component-item information">
               <div className="component-item__header image">
-                <p>Upload avatar</p>
-                <Upload
-                  onChange={handleChangeImage}
-                  onRemove={handleRemoveImage}
-                  accept="image/*"
-                  listType="picture"
-                  maxCount={1}
-                >
-                  <Button
-                    style={{
-                      display: values.folder === '' ? 'block' : 'none',
-                    }}
-                  >
-                    Choose folder +
-                  </Button>
-                </Upload>
+                <p style={{ width: '40%' }}>Upload avatar</p>
+                {values.folder === '' ? (
+                  <Upload onChange={handleChangeImage} accept="image/*" listType="picture" maxCount={1}>
+                    <Button
+                      style={{
+                        display: values.folder === '' ? 'block' : 'none',
+                      }}
+                    >
+                      Choose folder +
+                    </Button>
+                  </Upload>
+                ) : (
+                  <div className="folderPhoto">
+                    <div className="URLImg">
+                      <span style={{ opacity: '0.5' }}>Folder:</span>
+                      <div>
+                        <span>{values.folder.replace(/^.*[\\/]/, '')}</span>
+                      </div>
+                    </div>
+                    <img src={DeleteButton} alt="Delete Button" onClick={handleRemoveImage} />
+                  </div>
+                )}
               </div>
             </div>
             <div className="component-item information">

@@ -108,6 +108,31 @@
           }
         }
         .image {
+          .folderPhoto {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            background-color: #fff;
+            width: 100%;
+            p {
+              font-weight: 400;
+            }
+            img {
+              width: 4%;
+              cursor: pointer;
+            }
+            .URLImg {
+              width: 100%;
+              display: flex;
+              flex-wrap: wrap;
+              margin-right: 5px;
+              justify-content: flex-end;
+              span {
+                display: block;
+                margin-right: 5px;
+              }
+            }
+          }
           justify-content: space-between;
           span.ant-upload-wrapper {
             display: flex;

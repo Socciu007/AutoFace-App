@@ -112,6 +112,52 @@
           justify-content: space-between;
           width: 51%;
           align-items: center;
+          .loginOption {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-bottom: 2%;
+            height: 29px;
+            width: 210px;
+            .LoginType {
+              font-family: 'GoogleSans';
+              top: 0;
+              width: 100%;
+              border-radius: 5px;
+              background: var(--bg-input);
+              height: 40px;
+              font-size: 15px;
+              appearance: none;
+              -webkit-appearance: none;
+              -moz-appearance: none;
+              background-image: url('../../../assets/icon/icon-down.svg');
+              background-repeat: no-repeat;
+              background-position: right 10px center;
+              border: 0;
+              svg {
+                display: none;
+              }
+            }
+            .LoginType:hover,
+            .LoginType:active,
+            .LoginType:focus,
+            .LoginType:target {
+              border: none !important;
+            }
+            .css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root.Mui-focused
+              .MuiOutlinedInput-notchedOutline,
+            .css-1d3z3hw-MuiOutlinedInput-notchedOutline {
+              border: 0;
+              border-radius: 5px;
+            }
+            img {
+              position: absolute;
+              display: inline;
+              right: 5%;
+              top: 50%;
+              transform: translate(-5%, -50%);
+            }
+          }
         }
         &__number {
           display: flex;
