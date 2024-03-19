@@ -806,6 +806,10 @@ const ProfilesPage = () => {
       profile.tag = row.tag
         .toString()
         .split(',')
+        .filter((e) => {
+          if (e.trim() !== '') return true;
+          return false;
+        })
         .map((e) => {
           if (e && e.toString().trim().length && !e.startsWith('#')) {
             return '#' + e.toString().trim();
