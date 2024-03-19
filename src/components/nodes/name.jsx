@@ -1,9 +1,8 @@
 import { useCallback, useState } from 'react';
 import { Handle, Position } from 'reactflow';
-import createPostLeft from '../../assets/icon/icon-createPostLeft.svg';
-import passIcon from '../../assets/icon/icon-node-password.svg';
+import createPostLeft from '../../assets/icon/icon-postInteractLeft.svg';
+import passIcon from '../../assets/icon/icon-name-node.svg';
 import optionNode from '../../assets/icon/icon-optionNode.svg';
-import time from '../../assets/icon/icon-time.svg';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
@@ -48,7 +47,7 @@ function nameNode({ data: { label, onButtonClick, onDeleteNode }, isConnectable,
           <img src={passIcon} alt="createPost" />
           <div className="content-right">
             <div className="right-top">
-              <p>Change name</p>
+              <p>Name</p>
               <img src={optionNode} alt="More" onClick={handleClick} />
               <Menu
                 id="basic-menu"
@@ -66,10 +65,6 @@ function nameNode({ data: { label, onButtonClick, onDeleteNode }, isConnectable,
                 <MenuItem onClick={editNode}>Edit</MenuItem>
                 <MenuItem onClick={deleteNode}>Delete</MenuItem>
               </Menu>
-            </div>
-            <div className="right-bottom">
-              <img src={time} alt="Time" />
-              <p>5 min</p>
             </div>
           </div>
         </div>

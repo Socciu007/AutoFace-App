@@ -25,6 +25,10 @@ import { changePassword } from './scriptAuto/ChangePass';
 import { DeletePhone } from './scriptAuto/DeletePhone';
 import { changeName } from './scriptAuto/ChangeName';
 import { changeEmail } from './scriptAuto/Email';
+import { changeAvatar } from './scriptAuto/ChangeAvatar';
+import { changeCover } from './scriptAuto/ChangeCover';
+import { twoFA } from './scriptAuto/TwoFA';
+import { trustedDevices } from './scriptAuto/TrustedDevices';
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -71,8 +75,6 @@ const getPosition = async (index) => {
 };
 
 export const runScript = async (profileSelected, scriptDesign, dispatch) => {
-  // set all profiles selected to waiting status
-
   let newProfileSelected = profileSelected.map((profile) => {
     return { ...profile, script: scriptDesign.id, status: 'waiting' };
   });
@@ -811,7 +813,6 @@ return new Promise(async (resolve) => {
     await closePage(pages[i]);
   }
   }
-  
 
   let page = await browser.newPage();
   
@@ -935,6 +936,23 @@ const convertToFunc = (script, profile) => {
       return `{
           ${changeName(script, profile)}
         }`;
+    case 'twoFA':
+      return `{
+          ${twoFA(script, profile)}
+        }`;
+    case 'trustedDevices':
+      return `{
+          ${trustedDevices(script, profile)}
+        }`;
+    case 'avatar':
+      return `{
+          ${changeAvatar(script, profile)}
+        }`;
+
+    case 'cover':
+      return `{
+              ${changeCover(script, profile)}
+            }`;
 
     case 'email':
       return `{

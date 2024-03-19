@@ -70,21 +70,40 @@ const ProfilesPage = () => {
       }
 
       if (params[0][1] && params[0][1].toString().includes('ChangePass|')) {
+        console.log('ChangePass');
         changePass(params[0][1].split('|')[1], params[0][1].split('|')[2]);
+      }
+
+      if (params[0][1] && params[0][1].toString().includes('Change2FA|')) {
+        change2FA(params[0][1].split('|')[1], params[0][1].split('|')[2]);
       }
 
       console.log(params[0]);
     });
   }
 
-  const changePass = async (oldPass, newPass) => {
+  const changePass = async (id, newPass) => {
     const profiles = await dbGetLocally(storageProfiles);
-    const index = profiles.findIndex((e) => e.password == oldPass);
+    const index = profiles.findIndex((e) => e.id == id);
+    console.log('changePass ' + index);
     if (index >= 0) {
       const profile = profiles[index];
       profiles.splice(index, 1, {
         ...profile,
         password: newPass,
+      });
+      await dbSetLocally(storageProfiles, profiles);
+    }
+  };
+
+  const change2FA = async (id, newTwoFA) => {
+    const profiles = await dbGetLocally(storageProfiles);
+    const index = profiles.findIndex((e) => e.id == id);
+    if (index >= 0) {
+      const profile = profiles[index];
+      profiles.splice(index, 1, {
+        ...profile,
+        twoFA: newTwoFA,
       });
       await dbSetLocally(storageProfiles, profiles);
     }

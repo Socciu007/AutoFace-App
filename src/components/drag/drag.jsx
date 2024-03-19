@@ -107,7 +107,7 @@ const nodeMessage = {
   avatar: 'avatar',
   cover: 'cover',
   trustedDevices: 'trustedDevices',
-  twoFA: '2FA',
+  twoFA: 'twoFA',
 };
 
 const getId = () => `dndnode_${+new Date()}`;

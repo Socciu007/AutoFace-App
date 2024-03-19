@@ -66,6 +66,8 @@ import Name from '../../components/Account/Name/Name.jsx';
 import Information from '../../components/Account/Information/information.jsx';
 import Avatar from '../../components/Account/Avatar/Avatar.jsx';
 import Cover from '../../components/Account/Cover/Cover.jsx';
+import Device from '../../components/Account/Device/Device.jsx';
+import TwoFA from '../../components/Account/TwoFA/TowFA.jsx';
 const CreateScript = () => {
   const DnDFlowRef = useRef();
   const { state } = useLocation();
@@ -473,23 +475,23 @@ const CreateScript = () => {
         );
       case 'trustedDevices':
         return (
-          <Name
+          <Device
             currentSetup={currentSetup}
             component={component}
             updateDesignScript={updateDesignScript}
             id={currentComponent}
             onGoBackClick={handleGoBackClick}
-          ></Name>
+          ></Device>
         );
-      case '2FA':
+      case 'twoFA':
         return (
-          <Name
+          <TwoFA
             currentSetup={currentSetup}
             component={component}
             updateDesignScript={updateDesignScript}
             id={currentComponent}
             onGoBackClick={handleGoBackClick}
-          ></Name>
+          ></TwoFA>
         );
       default:
         return (
@@ -637,7 +639,7 @@ const CreateScript = () => {
                     <img src={iconTrusted} alt="devices" />
                     <p>Trusted devices</p>
                   </div>
-                  <div className="card" onDragStart={(event) => onDragStart(event, '2FA')} draggable>
+                  <div className="card" onDragStart={(event) => onDragStart(event, 'twoFA')} draggable>
                     <img src={icon2FA} alt="sercure" />
                     <p>2FA</p>
                   </div>

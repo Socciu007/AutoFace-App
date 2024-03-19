@@ -285,5 +285,11 @@
     "folder": "",
     "isDelete": false,
     "isSkip": false
+  },
+  "twoFA": {
+    "turnOn": true
+  },
+  "device": {
+    "isDelete": true
   }
 }

@@ -30,8 +30,15 @@ const Cover = ({ onGoBackClick, id, updateDesignScript, currentSetup, component 
     setValues({ ...values, isSkip: value });
   };
 
+  const getNameFolder = (path) => {
+    const paths = path.split('\\');
+    return paths[paths.length - 1];
+  };
+
   const handleChangeImage = (value) => {
-    setValues({ ...values, folder: value.file.originFileObj.path });
+    const path = value.file.originFileObj.path;
+    const name = path.replace(/^.*[\\/]/, '');
+    setValues({ ...values, folder: path.replace('\\' + name, '') });
   };
 
   const handleRemoveImage = () => {
@@ -58,7 +65,7 @@ const Cover = ({ onGoBackClick, id, updateDesignScript, currentSetup, component 
               <div className="component-item__header image">
                 <p style={{ width: '40%' }}>Upload avatar</p>
                 {values.folder === '' ? (
-                  <Upload onChange={handleChangeImage} accept="image/*" listType="picture" maxCount={1}>
+                  <Upload onChange={handleChangeImage} directory maxCount={1}>
                     <Button
                       style={{
                         display: values.folder === '' ? 'block' : 'none',
@@ -72,7 +79,7 @@ const Cover = ({ onGoBackClick, id, updateDesignScript, currentSetup, component 
                     <div className="URLImg">
                       <span style={{ opacity: '0.5' }}>Folder:</span>
                       <div>
-                        <span>{values.folder.replace(/^.*[\\/]/, '')}</span>
+                        <span>{getNameFolder(values.folder)}</span>
                       </div>
                     </div>
                     <img src={DeleteButton} alt="Delete Button" onClick={handleRemoveImage} />

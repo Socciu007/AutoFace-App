@@ -1,5 +1,6 @@
 export const changePassword = (script, account) => {
   const accountStr = `{
+        id: ${JSON.stringify(account.id)},
         uid: ${JSON.stringify(account.uid)},
         password:${JSON.stringify(account.password)},
         recoveryEmail:${JSON.stringify(account.recoveryEmail)},
@@ -16,6 +17,7 @@ export const changePassword = (script, account) => {
 
   return `{
     try {
+       
       const script = ${scriptStr};
       const account = ${accountStr};
       if (
@@ -90,7 +92,7 @@ export const changePassword = (script, account) => {
                 await submitAction.click();
                 await delay(getRandomIntBetween(5000, 7000));
                 if(!page.url().includes("account/password")){
-                    logger("ChangePass|" + account.password + "|" + script.newPassword);
+                    logger("ChangePass|" + account.id + "|" + script.newPassword);
                 }
             }
 

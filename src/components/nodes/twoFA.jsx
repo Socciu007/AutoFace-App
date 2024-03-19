@@ -1,17 +1,12 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { Handle, Position } from 'reactflow';
-import createPostLeft from '../../assets/icon/icon-createPostLeft.svg';
-import passIcon from '../../assets/icon/icon-node-password.svg';
+import deleteLeft from '../../assets/icon/icon-deleteLeft.svg';
+import deleteIcon from '../../assets/icon/icon-2FA-node.svg';
 import optionNode from '../../assets/icon/icon-optionNode.svg';
-import time from '../../assets/icon/icon-time.svg';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
-function twoFANode({ data: { label, onButtonClick, onDeleteNode }, isConnectable, id }) {
-  const onChange = useCallback((evt) => {
-    console.log(evt.target.value);
-  }, []);
-  // for style menu materials UI
+function TwoFA({ data: { label, onButtonClick, onDeleteNode }, isConnectable, id }) {
   const menuStyle = {
     boxShadow:
       '0px 5px 5px -3px rgb(233 232 232 / 20%), 0px 8px 10px 1px rgb(255 255 255 / 14%), 0px 3px 14px 2px rgb(241 232 232 / 12%)',
@@ -43,9 +38,9 @@ function twoFANode({ data: { label, onButtonClick, onDeleteNode }, isConnectable
     <div className="updater-node">
       <Handle type="target" position={Position.Left} isConnectable={isConnectable} />
       <div className="node">
-        <img src={createPostLeft} alt="createPostLeft" />
+        <img src={deleteLeft} alt="deleteLeft" />
         <div className="content">
-          <img src={passIcon} alt="createPost" />
+          <img src={deleteIcon} alt="deleteLeft" />
           <div className="content-right">
             <div className="right-top">
               <p>2FA</p>
@@ -67,10 +62,6 @@ function twoFANode({ data: { label, onButtonClick, onDeleteNode }, isConnectable
                 <MenuItem onClick={deleteNode}>Delete</MenuItem>
               </Menu>
             </div>
-            <div className="right-bottom">
-              <img src={time} alt="Time" />
-              <p>5 min</p>
-            </div>
           </div>
         </div>
       </div>
@@ -80,4 +71,4 @@ function twoFANode({ data: { label, onButtonClick, onDeleteNode }, isConnectable
   );
 }
 
-export default twoFANode;
+export default TwoFA;
