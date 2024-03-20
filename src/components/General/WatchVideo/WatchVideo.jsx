@@ -6,8 +6,7 @@ import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
 import DragButton from '../../../assets/icon/icon-drag.svg';
 import DeleteButton from '../../../assets/icon/icon-Delete.svg';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
+import { Select } from 'antd';
 import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
@@ -15,26 +14,13 @@ import 'prismjs/components/prism-javascript';
 import { useDropzone } from 'react-dropzone';
 import { parseToNumber } from '../../../services/utils';
 import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
+import PopupCommentFB from '../../PopupHome/PopupCommentFB/PopupCommentFB';
 
 const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
-  const [values, setValues] = useState(DefaultSciptSettings['watchVideo']);
+  const [watchVideoData, setWatchVideoData] = useState(DefaultSciptSettings['watchVideo']);
+  const [openComment, setOpenComment] = useState(false);
   const [textContent, setTextContent] = useState('');
 
-  // const { getRootProps, getInputProps } = useDropzone({
-  //   maxFiles: 10,
-  //   noClick: true,
-  //   accept: {
-  //     'image/png': ['.png', '.jpg', '.jpeg'],
-  //   },
-  //   onDrop: (acceptedFiles) => {
-  //     const newFiles = acceptedFiles.map((file) => {
-  //       console.log(file);
-  //       return file.path;
-  //     });
-
-  //     setValues({ ...values, photos: [...values.photos, ...newFiles] });
-  //   },
-  // });
   const { getRootProps, getInputProps } = useDropzone({
     maxFiles: 10,
     noClick: true,
@@ -51,30 +37,32 @@ const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
         return file.path;
       });
 
-      setValues({ ...values, photos: [...values.photos, ...newFiles] });
+      setWatchVideoData({ ...watchVideoData, photos: [...watchVideoData.photos, ...newFiles] });
     },
   });
 
   const handleDeleteButtonClick = () => {
-    setValues({ ...values, photos: [] });
+    setWatchVideoData({ ...watchVideoData, photos: [] });
   };
 
   useEffect(() => {
-    updateDesignScript(values, component, id);
-  }, [values]);
+    updateDesignScript(watchVideoData, component, id);
+  }, [watchVideoData]);
 
   useEffect(() => {
     if (currentSetup) {
-      if (currentSetup.text && currentSetup.text.length) {
+      if (currentSetup.text && currentSetup.text.length && currentSetup.typeComment === 'line') {
         setTextContent(currentSetup.text.join('\n'));
       }
-      setValues(currentSetup);
+      setTimeout(() => {
+        setWatchVideoData(currentSetup);
+      }, 20);
     }
   }, [currentSetup]);
 
   useEffect(() => {
     if (textContent.length) {
-      setValues({ ...values, text: textContent.split('\n') });
+      setWatchVideoData({ ...watchVideoData, text: textContent.split('\n') });
     }
   }, [textContent]);
   const hightlightWithLineNumbers = (input, language, content) =>
@@ -88,62 +76,71 @@ const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
   };
 
   const changeVideoStart = (video) => {
-    setValues({ ...values, videoStart: parseToNumber(video) });
+    setWatchVideoData({ ...watchVideoData, videoStart: parseToNumber(video) });
   };
 
   const changeVideoEnd = (video) => {
-    setValues({ ...values, videoEnd: parseToNumber(video) });
+    setWatchVideoData({ ...watchVideoData, videoEnd: parseToNumber(video) });
   };
 
   const changeDelayTimeStart = (time) => {
-    setValues({ ...values, delayTimeStart: parseToNumber(time) });
+    setWatchVideoData({ ...watchVideoData, delayTimeStart: parseToNumber(time) });
   };
   const changeDelayTimeEnd = (time) => {
-    setValues({ ...values, delayTimeEnd: parseToNumber(time) });
+    setWatchVideoData({ ...watchVideoData, delayTimeEnd: parseToNumber(time) });
   };
 
   const changeLikeStart = (like) => {
-    setValues({ ...values, likeStart: parseToNumber(like) });
+    setWatchVideoData({ ...watchVideoData, likeStart: parseToNumber(like) });
   };
   const changeLikeEnd = (like) => {
-    setValues({ ...values, likeEnd: parseToNumber(like) });
+    setWatchVideoData({ ...watchVideoData, likeEnd: parseToNumber(like) });
   };
 
   const changeShareStart = (share) => {
-    setValues({ ...values, shareStart: parseToNumber(share) });
+    setWatchVideoData({ ...watchVideoData, shareStart: parseToNumber(share) });
   };
   const changeShareEnd = (share) => {
-    setValues({ ...values, shareEnd: parseToNumber(share) });
+    setWatchVideoData({ ...watchVideoData, shareEnd: parseToNumber(share) });
   };
 
   const changeCommentStart = (comment) => {
-    setValues({ ...values, commentStart: parseToNumber(comment) });
+    setWatchVideoData({ ...watchVideoData, commentStart: parseToNumber(comment) });
   };
   const changeCommentEnd = (comment) => {
-    setValues({ ...values, commentEnd: parseToNumber(comment) });
-  };
-
-  const changePhotoStart = (photo) => {
-    setValues({ ...values, photoStart: parseToNumber(photo) });
-  };
-  const changePhotoEnd = (photo) => {
-    setValues({ ...values, photoEnd: parseToNumber(photo) });
+    setWatchVideoData({ ...watchVideoData, commentEnd: parseToNumber(comment) });
   };
 
   const changeLike = (value) => {
-    setValues({ ...values, isLiked: value });
+    setWatchVideoData({ ...watchVideoData, isLiked: value });
   };
 
   const changeShare = (value) => {
-    setValues({ ...values, isShare: value });
+    setWatchVideoData({ ...watchVideoData, isShare: value });
   };
 
   const changeComment = (value) => {
-    setValues({ ...values, isComment: value });
+    setWatchVideoData({ ...watchVideoData, isComment: value });
   };
 
   const changeOption = (value) => {
-    setValues({ ...values, option: value });
+    setWatchVideoData({ ...watchVideoData, option: value });
+  };
+
+  const handleOnchangeTypeComment = (value) => {
+    setWatchVideoData({ ...watchVideoData, typeComment: value });
+  };
+
+  const handleSave = (watchVideoData) => {
+    setWatchVideoData(watchVideoData);
+  };
+
+  const handleClick = () => {
+    setOpenComment(true);
+  };
+
+  const handleClose = () => {
+    setOpenComment(false);
   };
 
   return (
@@ -156,7 +153,7 @@ const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                 src={backButton}
                 alt="Back button"
                 onClick={() => {
-                  onGoBackClick(values, component, id);
+                  onGoBackClick(watchVideoData, component, id);
                 }}
               />
               <p>Watch video</p>
@@ -169,21 +166,21 @@ const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                     src={iconIncrease}
                     alt="Increase icon"
                     onClick={() => {
-                      changeVideoStart(values.videoStart + 1);
+                      changeVideoStart(watchVideoData.videoStart + 1);
                     }}
                   />
                   <img
                     src={iconDecrease}
                     alt="Decrease icon"
                     onClick={() => {
-                      changeVideoStart(values.videoStart - 1);
+                      changeVideoStart(watchVideoData.videoStart - 1);
                     }}
                   />
                 </div>
                 <input
                   type="text"
                   name="Start"
-                  value={values.videoStart}
+                  value={watchVideoData.videoStart}
                   onChange={(event) => changeVideoStart(event.target.value)}
                 />
               </div>
@@ -194,21 +191,21 @@ const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                     src={iconIncrease}
                     alt="Increase icon"
                     onClick={() => {
-                      changeVideoEnd(values.videoEnd + 1);
+                      changeVideoEnd(watchVideoData.videoEnd + 1);
                     }}
                   />
                   <img
                     src={iconDecrease}
                     alt="Decrease icon"
                     onClick={() => {
-                      changeVideoEnd(values.videoEnd - 1);
+                      changeVideoEnd(watchVideoData.videoEnd - 1);
                     }}
                   />
                 </div>
                 <input
                   type="text"
                   name="End"
-                  value={values.videoEnd}
+                  value={watchVideoData.videoEnd}
                   onChange={(event) => changeVideoEnd(event.target.value)}
                 />
               </div>
@@ -223,21 +220,21 @@ const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                     src={iconIncrease}
                     alt="Increase icon"
                     onClick={() => {
-                      changeDelayTimeStart(values.delayTimeStart + 1);
+                      changeDelayTimeStart(watchVideoData.delayTimeStart + 1);
                     }}
                   />
                   <img
                     src={iconDecrease}
                     alt="Decrease icon"
                     onClick={() => {
-                      changeDelayTimeStart(values.delayTimeStart - 1);
+                      changeDelayTimeStart(watchVideoData.delayTimeStart - 1);
                     }}
                   />
                 </div>
                 <input
                   name="Start"
                   type="text"
-                  value={values.delayTimeStart}
+                  value={watchVideoData.delayTimeStart}
                   onChange={(event) => changeDelayTimeStart(event.target.value)}
                 />
               </div>
@@ -248,21 +245,21 @@ const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                     src={iconIncrease}
                     alt="Increase icon"
                     onClick={() => {
-                      changeDelayTimeEnd(values.delayTimeEnd + 1);
+                      changeDelayTimeEnd(watchVideoData.delayTimeEnd + 1);
                     }}
                   />
                   <img
                     src={iconDecrease}
                     alt="Decrease icon"
                     onClick={() => {
-                      changeDelayTimeEnd(values.delayTimeEnd - 1);
+                      changeDelayTimeEnd(watchVideoData.delayTimeEnd - 1);
                     }}
                   />
                 </div>
                 <input
                   name="End"
                   type="text"
-                  value={values.delayTimeEnd}
+                  value={watchVideoData.delayTimeEnd}
                   onChange={(event) => changeDelayTimeEnd(event.target.value)}
                 />
               </div>
@@ -272,41 +269,44 @@ const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                 <input
                   type="checkbox"
                   name="randomLike"
-                  checked={values.isLiked}
+                  checked={watchVideoData.isLiked}
                   onChange={(event) => {
                     changeLike(event.target.checked);
                   }}
                 />
                 <p>
                   Random Like{' '}
-                  <span style={{ marginLeft: '2px' }} className={`span__content ${values.isLiked ? 'show' : 'hide'}`}>
+                  <span
+                    style={{ marginLeft: '2px' }}
+                    className={`span__content ${watchVideoData.isLiked ? 'show' : 'hide'}`}
+                  >
                     (video)
                   </span>
                   :
                 </p>
               </div>
-              <div className={`component-item__content ${values.isLiked ? 'show' : 'hide'}`}>
+              <div className={`component-item__content ${watchVideoData.isLiked ? 'show' : 'hide'}`}>
                 <div className="component-item__number">
                   <div className="component-item__number__icon">
                     <img
                       src={iconIncrease}
                       alt="Increase icon"
                       onClick={() => {
-                        changeLikeStart(values.likeStart + 1);
+                        changeLikeStart(watchVideoData.likeStart + 1);
                       }}
                     />
                     <img
                       src={iconDecrease}
                       alt="Decrease icon"
                       onClick={() => {
-                        changeLikeStart(values.likeStart - 1);
+                        changeLikeStart(watchVideoData.likeStart - 1);
                       }}
                     />
                   </div>
                   <input
                     type="text"
                     name="Start"
-                    value={!values.isLiked ? 0 : values.likeStart}
+                    value={!watchVideoData.isLiked ? 0 : watchVideoData.likeStart}
                     onChange={(event) => changeLikeStart(event.target.value)}
                   />
                 </div>
@@ -317,21 +317,21 @@ const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                       src={iconIncrease}
                       alt="Increase icon"
                       onClick={() => {
-                        changeLikeEnd(values.likeEnd + 1);
+                        changeLikeEnd(watchVideoData.likeEnd + 1);
                       }}
                     />
                     <img
                       src={iconDecrease}
                       alt="Decrease icon"
                       onClick={() => {
-                        changeLikeEnd(values.likeEnd - 1);
+                        changeLikeEnd(watchVideoData.likeEnd - 1);
                       }}
                     />
                   </div>
                   <input
                     type="text"
                     name="End"
-                    value={!values.isLiked ? 0 : values.likeEnd}
+                    value={!watchVideoData.isLiked ? 0 : watchVideoData.likeEnd}
                     onChange={(event) => changeLikeEnd(event.target.value)}
                   />
                 </div>
@@ -342,50 +342,61 @@ const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                 <input
                   type="checkbox"
                   name="randomShare"
-                  checked={values.isShare}
+                  checked={watchVideoData.isShare}
                   onChange={(event) => {
                     changeShare(event.target.checked);
                   }}
                 />
                 <p>
                   Share to Feed{' '}
-                  <span style={{ marginLeft: '2px' }} className={`span__content ${values.isShare ? 'show' : 'hide'}`}>
+                  <span
+                    style={{ marginLeft: '2px' }}
+                    className={`span__content ${watchVideoData.isShare ? 'show' : 'hide'}`}
+                  >
                     (video)
                   </span>
                   :
                 </p>
               </div>
-              <div className={`component-item__content ${values.isShare ? 'show' : 'hide'}`}>
+              <div className={`component-item__content ${watchVideoData.isShare ? 'show' : 'hide'}`}>
                 <div className="component-item__number">
                   <div className="component-item__number__icon">
                     <img
                       src={iconIncrease}
                       alt="Increase icon"
-                      onClick={() => changeShareStart(values.shareStart + 1)}
+                      onClick={() => changeShareStart(watchVideoData.shareStart + 1)}
                     />
                     <img
                       src={iconDecrease}
                       alt="Decrease icon"
-                      onClick={() => changeShareStart(values.shareStart - 1)}
+                      onClick={() => changeShareStart(watchVideoData.shareStart - 1)}
                     />
                   </div>
                   <input
                     type="text"
                     name="Start"
-                    value={!values.isShare ? 0 : values.shareStart}
+                    value={!watchVideoData.isShare ? 0 : watchVideoData.shareStart}
                     onChange={(event) => changeShareStart(event.target.value)}
                   />
                 </div>
                 <span>to</span>
                 <div className="component-item__number">
                   <div className="component-item__number__icon">
-                    <img src={iconIncrease} alt="Increase icon" onClick={() => changeShareEnd(values.shareEnd + 1)} />
-                    <img src={iconDecrease} alt="Decrease icon" onClick={() => changeShareEnd(values.shareEnd - 1)} />
+                    <img
+                      src={iconIncrease}
+                      alt="Increase icon"
+                      onClick={() => changeShareEnd(watchVideoData.shareEnd + 1)}
+                    />
+                    <img
+                      src={iconDecrease}
+                      alt="Decrease icon"
+                      onClick={() => changeShareEnd(watchVideoData.shareEnd - 1)}
+                    />
                   </div>
                   <input
                     type="text"
                     name="End"
-                    value={!values.isShare ? 0 : values.shareEnd}
+                    value={!watchVideoData.isShare ? 0 : watchVideoData.shareEnd}
                     onChange={(event) => changeShareEnd(event.target.value)}
                   />
                 </div>
@@ -396,14 +407,14 @@ const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                 <input
                   type="checkbox"
                   name="randomComment"
-                  checked={values.isComment}
+                  checked={watchVideoData.isComment}
                   onChange={(event) => {
                     changeComment(event.target.checked);
                   }}
                 />
                 <p>Randomly Comment</p>
               </div>
-              <div className={`commentContent ${values.isComment ? 'show' : 'hide'}`}>
+              <div className={`commentContent ${watchVideoData.isComment ? 'show' : 'hide'}`}>
                 <div className="component-item comment__numberOfVideo">
                   <p className="component-item__header">Number of videos:</p>
                   <div className="component-item__content">
@@ -413,21 +424,21 @@ const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                           src={iconIncrease}
                           alt="Increase icon"
                           onClick={() => {
-                            changeCommentStart(values.commentStart + 1);
+                            changeCommentStart(watchVideoData.commentStart + 1);
                           }}
                         />
                         <img
                           src={iconDecrease}
                           alt="Decrease icon"
                           onClick={() => {
-                            changeCommentStart(values.commentStart - 1);
+                            changeCommentStart(watchVideoData.commentStart - 1);
                           }}
                         />
                       </div>
                       <input
                         type="text"
                         name="Start"
-                        value={!values.isComment ? 0 : values.commentStart}
+                        value={!watchVideoData.isComment ? 0 : watchVideoData.commentStart}
                         onChange={(event) => changeCommentStart(event.target.value)}
                       />
                     </div>
@@ -438,21 +449,21 @@ const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                           src={iconIncrease}
                           alt="Increase icon"
                           onClick={() => {
-                            changeCommentEnd(values.commentEnd + 1);
+                            changeCommentEnd(watchVideoData.commentEnd + 1);
                           }}
                         />
                         <img
                           src={iconDecrease}
                           alt="Decrease icon"
                           onClick={() => {
-                            changeCommentEnd(values.commentEnd - 1);
+                            changeCommentEnd(watchVideoData.commentEnd - 1);
                           }}
                         />
                       </div>
                       <input
                         type="text"
                         name="End"
-                        value={!values.isComment ? 0 : values.commentEnd}
+                        value={!watchVideoData.isComment ? 0 : watchVideoData.commentEnd}
                         onChange={(event) => changeCommentEnd(event.target.value)}
                       />
                     </div>
@@ -462,105 +473,101 @@ const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                 <div className="component-item optionComment">
                   <Select
                     name="optionComment"
+                    id="typeProfile"
                     className="commentType"
-                    onChange={(event) => {
-                      changeOption(event.target.value);
-                    }}
-                    value={values.option}
-                  >
-                    <MenuItem value="text">Text</MenuItem>
-                    <MenuItem value="photoOrVideo">Photo/video</MenuItem>
-                    <MenuItem value="all">Text & Photo/video</MenuItem>
-                  </Select>
+                    value={watchVideoData.option}
+                    onChange={changeOption}
+                    bordered={false}
+                    options={[
+                      {
+                        value: 'text',
+                        label: 'Text',
+                      },
+                      {
+                        value: 'photoOrVideo',
+                        label: 'Photo/video',
+                      },
+                      {
+                        value: 'all',
+                        label: 'Text & Photo/video',
+                      },
+                    ]}
+                  />
                 </div>
-                {(values.option === 'text' || values.option === 'all') && (
-                  <div className="Text">
-                    <p className="selectComment__header">Text</p>
-                    <div className="component-item" style={{ position: 'relative' }}>
-                      <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
-                        <Editor
-                          value={textContent}
-                          onValueChange={(text) => {
-                            setTextContent(text);
-                          }}
-                          highlight={(text) => hightlightWithLineNumbers(text, languages.js, textContent)}
-                          padding={15}
-                          className="editor"
-                          textareaId="codeArea"
-                          style={{
-                            background: '#f5f5f5',
-                            fontSize: 15,
-                          }}
-                        />
-                      </div>
-                      <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
-                        <p>
-                          <span>1</span>Enter the content here
-                        </p>
-                        <p>
-                          <span>2</span>Each content/line
-                        </p>
-                      </div>
-                    </div>
+                {(watchVideoData.option === 'text' || watchVideoData.option === 'all') && (
+                  <div className="component-item optionComment">
+                    <Select
+                      id="typeProfile"
+                      className="commentType"
+                      value={watchVideoData.typeComment}
+                      onChange={handleOnchangeTypeComment}
+                      bordered={false}
+                      options={[
+                        {
+                          value: 'line',
+                          label: 'The comment is only 1 line',
+                        },
+                        {
+                          value: 'moreLine',
+                          label: 'Comment has multiple lines',
+                        },
+                      ]}
+                    />
                   </div>
                 )}
-                {(values.option === 'photoOrVideo' || values.option === 'all') && (
+                {(watchVideoData.option === 'text' || watchVideoData.option === 'all') &&
+                  watchVideoData.typeComment === 'line' && (
+                    <div className="Text">
+                      <p className="selectComment__header">Text</p>
+                      <div className="component-item" style={{ position: 'relative' }}>
+                        <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
+                          <Editor
+                            value={textContent}
+                            onValueChange={(text) => {
+                              setTextContent(text);
+                            }}
+                            highlight={(text) => hightlightWithLineNumbers(text, languages.js, textContent)}
+                            padding={15}
+                            className="editor"
+                            textareaId="codeArea"
+                            style={{
+                              background: '#f5f5f5',
+                              fontSize: 15,
+                            }}
+                          />
+                        </div>
+                        <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
+                          <p>
+                            <span style={{ marginRight: '14px' }}>1</span>Enter the content here
+                          </p>
+                          <p>
+                            <span>2</span>Each content/line
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                {(watchVideoData.option === 'text' || watchVideoData.option === 'all') &&
+                  watchVideoData.typeComment === 'moreLine' && (
+                    <div className="moreLine">
+                      <div className="moreLineComment">
+                        <button onClick={handleClick}>Add +</button>
+                      </div>
+                      <span>({watchVideoData.text.length})</span>
+                    </div>
+                  )}
+                {watchVideoData.isComment && watchVideoData.typeComment === 'moreLine' && (
+                  <PopupCommentFB
+                    open={openComment}
+                    data={watchVideoData}
+                    handleClose={handleClose}
+                    handleSave={handleSave}
+                  />
+                )}
+                {(watchVideoData.option === 'photoOrVideo' || watchVideoData.option === 'all') && (
                   <div className="photoOrVideo">
                     <p className="component-item__header">Photo/video</p>
-                    {/* <div className="component-item numberOfVideo">
-                      <p className="component-item__header numberOfVideoText">Number of photo/video:</p>
-                      <div className="component-item__number">
-                        <div className="component-item__number__icon">
-                          <img
-                            src={iconIncrease}
-                            alt="Increase icon"
-                            onClick={() => {
-                              changePhotoStart(values.photoStart + 1);
-                            }}
-                          />
-                          <img
-                            src={iconDecrease}
-                            alt="Decrease icon"
-                            onClick={() => {
-                              changePhotoStart(values.photoStart - 1);
-                            }}
-                          />
-                        </div>
-                        <input
-                          type="text"
-                          name="Start"
-                          value={values.photoStart}
-                          onChange={(event) => changePhotoStart(event.target.value)}
-                        />
-                      </div>
-                      <span>to</span>
-                      <div className="component-item__number">
-                        <div className="component-item__number__icon">
-                          <img
-                            src={iconIncrease}
-                            alt="Increase icon"
-                            onClick={() => {
-                              changePhotoEnd(values.photoEnd + 1);
-                            }}
-                          />
-                          <img
-                            src={iconDecrease}
-                            alt="Decrease icon"
-                            onClick={() => {
-                              changePhotoEnd(values.photoEnd - 1);
-                            }}
-                          />
-                        </div>
-                        <input
-                          type="text"
-                          name="End"
-                          value={values.photoEnd}
-                          onChange={(event) => changePhotoEnd(event.target.value)}
-                        />
-                      </div>
-                    </div> */}
-
-                    {values.photos.length === 0 ? (
+                    {watchVideoData.photos.length === 0 ? (
                       <div {...getRootProps({ className: 'component-item dragVideoOrPhoto' })}>
                         <input {...getInputProps()} />
                         <img className="mx-auto h-40" src={DragButton} alt="addfile" />
@@ -571,7 +578,7 @@ const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                         <div className="URLImg">
                           <span style={{ opacity: '0.5' }}>Folder:</span>
                           <div style={{ width: '100%' }}>
-                            {values.photos.map((fileName, index) => (
+                            {watchVideoData.photos.map((fileName, index) => (
                               <span key={index}>{fileName}</span>
                             ))}
                           </div>

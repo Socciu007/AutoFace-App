@@ -11,14 +11,17 @@ import 'prismjs/components/prism-javascript';
 import 'prismjs/themes/prism.css';
 import { parseToNumber } from '../../../services/utils';
 import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
+import { Select } from 'antd';
+import PopupCommentFB from '../../PopupHome/PopupCommentFB/PopupCommentFB';
 
 const Newsfeed = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
   const [textContent, setTextContent] = useState('');
   const [values, setValues] = useState(DefaultSciptSettings['newsFeed']);
+  const [openComment, setOpenComment] = useState(false);
 
   useEffect(() => {
     if (currentSetup) {
-      if (currentSetup.commentStrs && currentSetup.commentStrs.length) {
+      if (currentSetup.commentStrs && currentSetup.commentStrs.length && currentSetup.typeComment === 'line') {
         setTextContent(currentSetup.commentStrs.join('\n'));
       }
       setValues(currentSetup);
@@ -83,6 +86,22 @@ const Newsfeed = ({ onGoBackClick, id, updateDesignScript, currentSetup, compone
 
   const handleChangeShareEnd = (value) => {
     setValues({ ...values, shareEnd: parseToNumber(value) });
+  };
+
+  const handleOnchangeTypeComment = (value) => {
+    setValues({ ...values, typeComment: value });
+  };
+
+  const handleCloseComment = () => {
+    setOpenComment(false);
+  };
+
+  const handleClick = () => {
+    setOpenComment(true);
+  };
+
+  const handleSave = (values) => {
+    setValues(values);
   };
 
   const handleDivClick = () => {
@@ -398,41 +417,78 @@ const Newsfeed = ({ onGoBackClick, id, updateDesignScript, currentSetup, compone
                     </div>
                   </div>
                 </div>
-
-                <div className="Text">
-                  <div className="component-item__header">
-                    <p>Text</p>
+                {values.randomComment && (
+                  <div className="PostContent">
+                    <Select
+                      id="typeProfile"
+                      className="PostContent__select PostContent__details"
+                      value={values.typeComment}
+                      onChange={handleOnchangeTypeComment}
+                      bordered={false}
+                      options={[
+                        {
+                          value: 'line',
+                          label: 'The comment is only 1 line',
+                        },
+                        {
+                          value: 'moreLine',
+                          label: 'Comment has multiple lines',
+                        },
+                      ]}
+                    />
                   </div>
-                  <div style={{ position: 'relative' }} className="component-item">
-                    <div style={{ width: '100%', height: 204, overflow: 'auto' }} className={`text`}>
-                      <Editor
-                        value={textContent}
-                        onValueChange={(text) => {
-                          setTextContent(text);
-                        }}
-                        highlight={(code) => hightlightWithLineNumbers(code, languages.js)}
-                        padding={15}
-                        className={`editor`}
-                        textareaId="codeArea"
-                        onClick={handleDivClick}
-                        style={{
-                          background: '#f5f5f5',
-                          fontSize: 15,
-                        }}
-                      />
-                      {textContent.length ? null : (
-                        <div onClick={handleDivClick} className={`placeholder`}>
-                          <p>
-                            <span>1</span>Enter the content here
-                          </p>
-                          <p>
-                            <span>2</span>Each content/line
-                          </p>
-                        </div>
-                      )}
+                )}
+                {values.randomComment && values.typeComment === 'moreLine' && (
+                  <div className="moreLine">
+                    <div className="moreLineComment">
+                      <button onClick={handleClick}>Add +</button>
+                    </div>
+                    <span>({values.commentStrs.length})</span>
+                  </div>
+                )}
+                <PopupCommentFB
+                  type="newsfeed"
+                  open={openComment}
+                  handleClose={handleCloseComment}
+                  data={values}
+                  handleSave={handleSave}
+                />
+                {values.randomComment && values.typeComment === 'line' && (
+                  <div className="Text">
+                    <div className="component-item__header">
+                      <p>Text</p>
+                    </div>
+                    <div style={{ position: 'relative' }} className="component-item">
+                      <div style={{ width: '100%', height: 204, overflow: 'auto' }} className={`text`}>
+                        <Editor
+                          value={textContent}
+                          onValueChange={(text) => {
+                            setTextContent(text);
+                          }}
+                          highlight={(code) => hightlightWithLineNumbers(code, languages.js)}
+                          padding={15}
+                          className={`editor`}
+                          textareaId="codeArea"
+                          onClick={handleDivClick}
+                          style={{
+                            background: '#f5f5f5',
+                            fontSize: 15,
+                          }}
+                        />
+                        {textContent.length ? null : (
+                          <div onClick={handleDivClick} className={`placeholder`}>
+                            <p>
+                              <span style={{ marginRight: '14px' }}>1</span>Enter the content here
+                            </p>
+                            <p>
+                              <span>2</span>Each content/line
+                            </p>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>

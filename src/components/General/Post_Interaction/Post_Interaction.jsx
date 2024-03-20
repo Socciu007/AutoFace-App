@@ -10,21 +10,26 @@ import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import { parseToNumber } from '../../../services/utils';
 import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
+import { Select } from 'antd';
+import PopupCommentFB from '../../PopupHome/PopupCommentFB/PopupCommentFB';
 
 const Post_Interaction = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
   const [values, setValues] = useState(DefaultSciptSettings['postInteract']);
   const [textContent, setTextContent] = useState('');
   const [UIDContent, setUIDContent] = useState('');
+  const [openComment, setOpenComment] = useState(false);
 
   useEffect(() => {
     if (currentSetup) {
       if (currentSetup.UID && currentSetup.UID.length) {
         setUIDContent(currentSetup.UID.join('\n'));
       }
-      if (currentSetup.text && currentSetup.text.length) {
+      if (currentSetup.text && currentSetup.text.length && currentSetup.typeComment === 'line') {
         setTextContent(currentSetup.text.join('\n'));
       }
-      setValues(currentSetup);
+      setTimeout(() => {
+        setValues(currentSetup);
+      }, 20);
     }
   }, [currentSetup]);
 
@@ -34,12 +39,16 @@ const Post_Interaction = ({ onGoBackClick, id, updateDesignScript, currentSetup,
 
   useEffect(() => {
     if (UIDContent.length) {
-      setValues({ ...values, UID: UIDContent.split('\n'), lineCount: UIDContent.split('\n').length });
+      setValues({ ...values, UID: UIDContent.split('\n') });
+    } else {
+      setValues({ ...values, UID: [] });
     }
   }, [UIDContent]);
   useEffect(() => {
     if (textContent.length) {
       setValues({ ...values, text: textContent.split('\n') });
+    } else {
+      setValues({ ...values, text: [] });
     }
   }, [textContent]);
 
@@ -96,8 +105,20 @@ const Post_Interaction = ({ onGoBackClick, id, updateDesignScript, currentSetup,
   const changeCommentEnd = (comment) => {
     setValues({ ...values, commentEnd: parseToNumber(comment) });
   };
-  const changeText = (value) => {
-    setValues({ ...values, isText: value });
+  const handleOnchangeTypeComment = (value) => {
+    setValues({ ...values, typeComment: value });
+  };
+
+  const handleCloseComment = () => {
+    setOpenComment(false);
+  };
+
+  const handleClick = () => {
+    setOpenComment(true);
+  };
+
+  const handleSave = (values) => {
+    setValues(values);
   };
 
   const handleDivUIDClick = () => {
@@ -107,6 +128,7 @@ const Post_Interaction = ({ onGoBackClick, id, updateDesignScript, currentSetup,
   const handleDivCommentClick = () => {
     document.getElementById('Comment').focus();
   };
+  console.log('data', values);
 
   const hightlightWithLineNumbers = (input, language, content) =>
     highlight(input, language)
@@ -132,7 +154,7 @@ const Post_Interaction = ({ onGoBackClick, id, updateDesignScript, currentSetup,
             <div className="PostUIDList">
               <p className="selectComment__header">
                 Post UID list
-                <span>({values.lineCount})</span>
+                <span>({values.UID.length})</span>
               </p>
               <div className="component-item" style={{ position: 'relative' }}>
                 <div className=" text" style={{ width: '100%', height: 204, overflow: 'auto' }}>
@@ -153,7 +175,7 @@ const Post_Interaction = ({ onGoBackClick, id, updateDesignScript, currentSetup,
                 </div>
                 <div onClick={handleDivUIDClick} className={`placeholder ${UIDContent ? 'hide' : ''}`}>
                   <p>
-                    <span>1</span>Enter the content here
+                    <span style={{ marginRight: '14px' }}>1</span>Enter the content here
                   </p>
                   <p>
                     <span>2</span>Each UID | Post UID list per line
@@ -518,46 +540,74 @@ const Post_Interaction = ({ onGoBackClick, id, updateDesignScript, currentSetup,
                     </div>
                   </div>
                 </div>
-
-                <div className="Text">
-                  <div className="component-item__header">
-                    <input
-                      type="checkbox"
-                      name="randomLike"
-                      checked={values.isText}
-                      onChange={(event) => changeText(event.target.checked)}
+                {values.isComment && (
+                  <div className="PostContent">
+                    <Select
+                      id="typeProfile"
+                      className="PostContent__select PostContent__details"
+                      value={values.typeComment}
+                      onChange={handleOnchangeTypeComment}
+                      bordered={false}
+                      options={[
+                        {
+                          value: 'line',
+                          label: 'The comment is only 1 line',
+                        },
+                        {
+                          value: 'moreLine',
+                          label: 'Comment has multiple lines',
+                        },
+                      ]}
                     />
-                    <p>Text</p>
                   </div>
-
-                  <div
-                    style={{ position: 'relative' }}
-                    className={`component-item  ${values.isText ? 'show' : 'hide'}`}
-                  >
-                    <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
-                      <Editor
-                        value={textContent}
-                        onValueChange={(text) => setTextContent(text)}
-                        highlight={(text) => hightlightWithLineNumbers(text, languages.js, textContent)}
-                        padding={15}
-                        className="editor"
-                        textareaId="Comment"
-                        style={{
-                          background: '#f5f5f5',
-                          fontSize: 15,
-                        }}
-                      />
+                )}
+                {values.isComment && values.typeComment === 'moreLine' && (
+                  <div className="moreLine">
+                    <div className="moreLineComment">
+                      <button onClick={handleClick}>Add +</button>
                     </div>
-                    <div onClick={handleDivCommentClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
-                      <p>
-                        <span>1</span>Enter the content here
-                      </p>
-                      <p>
-                        <span>2</span>Each content/line
-                      </p>
+                    <span>({values.text.length})</span>
+                  </div>
+                )}
+                {values.isComment && values.typeComment === 'moreLine' && (
+                  <PopupCommentFB
+                    open={openComment}
+                    handleClose={handleCloseComment}
+                    data={values}
+                    handleSave={handleSave}
+                  />
+                )}
+                {values.isComment && values.typeComment === 'line' && (
+                  <div className="Text">
+                    <div
+                      style={{ position: 'relative' }}
+                      className={`component-item  ${values.isText ? 'show' : 'hide'}`}
+                    >
+                      <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
+                        <Editor
+                          value={textContent}
+                          onValueChange={(text) => setTextContent(text)}
+                          highlight={(text) => hightlightWithLineNumbers(text, languages.js, textContent)}
+                          padding={15}
+                          className="editor"
+                          textareaId="Comment"
+                          style={{
+                            background: '#f5f5f5',
+                            fontSize: 15,
+                          }}
+                        />
+                      </div>
+                      <div onClick={handleDivCommentClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
+                        <p>
+                          <span style={{ marginRight: '14px' }}>1</span>Enter the content here
+                        </p>
+                        <p>
+                          <span>2</span>Each content/line
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>

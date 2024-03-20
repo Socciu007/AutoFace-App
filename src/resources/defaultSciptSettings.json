@@ -13,6 +13,7 @@
     "isSad": false,
     "isAngry": false,
     "isComment": false,
+    "typeComment": "line",
     "text": []
   },
   "watchVideo": {
@@ -28,6 +29,7 @@
     "shareEnd": 2,
     "isComment": false,
     "option": "text",
+    "typeComment": "line",
     "text": [],
     "photos": [],
     "photoStart": 1,
@@ -49,7 +51,8 @@
     "randomComment": false,
     "commentStart": 1,
     "commentEnd": 2,
-    "commentStrs": []
+    "commentStrs": [],
+    "typeComment": "line"
   },
   "createPost": {
     "postStart": 1,
@@ -57,6 +60,7 @@
     "delayTimeStart": 5,
     "delayTimeEnd": 10,
     "option": "background",
+    "typeComment": "line",
     "text": [],
     "photos": [],
     "photoStart": 1,
@@ -85,6 +89,7 @@
     "isText": true,
     "commentStart": 1,
     "commentEnd": 2,
+    "typeComment": "line",
     "text": [],
     "lineCount": 0
   },

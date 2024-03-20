@@ -5,8 +5,7 @@ import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
 import DragButton from '../../../assets/icon/icon-drag.svg';
 import DeleteButton from '../../../assets/icon/icon-Delete.svg';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
+
 import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
@@ -14,10 +13,13 @@ import 'prismjs/components/prism-javascript';
 import { useDropzone } from 'react-dropzone';
 import { parseToNumber } from '../../../services/utils';
 import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
+import PopupCommentFB from '../../PopupHome/PopupCommentFB/PopupCommentFB';
+import { Select } from 'antd';
 const CreatePost = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
   const [values, setValues] = useState(DefaultSciptSettings['createPost']);
   const [textContent, setTextContent] = useState('');
   const [UIDContent, setUIDContent] = useState('');
+  const [openComment, setOpenComment] = useState(false);
 
   const { getRootProps, getInputProps } = useDropzone({
     maxFiles: 10,
@@ -110,6 +112,22 @@ const CreatePost = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
   };
   const changeNumberFriendTagEnd = (value) => {
     setValues({ ...values, numberFriendTagEnd: parseToNumber(value) });
+  };
+
+  const handleOnchangeTypeComment = (value) => {
+    setValues({ ...values, typeComment: value });
+  };
+
+  const handleCloseComment = () => {
+    setOpenComment(false);
+  };
+
+  const handleClick = () => {
+    setOpenComment(true);
+  };
+
+  const handleSave = (values) => {
+    setValues(values);
   };
 
   const handleDivClick = () => {
@@ -252,47 +270,99 @@ const CreatePost = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
               <div className="PostContent">
                 <div className="component-item postOption">
                   <Select
-                    name="postOption"
+                    id="typeProfile"
                     className="PostType"
-                    onChange={(event) => changeOption(event.target.value)}
                     value={values.option}
+                    onChange={changeOption}
                     bordered={false}
-                    MuiButtonBase-root
-                  >
-                    <MenuItem value="background">Using background</MenuItem>
-                    <MenuItem value="text/photo">Text, Photo/video</MenuItem>
-                  </Select>
+                    options={[
+                      {
+                        value: 'background',
+                        label: 'Using background',
+                      },
+                      {
+                        value: 'text/photo',
+                        label: 'Text, Photo/video',
+                      },
+                    ]}
+                  />
                 </div>
-
-                <div className="Text">
-                  <p className="selectPost__header">Text</p>
-                  <div style={{ position: 'relative' }} className="component-item">
-                    <div className="text" style={{ width: '100%', height: 204, overflow: 'auto' }}>
-                      <Editor
-                        value={textContent}
-                        onValueChange={(text) => {
-                          setTextContent(text);
-                        }}
-                        highlight={(text) => hightlightWithLineNumbers(text, languages.js, textContent)}
-                        padding={15}
-                        className="editor"
-                        textareaId="text"
-                        style={{
-                          background: '#f5f5f5',
-                          fontSize: 15,
-                        }}
-                      />
-                    </div>
-                    <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
-                      <p>
-                        <span>1</span>Enter the content here
-                      </p>
-                      <p>
-                        <span>2</span>Each content/line
-                      </p>
-                    </div>
+                <div>
+                  <div className="titleComment">
+                    <p>Content</p>
+                  </div>
+                  <div className="component-item postOption">
+                    <Select
+                      id="typeProfile"
+                      className="PostType"
+                      value={values.typeComment}
+                      onChange={handleOnchangeTypeComment}
+                      bordered={false}
+                      options={[
+                        {
+                          value: 'line',
+                          label: 'The comment is only 1 line',
+                        },
+                        {
+                          value: 'moreLine',
+                          label: 'Comment has multiple lines',
+                        },
+                      ]}
+                    />
                   </div>
                 </div>
+
+                {(values.option === 'background' || values.option === 'text/photo') &&
+                  values.typeComment === 'line' && (
+                    <div className="Text">
+                      <p className="selectPost__header">Text</p>
+                      <div style={{ position: 'relative' }} className="component-item">
+                        <div className="text" style={{ width: '100%', height: 204, overflow: 'auto' }}>
+                          <Editor
+                            value={textContent}
+                            onValueChange={(text) => {
+                              setTextContent(text);
+                            }}
+                            highlight={(text) => hightlightWithLineNumbers(text, languages.js, textContent)}
+                            padding={15}
+                            className="editor"
+                            textareaId="text"
+                            style={{
+                              background: '#f5f5f5',
+                              fontSize: 15,
+                            }}
+                          />
+                        </div>
+                        <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
+                          <p>
+                            <span style={{ marginRight: '14px' }}>1</span>Enter the content here
+                          </p>
+                          <p>
+                            <span>2</span>Each content/line
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                {(values.option === 'background' || values.option === 'text/photo') &&
+                  values.typeComment === 'moreLine' && (
+                    <div className="moreLine">
+                      <div className="moreLineComment">
+                        <button onClick={handleClick}>Add +</button>
+                      </div>
+                      <span>({values.text.length})</span>
+                    </div>
+                  )}
+
+                {values.typeComment === 'moreLine' && (
+                  <PopupCommentFB
+                    open={openComment}
+                    handleClose={handleCloseComment}
+                    data={values}
+                    handleSave={handleSave}
+                  />
+                )}
+
                 {values.option === 'text/photo' && (
                   <div className="photoOrVideo">
                     <p className="component-item__header">Photo/video</p>
@@ -434,16 +504,22 @@ const CreatePost = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                       <p>Friends</p>
                       <div className="component-item optionTag">
                         <Select
-                          name="optionTag"
+                          id="optionTag"
                           className="TagType"
-                          onChange={(event) => {
-                            changeTypeTag(event.target.value);
-                          }}
                           value={values.typeTag}
-                        >
-                          <MenuItem value="random">Randomly tag among friends</MenuItem>
-                          <MenuItem value="UID">UID list</MenuItem>
-                        </Select>
+                          onChange={changeTypeTag}
+                          bordered={false}
+                          options={[
+                            {
+                              value: 'random',
+                              label: 'Randomly tag among friends',
+                            },
+                            {
+                              value: 'UID',
+                              label: 'UID list',
+                            },
+                          ]}
+                        />
                       </div>
                       {values.typeTag === 'UID' && (
                         <div style={{ position: 'relative' }} className="component-item">
@@ -464,7 +540,7 @@ const CreatePost = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                             />
                             <div onClick={handleUIDDivClick} className={`placeholder ${UIDContent ? 'hide' : ''}`}>
                               <p>
-                                <span>1</span>Enter the content here
+                                <span style={{ marginRight: '14px' }}>1</span>Enter the content here
                               </p>
                               <p>
                                 <span>2</span>Each content/line

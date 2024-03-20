@@ -11,17 +11,22 @@ import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import { parseToNumber } from '../../../services/utils';
 import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
+import { Select } from 'antd';
+import PopupCommentFB from '../../PopupHome/PopupCommentFB/PopupCommentFB';
 
 const WatchStory = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
+  const [openComment, setOpenComment] = useState(false);
   const [values, setValues] = useState(DefaultSciptSettings['watchStory']);
   const [textContent, setTextContent] = useState('');
 
   useEffect(() => {
     if (currentSetup) {
-      if (currentSetup.text && currentSetup.text.length) {
+      if (currentSetup.text && currentSetup.text.length && currentSetup.typeComment === 'line') {
         setTextContent(currentSetup.text.join('\n'));
       }
-      setValues(currentSetup);
+      setTimeout(() => {
+        setValues(currentSetup);
+      }, 20);
     }
   }, [currentSetup]);
 
@@ -54,6 +59,21 @@ const WatchStory = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
   };
   const changeComment = (value) => {
     setValues({ ...values, isComment: value });
+  };
+  const handleOnchangeTypeComment = (value) => {
+    setValues({ ...values, typeComment: value });
+  };
+
+  const handleCloseComment = () => {
+    setOpenComment(false);
+  };
+
+  const handleClick = () => {
+    setOpenComment(true);
+  };
+
+  const handleSave = (values) => {
+    setValues(values);
   };
   const changeLike = (value) => {
     setValues({ ...values, isLike: value });
@@ -285,19 +305,62 @@ const WatchStory = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
               </div>
             </div>
             <div className="component-item comment">
-              <div className="component-item__header">
-                <input
-                  type="checkbox"
-                  name="randomComment"
-                  checked={values.isComment}
-                  onChange={(event) => {
-                    changeComment(event.target.checked);
-                  }}
-                />
-                <p>Randomly Comment</p>
-                {/* <img src={iconQuestion} alt="icon Question" /> */}
+              <div className="component-item__header headerComment">
+                <div className="titleComment">
+                  <input
+                    type="checkbox"
+                    name="randomComment"
+                    checked={values.isComment}
+                    onChange={(event) => {
+                      changeComment(event.target.checked);
+                    }}
+                  />
+                  <p>
+                    Randomly Comment <img src={iconQuestion} alt="icon Question" />
+                  </p>
+                </div>
+                {values.isComment && (
+                  <div className="PostContent">
+                    <Select
+                      id="typeProfile"
+                      className="PostContent__select PostContent__details"
+                      value={values.typeComment}
+                      onChange={handleOnchangeTypeComment}
+                      bordered={false}
+                      options={[
+                        {
+                          value: 'line',
+                          label: 'The comment is only 1 line',
+                        },
+                        {
+                          value: 'moreLine',
+                          label: 'Comment has multiple lines',
+                        },
+                      ]}
+                    />
+                  </div>
+                )}
               </div>
-              <div className={`commentContent Text ${values.isComment ? 'show' : 'hide'}`}>
+              {values.isComment && values.typeComment === 'moreLine' && (
+                <div className="moreLine">
+                  <div className="moreLineComment">
+                    <button onClick={handleClick}>Add +</button>
+                  </div>
+                  <span>({values.text.length})</span>
+                </div>
+              )}
+
+              {values.isComment && values.typeComment === 'moreLine' && (
+                <PopupCommentFB
+                  open={openComment}
+                  handleClose={handleCloseComment}
+                  data={values}
+                  handleSave={handleSave}
+                />
+              )}
+              <div
+                className={`commentContent Text ${values.isComment && values.typeComment === 'line' ? 'show' : 'hide'}`}
+              >
                 <div className="component-item " style={{ position: 'relative' }}>
                   <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
                     <Editor
@@ -317,14 +380,10 @@ const WatchStory = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                   </div>
                   <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
                     <p>
-                      <span>1</span>Enter the content here
+                      <span style={{ marginRight: '14px' }}>1</span>Enter the comment here
                     </p>
                     <p>
-                      <span>2</span>Each content/line
-                    </p>
-                    <p>
-                      <span>3</span>If the content has multiple paragraphs, each content needs to be separated by the
-                      character /
+                      <span>2</span>Each comment/line
                     </p>
                   </div>
                 </div>
