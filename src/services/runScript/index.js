@@ -29,6 +29,7 @@ import { changeAvatar } from './scriptAuto/ChangeAvatar';
 import { changeCover } from './scriptAuto/ChangeCover';
 import { twoFA } from './scriptAuto/TwoFA';
 import { trustedDevices } from './scriptAuto/TrustedDevices';
+import { changeInformation } from './scriptAuto/ChangeInfor';
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -550,6 +551,80 @@ try {
       }
     };
 
+    const scrollSmoothElementInfo = async (page, element) => {
+      try {
+        await page.evaluate(async (element) => {
+          const getRandomIntBetween = (min, max) => {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+          };
+          const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+          const smoothScrollByStep = (targetPosition, duration) => {
+            const startPosition = window.scrollY;
+            const distance = targetPosition - startPosition;
+            let startTime = null;
+    
+            const ease = (t, b, c, d) => {
+              t /= d / 2;
+              if (t < 1) return (c / 2) * t * t + b;
+              t--;
+              return (-c / 2) * (t * (t - 2) - 1) + b;
+            };
+    
+            const animation = (currentTime) => {
+              if (startTime === null) startTime = currentTime;
+              const timeElapsed = currentTime - startTime;
+              const run = ease(timeElapsed, startPosition, distance, duration);
+              window.scrollTo(0, run);
+              if (timeElapsed < duration) requestAnimationFrame(animation);
+            };
+    
+            requestAnimationFrame(animation);
+          };
+    
+          const isInViewport = (elem) => {
+            const bounding = elem.getBoundingClientRect();
+            return (
+              bounding.top >= 0 &&
+              bounding.left >= 0 &&
+              bounding.bottom <=
+                (window.innerHeight || document.documentElement.clientHeight) &&
+              bounding.right <=
+                (window.innerWidth || document.documentElement.clientWidth)
+            );
+          };
+          if (element && !isInViewport(element)) {
+            const elementRect = element.getBoundingClientRect();
+            const viewportHeight =
+              window.innerHeight || document.documentElement.clientHeight;
+            const targetPosition =
+              window.scrollY +
+              elementRect.top -
+              (elementRect.top > viewportHeight ? viewportHeight : 0);
+    
+            let currentPosition = window.scrollY;
+            while (
+              Math.abs(currentPosition - targetPosition) > 0 &&
+              !isInViewport(element)
+            ) {
+              const stepSize =
+                getRandomIntBetween(200, 600) *
+                (currentPosition > targetPosition ? -1 : 1);
+              const durationPerStep = getRandomIntBetween(1000, 2000);
+              const nextPosition = currentPosition + stepSize;
+    
+              smoothScrollByStep(nextPosition, durationPerStep);
+              await delay(getRandomIntBetween(1000,2000));
+              currentPosition = window.scrollY;
+            }
+          }
+        }, element);
+        return true;
+      } catch (error) {
+        console.log(error);
+        return false;
+      }
+    };
+
     const scrollSmooth = async (page, randomScrollTime) => {
       try {
         while(randomScrollTime > 0){
@@ -952,6 +1027,11 @@ const convertToFunc = (script, profile) => {
     case 'cover':
       return `{
               ${changeCover(script, profile)}
+            }`;
+
+    case 'information':
+      return `{
+              ${changeInformation(script, profile)}
             }`;
 
     case 'email':

@@ -1,5 +1,5 @@
 export const getInfor = (profile) => {
-  if (!profile.nameAccount || !profile.friends) {
+  if (!profile.nameAccount || profile.friends) {
     return `{
             try{
                 const checkPageIsLive = checkIsLive(page);

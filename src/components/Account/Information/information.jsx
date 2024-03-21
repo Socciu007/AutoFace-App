@@ -1,8 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState } from 'react';
 import './style.scss';
-import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
-import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
@@ -128,8 +126,6 @@ const Information = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
     }
   };
 
-  console.log('data', values);
-
   return (
     <div className="information">
       <div className="component_container">
@@ -167,10 +163,6 @@ const Information = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
                     handleClose={handleCloseBio}
                     handleSave={handleSave}
                     data={values}
-                    id={id}
-                    currentSetup={currentSetup}
-                    updateDesignScript={updateDesignScript}
-                    component={component}
                   />
                 )}
               </div>
@@ -197,10 +189,6 @@ const Information = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
                     handleClose={handleCloseWork}
                     handleSave={handleSave}
                     data={values}
-                    id={id}
-                    currentSetup={currentSetup}
-                    updateDesignScript={updateDesignScript}
-                    component={component}
                   />
                 )}
               </div>
@@ -228,10 +216,6 @@ const Information = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
                     handleClose={handleCloseHighSchool}
                     handleSave={handleSave}
                     data={values}
-                    id={id}
-                    currentSetup={currentSetup}
-                    updateDesignScript={updateDesignScript}
-                    component={component}
                   />
                 )}
               </div>
@@ -259,10 +243,6 @@ const Information = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
                     handleClose={handleCloseCollege}
                     handleSave={handleSave}
                     data={values}
-                    id={id}
-                    currentSetup={currentSetup}
-                    updateDesignScript={updateDesignScript}
-                    component={component}
                   />
                 )}
               </div>
@@ -290,10 +270,6 @@ const Information = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
                     handleSave={handleSave}
                     handleClose={handleCloseCity}
                     data={values}
-                    id={id}
-                    currentSetup={currentSetup}
-                    updateDesignScript={updateDesignScript}
-                    component={component}
                   />
                 )}
               </div>
@@ -314,17 +290,13 @@ const Information = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
                 <div className="component-item__number">
                   <button onClick={() => setOpenHometown(true)}>Add +</button>
                 </div>
-                {values.isBirthday && (
+                {values.isHometown && (
                   <PopupInformation
                     type="hometown"
                     open={openHometown}
                     handleClose={handleCloseHometown}
                     handleSave={handleSave}
                     data={values}
-                    id={id}
-                    currentSetup={currentSetup}
-                    updateDesignScript={updateDesignScript}
-                    component={component}
                   />
                 )}
               </div>
@@ -423,10 +395,6 @@ const Information = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
                     handleClose={handleCloseBirthday}
                     handleSave={handleSave}
                     data={values}
-                    id={id}
-                    currentSetup={currentSetup}
-                    updateDesignScript={updateDesignScript}
-                    component={component}
                   />
                 )}
               </div>
@@ -454,10 +422,6 @@ const Information = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
                     handleSave={handleSave}
                     handleClose={handleCloseNickname}
                     data={values}
-                    id={id}
-                    currentSetup={currentSetup}
-                    updateDesignScript={updateDesignScript}
-                    component={component}
                   />
                 )}
               </div>
