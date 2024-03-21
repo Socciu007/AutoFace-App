@@ -9,84 +9,42 @@ import 'prismjs/components/prism-javascript';
 import { MenuItem, Select } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 
-const PopupInformation = ({
-  type,
-  handleSave,
-  open,
-  handleClose,
-  data,
-  id,
-  currentSetup,
-  updateDesignScript,
-  component,
-}) => {
+const PopupInformation = ({ type, handleSave, open, handleClose, data }) => {
   const [values, setValues] = useState(data);
-  const [contentBio, setContentBio] = useState('');
-  const [contentWork, setContentWork] = useState('');
-  const [contentHighSchool, setContentHighSchool] = useState('');
-  const [contentColege, setContentColege] = useState('');
-  const [contentCity, setContentCity] = useState('');
-  const [contentHometown, setContentHometown] = useState('');
-  const [contentNickName, setContentNickName] = useState('');
-  const [day, setDay] = useState('');
-  const [month, setMonth] = useState('');
-  const [year, setYear] = useState('');
-
-  useEffect(() => {
-    if (currentSetup) {
-      if (currentSetup.bio && currentSetup.bio.length && currentSetup.typeBio === 'line') {
-        setContentBio(currentSetup.bio.join('\n'));
-      }
-      if (currentSetup.bio && currentSetup.bio.length && currentSetup.typeBio === 'moreLine') {
-        setContentBio(currentSetup.bio.join('|'));
-      }
-      if (currentSetup.work && currentSetup.work.length) {
-        setContentWork(currentSetup.work.join('\n'));
-      }
-      if (currentSetup.highSchool && currentSetup.highSchool.length) {
-        setContentHighSchool(currentSetup.highSchool.join('\n'));
-      }
-      if (currentSetup.colege && currentSetup.colege.length) {
-        setContentColege(currentSetup.colege.join('\n'));
-      }
-      if (currentSetup.city && currentSetup.city.length) {
-        setContentCity(currentSetup.city.join('\n'));
-      }
-      if (currentSetup.hometown && currentSetup.hometown.length) {
-        setContentHometown(currentSetup.hometown.join('\n'));
-      }
-      if (currentSetup.nickname && currentSetup.nickname.length) {
-        setContentNickName(currentSetup.nickname.join('\n'));
-      }
-      if (currentSetup.birthday.day && currentSetup.birthday.day.length) {
-        setDay(currentSetup.birthday.day.join('\n'));
-      }
-      if (currentSetup.birthday.month && currentSetup.birthday.month.length) {
-        setMonth(currentSetup.birthday.month.join('\n'));
-      }
-      if (currentSetup.birthday.year && currentSetup.birthday.year.length) {
-        setYear(currentSetup.birthday.year.join('\n'));
-      }
-
-      setTimeout(() => {
-        setValues(currentSetup);
-      }, 20);
-    }
-  }, [currentSetup]);
-
-  useEffect(() => {
-    updateDesignScript(values, component, id);
-  }, [values]);
+  const [contentBio, setContentBio] = useState(data.bio && data.bio.length ? data.bio.join('\n') : '');
+  const [contentWork, setContentWork] = useState(data.work && data.work.length ? data.work.join('\n') : '');
+  const [contentHighSchool, setContentHighSchool] = useState(
+    data.highSchool && data.highSchool.length ? data.highSchool.join('\n') : '',
+  );
+  const [contentColege, setContentColege] = useState(data.colege && data.colege.length ? data.colege.join('\n') : '');
+  const [contentCity, setContentCity] = useState(data.city && data.city.length ? data.city.join('\n') : '');
+  const [contentHometown, setContentHometown] = useState(
+    data.hometown && data.hometown.length ? data.hometown.join('\n') : '',
+  );
+  const [contentNickName, setContentNickName] = useState(
+    data.nickname && data.nickname.length ? data.nickname.join('\n') : '',
+  );
+  const [day, setDay] = useState(data.birthday.day && data.birthday.day.length ? data.birthday.day.join('\n') : '');
+  const [month, setMonth] = useState(
+    data.birthday.month && data.birthday.month.length ? data.birthday.month.join('\n') : '',
+  );
+  const [year, setYear] = useState(
+    data.birthday.year && data.birthday.year.length ? data.birthday.year.join('\n') : '',
+  );
 
   useEffect(() => {
     if (contentBio.length && values.typeBio === 'line') {
       setValues({ ...values, bio: contentBio.split('\n') });
     } else if (contentBio.length && values.typeBio === 'moreLine') {
-      setValues({ ...values, bio: contentBio.split('|') });
+      setValues({ ...values, bio: contentBio.split('|').map((e) => e.trim()) });
     } else {
       setValues({ ...values, bio: [] });
     }
   }, [contentBio]);
+
+  useEffect(() => {
+    setValues(data);
+  }, [data]);
 
   useEffect(() => {
     if (contentCity.length) {

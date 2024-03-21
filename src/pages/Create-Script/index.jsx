@@ -129,6 +129,8 @@ const CreateScript = () => {
   };
 
   const updateDesignScript = (value, component, id) => {
+    console.log('values ', value);
+
     const newDesign = { ...designScript };
     const index = newDesign.script.findIndex((e) => e.id == id);
     if (index >= 0) {
