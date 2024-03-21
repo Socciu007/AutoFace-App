@@ -301,11 +301,11 @@ const CreatePost = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                       options={[
                         {
                           value: 'line',
-                          label: 'The comment is only 1 line',
+                          label: 'The content is only 1 line',
                         },
                         {
                           value: 'moreLine',
-                          label: 'Comment has multiple lines',
+                          label: 'Content has multiple lines',
                         },
                       ]}
                     />

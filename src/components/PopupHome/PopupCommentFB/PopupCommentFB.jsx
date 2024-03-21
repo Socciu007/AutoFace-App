@@ -13,11 +13,34 @@ const PopupCommentFB = ({ type, handleSave, open, handleClose, data }) => {
   const [contentText, setContentText] = useState('');
   useEffect(() => {
     if (data) {
-      if (data.text && data.text.length && data.typeComment === 'moreLine') {
-        setContentText(data.text.join('|'));
-      }
-      if (data.commentStrs && data.commentStrs.length && data.typeComment === 'moreLine') {
-        setContentText(data.commentStrs.join('|'));
+      switch (type) {
+        case 'newsfeed':
+          if (data.commentStrs && data.commentStrs.length && data.typeComment === 'moreLine') {
+            setContentText(data.commentStrs.join('|'));
+          }
+          break;
+        case 'addFriend':
+          if (data.comment && data.comment.length && data.typeComment === 'moreLine') {
+            setContentText(data.comment.join('|'));
+          }
+          break;
+        case 'likeComment':
+          if (data.textComment && data.textComment.length && data.typeComment === 'moreLine') {
+            setContentText(data.textComment.join('|'));
+          }
+          break;
+        case 'joinGroup':
+          if (data.answer && data.answer.length && data.typeAnswer === 'moreLine') {
+            setContentText(data.answer.join('|'));
+          }
+          if (data.answer1 && data.answer1.length && data.typeAnswer === 'moreLine') {
+            setContentText(data.answer.join('|'));
+          }
+          break;
+        default:
+          if (data.text && data.text.length && data.typeComment === 'moreLine') {
+            setContentText(data.text.join('|'));
+          }
       }
       setTimeout(() => {
         setValues(data);
@@ -31,6 +54,18 @@ const PopupCommentFB = ({ type, handleSave, open, handleClose, data }) => {
         setValues({ ...values, commentStrs: contentText.split('|') });
       } else {
         setValues({ ...values, commentStrs: [] });
+      }
+    } else if (type === 'addFriend') {
+      if (contentText.length) {
+        setValues({ ...values, comment: contentText.split('|') });
+      } else {
+        setValues({ ...values, comment: [] });
+      }
+    } else if (type === 'likeComment') {
+      if (contentText.length) {
+        setValues({ ...values, textComment: contentText.split('|') });
+      } else {
+        setValues({ ...values, textComment: [] });
       }
     } else {
       if (contentText.length) {

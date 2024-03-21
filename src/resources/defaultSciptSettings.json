@@ -125,6 +125,7 @@
     "isLiked": false,
     "isInteract": false,
     "isComment": false,
+    "typeComment": "line",
     "comment": [],
     "stopTime": 10,
     "text": []
@@ -147,8 +148,14 @@
     "delayTimeEnd": 10,
     "isAutoAnswer": false,
     "option": "suggestions",
+    "typeAnswer": "line",
     "text": [],
-    "answer": [],
+    "answer": [[], []],
+    "selectArr": [
+      { "select": 1, "moreSelect": [1, 3] },
+      { "select": 2, "moreSelect": [2, 4] }
+    ],
+    "isAutoSelect": false,
     "lineCount": 0
   },
   "leftGroup": {
@@ -203,6 +210,7 @@
     "line": 0,
     "postID": [],
     "isComment": false,
+    "typeComment": "line",
     "photoVideoQuantityStart": 1,
     "photoVideoQuantityEnd": 2,
     "file": [],

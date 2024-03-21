@@ -1,20 +1,20 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './style.scss';
 import iconDecrease from '../../../assets/icon/icon-Decrease.svg';
 import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
 import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import { parseToNumber } from '../../../services/utils';
 import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
+import { Select } from 'antd';
+import PopupCommentFB from '../../PopupHome/PopupCommentFB/PopupCommentFB';
 
 const AddFriend = ({ onGoBackClick, id, currentSetup, component, updateDesignScript }) => {
   const initialValues = DefaultSciptSettings['addFriend'];
-
+  const [openComment, setOpenComment] = useState(false);
   const [values, setValues] = useState(initialValues);
   const [textContent, setTextContent] = useState('');
   const [commentContent, setCommentContent] = useState('');
@@ -25,10 +25,12 @@ const AddFriend = ({ onGoBackClick, id, currentSetup, component, updateDesignScr
       if (currentSetup.text && currentSetup.text.length) {
         setTextContent(currentSetup.text.join('\n'));
       }
-      if (currentSetup.comment && currentSetup.comment.length) {
+      if (currentSetup.comment && currentSetup.comment.length && currentSetup.typeComment === 'moreLine') {
         setCommentContent(currentSetup.comment.join('\n'));
       }
-      setValues(currentSetup);
+      setTimeout(() => {
+        setValues(currentSetup);
+      }, 20);
     }
   }, [currentSetup]);
 
@@ -39,12 +41,16 @@ const AddFriend = ({ onGoBackClick, id, currentSetup, component, updateDesignScr
   useEffect(() => {
     if (textContent.length) {
       setValues({ ...values, text: textContent.split('\n') });
+    } else {
+      setValues({ ...values, text: [] });
     }
   }, [textContent]);
 
   useEffect(() => {
     if (commentContent.length) {
       setValues({ ...values, comment: commentContent.split('\n') });
+    } else {
+      setValues({ ...values, comment: [] });
     }
   }, [commentContent]);
 
@@ -123,6 +129,18 @@ const AddFriend = ({ onGoBackClick, id, currentSetup, component, updateDesignScr
   const handleChangeComment = (value) => {
     setValues({ ...values, isComment: value });
   };
+  const handleOnchangeTypeComment = (value) => {
+    setValues({ ...values, comment: [], typeComment: value });
+  };
+  const handleCloseComment = () => {
+    setOpenComment(false);
+  };
+  const handleClick = () => {
+    setOpenComment(true);
+  };
+  const handleSave = (values) => {
+    setValues(values);
+  };
   const handleDivCommentClick = () => {
     document.getElementById('codeArea').focus();
   };
@@ -154,19 +172,42 @@ const AddFriend = ({ onGoBackClick, id, currentSetup, component, updateDesignScr
               <div className="addFriendContent">
                 <div className="component-item addFriendOption">
                   <Select
-                    value={values.option}
-                    onChange={(event) => changeOption(event.target.value)}
-                    name="addFriendOption"
+                    id="addFriendType"
                     className="addFriendType"
-                  >
-                    <MenuItem value="suggestions">By suggestions</MenuItem>
-                    <MenuItem value="acceptFriendRequests">Accept friend requests</MenuItem>
-                    <MenuItem value="UIDList">UID list</MenuItem>
-                    <MenuItem value="keywords">By keywords</MenuItem>
-                    <MenuItem value="groupMembers">Group members</MenuItem>
-                    <MenuItem value="friendOfFriends">Friend of friends</MenuItem>
-                    <MenuItem value="friendOfUID">Friend of UID</MenuItem>
-                  </Select>
+                    value={values.option}
+                    onChange={changeOption}
+                    bordered={false}
+                    options={[
+                      {
+                        value: 'suggestions',
+                        label: 'By suggestions',
+                      },
+                      {
+                        value: 'acceptFriendRequests',
+                        label: 'Accept friend requests',
+                      },
+                      {
+                        value: 'UIDList',
+                        label: 'UID list',
+                      },
+                      {
+                        value: 'keywords',
+                        label: 'By keywords',
+                      },
+                      {
+                        value: 'groupMembers',
+                        label: 'Group members',
+                      },
+                      {
+                        value: 'friendOfFriends',
+                        label: 'Friend of friends',
+                      },
+                      {
+                        value: 'friendOfUID',
+                        label: 'Friend of UID',
+                      },
+                    ]}
+                  />
                 </div>
                 {(values.option === 'UIDList' ||
                   values.option === 'keywords' ||
@@ -196,7 +237,7 @@ const AddFriend = ({ onGoBackClick, id, currentSetup, component, updateDesignScr
                         className={`placeholder ${textContent ? 'hide' : ''}`}
                       >
                         <p>
-                          <span>1</span>
+                          <span style={{ marginRight: '14px' }}>1</span>
                           {placeholderText.split('\n')[0]}
                         </p>
                         <p>
@@ -463,37 +504,81 @@ const AddFriend = ({ onGoBackClick, id, currentSetup, component, updateDesignScr
                         />
                         <p>Comment</p>
                       </div>
-                      <div
-                        style={{ position: 'relative' }}
-                        className={`component-item  ${values.isComment ? 'show' : 'hide'}`}
-                      >
-                        <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="textComment">
-                          <Editor
-                            value={commentContent}
-                            onValueChange={(text) => {
-                              setCommentContent(text);
-                            }}
-                            highlight={(code) => hightlightWithLineNumbers(code, languages.js, commentContent)}
-                            padding={15}
-                            className="editor"
-                            textareaId="codeArea"
-                            style={{
-                              background: '#fff',
-                              fontSize: 15,
-                            }}
+                      {values.isComment && (
+                        <div className="PostContent">
+                          <Select
+                            id="typeProfile"
+                            className="PostContent__select PostContent__details"
+                            value={values.typeComment}
+                            onChange={handleOnchangeTypeComment}
+                            bordered={false}
+                            options={[
+                              {
+                                value: 'line',
+                                label: 'The comment is only 1 line',
+                              },
+                              {
+                                value: 'moreLine',
+                                label: 'Comment has multiple lines',
+                              },
+                            ]}
                           />
                         </div>
-                        <div className={`placeholder ${commentContent ? 'hide' : ''}`} onClick={handleDivCommentClick}>
-                          <p>
-                            <span>1</span>
-                            <span>Enter the content here</span>
-                          </p>
-                          <p>
-                            <span>2</span>
-                            <span>Each content/line</span>
-                          </p>
+                      )}
+                      {values.isComment && values.typeComment === 'moreLine' && (
+                        <div className="moreLine">
+                          <div className="moreLineComment">
+                            <button onClick={handleClick}>Add +</button>
+                          </div>
+                          <span>({values.comment.length})</span>
                         </div>
-                      </div>
+                      )}
+
+                      {values.isComment && values.typeComment === 'moreLine' && (
+                        <PopupCommentFB
+                          type="addFriend"
+                          open={openComment}
+                          handleClose={handleCloseComment}
+                          data={values}
+                          handleSave={handleSave}
+                        />
+                      )}
+                      {values.isComment && values.typeComment === 'line' && (
+                        <div
+                          style={{ position: 'relative' }}
+                          className={`component-item  ${values.isComment ? 'show' : 'hide'}`}
+                        >
+                          <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="textComment">
+                            <Editor
+                              value={commentContent}
+                              onValueChange={(text) => {
+                                setCommentContent(text);
+                              }}
+                              highlight={(code) => hightlightWithLineNumbers(code, languages.js, commentContent)}
+                              padding={15}
+                              className="editor"
+                              textareaId="codeArea"
+                              style={{
+                                background: '#fff',
+                                fontSize: 15,
+                              }}
+                            />
+                          </div>
+                          <div
+                            className={`placeholder ${commentContent ? 'hide' : ''}`}
+                            onClick={handleDivCommentClick}
+                          >
+                            <p>
+                              <span style={{ marginRight: '12.5px' }}>1</span>
+                              <span>Enter the content here</span>
+                            </p>
+                            <p>
+                              <span>2</span>
+                              <span>Each content/line</span>
+                            </p>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}

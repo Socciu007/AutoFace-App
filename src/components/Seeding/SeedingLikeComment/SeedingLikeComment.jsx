@@ -11,6 +11,8 @@ import 'prismjs/components/prism-javascript';
 import './style.scss';
 import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
 import { useDropzone } from 'react-dropzone';
+import { Select } from 'antd';
+import PopupCommentFB from '../../PopupHome/PopupCommentFB/PopupCommentFB';
 
 const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, updateDesignScript }) => {
   const [likeComment, setLikeComment] = useState(DefaultSciptSettings['likeComment']);
@@ -18,7 +20,7 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
   const [UIDPost, setUIDPost] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const [isFileSelected, setIsFileSelected] = useState(false);
-  const [line, setLine] = useState(0);
+  const [openComment, setOpenComment] = useState(false);
 
   const { getRootProps, getInputProps } = useDropzone({
     maxFiles: 10,
@@ -48,10 +50,12 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
       if (currentSetup.postID && currentSetup.postID.length) {
         setUIDPost(currentSetup.postID.join('\n'));
       }
-      if (currentSetup.textComment && currentSetup.textComment.length) {
+      if (currentSetup.textComment && currentSetup.textComment.length && currentSetup.typeComment === 'line') {
         setTextComment(currentSetup.textComment.join('\n'));
       }
-      setLikeComment(currentSetup);
+      setTimeout(() => {
+        setLikeComment(currentSetup);
+      }, 20);
     }
   }, [currentSetup]);
 
@@ -243,95 +247,26 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
     }
   };
 
-  //comment
-  // const handleCommentStart = (type) => {
-  //   if (type === 'increase') {
-  //     setLikeComment({
-  //       ...likeComment,
-  //       commentStart: likeComment.commentStart + 1,
-  //     });
-  //   } else {
-  //     setLikeComment({
-  //       ...likeComment,
-  //       commentStart: likeComment.commentStart > 0 ? likeComment.commentStart - 1 : 0,
-  //     });
-  //   }
-  // };
-  // const onChangeCommentStart = (e) => {
-  //   const decimalRegex = /^[+-]?\d*\.?\d+$/;
-  //   const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
-  //   if (!isNaN(value) && decimalRegex.test(value)) {
-  //     setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
-  //   }
-  // };
+  const handleOnchangeTypeComment = (value) => {
+    setLikeComment({ ...likeComment, typeComment: value, textComment: [] });
+  };
 
-  // const handleCommentEnd = (type) => {
-  //   if (type === 'increase') {
-  //     setLikeComment({
-  //       ...likeComment,
-  //       commentEnd: likeComment.commentEnd + 1,
-  //     });
-  //   } else {
-  //     setLikeComment({
-  //       ...likeComment,
-  //       commentEnd: likeComment.commentEnd > 0 ? likeComment.commentEnd - 1 : 0,
-  //     });
-  //   }
-  // };
-  // const onChangeCommentEnd = (e) => {
-  //   const decimalRegex = /^[+-]?\d*\.?\d+$/;
-  //   const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
-  //   if (!isNaN(value) && decimalRegex.test(value)) {
-  //     setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
-  //   }
-  // };
+  const handleCloseComment = () => {
+    setOpenComment(false);
+  };
+
+  const handleClick = () => {
+    setOpenComment(true);
+  };
+
+  const handleSave = (values) => {
+    setLikeComment(values);
+  };
 
   //post quantity
   const changeComment = (value) => {
     setLikeComment({ ...likeComment, isComment: value });
   };
-  const handlePhotoVideoStart = (type) => {
-    if (type === 'increase') {
-      setLikeComment({
-        ...likeComment,
-        photoVideoQuantityStart: likeComment.photoVideoQuantityStart + 1,
-      });
-    } else {
-      setLikeComment({
-        ...likeComment,
-        photoVideoQuantityStart: likeComment.photoVideoQuantityStart > 0 ? likeComment.photoVideoQuantityStart - 1 : 0,
-      });
-    }
-  };
-  const onChangePhotoVideoStart = (e) => {
-    const decimalRegex = /^[+-]?\d*\.?\d+$/;
-    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
-    if (!isNaN(value) && decimalRegex.test(value)) {
-      setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
-    }
-  };
-
-  const handlePhotoVideoEnd = (type) => {
-    if (type === 'increase') {
-      setLikeComment({
-        ...likeComment,
-        photoVideoQuantityEnd: likeComment.photoVideoQuantityEnd + 1,
-      });
-    } else {
-      setLikeComment({
-        ...likeComment,
-        photoVideoQuantityEnd: likeComment.photoVideoQuantityEnd > 0 ? likeComment.photoVideoQuantityEnd - 1 : 0,
-      });
-    }
-  };
-  const onChangePhotoVideoEnd = (e) => {
-    const decimalRegex = /^[+-]?\d*\.?\d+$/;
-    const value = e.target.value && e.target.value !== '' ? e.target.value : 0;
-    if (!isNaN(value) && decimalRegex.test(value)) {
-      setLikeComment({ ...likeComment, [e.target.name]: parseInt(value) });
-    }
-  };
-
   //tag friend
   const changeTag = (value) => {
     setLikeComment({ ...likeComment, isTag: value });
@@ -564,154 +499,162 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
                 <p>Comment</p>
               </div>
             </div>
-            <div
-              className="-option-boost-like -option-boost-comment"
-              style={{ display: likeComment.isComment ? 'block' : 'none' }}
-            >
-              <p>Text</p>
-              <div className="-option-boost-comment__wrapper">
-                <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
-                  <Editor
-                    value={textComment}
-                    onValueChange={handleOnchangeText}
-                    highlight={(textContent) => hightlightWithLineNumbers(textContent, languages.js, textComment)}
-                    padding={15}
-                    className="editor"
-                    textareaId="textComment"
-                    style={{
-                      background: '#f5f5f5',
-                      fontSize: 15,
-                    }}
-                  />
+            {likeComment.isComment && (
+              <div className="commentAll">
+                <div
+                  className="-option-boost-like -option-boost-comment"
+                  style={{ display: likeComment.isComment ? 'block' : 'none' }}
+                >
+                  {likeComment.isComment && (
+                    <div className="PostContent">
+                      <Select
+                        id="typeProfile"
+                        className="PostContent__select PostContent__details"
+                        value={likeComment.typeComment}
+                        onChange={handleOnchangeTypeComment}
+                        bordered={false}
+                        options={[
+                          {
+                            value: 'line',
+                            label: 'The comment is only 1 line',
+                          },
+                          {
+                            value: 'moreLine',
+                            label: 'Comment has multiple lines',
+                          },
+                        ]}
+                      />
+                    </div>
+                  )}
+                  {likeComment.isComment && likeComment.typeComment === 'moreLine' && (
+                    <div className="moreLine">
+                      <div className="moreLineComment">
+                        <button onClick={handleClick}>Add +</button>
+                      </div>
+                      <span>({likeComment.textComment.length})</span>
+                    </div>
+                  )}
+
+                  {likeComment.isComment && likeComment.typeComment === 'moreLine' && (
+                    <PopupCommentFB
+                      type="likeComment"
+                      open={openComment}
+                      handleClose={handleCloseComment}
+                      data={likeComment}
+                      handleSave={handleSave}
+                    />
+                  )}
+                  {likeComment.isComment && likeComment.typeComment === 'line' && (
+                    <div className="-option-boost-comment__wrapper">
+                      <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
+                        <Editor
+                          value={textComment}
+                          onValueChange={handleOnchangeText}
+                          highlight={(textContent) => hightlightWithLineNumbers(textContent, languages.js, textComment)}
+                          padding={15}
+                          className="editor"
+                          textareaId="textComment"
+                          style={{
+                            background: '#f5f5f5',
+                            fontSize: 15,
+                          }}
+                        />
+                      </div>
+                      <div
+                        className="-option-boost-comment__wrapper__content"
+                        onClick={handleWriteText}
+                        style={{ display: textComment ? 'none' : 'inline' }}
+                      >
+                        <p>
+                          <span style={{ marginRight: '2px' }}>1</span>
+                          <div>Enter the content here</div>
+                        </p>
+                        <p>
+                          <span>2</span>
+                          <div>Each content/line</div>
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div
-                  className="-option-boost-comment__wrapper__content"
-                  onClick={handleWriteText}
-                  style={{ display: textComment ? 'none' : 'inline' }}
+                  className="-option-boost-like -option-photo-video"
+                  style={{ display: likeComment.isComment ? 'block' : 'none' }}
                 >
-                  <p>
-                    <span style={{ marginRight: '2px' }}>1</span>
-                    <div>Enter the content here</div>
-                  </p>
-                  <p>
-                    <span>2</span>
-                    <div>Each content/line</div>
-                  </p>
+                  <h1>Photo/Video</h1>
                 </div>
-              </div>
-            </div>
-            <div
-              className="-option-boost-like -option-photo-video"
-              style={{ display: likeComment.isComment ? 'block' : 'none' }}
-            >
-              <h1>Photo/Video</h1>
-              {/* <div className="-option-boost-like">
-                <p>Quantity:</p>
-                <div className="-option-boost-like__number">
-                  <div className="-option-boost-like__number__icon">
-                    <div style={{ marginBottom: '2px' }} onClick={() => handlePhotoVideoStart('increase')}>
-                      <img src={up} alt="up" width={10} height={7} />
+
+                <div
+                  {...getRootProps({ className: '-option-boost-like dragVideoOrPhoto' })}
+                  style={{ display: likeComment.isComment ? 'flex' : 'none' }}
+                >
+                  <img src={drag} alt="icon-drag" />
+                  <span>Drag the photo/video folder here</span>
+                  <input {...getInputProps()} />
+                </div>
+                {likeComment.file.length > 0 && likeComment.isComment && (
+                  <div className="folderPhoto">
+                    <p>
+                      <span>Folder:</span>
+                      <div style={{ display: 'flex', flexDirection: 'column', color: 'black' }}>
+                        {likeComment.file.map((filePath, index) => (
+                          <p key={index}>{filePath.replace(/^.*[\\/]/, '')}</p>
+                        ))}
+                      </div>
+                    </p>
+                    <img src={deleted} alt="icon-delete" onClick={handleDeleteButtonClick} />
+                  </div>
+                )}
+
+                <div className="-option-boost-like -option-photo-video">
+                  <div className="-option-photo-video__checkbox">
+                    <input
+                      type="checkbox"
+                      name="isTag"
+                      checked={likeComment.isTag}
+                      onChange={(event) => changeTag(event.target.checked)}
+                    />
+                    <h1>Tag friends</h1>
+                  </div>
+                  <div className="-option-boost-like" style={{ display: likeComment.isTag ? 'flex' : 'none' }}>
+                    <p>Number of friends:</p>
+                    <div className="-option-boost-like__number">
+                      <div className="-option-boost-like__number__icon">
+                        <div style={{ marginBottom: '2px' }} onClick={() => handleTagFriendStart('increase')}>
+                          <img src={up} alt="up" width={10} height={7} />
+                        </div>
+                        <div style={{ marginTop: '2px' }} onClick={() => handleTagFriendStart('des')}>
+                          <img src={down} alt="down" width={10} height={7} />
+                        </div>
+                      </div>
+                      <input
+                        type="text"
+                        name="tagFriendStart"
+                        value={likeComment.tagFriendStart}
+                        onChange={onChangeTagFriendStart}
+                      />
                     </div>
-                    <div style={{ marginTop: '2px' }} onClick={() => handlePhotoVideoStart('des')}>
-                      <img src={down} alt="down" width={10} height={7} />
+                    <span>to</span>
+                    <div className="-option-boost-like__number">
+                      <div className="-option-boost-like__number__icon">
+                        <div style={{ marginBottom: '2px' }} onClick={() => handleTagFriendEnd('increase')}>
+                          <img src={up} alt="up" width={10} height={7} />
+                        </div>
+                        <div style={{ marginTop: '2px' }} onClick={() => handleTagFriendEnd('des')}>
+                          <img src={down} alt="down" width={10} height={7} />
+                        </div>
+                      </div>
+                      <input
+                        type="text"
+                        name="tagFriendEnd"
+                        value={likeComment.tagFriendEnd}
+                        onChange={onChangeTagFriendEnd}
+                      />
                     </div>
                   </div>
-                  <input
-                    type="text"
-                    name="photoVideoQuantityStart"
-                    value={likeComment.photoVideoQuantityStart}
-                    onChange={onChangePhotoVideoStart}
-                  />
                 </div>
-                <span>to</span>
-                <div className="-option-boost-like__number">
-                  <div className="-option-boost-like__number__icon">
-                    <div style={{ marginBottom: '2px' }} onClick={() => handlePhotoVideoEnd('increase')}>
-                      <img src={up} alt="up" width={10} height={7} />
-                    </div>
-                    <div style={{ marginTop: '2px' }} onClick={() => handlePhotoVideoEnd('des')}>
-                      <img src={down} alt="down" width={10} height={7} />
-                    </div>
-                  </div>
-                  <input
-                    type="text"
-                    name="photoVideoQuantityEnd"
-                    value={likeComment.photoVideoQuantityEnd}
-                    onChange={onChangePhotoVideoEnd}
-                  />
-                </div>
-              </div> */}
-            </div>
-            {/* <div className="-option-boost-like dragVideoOrPhoto" onClick={handleFile}> */}
-            <div
-              {...getRootProps({ className: '-option-boost-like dragVideoOrPhoto' })}
-              style={{ display: likeComment.isComment ? 'flex' : 'none' }}
-            >
-              <img src={drag} alt="icon-drag" />
-              <span>Drag the photo/video folder here</span>
-              <input {...getInputProps()} />
-            </div>
-            {likeComment.file.length > 0 && likeComment.isComment && (
-              <div className="folderPhoto">
-                <p>
-                  <span>Folder:</span>
-                  <div style={{ display: 'flex', flexDirection: 'column', color: 'black' }}>
-                    {likeComment.file.map((filePath, index) => (
-                      <p key={index}>{filePath.replace(/^.*[\\/]/, '')}</p>
-                    ))}
-                  </div>
-                </p>
-                <img src={deleted} alt="icon-delete" onClick={handleDeleteButtonClick} />
               </div>
             )}
-
-            <div className="-option-boost-like -option-photo-video">
-              <div className="-option-photo-video__checkbox">
-                <input
-                  type="checkbox"
-                  name="isTag"
-                  checked={likeComment.isTag}
-                  onChange={(event) => changeTag(event.target.checked)}
-                />
-                <h1>Tag friends</h1>
-              </div>
-              <div className="-option-boost-like" style={{ display: likeComment.isTag ? 'flex' : 'none' }}>
-                <p>Number of friends:</p>
-                <div className="-option-boost-like__number">
-                  <div className="-option-boost-like__number__icon">
-                    <div style={{ marginBottom: '2px' }} onClick={() => handleTagFriendStart('increase')}>
-                      <img src={up} alt="up" width={10} height={7} />
-                    </div>
-                    <div style={{ marginTop: '2px' }} onClick={() => handleTagFriendStart('des')}>
-                      <img src={down} alt="down" width={10} height={7} />
-                    </div>
-                  </div>
-                  <input
-                    type="text"
-                    name="tagFriendStart"
-                    value={likeComment.tagFriendStart}
-                    onChange={onChangeTagFriendStart}
-                  />
-                </div>
-                <span>to</span>
-                <div className="-option-boost-like__number">
-                  <div className="-option-boost-like__number__icon">
-                    <div style={{ marginBottom: '2px' }} onClick={() => handleTagFriendEnd('increase')}>
-                      <img src={up} alt="up" width={10} height={7} />
-                    </div>
-                    <div style={{ marginTop: '2px' }} onClick={() => handleTagFriendEnd('des')}>
-                      <img src={down} alt="down" width={10} height={7} />
-                    </div>
-                  </div>
-                  <input
-                    type="text"
-                    name="tagFriendEnd"
-                    value={likeComment.tagFriendEnd}
-                    onChange={onChangeTagFriendEnd}
-                  />
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>

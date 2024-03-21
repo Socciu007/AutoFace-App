@@ -128,8 +128,6 @@ const Information = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
     }
   };
 
-  console.log('data', values);
-
   return (
     <div className="information">
       <div className="component_container">

@@ -34,8 +34,11 @@ const PopupInformation = ({
 
   useEffect(() => {
     if (currentSetup) {
-      if (currentSetup.bio && currentSetup.bio.length) {
+      if (currentSetup.bio && currentSetup.bio.length && currentSetup.typeBio === 'line') {
         setContentBio(currentSetup.bio.join('\n'));
+      }
+      if (currentSetup.bio && currentSetup.bio.length && currentSetup.typeBio === 'moreLine') {
+        setContentBio(currentSetup.bio.join('|'));
       }
       if (currentSetup.work && currentSetup.work.length) {
         setContentWork(currentSetup.work.join('\n'));
