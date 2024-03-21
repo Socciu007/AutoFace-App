@@ -498,24 +498,17 @@ export const changeInformation = (script, account) => {
             break;
           case "specific":
             if(script.birthday.day && script.birthday.day.length){
-                logger(script.birthday.day  .length);
                 day = script.birthday.day[getRandomIntBetween(0, script.birthday.day.length)];
-                logger(day);
             }
             if(script.birthday.month && script.birthday.month.length){
-                logger(script.birthday.month.length);
                 month = script.birthday.month[getRandomIntBetween(0, script.birthday.month.length)];
-                logger(month);
             }
             if(script.birthday.year && script.birthday.year.length){
-                logger(script.birthday.year.length);
                 year = script.birthday.year[getRandomIntBetween(0, script.birthday.year.length)];
-                logger(year);
             }
             break;
         }
-
-return;
+        
         const elDay = await getElement(page,'[id="day"]');
         if(elDay){
             await elDay.click();
