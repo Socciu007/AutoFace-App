@@ -12,17 +12,18 @@ import 'prismjs/components/prism-javascript';
 import { parseToNumber } from '../../../services/utils.js';
 import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
 import { Select } from 'antd';
-import PopupCommentFB from '../../PopupHome/PopupCommentFB/PopupCommentFB.jsx';
+import PopupAnswer from '../../PopupHome/PopupAnswer/PopupAnswer.jsx';
+import { Store } from 'react-notifications-component';
+import notification from '../../../resources/notification.json';
 const JoinGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
   const [values, setValues] = useState(DefaultSciptSettings['joinGroup']);
   const [answerContent, setAnswerContent] = useState([]);
   const [textContent, setTextContent] = useState('');
-  const [openAnswer, setOpenAnswer] = useState(false);
+  const [openAnswer, setOpenAnswer] = useState(null);
 
   useEffect(() => {
     if (currentSetup) {
       if (currentSetup.text && currentSetup.text.length) {
-        console.log(currentSetup.text.length);
         setTextContent(currentSetup.text.join('\n'));
       }
       if (currentSetup.answer && currentSetup.typeAnswer === 'line') {
@@ -47,18 +48,15 @@ const JoinGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, compon
 
   useEffect(() => {
     if (textContent.length) {
-      setValues({ ...values, text: textContent.split('\n'), lineCount: textContent.split('\n').length });
+      setValues({ ...values, text: textContent.split('\n') });
+    } else {
+      setValues({ ...values, text: [] });
     }
   }, [textContent]);
 
   useEffect(() => {
-    let updateAnswer = [...values.answer];
-    for (let i = 0; i < answerContent.length; i++) {
-      if (answerContent[i].length) {
-        updateAnswer[i] = answerContent[i].split('\n');
-      }
-    }
-    setValues({ ...values, answer: updateAnswer });
+    const updatedAnswerContent = answerContent.map((value) => value.split('\n'));
+    setValues({ ...values, answer: updatedAnswerContent });
   }, [answerContent]);
 
   const changeOption = (value) => {
@@ -99,8 +97,30 @@ const JoinGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, compon
 
   const handleAddQuestion = () => {
     const newAnswer = [...answerContent];
-    newAnswer.push([]);
-    setAnswerContent(newAnswer);
+    if (newAnswer.length < 9) {
+      newAnswer.push('');
+      setAnswerContent(newAnswer);
+    } else {
+      Store.addNotification({
+        ...notification,
+        type: 'warning',
+        message: 'Maximum number of questions!',
+      });
+    }
+  };
+
+  const handleAddQuestions = () => {
+    const newAnswer = [...values.answer];
+    if (newAnswer.length < 9) {
+      newAnswer.push([]);
+      setValues({ ...values, answer: newAnswer });
+    } else {
+      Store.addNotification({
+        ...notification,
+        type: 'warning',
+        message: 'Maximum number of questions!',
+      });
+    }
   };
 
   const handleDivKeywordClick = () => {
@@ -111,7 +131,7 @@ const JoinGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, compon
     const id = 'answer' + index;
     const element = document.getElementById(id);
     if (element) {
-      element.focus();
+      // element.focus();
     }
   };
 
@@ -128,15 +148,22 @@ const JoinGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, compon
   };
 
   const handleCloseComment = () => {
-    setOpenAnswer(false);
+    setOpenAnswer(null);
   };
 
-  const handleClick = () => {
-    setOpenAnswer(true);
+  const handleClick = (index) => {
+    setOpenAnswer(index);
   };
 
   const handleSave = (values) => {
     setValues(values);
+  };
+
+  const onValueChange = (text, index) => {
+    const answers = text;
+    const newAnswerContent = [...answerContent];
+    newAnswerContent[index] = answers;
+    setAnswerContent(newAnswerContent);
   };
 
   const hightlightWithLineNumbers = (input, language, content) =>
@@ -144,6 +171,7 @@ const JoinGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, compon
       .split('\n')
       .map((line, i) => `<span class='editorLineNumber ${content ? '' : 'hide'}'>${i + 1}</span>${line}`)
       .join('\n');
+
   return (
     <div className="joinGroup">
       <div className="component_container">
@@ -300,10 +328,10 @@ const JoinGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, compon
                         <div className="Keyword_Header">
                           {values.option === 'keywords' && <p>Keyword list</p>}
                           {values.option === 'UID' && <p>UID list</p>}
-                          <span>({values.lineCount})</span>
+                          <span>({values.text.length})</span>
                         </div>
                         <div className="component-item " style={{ position: 'relative' }}>
-                          <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="keywordText">
+                          <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="keywordMore">
                             <Editor
                               value={textContent}
                               onValueChange={(text) => {
@@ -322,7 +350,7 @@ const JoinGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, compon
 
                           <div onClick={handleDivKeywordClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
                             <p>
-                              <span>1</span>Enter the keyword here
+                              <span style={{ marginRight: '14px' }}>1</span>Enter the keyword here
                             </p>
                             <p>
                               <span>2</span>Each keyword/line
@@ -362,25 +390,27 @@ const JoinGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, compon
                           />
                         </div>
                       )}
-                      {values.typeAnswer === 'moreLine' && (
-                        <div className="moreLine">
-                          <div className="moreLineComment">
-                            <button onClick={handleClick}>Add +</button>
-                          </div>
-                          <span>({values.text.length})</span>
-                        </div>
-                      )}
-
-                      {values.isAutoAnswer && values.typeAnswer === 'moreLine' && (
-                        <PopupCommentFB
-                          type="joinGroup"
-                          open={openAnswer}
-                          handleClose={handleCloseComment}
-                          data={values}
-                          handleSave={handleSave}
-                        />
-                      )}
+                      {values.typeAnswer === 'moreLine' &&
+                        values.answer.map((value, index) => (
+                          <>
+                            <div className="moreLine" key={index}>
+                              <p style={{ width: '50%' }}>Question {index + 1}:</p>
+                              <div className="moreLineComment" style={{ width: '80%', marginRight: '6px' }}>
+                                <button onClick={() => handleClick(index)}>Add +</button>
+                              </div>
+                              <span>({value.length})</span>
+                            </div>
+                            <PopupAnswer
+                              type={`Question ${index + 1}`}
+                              open={openAnswer === index}
+                              handleClose={handleCloseComment}
+                              data={values}
+                              handleSave={handleSave}
+                            />
+                          </>
+                        ))}
                       {values.isAutoAnswer &&
+                        values.typeAnswer === 'line' &&
                         answerContent.map((value, index) => {
                           return (
                             <div style={{ position: 'relative' }} className={`component-item  answerLine`} key={index}>
@@ -390,13 +420,9 @@ const JoinGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, compon
 
                               <div style={{ width: '100%', height: 93, overflow: 'auto' }} className="AutoAnswerText">
                                 <Editor
-                                  value={answerContent[index]}
-                                  onValueChange={(text) =>
-                                    setAnswerContent([...answerContent, { ...answerContent[index], text }])
-                                  }
-                                  highlight={(text) =>
-                                    hightlightWithLineNumbers(text, languages.js, answerContent[index])
-                                  }
+                                  value={value ? value : ''}
+                                  onValueChange={(text) => onValueChange(text, index)}
+                                  highlight={(text) => hightlightWithLineNumbers(text, languages.js, value)}
                                   padding={15}
                                   className="editor"
                                   textareaId={`answer${index}`}
@@ -408,7 +434,7 @@ const JoinGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, compon
                               </div>
                               <div
                                 onClick={handleDivAnswerClick(index)}
-                                className={`placeholder ${answerContent[index] ? 'hide' : ''}`}
+                                className={`placeholder ${value ? 'hide' : ''}`}
                               >
                                 <p>
                                   <span style={{ marginRight: '14px' }}>1</span>Enter the answer here
@@ -427,8 +453,16 @@ const JoinGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, compon
                           </div>
                         </div>
                       )}
+                      {values.isAutoAnswer && values.typeAnswer === 'moreLine' && (
+                        <div className="moreLine" style={{ gap: '20px' }}>
+                          <div className="moreLineComment">
+                            <button onClick={handleAddQuestions}>Add question +</button>
+                          </div>
+                          <span>({values.answer.length})</span>
+                        </div>
+                      )}
                     </div>
-                    <div className="AutoAnswerContent">
+                    {/* <div className="AutoAnswerContent">
                       <div className="AutoAnswer_Header">
                         <input
                           type="checkbox"
@@ -493,7 +527,7 @@ const JoinGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, compon
                           </div>
                         </div>
                       )}
-                    </div>
+                    </div> */}
                   </div>
                 )}
               </div>

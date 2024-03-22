@@ -275,6 +275,9 @@
               cursor: pointer;
             }
           }
+          span {
+            width: 30px;
+          }
         }
 
         .answerLine {
@@ -299,6 +302,44 @@
           margin-bottom: 0.2em;
         }
       }
+      .keywordMore {
+        position: relative;
+        border-radius: 5px;
+        border: 1px dashed rgba(1, 22, 43, 0.2);
+        scrollbar-width: none;
+        &::-webkit-scrollbar {
+          display: none;
+        }
+        .editor {
+          min-width: 100%;
+          min-height: 100%;
+          float: left;
+          font-family: 'GoogleSans';
+          -webkit-text-fill-color: #333;
+        }
+
+        .editor #keyword {
+          outline: none;
+          padding-left: 9.5% !important;
+          padding-top: 4% !important;
+        }
+
+        .editor pre {
+          padding-left: 9.5% !important;
+          padding-top: 4% !important;
+          width: 100%;
+        }
+
+        .editor .editorLineNumber {
+          position: absolute;
+          left: 0px;
+          color: #cccccc;
+          text-align: right;
+          width: 6%;
+          font-weight: 100;
+          opacity: 0.5 !important;
+        }
+      }
       .keywordText,
       .AutoAnswerText {
         position: relative;
@@ -317,8 +358,14 @@
         }
 
         .editor #keyword,
-        .editor #answer,
-        .editor #answer1 {
+        .editor #answer0,
+        .editor #answer1,
+        .editor #answer2,
+        .editor #answer3,
+        .editor #answer4,
+        .editor #answer5,
+        .editor #answer6,
+        .editor #answer7 {
           outline: none;
           padding-left: 9.5% !important;
           padding-top: 2.3% !important;
