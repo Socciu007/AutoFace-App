@@ -33,6 +33,8 @@ import { changeInformation } from './scriptAuto/ChangeInfor';
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+let emails = [];
+
 const splitToChunks = (array, length, thread) => {
   const size = (length / thread) | 0;
   console.log(size);
@@ -111,6 +113,12 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
       }
     }
   }
+
+  const isfuncEmail = arrfunction.find((e) => e.type == 'email');
+  if (isfuncEmail) {
+    emails = [];
+  }
+
   for (let i = 0; i < settings.countLoop; i++) {
     await Promise.map(
       results,
@@ -223,7 +231,6 @@ const runCode = async (profile, profileSelected, index, dispatch, arrfunction, s
       if (browserData && browserData.data) {
         dispatch(updateProfile({ ...profile, script: scriptDesign.id, status: 'running' }));
         dispatch(removeProfile(profile));
-        removeProfile;
         const positionBrowser = await getPosition(index);
         const strCode = `
 
@@ -1036,7 +1043,7 @@ const convertToFunc = (script, profile) => {
 
     case 'email':
       return `{
-          ${changeEmail(script, profile)}
+          ${changeEmail(script, profile, emails)}
         }`;
     case 'deletePhone':
       return `{
