@@ -131,7 +131,7 @@ const JoinGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, compon
     const id = 'answer' + index;
     const element = document.getElementById(id);
     if (element) {
-      // element.focus();
+      element.focus();
     }
   };
 
@@ -433,7 +433,7 @@ const JoinGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, compon
                                 />
                               </div>
                               <div
-                                onClick={handleDivAnswerClick(index)}
+                                onClick={() => handleDivAnswerClick(index)}
                                 className={`placeholder ${value ? 'hide' : ''}`}
                               >
                                 <p>
