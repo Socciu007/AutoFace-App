@@ -129,7 +129,7 @@ const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
   };
 
   const handleOnchangeTypeComment = (value) => {
-    setWatchVideoData({ ...watchVideoData, typeComment: value });
+    setWatchVideoData({ ...watchVideoData, typeComment: value, text: [] });
   };
 
   const handleSave = (watchVideoData) => {

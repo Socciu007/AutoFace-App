@@ -14,62 +14,63 @@ const PopupAnswer = ({ type, handleSave, open, handleClose, data }) => {
   useEffect(() => {
     if (data) {
       if (type === 'Question 1') {
-        if (data.answer && data.answer.length && data.typeComment === 'moreLine') {
+        if (data.answer && data.answer.length && data.typeAnswer === 'moreLine') {
           setContentText(data.answer[0].join('|'));
         }
       }
 
       if (type === 'Question 2') {
-        if (data.answer && data.answer.length && data.typeComment === 'moreLine') {
+        if (data.answer && data.answer.length && data.typeAnswer === 'moreLine') {
           setContentText(data.answer[1].join('|'));
         }
       }
 
       if (type === 'Question 3') {
-        if (data.answer && data.answer.length && data.typeComment === 'moreLine') {
+        if (data.answer && data.answer.length && data.typeAnswer === 'moreLine') {
           setContentText(data.answer[2].join('|'));
         }
       }
 
       if (type === 'Question 4') {
-        if (data.answer && data.answer.length && data.typeComment === 'moreLine') {
+        if (data.answer && data.answer.length && data.typeAnswer === 'moreLine') {
           setContentText(data.answer[3].join('|'));
         }
       }
 
       if (type === 'Question 5') {
-        if (data.answer && data.answer.length && data.typeComment === 'moreLine') {
+        if (data.answer && data.answer.length && data.typeAnswer === 'moreLine') {
           setContentText(data.answer[4].join('|'));
         }
       }
       if (type === 'Question 6') {
-        if (data.answer && data.answer.length && data.typeComment === 'moreLine') {
+        if (data.answer && data.answer.length && data.typeAnswer === 'moreLine') {
           setContentText(data.answer[5].join('|'));
         }
       }
       if (type === 'Question 7') {
-        if (data.answer && data.answer.length && data.typeComment === 'moreLine') {
+        if (data.answer && data.answer.length && data.typeAnswer === 'moreLine') {
           setContentText(data.answer[6].join('|'));
         }
       }
 
       if (type === 'Question 8') {
-        if (data.answer && data.answer.length && data.typeComment === 'moreLine') {
+        if (data.answer && data.answer.length && data.typeAnswer === 'moreLine') {
           setContentText(data.answer[7].join('|'));
         }
       }
 
       if (type === 'Question 9') {
-        if (data.answer && data.answer.length && data.typeComment === 'moreLine') {
+        if (data.answer && data.answer.length && data.typeAnswer === 'moreLine') {
           setContentText(data.answer[8].join('|'));
         }
       }
 
       if (type === 'Question 10') {
-        if (data.answer && data.answer.length && data.typeComment === 'moreLine') {
+        if (data.answer && data.answer.length && data.typeAnswer === 'moreLine') {
           setContentText(data.answer[10].join('|'));
         }
       }
+      console.log('content', contentText);
 
       setTimeout(() => {
         setValues(data);

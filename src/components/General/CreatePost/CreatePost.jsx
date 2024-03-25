@@ -115,7 +115,7 @@ const CreatePost = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
   };
 
   const handleOnchangeTypeComment = (value) => {
-    setValues({ ...values, typeComment: value });
+    setValues({ ...values, typeComment: value, text: [] });
   };
 
   const handleCloseComment = () => {

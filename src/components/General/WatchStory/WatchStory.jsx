@@ -11,7 +11,7 @@ import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import { parseToNumber } from '../../../services/utils';
 import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
-import { Select } from 'antd';
+import { Popover, Select } from 'antd';
 import PopupCommentFB from '../../PopupHome/PopupCommentFB/PopupCommentFB';
 
 const WatchStory = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
@@ -61,7 +61,7 @@ const WatchStory = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
     setValues({ ...values, isComment: value });
   };
   const handleOnchangeTypeComment = (value) => {
-    setValues({ ...values, typeComment: value });
+    setValues({ ...values, typeComment: value, text: [] });
   };
 
   const handleCloseComment = () => {
@@ -316,7 +316,16 @@ const WatchStory = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                     }}
                   />
                   <p>
-                    Randomly Comment <img src={iconQuestion} alt="icon Question" />
+                    Randomly Comment
+                    <Popover
+                      content={
+                        <div style={{ width: '150px' }}>
+                          Randomly comment with two options: only one line or more line
+                        </div>
+                      }
+                    >
+                      <img src={iconQuestion} alt="icon Question" />
+                    </Popover>
                   </p>
                 </div>
                 {values.isComment && (

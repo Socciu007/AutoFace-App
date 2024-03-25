@@ -11,7 +11,7 @@ import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import { parseToNumber } from '../../../services/utils.js';
 import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
-import { Select } from 'antd';
+import { Popover, Select } from 'antd';
 import PopupAnswer from '../../PopupHome/PopupAnswer/PopupAnswer.jsx';
 import { Store } from 'react-notifications-component';
 import notification from '../../../resources/notification.json';
@@ -144,7 +144,7 @@ const JoinGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, compon
   };
 
   const handleOnchangeTypeAnswer = (value) => {
-    setValues({ ...values, typeAnswer: value });
+    setValues({ ...values, typeAnswer: value, answer: [[]] });
   };
 
   const handleCloseComment = () => {
@@ -369,7 +369,9 @@ const JoinGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, compon
                         />
                         <p>
                           Automatically answer the questions{' '}
-                          <img style={{ marginLeft: '6px' }} src={iconQuestion} alt="icon Question" />
+                          <Popover content={<>Automatically answer the questions</>}>
+                            <img style={{ marginLeft: '6px' }} src={iconQuestion} alt="icon Question" />
+                          </Popover>
                         </p>
                       </div>
                       {values.isAutoAnswer && (
