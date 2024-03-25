@@ -7,6 +7,7 @@ export const joinGroup = (setting) => {
         groupStart: ${setting.groupStart},
         isAutoAnswer: ${setting.isAutoAnswer},
         option: ${JSON.stringify(setting.option)},
+        typeAnswer: ${JSON.stringify(setting.typeAnswer)},
         answer: ${JSON.stringify(setting.answer)},
         text:${JSON.stringify(setting.text)},
       }`;
@@ -33,6 +34,9 @@ export const joinGroup = (setting) => {
     try {
       let arr = [];
       let buttons = await getElements(page, '[class="native-text"]');
+      if(!buttons) {
+        buttons.length = 0;
+      }
       for (let i = 0; i < buttons.length; i++) {
         const btn = await page.evaluate((el) => {
           return el.innerHTML;
@@ -43,6 +47,9 @@ export const joinGroup = (setting) => {
       }
       if(arr.length == 0){
         buttons = await getElements(page, '[class="internal-input native-text native-text non-native-input"]');
+        if(!buttons) {
+          return arr;
+        }
         for (let i = 0; i < buttons.length; i++) {
         const btn = await page.evaluate((el) => {
           return el.innerHTML;
@@ -194,10 +201,13 @@ const answerGroupQuestion = async (page, joinGroupObject) => {
             await delay(1000);
             await clickElement(area);
             await delay(2000);
-            let randomText =
-              joinGroupObject.answer[
-                getRandomInt(joinGroupObject.answer.length)
-              ];
+            let array_2d = joinGroupObject.answer;
+            if(array_2d.length == 0) {
+              break;
+            }
+            let index = i % array_2d.length;
+            let subarray = array_2d[index];
+            let randomText = subarray[Math.floor(Math.random() * subarray.length)];
             await page.keyboard.type(randomText, { delay: 200 });
             isAnswer = true;
             logger("answer " + i);
@@ -222,7 +232,6 @@ const answerGroupQuestion = async (page, joinGroupObject) => {
 };
 const joinWithoutAnswer = async (page) => {
   try {
-
     // click radio button
     let arrBtn = [];
     const buttons = await getElements(page, '[class="native-text"]');
@@ -351,7 +360,7 @@ const joinGroupByUID = async (page, joinGroupObject) => {
   );
   if (!moreIcon) return false;
   await clickElement(moreIcon);
-  await delay(2000);
+  await delay(3000);
   const groupIconSelector =
     'img[src="https://static.xx.fbcdn.net/rsrc.php/v3/yn/r/lH756t0xaFS.png"]';
   const groupIcon = await getElement(page, groupIconSelector, 10);
