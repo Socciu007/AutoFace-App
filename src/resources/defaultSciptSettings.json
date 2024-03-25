@@ -182,6 +182,7 @@
     "delayTimeStart": 5,
     "delayTimeEnd": 10,
     "option": "text/photo",
+    "typeComment": "line",
     "text": [],
     "photos": [],
     "photoStart": 1,

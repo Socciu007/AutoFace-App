@@ -207,7 +207,7 @@ const SettingsPage = ({ component, handleCloseSettings }) => {
   const handleOnChangeTypeProfile = (event) => {
     setSettings({
       ...settings,
-      runningType: event.target.value,
+      runningType: event,
     });
   };
   const handleOnChangeMuteaudio = (value) => {

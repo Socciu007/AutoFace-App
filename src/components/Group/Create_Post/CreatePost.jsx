@@ -7,19 +7,20 @@ import backButton from '../../../assets/icon/icon-back.svg';
 import DragButton from '../../../assets/icon/icon-drag.svg';
 import DeleteButton from '../../../assets/icon/icon-Delete.svg';
 import Editor from 'react-simple-code-editor';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
 import { languages, highlight } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import { useDropzone } from 'react-dropzone';
 import { parseToNumber } from '../../../services/utils';
 import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
+import PopupCommentFB from '../../PopupHome/PopupCommentFB/PopupCommentFB';
+import { Select } from 'antd';
 const CreatePostGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
   const [values, setValues] = useState(DefaultSciptSettings['createPostGroup']);
   const [textContent, setTextContent] = useState('');
   const [UIDContent, setUIDContent] = useState('');
   const [UIDGroupContent, setUIDGroupContent] = useState('');
+  const [openComment, setOpenComment] = useState(false);
 
   const { getRootProps, getInputProps } = useDropzone({
     maxFiles: 10,
@@ -124,13 +125,26 @@ const CreatePostGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, 
   };
 
   const handleDivClick = () => {
-    document.getElementById('text').focus();
+    document.getElementById('codeArea').focus();
   };
   const handleUIDDivClick = () => {
     document.getElementById('UID').focus();
   };
-  const handleDivUIDGroupClick = () => {
-    document.getElementById('codeArea').focus();
+
+  const handleOnchangeTypeComment = (value) => {
+    setValues({ ...values, typeComment: value });
+  };
+
+  const handleCloseComment = () => {
+    setOpenComment(false);
+  };
+
+  const handleClick = () => {
+    setOpenComment(true);
+  };
+
+  const handleSave = (values) => {
+    setValues(values);
   };
   const hightlightWithLineNumbers = (input, language, content) =>
     highlight(input, language)
@@ -266,44 +280,97 @@ const CreatePostGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, 
               <div className="PostContent">
                 <div className="component-item postOption">
                   <Select
-                    name="postOption"
+                    id="typeProfile"
                     className="PostType"
-                    onChange={(event) => changeOption(event.target.value)}
                     value={values.option}
-                  >
-                    <MenuItem value="background">Using background</MenuItem>
-                    <MenuItem value="text/photo">Text, Photo/video</MenuItem>
-                  </Select>
+                    onChange={changeOption}
+                    bordered={false}
+                    options={[
+                      {
+                        value: 'background',
+                        label: 'Using background',
+                      },
+                      {
+                        value: 'text/photo',
+                        label: 'Text, Photo/video',
+                      },
+                    ]}
+                  />
                 </div>
-                <div className="Text">
-                  <p className="selectPost__header">Text</p>
-                  <div style={{ position: 'relative' }} className="component-item">
-                    <div className="text" style={{ width: '100%', height: 204, overflow: 'auto' }}>
-                      <Editor
-                        value={textContent}
-                        onValueChange={(text) => {
-                          setTextContent(text);
-                        }}
-                        highlight={(text) => hightlightWithLineNumbers(text, languages.js, textContent)}
-                        padding={15}
-                        className="editor"
-                        textareaId="text"
-                        style={{
-                          background: '#f5f5f5',
-                          fontSize: 15,
-                        }}
-                      />
-                    </div>
-                    <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
-                      <p>
-                        <span>1</span>Enter the content here
-                      </p>
-                      <p>
-                        <span>2</span>Each content/line
-                      </p>
-                    </div>
+                <div style={{ marginTop: '3%' }}>
+                  <div className="titleComment">
+                    <p>Content</p>
+                  </div>
+                  <div className="component-item postOption">
+                    <Select
+                      id="typeProfile"
+                      className="PostType"
+                      value={values.typeComment}
+                      onChange={handleOnchangeTypeComment}
+                      bordered={false}
+                      options={[
+                        {
+                          value: 'line',
+                          label: 'The content is only 1 line',
+                        },
+                        {
+                          value: 'moreLine',
+                          label: 'Content has multiple lines',
+                        },
+                      ]}
+                    />
                   </div>
                 </div>
+
+                {(values.option === 'background' || values.option === 'text/photo') &&
+                  values.typeComment === 'line' && (
+                    <div className="Text">
+                      <div style={{ position: 'relative' }} className="component-item">
+                        <div className="text" style={{ width: '100%', height: 204, overflow: 'auto' }}>
+                          <Editor
+                            value={textContent}
+                            onValueChange={(text) => {
+                              setTextContent(text);
+                            }}
+                            highlight={(text) => hightlightWithLineNumbers(text, languages.js, textContent)}
+                            padding={15}
+                            className="editor"
+                            textareaId="codeArea"
+                            style={{
+                              background: '#f5f5f5',
+                              fontSize: 15,
+                            }}
+                          />
+                        </div>
+                        <div onClick={handleDivClick} className={`placeholder ${textContent ? 'hide' : ''}`}>
+                          <p>
+                            <span style={{ marginRight: '14px' }}>1</span>Enter the content here
+                          </p>
+                          <p>
+                            <span>2</span>Each content/line
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                {(values.option === 'background' || values.option === 'text/photo') &&
+                  values.typeComment === 'moreLine' && (
+                    <div className="moreLine">
+                      <div className="moreLineComment">
+                        <button onClick={handleClick}>Add +</button>
+                      </div>
+                      <span>({values.text.length})</span>
+                    </div>
+                  )}
+
+                {values.typeComment === 'moreLine' && (
+                  <PopupCommentFB
+                    open={openComment}
+                    handleClose={handleCloseComment}
+                    data={values}
+                    handleSave={handleSave}
+                  />
+                )}
 
                 {values.option === 'text/photo' && (
                   <div className="photoOrVideo">
@@ -446,16 +513,22 @@ const CreatePostGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, 
                       <p>Friends</p>
                       <div className="component-item optionTag">
                         <Select
-                          name="optionTag"
+                          id="optionTag"
                           className="TagType"
-                          onChange={(event) => {
-                            changeTypeTag(event.target.value);
-                          }}
                           value={values.typeTag}
-                        >
-                          <MenuItem value="random">Randomly tag among friends</MenuItem>
-                          <MenuItem value="UID">UID list</MenuItem>
-                        </Select>
+                          onChange={changeTypeTag}
+                          bordered={false}
+                          options={[
+                            {
+                              value: 'random',
+                              label: 'Randomly tag among friends',
+                            },
+                            {
+                              value: 'UID',
+                              label: 'UID list',
+                            },
+                          ]}
+                        />
                       </div>
                       {values.typeTag === 'UID' && (
                         <div style={{ position: 'relative' }} className="component-item">
@@ -476,7 +549,7 @@ const CreatePostGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, 
                             />
                             <div onClick={handleUIDDivClick} className={`placeholder ${UIDContent ? 'hide' : ''}`}>
                               <p>
-                                <span>1</span>Enter the content here
+                                <span style={{ marginRight: '14px' }}>1</span>Enter the content here
                               </p>
                               <p>
                                 <span>2</span>Each content/line
@@ -488,37 +561,6 @@ const CreatePostGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, 
                     </div>
                   </div>
                 )}
-                <div className="UIDList">
-                  <div className="UIDList__header">
-                    <p>Group UID list</p>
-                    <span>({values.lineCount})</span>
-                  </div>
-                  <div className="component-item" style={{ position: 'relative' }}>
-                    <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="UID">
-                      <Editor
-                        value={UIDGroupContent}
-                        onValueChange={(text) => setUIDGroupContent(text)}
-                        highlight={(text) => hightlightWithLineNumbers(text, languages.js, UIDGroupContent)}
-                        padding={15}
-                        className="editor"
-                        textareaId="codeArea"
-                        style={{
-                          background: '#f5f5f5',
-                          fontSize: 15,
-                        }}
-                      />
-                    </div>
-
-                    <div onClick={handleDivUIDGroupClick} className={`placeholder ${UIDGroupContent ? 'hide' : ''}`}>
-                      <p>
-                        <span>1</span>Enter the UID here
-                      </p>
-                      <p>
-                        <span>2</span>Each UID/line
-                      </p>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>

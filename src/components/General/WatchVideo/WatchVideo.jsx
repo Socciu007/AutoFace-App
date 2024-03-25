@@ -6,6 +6,7 @@ import iconIncrease from '../../../assets/icon/icon-Increase.svg';
 import backButton from '../../../assets/icon/icon-back.svg';
 import DragButton from '../../../assets/icon/icon-drag.svg';
 import DeleteButton from '../../../assets/icon/icon-Delete.svg';
+import iconQuestion from '../../../assets/icon/icon-question.svg';
 import { Select } from 'antd';
 import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
@@ -518,7 +519,7 @@ const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                 {(watchVideoData.option === 'text' || watchVideoData.option === 'all') &&
                   watchVideoData.typeComment === 'line' && (
                     <div className="Text">
-                      <p className="selectComment__header">Text</p>
+                      {/* <p className="selectComment__header">Text</p>s */}
                       <div className="component-item" style={{ position: 'relative' }}>
                         <div style={{ width: '100%', height: 204, overflow: 'auto' }} className="text">
                           <Editor

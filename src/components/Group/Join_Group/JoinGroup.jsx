@@ -367,7 +367,10 @@ const JoinGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, compon
                           checked={values.isAutoAnswer}
                           onChange={(event) => changeAnswer(event.target.checked)}
                         />
-                        <p>Automatically answer the questions</p>
+                        <p>
+                          Automatically answer the questions{' '}
+                          <img style={{ marginLeft: '6px' }} src={iconQuestion} alt="icon Question" />
+                        </p>
                       </div>
                       {values.isAutoAnswer && (
                         <div className="PostContent">

@@ -168,12 +168,12 @@ const PopupInformation = ({ type, handleSave, open, handleClose, data }) => {
   const handleWriteYear = () => {
     document.getElementById('year').focus();
   };
-  const makeCopy = {
+  const makeCopys = {
     background: '#fff',
     position: 'fixed',
     maxWidth: '100% !important',
-    width: '498px',
-    height: '679px',
+    width: '758px',
+    height: '498px',
     top: '50%',
     left: '50%',
     transform: ' translate(-50%, -50%)',
@@ -192,17 +192,17 @@ const PopupInformation = ({ type, handleSave, open, handleClose, data }) => {
     handleClose();
   };
 
-  const overlay = {
+  const overlays = {
     background: 'rgba(255,255,255,0.9)',
   };
-  const MuiDialogPaper = {
+  const MuiDialogPapers = {
     width: '758px',
     height: '498px',
     maxHeight: '498px !important',
     minWidth: '758px !important',
     color: '#01162b !important',
   };
-  const MuiDialogContainerProxy = {
+  const MuiDialogContainerProxys = {
     display: 'block',
   };
   return (
@@ -210,10 +210,10 @@ const PopupInformation = ({ type, handleSave, open, handleClose, data }) => {
       open={open}
       onClose={handleClose}
       sx={{
-        '& .MuiPaper-root': makeCopy,
-        '& .MuiBackdrop-root': overlay,
-        '& .css-1t1j96h-MuiPaper-root-MuiDialog-paper': MuiDialogPaper,
-        '& .MuiDialog-container': MuiDialogContainerProxy,
+        '& .MuiPaper-root': makeCopys,
+        '& .MuiBackdrop-root': overlays,
+        '& .css-1t1j96h-MuiPaper-root-MuiDialog-paper': MuiDialogPapers,
+        '& .MuiDialog-container': MuiDialogContainerProxys,
       }}
     >
       <div className="information-popup">

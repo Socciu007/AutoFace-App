@@ -455,9 +455,9 @@ const Newsfeed = ({ onGoBackClick, id, updateDesignScript, currentSetup, compone
                 />
                 {values.randomComment && values.typeComment === 'line' && (
                   <div className="Text">
-                    <div className="component-item__header">
+                    {/* <div className="component-item__header">
                       <p>Text</p>
-                    </div>
+                    </div> */}
                     <div style={{ position: 'relative' }} className="component-item">
                       <div style={{ width: '100%', height: 204, overflow: 'auto' }} className={`text`}>
                         <Editor

@@ -301,11 +301,11 @@ const CreatePost = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                       options={[
                         {
                           value: 'line',
-                          label: 'The content is only 1 line',
+                          label: <span>The content is only 1 line</span>,
                         },
                         {
                           value: 'moreLine',
-                          label: 'Content has multiple lines',
+                          label: <span>Content has multiple lines</span>,
                         },
                       ]}
                     />
@@ -315,7 +315,7 @@ const CreatePost = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                 {(values.option === 'background' || values.option === 'text/photo') &&
                   values.typeComment === 'line' && (
                     <div className="Text">
-                      <p className="selectPost__header">Text</p>
+                      {/* <p className="selectPost__header">Text</p> */}
                       <div style={{ position: 'relative' }} className="component-item">
                         <div className="text" style={{ width: '100%', height: 204, overflow: 'auto' }}>
                           <Editor

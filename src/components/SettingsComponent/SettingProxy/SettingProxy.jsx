@@ -1,4 +1,4 @@
-import { Switch } from 'antd';
+import { Select, Switch } from 'antd';
 import './style.scss';
 import React, { useEffect, useState } from 'react';
 import edit from '../../../assets/pictures/icon-edit.png';
@@ -9,7 +9,6 @@ import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
-import { MenuItem, Select } from '@mui/material';
 
 const SettingProxy = ({
   data,
@@ -30,7 +29,7 @@ const SettingProxy = ({
     setListProxy(data);
   }, [data]);
   const onChangeProxyType = (event) => {
-    setProxyType(event.target.value);
+    setProxyType(event);
   };
 
   const handleOpenWriteText = () => {
@@ -114,14 +113,12 @@ const SettingProxy = ({
             <div className="-add-proxys">
               <div className="-type-proxys">
                 <div className="-type-proxys__nav">
-                  {/* <Select
+                  <Select
                     name="url"
                     className="-type-proxys__nav__details"
-                    onChange={(value) => {
-                      onChangeProxyType(value);
-                    }}
+                    onChange={onChangeProxyType}
                     bordered={false}
-                    defaultValue={proxyType}
+                    // defaultValue={proxyType}
                     value={proxyType}
                     options={[
                       {
@@ -141,8 +138,8 @@ const SettingProxy = ({
                         label: 'SSH',
                       },
                     ]}
-                  /> */}
-                  <Select
+                  />
+                  {/* <Select
                     name="url"
                     className="-type-proxys__nav__details"
                     onChange={onChangeProxyType}
@@ -152,7 +149,7 @@ const SettingProxy = ({
                     <MenuItem value="socks4">Socks 4</MenuItem>
                     <MenuItem value="socks5">Socks 5</MenuItem>
                     <MenuItem value="ssh">SSH</MenuItem>
-                  </Select>
+                  </Select> */}
                 </div>
                 {/* <div className="-icon-proxys" onClick={handleOpenProxyManage}>
                   <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none">
