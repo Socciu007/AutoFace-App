@@ -16,7 +16,7 @@ export const twoFA = (script, account) => {
   return `{
     try {
       const script = ${scriptStr};
-  
+      logger(script);
       const account = ${accountStr};
   
       const checkPageIsLive = checkIsLive(page);

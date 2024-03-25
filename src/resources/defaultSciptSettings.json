@@ -301,9 +301,9 @@
     "isSkip": false
   },
   "twoFA": {
-    "turnOn": true
+    "turnOn": false
   },
   "device": {
-    "isDelete": true
+    "url": "https://mbasic.facebook.com"
   }
 }

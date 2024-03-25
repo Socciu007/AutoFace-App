@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import './style.scss';
 import backButton from '../../../assets/icon/icon-back.svg';
-import { Radio } from 'antd';
 import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
+import { MenuItem, Select } from '@mui/material';
 const Device = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
   const [values, setValues] = useState(DefaultSciptSettings['device']);
   useEffect(() => {
     updateDesignScript(values, component, id);
   }, [values]);
 
-  const changeType = (e) => {
-    setValues({ ...values, isDelete: e.target.value });
+  const changeTypeLogin = (type) => {
+    setValues({ ...values, typeLogin: type });
   };
 
   useEffect(() => {
@@ -31,17 +31,21 @@ const Device = ({ onGoBackClick, id, updateDesignScript, currentSetup, component
                   onGoBackClick(values, component, id);
                 }}
               />
-              <p>Trusted devices</p>
+              <p>Change password</p>
             </div>
             <div className="component-item Notification">
               <div className="component-item__header">
-                <p>Select type</p>
+                <p>Select URL</p>
               </div>
               <div className="NotificationContent">
                 <div className="component-item loginOption">
-                  <Radio.Group onChange={changeType} value={values.isDelete}>
-                    <Radio value={true}>Logout all devices</Radio>
-                  </Radio.Group>
+                  <Select
+                    value={values.url}
+                    onChange={(event) => changeTypeLogin(event.target.value)}
+                    className="LoginType"
+                  >
+                    <MenuItem value="https://mbasic.facebook.com">mbasic.facebook.com</MenuItem>
+                  </Select>
                 </div>
               </div>
             </div>

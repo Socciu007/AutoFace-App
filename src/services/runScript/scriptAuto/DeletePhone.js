@@ -15,9 +15,7 @@ export const DeletePhone = (script, account) => {
   return `{
     try {
       const script = ${scriptStr};
-  
       const account = ${accountStr};
-  
       if (
         !account.password ||
         account.password.length == 0 ||

@@ -21,21 +21,11 @@ export const changeName = (script, account) => {
         surName: ${JSON.stringify(script.surName)},
         }`;
 
-  console.log(script);
-
   let name;
-  if (script.changeName == 'randomly') {
-    const rd = Math.floor(Math.random() * 10);
-    let gender = 0;
-    if (rd < 5) gender = 1;
-    name = {
-      firstName: firstName('US', gender),
-      midleName: '',
-      lastName: lastName('US', gender),
-    };
-  } else if (script.changeName == 'fullName') {
+  if (script.changeName == 'fullName') {
     if (script.nameList.length) {
-      const rdName = script.nameList[getRandomInt(script.nameList.length)];
+      const nameList = script.nameList.filter((e) => e.trim().length);
+      const rdName = nameList[getRandomInt(nameList.length)];
       if (rdName && rdName.length) {
         const strName = rdName.toString().split(' ');
         if (strName.length > 2) {
@@ -62,14 +52,23 @@ export const changeName = (script, account) => {
   } else if (script.changeName == 'unFullName') {
     if (script.surName.length || script.firstName.length || script.midleName.length)
       name = {
-        firstName: script.firstName.length ? script.firstName[getRandomInt(script.firstName.length - 1)] : '',
-        midleName: script.midleName.length ? script.midleName[getRandomInt(script.midleName.length - 1)] : '',
-        lastName: script.surName.length ? script.surName[getRandomInt(script.surName.length - 1)] : '',
+        firstName: script.firstName.length ? script.firstName[getRandomInt(script.firstName.length)] : '',
+        midleName: script.midleName.length ? script.midleName[getRandomInt(script.midleName.length)] : '',
+        lastName: script.surName.length ? script.surName[getRandomInt(script.surName.length)] : '',
       };
+  } else {
+    const rd = Math.floor(Math.random() * 10);
+    let gender = 0;
+    if (rd < 5) gender = 1;
+    name = {
+      firstName: firstName('US', gender),
+      midleName: '',
+      lastName: lastName('US', gender),
+    };
   }
   if (!name) {
     return `{
-        logger("Debug|Change name|Change name Fail");
+        logger("Debug|Change name|Name is null");
     }`;
   }
 
