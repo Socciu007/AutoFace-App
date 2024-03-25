@@ -1,4 +1,4 @@
-export const changeEmail = (script, account) => {
+export const changeEmail = (script, account, emails) => {
   const scriptStr = `{
             isAdd:${script.isAdd},
             isDelete:${script.isDelete},
@@ -20,10 +20,23 @@ export const changeEmail = (script, account) => {
               twoFA:${JSON.stringify(account.twoFA)}
           }`;
 
+  let email;
+  for (let i = 0; i < script.emailList.length; i++) {
+    const check = emails.find((e) => e == script.emailList[i]);
+    if (!check) {
+      email = script.emailList[i];
+      break;
+    }
+  }
+  if (email) {
+    emails.push(email);
+  }
+
   return `{
     try {
       const script = ${scriptStr};
       const account = ${accountStr};
+
       if (
         !account.password ||
         account.password.length == 0 ||
@@ -74,7 +87,9 @@ export const changeEmail = (script, account) => {
           }
         }
       } else if (script.isAdd) {
-        if (!script.emailList || !script.emailList.length) {
+        const email = ${JSON.stringify(email)}
+
+        if (!email) {
           logger("Debug|Email|Change email Fail");
         }
   
@@ -87,6 +102,65 @@ export const changeEmail = (script, account) => {
         const inputEmail = await getElement(page, '[name="email"]');
   
         if (inputEmail) {
+          await inputEmail.type(email.split("|")[0].trim(),{delay:20});
+          await delay(1000);
+          const save = await getElement(page,'[name="save"]');
+          if(save){
+            await save.click();
+            await delay(7000);
+            const nameEmail = email.split("@")[0];
+            const links = await getElements(page, "a");
+            if (links && links.length) {
+              for (let i = 0; i < links.length; i++) {
+                const href = await links[i].evaluate((element) => element.href);
+                if (href && href.toString().includes("entercode") && href.toString().includes(nameEmail)) {
+                  await links[i].click();
+                  await delay(7000);
+                  break;
+                }
+              }
+            }
+
+            const inputCode = await getElement(page,'[name="code"]');
+            if(inputCode){
+                if(script.waitTimeOTP > 15){
+                    await delay((script.waitTimeOTP - 15)*1000);
+                }
+                else{
+                  await delay(3000);
+                }
+
+                let codeMail = await getCodeMail(
+                  email.split("|")[0].trim(),
+                  email.split("|")[1].trim(),
+                );
+                logger(codeMail);
+                if (!codeMail || !codeMail.length) {
+                  for (let i = 0; i < 5; i++) {
+                    await delay(10000);
+                    codeMail = await getCodeMail(
+                      email.split("|")[0].trim(),
+                      email.split("|")[1].trim(),
+                    );
+                    logger(codeMail);
+                    if (codeMail && codeMail.length) {
+                      break;
+                    }
+                  }
+                }
+
+                if (codeMail && codeMail.length) {
+                  await inputCode.type(codeMail,{delay:10});
+                  await delay(1000);
+                  const submitCode = await getElement(page,'[id="root"] [type="submit"]');
+                  if(submitCode){
+                    await submitCode.click();
+                    await delay(10000);
+                  }
+                }
+            }
+
+          }
         }
       } else if (script.isHide) {
         const elLinks = await getElements(page, "a");
