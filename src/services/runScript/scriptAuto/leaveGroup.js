@@ -321,12 +321,15 @@ const leaveGroupObj = ${strSetting};
     leaveGroupObject.delayTimeEnd * 1000
   );
 
-  const moreIcon = await getElement(
+  let moreIcon = await getElement(
     page,
     "#screen-root > div > div:nth-child(1) > div:nth-child(3) > div > div > div:nth-child(3)",
     10
   );
-  if (!moreIcon) return false;
+  if (!moreIcon) {
+    moreIcon = await findBtn(page, "󱥆");
+    if(!moreIcon) return false;
+  };
   await clickElement(moreIcon);
   await delay(2000);
   const groupIconSelector =
