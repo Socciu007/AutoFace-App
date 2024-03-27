@@ -172,25 +172,24 @@ export const boostLikeComment = (setting) => {
             logger("Done tag friend");
           }
         }
-          const commentBtn = await page.$(
-            "textarea.internal-input.input-box.native-input"
-          );
+        const commentBtn = await page.$(
+          "textarea.internal-input.input-box.native-input"
+        );
+        await delay(getRandomIntBetween(3000, 5000));
+        await commentBtn.type(
+          boostObj.textComment[getRandomInt(boostObj.textComment.length)],
+          { delay: 200 }
+        );
+        await delay(getRandomIntBetween(3000, 5000));
+        const sendBtn = await findBtn(
+          page,
+          "󱛅",
+          "div.fl.ac > div.native-text > span.f3"
+        );
+        if (sendBtn) {
+          await clickElement(sendBtn);
           await delay(getRandomIntBetween(3000, 5000));
-          await commentBtn.type(
-            boostObj.textComment[getRandomInt(boostObj.textComment.length)],
-            { delay: 200 }
-          );
-          await delay(getRandomIntBetween(3000, 5000));
-          const sendBtn = await findBtn(
-            page,
-            "󱛅",
-            "div.fl.ac > div.native-text > span.f3"
-          );
-          if (sendBtn) {
-            await clickElement(sendBtn);
-            await delay(getRandomIntBetween(3000, 5000));
-            logger("Done comment post");
-          }
+          logger("Done comment post");
         }
       } else {
         logger("No comment content or enough comment");

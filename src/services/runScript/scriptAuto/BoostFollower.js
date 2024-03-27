@@ -16,7 +16,7 @@ export const boostFollower = (setting) => {
         boostObj.delayTimeEnd * 1000
       );
       for (let i = 0; i < boostObj.UIDList.length; i++) {
-        const url = 'https://www.facebook.com/profile.php/?id='+boostObj.UIDList[i];
+        const url = 'https://m.facebook.com/profile.php/?id='+boostObj.UIDList[i];
         await navigateToUrl(page, url);
         await delay(getRandomIntBetween(3000, 5000));
         if (boostObj.selectTypeFollow === "profile") {
