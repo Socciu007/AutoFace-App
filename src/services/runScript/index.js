@@ -271,7 +271,22 @@ for (const key in obj) {
 
 return obj;
 };
-
+const checkExistElementOnScreen1 = async (page, element) => {
+try {
+  return await page.evaluate((el) => {
+    if (el.getBoundingClientRect().top <= 0) {
+      return -1;
+    } else if (el.getBoundingClientRect().top + el.getBoundingClientRect().height > window.innerHeight) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }, element);
+ 
+} catch (error) {
+  return error;
+}
+};
 const checkExistElementOnScreen = async (page, JSpath) => {
 try {
   const element = await page.$eval(JSpath, (el) => {
