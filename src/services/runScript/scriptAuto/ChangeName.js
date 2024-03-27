@@ -166,6 +166,10 @@ export const changeName = (script, account) => {
                     await delay(getRandomIntBetween(5000, 7000));
                 }
             }
+
+            let fullName = name.firstName + " " + name.midleName + " " + name.lastName;
+            fullName = fullName.trim().replaceAll("  ","");
+            logger("${account.id}", "Update name:" + fullName);
            
           } else {
             logger("Debug|Change name|Change name Fail");

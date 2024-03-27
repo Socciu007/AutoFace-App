@@ -360,6 +360,7 @@ const CreatePost = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                     handleClose={handleCloseComment}
                     data={values}
                     handleSave={handleSave}
+                    createPost={true}
                   />
                 )}
 

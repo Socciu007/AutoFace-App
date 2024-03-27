@@ -324,7 +324,7 @@ export const changeInformation = (script, account) => {
             url += rd.toString();
             break;
           case "single":
-            url += "1";
+            url += "1&";
             break;
           case "couple":
             url += "2";
@@ -336,7 +336,7 @@ export const changeInformation = (script, account) => {
             url += "4";
             break;
           case "civilUnion":
-            url += "10";
+            url += "10&";
             break;
           case "partnership":
             url += "11";
@@ -357,7 +357,7 @@ export const changeInformation = (script, account) => {
             url += "7";
             break;
           default:
-            url += "1";
+            url += "1&";
         }
   
         const click = await clickElementByHref(page, url);

@@ -148,8 +148,13 @@ const uploadImg = async (page, CreatePost) => {
             '#screen-root > div > div:nth-child(2) > div:nth-child(7) > div:nth-child(1)',
           )) === 0
         ) {
-          let select = await findBtn(page, "󰘄");
-          if(!select || select.length == 0) return false;
+          let select = await findBtn(page, "󱢻");
+          if(!select){
+            select = await findBtn(page, "󰘄");
+          }
+          if(!select){
+            return false;
+          }
           let arrImg = [];
           for (let i = 0; i < numberPhoto; i++) {
             const isLive = checkIsLive(page);

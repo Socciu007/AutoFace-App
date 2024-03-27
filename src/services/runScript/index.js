@@ -766,6 +766,19 @@ for (let i = 0; i < loop; i++) {
 }
 };
 
+const getElementsByXPath = async (page, xpath, loop = 10) => {
+  let element;
+  for (let i = 0; i < loop; i++) {
+    try {
+      element = await page.$x(xpath, { timeout: 1000 });
+    } catch (error) {
+      element = null;
+    }
+    if (element) return element;
+    await delay(1000);
+  }
+  };
+
 const getElements = async (page, selector, loop = 10) => {
 let elements;
 for (let i = 0; i < loop; i++) {
@@ -896,7 +909,7 @@ return new Promise(async (resolve) => {
   }
   }
 
-  let page = await browser.newPage();
+  let page = await pages[0];
   
   await page.setBypassCSP(true);
   await page.setCacheEnabled(false);

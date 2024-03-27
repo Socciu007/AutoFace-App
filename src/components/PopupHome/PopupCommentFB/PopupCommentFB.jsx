@@ -8,7 +8,7 @@ import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
 import Dialog from '@mui/material/Dialog';
 
-const PopupCommentFB = ({ type, handleSave, open, handleClose, data }) => {
+const PopupCommentFB = ({ type, handleSave, open, handleClose, data, createPost }) => {
   const [values, setValues] = useState(data);
   const [contentText, setContentText] = useState('');
   useEffect(() => {
@@ -143,7 +143,7 @@ const PopupCommentFB = ({ type, handleSave, open, handleClose, data }) => {
           <div className="-close-popup" onClick={handleClose}>
             <img src={closePopup} alt="icon-x"></img>
           </div>
-          <h1>Comment List</h1>
+          <h1>{createPost ? 'Content List' : 'Comment List'}</h1>
           <div className="-add-proxys__type">
             <div className="-add-proxys-nav -list-proxys">
               <>
@@ -166,7 +166,9 @@ const PopupCommentFB = ({ type, handleSave, open, handleClose, data }) => {
                 >
                   <p>
                     <span>*</span>
-                    Enter comment here, each comment is separated by “|”
+                    {createPost
+                      ? 'Enter content here, each content is separated by “|”'
+                      : 'Enter comment here, each comment is separated by “|”'}
                   </p>
                   <p>For examples:</p>
                   <p>

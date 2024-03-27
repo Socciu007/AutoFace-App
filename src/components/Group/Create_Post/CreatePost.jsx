@@ -369,6 +369,7 @@ const CreatePostGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, 
                     handleClose={handleCloseComment}
                     data={values}
                     handleSave={handleSave}
+                    createPost={true}
                   />
                 )}
 
@@ -561,6 +562,40 @@ const CreatePostGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, 
                     </div>
                   </div>
                 )}
+
+                <p
+                  className="component-item__header"
+                  style={{ marginTop: '3%', width: '100%', justifyContent: 'space-between' }}
+                >
+                  Group UID list
+                  <span>({values.lineCount})</span>
+                </p>
+                <div style={{ position: 'relative', marginTop: '3%' }} className="component-item">
+                  <div className="text" style={{ width: '100%', height: 204, overflow: 'auto' }}>
+                    <Editor
+                      value={UIDGroupContent}
+                      onValueChange={(text) => {
+                        setUIDGroupContent(text);
+                      }}
+                      highlight={(text) => hightlightWithLineNumbers(text, languages.js, UIDGroupContent)}
+                      padding={15}
+                      className="editor"
+                      textareaId="UID"
+                      style={{
+                        background: '#f5f5f5',
+                        fontSize: 15,
+                      }}
+                    />
+                    <div onClick={handleUIDDivClick} className={`placeholder ${UIDGroupContent ? 'hide' : ''}`}>
+                      <p>
+                        <span style={{ marginRight: '14px' }}>1</span>Enter UID here
+                      </p>
+                      <p>
+                        <span>2</span>Each UID/line
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

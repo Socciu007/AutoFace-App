@@ -50,7 +50,7 @@ export const DeletePhone = (script, account) => {
       if (elLinks && elLinks.length) {
         for (let i = 0; i < elLinks.length; i++) {
           const href = await elLinks[i].evaluate((element) => element.href);
-          if (href && href.toString().includes("remove_phone&phone_number")) {
+          if (href && (href.toString().includes("remove_phone&phone_number") ||  href.toString().includes("remove_shared_phone&phone_number"))) {
             listPhone.push(elLinks[i]);
           }
         }

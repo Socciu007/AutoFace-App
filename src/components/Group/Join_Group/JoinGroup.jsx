@@ -385,7 +385,7 @@ const JoinGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, compon
                             options={[
                               {
                                 value: 'line',
-                                label: 'The answer is only 1 line',
+                                label: 'The answer has only 1 line',
                               },
                               {
                                 value: 'moreLine',

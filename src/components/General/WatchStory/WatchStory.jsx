@@ -304,7 +304,7 @@ const WatchStory = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                 </div>
               </div>
             </div>
-            <div className="component-item comment">
+            {/* <div className="component-item comment">
               <div className="component-item__header headerComment">
                 <div className="titleComment">
                   <input
@@ -397,7 +397,7 @@ const WatchStory = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

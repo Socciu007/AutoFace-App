@@ -121,8 +121,9 @@ export const changeEmail = (script, account, emails) => {
               }
             }
 
-            const inputCode = await getElement(page,'[name="code"]');
+            let inputCode = await getElement(page,'[name="code"]');
             if(inputCode){
+
                 if(script.waitTimeOTP > 15){
                     await delay((script.waitTimeOTP - 15)*1000);
                 }
@@ -134,8 +135,19 @@ export const changeEmail = (script, account, emails) => {
                   email.split("|")[0].trim(),
                   email.split("|")[1].trim(),
                 );
-                logger(codeMail);
                 if (!codeMail || !codeMail.length) {
+                  const linksResend = await getElements(page, "a");
+                  if (linksResend && linksResend.length) {
+                    for (let i = 0; i < linksResend.length; i++) {
+                      const href = await linksResend[i].evaluate((element) => element.href);
+                      if (href && href.toString().includes("step=resend")) {
+                        await linksResend[i].click();
+                        await delay(7000);
+                        break;
+                      }
+                    }
+                  }
+                  inputCode = await getElement(page,'[name="code"]');
                   for (let i = 0; i < 5; i++) {
                     await delay(10000);
                     codeMail = await getCodeMail(

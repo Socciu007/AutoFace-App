@@ -312,7 +312,7 @@ const Information = ({ onGoBackClick, id, updateDesignScript, currentSetup, comp
                 <div className="component-item__number">
                   <button onClick={() => setOpenHometown(true)}>Add +</button>
                 </div>
-                {values.isBirthday && (
+                {values.isHometown && (
                   <PopupInformation
                     type="hometown"
                     open={openHometown}

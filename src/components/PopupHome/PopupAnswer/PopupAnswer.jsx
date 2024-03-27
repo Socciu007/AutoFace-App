@@ -271,7 +271,7 @@ const PopupAnswer = ({ type, handleSave, open, handleClose, data }) => {
                 >
                   <p>
                     <span>*</span>
-                    Enter comment here, each comment is separated by “|”
+                    Enter question here, each question is separated by “|”
                   </p>
                   <p>For examples:</p>
                   <p>

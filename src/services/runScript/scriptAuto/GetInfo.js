@@ -27,15 +27,20 @@ export const getInfor = (profile) => {
     
           let textFriends = "";
           const elTexts = await getElements(page, "h3", 2);
-          for (let i = 0; i < elTexts.length; i++) {
-            const text = await getText(page, elTexts[i]);
-            if (text.includes("(")) {
-              textFriends = text.split("(")[1]
-                ? text.split("(")[1].replace(")", "")
-                : "";
-              break;
+          if(elTexts && elTexts.length){
+
+            for (let i = 0; i < elTexts.length; i++) {
+              const text = await getText(page, elTexts[i]);
+              if (text.includes("(")) {
+                textFriends = text.split("(")[1]
+                  ? text.split("(")[1].replace(")", "")
+                  : "";
+                break;
+              }
             }
+
           }
+          
           if (textFriends !== "") {
             logger("${profile.id}", "Update name:" + name + "|" + textFriends);
           } else {

@@ -96,8 +96,7 @@ export const changeCover = (script, account) => {
         waitUntil: "networkidle2",
         timeout: 60000,
       });
-      await delay(200000000);
-  
+      await delay(2000);
       const btnAdd = await getElement(page, '[id="profile_cover_photo"]', 3);
       if (btnAdd) {
         await btnAdd.click();

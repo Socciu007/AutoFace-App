@@ -149,16 +149,20 @@ export const createPost = (setting) => {
           )) === 0
         ) {
            let select = await findBtn(page, "󱢻");
-          if(!select || select.length == 0) return false;
+          if(!select){
+            select = await findBtn(page, "󰘄");
+          }
+          if(!select){
+            return false;
+          }
           let arrImg = [];
           for (let i = 0; i < numberPhoto; i++) {
-                        const isLive = checkIsLive(page);
+            const isLive = checkIsLive(page);
             if (!isLive) {
             return false;
             }
             let randomImg = getRandomIntBetween(0, CreatePost.photos.length);
 
-          
             arrImg.push(CreatePost.photos[randomImg]);
 
             if (select) {

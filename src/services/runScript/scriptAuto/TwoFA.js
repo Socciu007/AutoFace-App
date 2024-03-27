@@ -86,7 +86,7 @@ export const twoFA = (script, account) => {
         }
       }
   
-      if (arrTurnOff.length) {
+      if (arrTurnOff && arrTurnOff.length) {
         if (!script.turnOn) {
           await arrTurnOff[0].click();
           await delay(5000);
@@ -114,18 +114,21 @@ export const twoFA = (script, account) => {
               if (href.toString().includes("2fac/setup/qrcode/generate")) {
                 await turnOnLinks[i].click();
                 await delay(5000);
+                break;
               }
             }
           }
   
-          const elTwoFA = await getElement(
+          
+          const elTwoFA = await getElementsByXPath(
             page,
-            "#root > table > tbody > tr > td > form > div.bl > div > table > tbody > tr > td > div > div.bq > div.br.ba.bs"
+            '//*[@id="root"]/table/tbody/tr/td/form/div[2]/div/table/tbody/tr/td/div/div[2]/div[2]'
           );
   
-          if (elTwoFA) {
-            let twoFA = await getText(page, elTwoFA);
-            twoFA = twoFA.replace(" ", "");
+          if (elTwoFA && elTwoFA.length) {
+            let twoFA = await getText(page, elTwoFA[0]);
+            twoFA = twoFA.replaceAll(" ", "");
+            logger(twoFA)
             const submit = await getElement(page, '[name="confirmButton"]');
             if (submit) {
               await submit.click();
