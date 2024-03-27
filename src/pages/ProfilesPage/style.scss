@@ -257,6 +257,30 @@
     justify-content: center;
     cursor: pointer;
   }
+  .-expand-run {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: row;
+  }
+  .-expand-button {
+    background-color: #34c38f;
+    color: white;
+    font-weight: 600;
+    font-size: 12px;
+    width: 60px;
+    height: 30px;
+    font-family: 'GoogleSans';
+  }
+  .-expand-buttonStop {
+    background-color: #e44141;
+    color: white;
+    font-weight: 600;
+    font-size: 12px;
+    width: 60px;
+    height: 30px;
+    font-family: 'GoogleSans';
+  }
   .-proxy-profiles {
     align-items: center;
     display: inline-flex;

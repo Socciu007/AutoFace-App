@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './style.scss';
-import { Input, Popover, Table, Tooltip } from 'antd';
+import { Button, Input, Popover, Table, Tooltip } from 'antd';
 import display from '../../assets/pictures/icon-display-setting.png';
 import search from '../../assets/pictures/icon-search.svg';
 import refresh from '../../assets/pictures/icon-refresh.png';
@@ -33,6 +33,7 @@ import storageService from '../../services/storage.service';
 import { formatTimeDay } from '../../services/utils';
 import { useSelector, useDispatch } from 'react-redux';
 import { setDebug } from '../../redux/debugSlice';
+import { runScript } from '../../services/runScript';
 const ProfilesPage = () => {
   const profiles = useSelector((state) => state.profile);
   const dispatch = useDispatch();
@@ -187,6 +188,31 @@ const ProfilesPage = () => {
     if (userProfile && userProfile.code == 1) {
       storageService.setSessionObject('user', userProfile);
       setUser(userProfile.result);
+    }
+  };
+
+  const runProfileApp = async (profile) => {
+    if (profile.status == 'ready' || profile.status.toLowerCase().includes('error')) {
+      const profiles = [];
+      profiles.push(profile);
+      await runScript(
+        profiles,
+        {
+          design: {
+            nodes: [],
+            edges: [],
+          },
+          script: [],
+        },
+        dispatch,
+        true,
+      );
+    } else {
+      Store.addNotification({
+        ...notification,
+        type: 'warning',
+        message: `Profile ${profile.uid} is ${profile.status}!`,
+      });
     }
   };
 
@@ -610,7 +636,7 @@ const ProfilesPage = () => {
       });
     }
     settingsColumns.push({
-      width: 50,
+      width: 100,
       fixed: 'right',
       render: (profile) => {
         const handleClickRemove = () => {
@@ -626,45 +652,55 @@ const ProfilesPage = () => {
           }
         };
         return (
-          <div
-            className="-expand-icon"
-            onClick={() => {
-              rowID = profile.id;
-              renderColumns();
-            }}
-          >
-            <Popover
-              open={rowID == profile.id}
-              trigger="hover"
-              onOpenChange={handleCloseAction}
-              placement="rightTop"
-              content={
-                <div className="-popover-options">
-                  <div
-                    onClick={() => {
-                      handleCloseAction();
-                      pinProfile(profile.id, data ? data : dataProfiles);
-                    }}
-                    className="-popover-options__attribute border-bottom"
-                  >
-                    <img src={pinBlack} alt="icon-pin"></img>
-                    {!profile.isPin ? <p>Pin</p> : <p>Unpin</p>}
-                  </div>
-                  <div
-                    onClick={() => {
-                      handleCloseAction();
-                      handleClickRemove();
-                    }}
-                    className="-popover-options__attribute"
-                  >
-                    <img src={deleted} alt="icon-deleted"></img>
-                    <p>Remove</p>
-                  </div>
-                </div>
-              }
+          <div className="-expand-run">
+            <Button
+              onClick={async () => {
+                await runProfileApp(profile);
+              }}
+              className="-expand-button"
             >
-              <img src={options} alt="image-option"></img>
-            </Popover>
+              Run
+            </Button>
+            <div
+              className="-expand-icon"
+              onClick={() => {
+                rowID = profile.id;
+                renderColumns();
+              }}
+            >
+              <Popover
+                open={rowID == profile.id}
+                trigger="hover"
+                onOpenChange={handleCloseAction}
+                placement="rightTop"
+                content={
+                  <div className="-popover-options">
+                    <div
+                      onClick={() => {
+                        handleCloseAction();
+                        pinProfile(profile.id, data ? data : dataProfiles);
+                      }}
+                      className="-popover-options__attribute border-bottom"
+                    >
+                      <img src={pinBlack} alt="icon-pin"></img>
+                      {!profile.isPin ? <p>Pin</p> : <p>Unpin</p>}
+                    </div>
+                    <div
+                      onClick={() => {
+                        handleCloseAction();
+                        handleClickRemove();
+                      }}
+                      className="-popover-options__attribute"
+                    >
+                      <img src={deleted} alt="icon-deleted"></img>
+                      <p>Remove</p>
+                    </div>
+                  </div>
+                }
+              >
+                <img src={options} alt="image-option"></img>
+              </Popover>
+            </div>
           </div>
         );
       },

@@ -55,7 +55,8 @@ export const newFeed = (setting) => {
     try {
       let arr = [];
       const buttons = await getElements(page, '[class="native-text"]');
-      for (let i = 0; i < buttons.length; i++) {
+      if(buttons && buttons.length){
+              for (let i = 0; i < buttons.length; i++) {
         const btn = await page.evaluate((el) => {
           return el.innerHTML;
         }, buttons[i]);
@@ -64,8 +65,11 @@ export const newFeed = (setting) => {
           arr.push( buttons[i]);
         }
       }
+      }
+
       return arr;
     } catch (err) {
+      return [];
       logger(err);
     }
   };

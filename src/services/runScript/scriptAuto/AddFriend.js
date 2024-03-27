@@ -742,7 +742,8 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
     try {
       let arr = [];
       const buttons = await getElements(page, '[class="native-text"]');
-      for (let i = 0; i < buttons.length; i++) {
+      if(buttons && buttons.length){
+        for (let i = 0; i < buttons.length; i++) {
         const btn = await page.evaluate((el) => {
           return el.innerHTML;
         }, buttons[i]);
@@ -750,8 +751,11 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
           arr.push( buttons[i]);
         }
       }
+      }
+      
       return arr;
     } catch (err) {
+      return [];
       logger(err);
     }
   };
@@ -1277,7 +1281,5 @@ const randomComment = async (page, addFriendObject, commentBtns, temp) => {
   } catch (err) {
     logger(err);
   }
-
-  
     `;
 };

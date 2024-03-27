@@ -37,7 +37,6 @@ let emails = [];
 
 const splitToChunks = (array, length, thread) => {
   const size = (length / thread) | 0;
-  console.log(size);
   let results = [];
   for (let i = 0; i < array.length; i += size) {
     results.push(array.slice(i, i + size));
@@ -77,7 +76,7 @@ const getPosition = async (index) => {
   return `${x},${y}`;
 };
 
-export const runScript = async (profileSelected, scriptDesign, dispatch) => {
+export const runScript = async (profileSelected, scriptDesign, dispatch, isRunApp = false) => {
   let newProfileSelected = profileSelected.map((profile) => {
     return { ...profile, script: scriptDesign.id, status: 'waiting' };
   });
@@ -119,7 +118,7 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
     emails = [];
   }
 
-  for (let i = 0; i < settings.countLoop; i++) {
+  if (isRunApp) {
     await Promise.map(
       results,
       async (result, index) => {
@@ -135,13 +134,14 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
               settings,
               j,
               scriptDesign,
+              isRunApp,
             );
             if (resultRun && resultRun.toString().includes('ERR_CONNECTION')) {
               dispatch(
                 updateProfile({
                   ...profile,
                   script: scriptDesign.id,
-                  status: i == settings.countLoop - 1 ? 'Proxy Error' : 'waiting',
+                  status: 'Proxy Error',
                 }),
               );
             } else {
@@ -149,7 +149,7 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
                 updateProfile({
                   ...profile,
                   script: scriptDesign.id,
-                  status: i == settings.countLoop - 1 ? 'ready' : 'waiting',
+                  status: 'ready',
                 }),
               );
             }
@@ -166,11 +166,72 @@ export const runScript = async (profileSelected, scriptDesign, dispatch) => {
       },
       { concurrency: results.length },
     );
+  } else {
+    for (let i = 0; i < settings.countLoop; i++) {
+      await Promise.map(
+        results,
+        async (result, index) => {
+          for (let j = 0; j < result.length; j++) {
+            try {
+              const profile = result[j];
+              const resultRun = await runCode(
+                profile,
+                profileSelected,
+                index,
+                dispatch,
+                arrfunction,
+                settings,
+                j,
+                scriptDesign,
+                isRunApp,
+              );
+              if (resultRun && resultRun.toString().includes('ERR_CONNECTION')) {
+                dispatch(
+                  updateProfile({
+                    ...profile,
+                    script: scriptDesign.id,
+                    status: i == settings.countLoop - 1 ? 'Proxy Error' : 'waiting',
+                  }),
+                );
+              } else {
+                dispatch(
+                  updateProfile({
+                    ...profile,
+                    script: scriptDesign.id,
+                    status: i == settings.countLoop - 1 ? 'ready' : 'waiting',
+                  }),
+                );
+              }
+            } catch (err) {
+              dispatch(
+                updateProfile({
+                  ...profile,
+                  script: scriptDesign.id,
+                  status: i == settings.countLoop - 1 ? 'ready' : 'waiting',
+                }),
+              );
+            }
+          }
+        },
+        { concurrency: results.length },
+      );
+    }
   }
+
   return;
 };
 
-const runCode = async (profile, profileSelected, index, dispatch, arrfunction, settings, indexThread, scriptDesign) => {
+const runCode = async (
+  profile,
+  profileSelected,
+  index,
+  dispatch,
+  arrfunction,
+  settings,
+  indexThread,
+  scriptDesign,
+  isRunApp,
+) => {
   const funcLogin = arrfunction.find((e) => e.type == 'login');
   await delay(settings.delayThread && settings.delayThread > 0 ? index * settings.delayThread * 1000 : 1000);
   try {
@@ -189,7 +250,7 @@ const runCode = async (profile, profileSelected, index, dispatch, arrfunction, s
     }
 
     if (proxy.host && proxy.host.length) {
-      proxyConvert = await getProxy(proxy, (settings.maxTime + 10) * 1000, profile.id);
+      proxyConvert = await getProxy(proxy, isRunApp ? 99999999 : (settings.maxTime + 10) * 1000, profile.id);
       console.log('proxyConvert: ' + JSON.stringify(proxyConvert));
       if (proxyConvert && proxyConvert.host && proxyConvert.port) {
         proxyStr = `"--proxy-server=${proxyConvert.mode}://${proxyConvert.host}:${proxyConvert.port}",`;
@@ -271,22 +332,7 @@ for (const key in obj) {
 
 return obj;
 };
-const checkExistElementOnScreen1 = async (page, element) => {
-try {
-  return await page.evaluate((el) => {
-    if (el.getBoundingClientRect().top <= 0) {
-      return -1;
-    } else if (el.getBoundingClientRect().top + el.getBoundingClientRect().height > window.innerHeight) {
-      return 1;
-    } else {
-      return 0;
-    }
-  }, element);
- 
-} catch (error) {
-  return error;
-}
-};
+
 const checkExistElementOnScreen = async (page, JSpath) => {
 try {
   const element = await page.$eval(JSpath, (el) => {
@@ -340,6 +386,23 @@ try {
 
 return flag ? 1 : 0;
 };
+
+
+const checkExistElementOnScreen1 = async (page, element) => {
+  try {
+    return await page.evaluate((el) => {
+      if (el.getBoundingClientRect().top <= 0) {
+        return -1;
+      } else if (el.getBoundingClientRect().top + el.getBoundingClientRect().height > window.innerHeight) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }, element);
+  } catch (error) {
+    return error;
+  }
+  };
 
 const checkLogin = async (page, url) => {
 
@@ -958,25 +1021,35 @@ return new Promise(async (resolve) => {
     waitUntil: 'networkidle2',
     timeout: 30000,
   });
+
+
   ${
-    funcLogin
-      ? ``
+    isRunApp
+      ? 'await delay(99999999);'
       : `
-  await returnHomePage(page);
-  const { isLogin } = await checkLogin(page);
-  if(!isLogin){
-    logger("Debug||Not logged into Facebook yet");
-    resolve('Not login!');
-    if(browser){
-      await browser.close();
+    ${
+      funcLogin
+        ? ``
+        : `
+    await returnHomePage(page);
+    const { isLogin } = await checkLogin(page);
+    if(!isLogin){
+      logger("Debug||Not logged into Facebook yet");
+      resolve('Not login!');
+      if(browser){
+        await browser.close();
+      }
+      return;
     }
-    return;
-  }
-  ${getInfor(profile)}
-  `
+    ${getInfor(profile)}
+    `
+    }
+  
+    ${getAllFunc(arrfunction, profile)}
+    `
   }
 
-  ${getAllFunc(arrfunction, profile)}
+  
 
 } catch (error) {
   logger(error)
