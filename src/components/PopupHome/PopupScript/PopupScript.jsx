@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import PopupComponent from '../PopupComponent/PopupComponent';
 import closePopup from '../../../assets/pictures/icon-x.svg';
 import settings from '../../../assets/pictures/icon-settings.png';
 import search from '../../../assets/pictures/icon-search.svg';
 import pin from '../../../assets/icon/icon-pin.svg';
 import { Table, Tooltip } from 'antd';
 import './style.scss';
+import systemScript from '../../../resources/systemScript.json';
 import { storageScripts } from '../../../common/const.config';
 import { runScript } from '../../../services/runScript';
 import { dbGetLocally } from '../../../sender';
@@ -75,7 +75,7 @@ const PopupScript = ({ openScripts, handleCloseScripts, profilesSelected }) => {
     if (scriptStr && scriptStr.length) {
       const script = JSON.parse(scriptStr);
       if (script && script.length) {
-        setContentArray(script);
+        setContentArray([...script, ...systemScript]);
       }
     }
   };
