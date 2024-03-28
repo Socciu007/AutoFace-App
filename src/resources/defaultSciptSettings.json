@@ -303,7 +303,7 @@
   "twoFA": {
     "turnOn": false
   },
-  "device": {
+  "trustedDevices": {
     "url": "https://mbasic.facebook.com"
   }
 }

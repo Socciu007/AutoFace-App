@@ -7,7 +7,6 @@ import ReactFlow, {
   Controls,
   MiniMap,
   MarkerType,
-  Panel,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 
@@ -46,7 +45,6 @@ const initialNodes = [
     type: 'startingPoint',
     data: { label: 'Starting Point' },
     position: { x: 250, y: 250 },
-    selected: false,
     selectable: false,
   },
 ];

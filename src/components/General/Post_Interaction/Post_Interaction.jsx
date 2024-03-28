@@ -551,7 +551,7 @@ const Post_Interaction = ({ onGoBackClick, id, updateDesignScript, currentSetup,
                       options={[
                         {
                           value: 'line',
-                          label: 'The comment is only 1 line',
+                          label: 'The comment has only 1 line',
                         },
                         {
                           value: 'moreLine',

@@ -515,7 +515,7 @@ const AddFriend = ({ onGoBackClick, id, currentSetup, component, updateDesignScr
                             options={[
                               {
                                 value: 'line',
-                                label: 'The comment is only 1 line',
+                                label: 'The comment has only 1 line',
                               },
                               {
                                 value: 'moreLine',

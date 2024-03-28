@@ -264,6 +264,7 @@
     flex-direction: row;
   }
   .-expand-button {
+    border: none;
     background-color: #34c38f;
     color: white;
     font-weight: 600;
@@ -271,6 +272,11 @@
     width: 60px;
     height: 30px;
     font-family: 'GoogleSans';
+  }
+  .-expand-button:hover,
+  .-expand-button:active {
+    color: #fff !important;
+    border: none;
   }
   .-expand-buttonStop {
     background-color: #e44141;
