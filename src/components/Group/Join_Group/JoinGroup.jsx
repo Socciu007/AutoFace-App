@@ -371,11 +371,11 @@ const JoinGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, compon
                           Automatically answer the questions{' '}
                           <Popover
                             content={
-                              <>
+                              <div style={{ fontSize: '15px', width: '250px', textAlign: 'justify', padding: '3px' }}>
                                 You can add answers corresponding to the questions when joining the group. Written
                                 Answers: Questions require an answer to be entered. Check boxes: Questions can select
                                 multiple answers. Multiple Choice Question: Question with 1 answer.
-                              </>
+                              </div>
                             }
                           >
                             <img style={{ marginLeft: '6px' }} src={iconQuestion} alt="icon Question" />
