@@ -369,7 +369,15 @@ const JoinGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, compon
                         />
                         <p>
                           Automatically answer the questions{' '}
-                          <Popover content={<>Automatically answer the questions</>}>
+                          <Popover
+                            content={
+                              <>
+                                You can add answers corresponding to the questions when joining the group. Written
+                                Answers: Questions require an answer to be entered. Check boxes: Questions can select
+                                multiple answers. Multiple Choice Question: Question with 1 answer.
+                              </>
+                            }
+                          >
                             <img style={{ marginLeft: '6px' }} src={iconQuestion} alt="icon Question" />
                           </Popover>
                         </p>
@@ -395,7 +403,8 @@ const JoinGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, compon
                           />
                         </div>
                       )}
-                      {values.typeAnswer === 'moreLine' &&
+                      {values.isAutoAnswer &&
+                        values.typeAnswer === 'moreLine' &&
                         values.answer.map((value, index) => (
                           <>
                             <div className="moreLine" key={index}>
@@ -415,6 +424,7 @@ const JoinGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, compon
                           </>
                         ))}
                       {values.isAutoAnswer &&
+                        values.isAutoAnswer &&
                         values.typeAnswer === 'line' &&
                         answerContent.map((value, index) => {
                           return (
