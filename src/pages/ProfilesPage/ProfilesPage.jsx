@@ -8,6 +8,7 @@ import refresh from '../../assets/pictures/icon-refresh.png';
 import settings from '../../assets/pictures/icon-settings.png';
 import plus from '../../assets/pictures/icon-plus.png';
 import options from '../../assets/pictures/icon-options.png';
+import noData from '../../assets/icon/icon-noData.png';
 import addProxy from '../../assets/pictures/icon-addProxy.png';
 import deleted from '../../assets/icon/icon-Delete.svg';
 import yourScript from '../../assets/pictures/icon-yourScripts.svg';
@@ -1231,20 +1232,30 @@ const ProfilesPage = () => {
             ></PopupScript>
           </div>
         </div>
-        {/* <div className="-content-profiles">
-          <div className="scrollable-container"> */}
-        <Table
-          rowSelection={{
-            ...rowSelection,
-          }}
-          components={components}
-          showSorterTooltip={false}
-          rowClassName={(profile) => (profile.isPin ? 'editable-row pinned-row' : 'editable-row')}
-          columns={columns}
-          dataSource={dataSearch}
-          scroll={{ x: 1000 }}
-          pagination={false}
-        />
+        {dataSearch.length === 0 ? (
+          <div className="noData">
+            <div className="noDataImg">
+              <img src={noData} alt="icon noData" />
+            </div>
+            <div className="noDataContent">Start by adding the first profile</div>
+            <div className="noDataBtn" onClick={handleOpenProfiles}>
+              <button>NEW PROFILE</button>
+            </div>
+          </div>
+        ) : (
+          <Table
+            rowSelection={{
+              ...rowSelection,
+            }}
+            components={components}
+            showSorterTooltip={false}
+            rowClassName={(profile) => (profile.isPin ? 'editable-row pinned-row' : 'editable-row')}
+            columns={columns}
+            dataSource={dataSearch}
+            scroll={{ x: 1000 }}
+            pagination={false}
+          />
+        )}
       </div>
     </div>
   );
