@@ -305,13 +305,23 @@ const joinGroupByUID = async (page, joinGroupObject) => {
       logger("Đã vào nhóm từ trước");
       return false;
     }
-    const joinSelector =
-      "#screen-root > div > div:nth-child(2) > div:nth-child(4) > div:nth-child(3) > div";
-    const joinBtn = await getElement(page, joinSelector, 10);
+    
+    const joinBtn = await getElements(page, '[role="button"]');
     if (!joinBtn) return false;
+    
+   const isButtonJoin = await page.evaluate((el) => {
+      if(el.innerHTML.includes("󱘋")){
+        return false;
+      }
+      if(el.innerHTML.includes("󰘄")){
+        return false;
+      }
+      return true;
+    }, joinBtn[0]);
+    if(!isButtonJoin) return false;
     await delay(2000);
     // if not pending , click join
-    await clickElement(joinBtn);
+    await clickElement(joinBtn[0]);
     await delay(randomDelay);
     //   check if group have to answer question before join
     let submitSelector =
