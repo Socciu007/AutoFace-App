@@ -506,7 +506,7 @@ const WatchVideo = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                       options={[
                         {
                           value: 'line',
-                          label: 'The comment is only 1 line',
+                          label: 'The comment has only 1 line',
                         },
                         {
                           value: 'moreLine',

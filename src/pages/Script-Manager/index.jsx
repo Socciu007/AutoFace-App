@@ -17,7 +17,7 @@ import yourScriptBlue from '../../assets/icon/icon-yourScriptsBlue.svg';
 import PopupDebug from '../../components/PopupHome/PopupDebug/PopupDebug.jsx';
 import plus from '../../assets/pictures/icon-plus.png';
 import iconCheck from '../../assets/icon/icon-checkBlue.svg';
-import systemScript from '../../assets/icon/icon-systemScript.svg';
+import iconSystemScript from '../../assets/icon/icon-systemScript.svg';
 import running from '../../assets/icon/icon-running.svg';
 import { storageScripts } from '../../common/const.config';
 import { v4 as uuidv4 } from 'uuid';
@@ -25,6 +25,7 @@ import { dbGetLocally, dbSetLocally } from '../../sender';
 import { Input, Table, Tooltip } from 'antd';
 import { formatTimeDay } from '../../services/utils';
 import { Store } from 'react-notifications-component';
+import systemScript from '../../resources/systemScript.json';
 import notification from '../../resources/notification.json';
 import { useSelector, useDispatch } from 'react-redux';
 import { setScriptAuto } from '../../redux/scriptAutoSlice';
@@ -103,12 +104,6 @@ const ScriptManager = () => {
     setListScript(mapStatus(listScript));
   }, [profiles]);
 
-  // useEffect(() => {
-  //   if (contentArray && contentArray.length) {
-  //     setListScript();
-  //   }
-  // }, [contentArray]);
-
   const mapStatus = (newList) => {
     if (!profiles || profiles.length == 0) return newList;
     const newArr = [...newList];
@@ -160,7 +155,7 @@ const ScriptManager = () => {
     if (scriptStr && scriptStr.length) {
       const script = JSON.parse(scriptStr);
       if (script && script.length) {
-        setContentArray(script);
+        setContentArray([...script, ...systemScript]);
       }
     }
   };
@@ -174,24 +169,14 @@ const ScriptManager = () => {
     navigate('/');
   };
   // Handle the button edit
-  const handleEditClick = () => {
+  const handleEditClick = (isView = fasle) => {
     navigate('/create', {
-      state: { ...itemSelect, status: '' },
+      state: !isView ? { ...itemSelect, status: '' } : { ...itemSelect, status: '', id: null, isSystem: false },
     });
   };
   // Handle category button
   const handleButtonClick = (isSystem) => {
-    let newList = contentArray.filter((e) => {
-      if (!e.isSystem && isSystem) return true;
-      return false;
-    });
-    newList = newList.sort(function (a, b) {
-      if (a.createdAt && b.createdAt) return new Date(b.createdAt) - new Date(a.createdAt);
-      return 0;
-    });
-    newList = newList.sort((x, y) => Number(y.isPin) - Number(x.isPin));
     setIsSystem(!isSystem);
-    setListScript(newList);
   };
 
   const [makeCopyDialogOpen, setMakeCopyDialogOpen] = useState(false);
@@ -470,10 +455,22 @@ const ScriptManager = () => {
                         <img src={pinBlack} alt="icon pin" />
                         {!script.isPin ? <p>Pin</p> : <p>Unpin</p>}
                       </li>
-                      <li onClick={handleEditClick}>
-                        <img src={iconEdit} alt="icon edit" />
-                        Edit
-                      </li>
+
+                      {!isSystem ? (
+                        <li onClick={handleEditClick}>
+                          <img src={iconEdit} alt="icon edit" />
+                          Edit
+                        </li>
+                      ) : (
+                        <li
+                          onClick={() => {
+                            handleEditClick(true);
+                          }}
+                        >
+                          <img src={iconEdit} alt="icon edit" />
+                          View
+                        </li>
+                      )}
 
                       <li
                         onClick={() => {
@@ -490,10 +487,12 @@ const ScriptManager = () => {
                         <img src={iconDuplicate} alt="icon duplicate" />
                         Duplicate
                       </li>
-                      <li onClick={() => handleOptionClick('delete', script)}>
-                        <img src={iconDelete} alt="icon delete" />
-                        Delete
-                      </li>
+                      {!isSystem ? (
+                        <li onClick={() => handleOptionClick('delete', script)}>
+                          <img src={iconDelete} alt="icon delete" />
+                          Delete
+                        </li>
+                      ) : null}
                     </ul>
                   </div>
                   <div style={{ width: '60px', background: 'tranparent !important', display: 'inherit' }}></div>
@@ -567,7 +566,7 @@ const ScriptManager = () => {
                     handleButtonClick(false);
                   }}
                 >
-                  <img src={systemScript} alt="icon system scripts" />
+                  <img src={iconSystemScript} alt="icon system scripts" />
                   <p>System’s Scripts</p>
                   {isSystem ? <img src={iconCheck} alt="icon check" /> : ''}
                 </div>
@@ -580,7 +579,7 @@ const ScriptManager = () => {
               components={components}
               showSorterTooltip={false}
               pagination={false}
-              dataSource={listScripts}
+              dataSource={listScripts.filter((e) => e.isSystem == isSystem || (!e.isSystem && !isSystem))}
               rowClassName={(profile) => (profile.isPin ? 'pinned-row' : '')}
             />
           </div>

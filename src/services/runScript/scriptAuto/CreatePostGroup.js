@@ -204,6 +204,8 @@ const inputContent = async (page, CreatePost) => {
         await InputTextContent.type(CreatePost.text[randomTextIndex], {
           delay: 100,
         });
+        await delay(3000);
+        await page.keyboard.press("Enter");
         await delay(5000);
         return true;
       } else {

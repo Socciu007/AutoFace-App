@@ -311,7 +311,7 @@ const CreatePostGroup = ({ onGoBackClick, id, updateDesignScript, currentSetup, 
                       options={[
                         {
                           value: 'line',
-                          label: 'The content is only 1 line',
+                          label: 'The content has only 1 line',
                         },
                         {
                           value: 'moreLine',

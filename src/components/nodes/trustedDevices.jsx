@@ -7,9 +7,6 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
 function trustedDevicesNode({ data: { label, onButtonClick, onDeleteNode }, isConnectable, id }) {
-  const onChange = useCallback((evt) => {
-    console.log(evt.target.value);
-  }, []);
   // for style menu materials UI
   const menuStyle = {
     boxShadow:

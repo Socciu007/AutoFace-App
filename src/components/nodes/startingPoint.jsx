@@ -10,7 +10,7 @@ function startingPointNode({ data, isConnectable }) {
 
   return (
     <div className="updater-node">
-      <div className="node nodrag">
+      <div className="node">
         <svg xmlns="http://www.w3.org/2000/svg" width="5" height="40" viewBox="0 0 5 40" fill="none">
           <path d="M0 5C0 2.23858 2.23858 0 5 0V40C2.23858 40 0 37.7614 0 35V5Z" fill="#2A86FF" />
         </svg>

@@ -39,6 +39,7 @@ const ProfilesPage = () => {
   const profiles = useSelector((state) => state.profile);
   const dispatch = useDispatch();
   let rowID;
+  let showRun = false;
   let loading = false;
   const [columns, setColumns] = useState([]);
   const [idSelect, setIdSelect] = useState(null);
@@ -184,9 +185,12 @@ const ProfilesPage = () => {
   const getUser = async () => {
     let userProfile;
     userProfile = storageService.getSessionObject('user');
-    console.log('userProfile ' + userProfile);
     if (!userProfile || userProfile.code !== 1) userProfile = await getMe();
     if (userProfile && userProfile.code == 1) {
+      if (userProfile.result.autoFacePro) {
+        showRun = true;
+        renderColumns();
+      }
       storageService.setSessionObject('user', userProfile);
       setUser(userProfile.result);
     }
@@ -234,171 +238,18 @@ const ProfilesPage = () => {
     }
     setDisplaySettings(display);
   };
-  // const [inputVisible, setInputVisible] = useState(false);
-  // const [inputValue, setInputValue] = useState('');
-  // const [editInputIndex, setEditInputIndex] = useState(-1);
-  // const [editInputValue, setEditInputValue] = useState('');
-  // const inputRef = useRef(null);
-  // const editInputRef = useRef(null);
-  // useEffect(() => {
-  //   if (inputVisible) {
-  //     inputRef.current?.focus();
-  //   }
-  // }, [inputVisible]);
-  // useEffect(() => {
-  //   editInputRef.current?.focus();
-  // }, [editInputValue]);
-  // const handleCloseTag = async (record, removedTag) => {
-  //   const listProfiles = [...dataProfiles];
-  //   const index = listProfiles.findIndex((profile) => record.id === profile.id);
-  //   const newData = listProfiles[index].filter((tag) => tag !== removedTag);
-  //   console.log('new', newData);
-  //   setDataProfiles(newData);
-  //   await dbSetLocally(storageProfiles, newData);
-  // };
-  // const showInput = () => {
-  //   setInputVisible(true);
-  // };
-  // const handleInputChange = (e) => {
-  //   setInputValue(e.target.value);
-  // };
-  // const handleInputConfirm = () => {
-  //   if (inputValue && !tags.includes(inputValue)) {
-  //     setTags([...tag, inputValue]);
-  //   }
-  //   setInputVisible(false);
-  //   setInputValue('');
-  // };
-  // const handleEditInputChange = (e) => {
-  //   setEditInputValue(e.target.value);
-  // };
-  // const handleEditInputConfirm = async (record, tag) => {
-  //   const newTags = [...tag];
-  //   newTags[editInputIndex] = editInputValue;
-  //   setTags(newTags);
-  //   setEditInputIndex(-1);
-  //   setEditInputValue('');
-  //   const newData = [...dataProfiles];
-  //   const index = newData.findIndex((profile) => record.id === profile.id);
-  //   const profile = newData[index];
-  //   profile.tag = record.tag.split(',').map((e) => {
-  //     if (e && e.length && !e.startsWith('#')) {
-  //       return '#' + e;
-  //     }
-  //     return e;
-  //   });
-  //   newData.splice(index, 1, {
-  //     ...profile,
-  //   });
-  //   setDataProfiles(newData);
-  //   await dbSetLocally(storageProfiles, newData);
-  // };
-  // const tagInputStyle = {
-  //   width: 64,
-  //   height: 22,
-  //   marginInlineEnd: 8,
-  //   verticalAlign: 'top',
-  // };
-  // const listTag = (record, tags) => {
-  //   return (
-  //     <Space size={[0, 8]} wrap>
-  //       {tags.map((tag, index) => {
-  //         if (editInputIndex === index) {
-  //           return (
-  //             <Input
-  //               ref={editInputRef}
-  //               type='text'
-  //               key={index}
-  //               size="small"
-  //               style={tagInputStyle}
-  //               value={editInputValue}
-  //               onChange={handleEditInputChange}
-  //               // onBlur={handleEditInputConfirm(tags)}
-  //               onPressEnter={handleEditInputConfirm(tags)}
-  //             />
-  //           );
-  //         }
-  //         const isLongTag = tag.length > 20;
-  //         const tagElem = (
-  //           <Tag
-  //             key={tag}
-  //             closable={index !== 0}
-  //             style={{
-  //               userSelect: 'none',
-  //             }}
-  //             onClose={() => handleCloseTag(record, tag)}
-  //           >
-  //             <span
-  //               onDoubleClick={(e) => {
-  //                 if (index !== 0) {
-  //                   setEditInputIndex(index);
-  //                   setEditInputValue(tag);
-  //                   e.preventDefault();
-  //                 }
-  //               }}
-  //             >
-  //               {isLongTag ? `${tag.slice(0, 20)}...` : tag}
-  //             </span>
-  //           </Tag>
-  //         );
-  //         return isLongTag ? (
-  //           <Tooltip title={tag} key={tag}>
-  //             {tagElem}
-  //           </Tooltip>
-  //         ) : (
-  //           tagElem
-  //         );
-  //       })}
-  //       {inputVisible ? (
-  //         <Input
-  //           ref={inputRef}
-  //           type="text"
-  //           size="small"
-  //           style={tagInputStyle}
-  //           value={inputValue}
-  //           onChange={() => handleInputChange()}
-  //           onBlur={handleInputConfirm()}
-  //           onPressEnter={handleInputConfirm()}
-  //         />
-  //       ) : (
-  //         <Tag onClick={showInput}>New Tag</Tag>
-  //       )}
-  //     </Space>
-  //   );
-  // };
 
   const renderColumns = async (settings, data) => {
     if (!settings) settings = await dbGetLocally(storageDisplaySettings);
     const settingsColumns = [
       {
         title: '#',
-        // dataIndex: 'key',
         width: 40,
         className: 'key',
         render: (text, record, index) => <div>{index + 1}</div>,
       },
     ];
 
-    // if (settings.profile) {
-    //   settingsColumns.push({
-    //     title: 'Profile',
-    //     width: 250,
-    //     render: (profile) => {
-    //       return (
-    //         <div className="-text-profile">
-    //           <span>{profile.os.charAt(0).toUpperCase() + profile.os.slice(1)}</span>
-    //           {profile.isPin && <img src={pin} alt="icon-pin"></img>}
-    //           {profile.os === 'mac' && <img style={{ width: 13 }} src={macosIcon} alt="icon-mac"></img>}
-    //           {profile.os === 'win' && <img src={windowIcon} style={{ width: 13 }} alt="icon-window"></img>}
-    //           {profile.os === 'ios' && <img src={iosIcon} style={{ width: 13 }} alt="icon-ios"></img>}
-    //           {profile.os === 'android' && <img src={androidIcon} style={{ width: 13 }} alt="icon-android"></img>}
-    //           {profile.os === 'lin' && <img src={linuxIcon} style={{ width: 13 }} alt="icon-linux"></img>}
-    //         </div>
-    //       );
-    //     },
-    //     sorter: (a, b) => a.profile.length - b.profile.length,
-    //   });
-    // }
     if (settings.uid) {
       settingsColumns.push({
         title: 'UID',
@@ -637,7 +488,7 @@ const ProfilesPage = () => {
       });
     }
     settingsColumns.push({
-      width: 100,
+      width: showRun ? 100 : 50,
       fixed: 'right',
       render: (profile) => {
         const handleClickRemove = () => {
@@ -654,14 +505,17 @@ const ProfilesPage = () => {
         };
         return (
           <div className="-expand-run">
-            <Button
-              onClick={async () => {
-                await runProfileApp(profile);
-              }}
-              className="-expand-button"
-            >
-              Run
-            </Button>
+            {showRun ? (
+              <Button
+                onClick={async () => {
+                  await runProfileApp(profile);
+                }}
+                className="-expand-button"
+              >
+                Run
+              </Button>
+            ) : null}
+
             <div
               className="-expand-icon"
               onClick={() => {
@@ -1128,10 +982,14 @@ const ProfilesPage = () => {
             </div>
             <div className="-wrapper-option-profiles">
               <span className="-option-profiles" onClick={handleReloadPage}>
-                <img src={refresh} alt="image-refresh"></img>
+                <Popover content={<>Refresh</>}>
+                  <img src={refresh} alt="image-refresh"></img>
+                </Popover>
               </span>
               <span className="-option-profiles" onClick={handleOpenDisplaySetting}>
-                <img src={display} alt="display-setting"></img>
+                <Popover content={<>Display settings</>}>
+                  <img src={display} alt="display-setting"></img>
+                </Popover>
               </span>
               <PopupDisplaySetting
                 onSaveDisplaySettings={onSaveDisplaySettings}
@@ -1140,13 +998,19 @@ const ProfilesPage = () => {
                 handleCloseDisplaySetting={handleCloseDisplaySetting}
               ></PopupDisplaySetting>
               <span className="-option-profiles" onClick={handleSettings}>
-                <img src={settings} alt="image-settings"></img>
+                <Popover content={<>Settings</>}>
+                  <img src={settings} alt="image-settings"></img>
+                </Popover>
               </span>
               <span className="-option-profiles" onClick={handleScript}>
-                <img src={yourScript} alt="icon-yourscripts"></img>
+                <Popover content={<>Script manager</>}>
+                  <img src={yourScript} alt="icon-yourscripts"></img>
+                </Popover>
               </span>
               <span className="-option-profiles" onClick={handleOpenProfiles}>
-                <img src={plus} alt="image-plus"></img>
+                <Popover content={<>Add account</>}>
+                  <img src={plus} alt="image-plus"></img>
+                </Popover>
               </span>
               <PopupProfile
                 openProfiles={openProfiles}

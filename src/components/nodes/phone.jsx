@@ -3,14 +3,10 @@ import { Handle, Position } from 'reactflow';
 import createPostLeft from '../../assets/icon/icon-watchVideoLeft.svg';
 import passIcon from '../../assets/icon/icon-phone-node.svg';
 import optionNode from '../../assets/icon/icon-optionNode.svg';
-import time from '../../assets/icon/icon-time.svg';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
 function passwordNode({ data: { label, onButtonClick, onDeleteNode }, isConnectable, id }) {
-  const onChange = useCallback((evt) => {
-    console.log(evt.target.value);
-  }, []);
   // for style menu materials UI
   const menuStyle = {
     boxShadow:

@@ -4,7 +4,7 @@ import backButton from '../../../assets/icon/icon-back.svg';
 import DefaultSciptSettings from '../../../resources/defaultSciptSettings.json';
 import { MenuItem, Select } from '@mui/material';
 const Device = ({ onGoBackClick, id, updateDesignScript, currentSetup, component }) => {
-  const [values, setValues] = useState(DefaultSciptSettings['device']);
+  const [values, setValues] = useState(DefaultSciptSettings['trustedDevices']);
   useEffect(() => {
     updateDesignScript(values, component, id);
   }, [values]);
