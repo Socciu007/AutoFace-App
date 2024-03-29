@@ -505,6 +505,10 @@ const ScriptManager = () => {
     },
   ];
 
+  if (isSystem) {
+    columns.splice(5, 1);
+  }
+
   const newColumns = columns.map((col) => {
     if (!col.editable) {
       return col;
