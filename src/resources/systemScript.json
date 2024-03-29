@@ -1,0 +1,416 @@
+[
+  {
+    "design": {
+      "nodes": [
+        {
+          "width": 132,
+          "height": 40,
+          "id": "1",
+          "type": "startingPoint",
+          "data": {
+            "label": "Starting Point"
+          },
+          "position": {
+            "x": 250,
+            "y": 250
+          },
+          "deletable": false,
+          "positionAbsolute": {
+            "x": 250,
+            "y": 250
+          }
+        },
+        {
+          "width": 147,
+          "height": 40,
+          "id": "dndnode_1711619317703",
+          "type": "newsFeed",
+          "position": {
+            "x": 442.921875,
+            "y": 248.046875
+          },
+          "data": {
+            "label": "newsFeed node"
+          },
+          "dragging": false,
+          "selected": false,
+          "positionAbsolute": {
+            "x": 442.921875,
+            "y": 248.046875
+          }
+        },
+        {
+          "width": 139,
+          "height": 40,
+          "id": "dndnode_1711619327807",
+          "type": "viewNoti",
+          "position": {
+            "x": 653.921875,
+            "y": 250.046875
+          },
+          "data": {
+            "label": "viewNoti node"
+          },
+          "dragging": false,
+          "selected": false,
+          "positionAbsolute": {
+            "x": 653.921875,
+            "y": 250.046875
+          }
+        },
+        {
+          "width": 157,
+          "height": 40,
+          "id": "dndnode_1711619376679",
+          "type": "watchVideo",
+          "position": {
+            "x": 262.921875,
+            "y": 319.046875
+          },
+          "data": {
+            "label": "watchVideo node"
+          },
+          "dragging": false,
+          "selected": true,
+          "positionAbsolute": {
+            "x": 262.921875,
+            "y": 319.046875
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "1",
+          "sourceHandle": "b",
+          "target": "dndnode_1711619317703",
+          "targetHandle": null,
+          "markerEnd": {
+            "type": "arrowclosed",
+            "width": 10,
+            "height": 10,
+            "color": "#333"
+          },
+          "style": {
+            "strokeWidth": 2,
+            "stroke": "#333"
+          },
+          "id": "reactflow__edge-1b-dndnode_1711619317703"
+        },
+        {
+          "source": "dndnode_1711619317703",
+          "sourceHandle": "b",
+          "target": "dndnode_1711619327807",
+          "targetHandle": null,
+          "markerEnd": {
+            "type": "arrowclosed",
+            "width": 10,
+            "height": 10,
+            "color": "#333"
+          },
+          "style": {
+            "strokeWidth": 2,
+            "stroke": "#333"
+          },
+          "id": "reactflow__edge-dndnode_1711619317703b-dndnode_1711619327807"
+        },
+        {
+          "source": "dndnode_1711619327807",
+          "sourceHandle": "b",
+          "target": "dndnode_1711619376679",
+          "targetHandle": null,
+          "markerEnd": {
+            "type": "arrowclosed",
+            "width": 10,
+            "height": 10,
+            "color": "#333"
+          },
+          "style": {
+            "strokeWidth": 2,
+            "stroke": "#333"
+          },
+          "id": "reactflow__edge-dndnode_1711619327807b-dndnode_1711619376679"
+        }
+      ],
+      "viewport": {
+        "x": -151,
+        "y": -14,
+        "zoom": 1
+      }
+    },
+    "script": [
+      {
+        "scrollTimeStart": 200,
+        "scrollTimeEnd": 300,
+        "delayTimeStart": 5,
+        "delayTimeEnd": 10,
+        "randomLike": true,
+        "likeStart": 2,
+        "likeEnd": 6,
+        "randomShare": false,
+        "shareStart": 1,
+        "shareEnd": 2,
+        "randomComment": false,
+        "commentStart": 1,
+        "commentEnd": 2,
+        "commentStrs": [],
+        "typeComment": "line",
+        "id": "dndnode_1711619317703",
+        "type": "newsFeed"
+      },
+      {
+        "notificationStart": 3,
+        "notificationEnd": 5,
+        "delayTimeStart": 5,
+        "delayTimeEnd": 10,
+        "option": "randomFriend",
+        "id": "dndnode_1711619327807",
+        "type": "viewNoti"
+      },
+      {
+        "videoStart": 5,
+        "videoEnd": 8,
+        "delayTimeStart": 15,
+        "delayTimeEnd": 60,
+        "isLike": false,
+        "likeStart": 1,
+        "likeEnd": 2,
+        "isShare": false,
+        "shareStart": 1,
+        "shareEnd": 2,
+        "isComment": false,
+        "option": "text",
+        "typeComment": "line",
+        "text": [],
+        "photos": [],
+        "photoStart": 1,
+        "photoEnd": 2,
+        "commentStart": 1,
+        "commentEnd": 2,
+        "id": "dndnode_1711619376679",
+        "type": "watchVideo",
+        "isLiked": true
+      }
+    ],
+    "name": "Newfeed",
+    "note": "",
+    "status": "",
+    "isSystem": true,
+    "id": "e955e8c3-9c4d-4076-982d-eb854535f91a",
+    "isPin": false,
+    "createdAt": null
+  },
+  {
+    "design": {
+      "nodes": [
+        {
+          "width": 132,
+          "height": 40,
+          "id": "1",
+          "type": "startingPoint",
+          "data": {
+            "label": "Starting Point"
+          },
+          "position": {
+            "x": 250,
+            "y": 250
+          },
+          "deletable": false,
+          "dragging": true,
+          "positionAbsolute": {
+            "x": 250,
+            "y": 250
+          }
+        },
+        {
+          "width": 157,
+          "height": 40,
+          "id": "dndnode_1711619172240",
+          "type": "watchVideo",
+          "position": {
+            "x": 465,
+            "y": 250.046875
+          },
+          "data": {
+            "label": "watchVideo node"
+          },
+          "dragging": false,
+          "selected": false,
+          "positionAbsolute": {
+            "x": 465,
+            "y": 250.046875
+          }
+        },
+        {
+          "width": 151,
+          "height": 40,
+          "id": "dndnode_1711619197463",
+          "type": "addFriend",
+          "position": {
+            "x": 715,
+            "y": 251.046875
+          },
+          "data": {
+            "label": "addFriend node"
+          },
+          "dragging": false,
+          "selected": false,
+          "positionAbsolute": {
+            "x": 715,
+            "y": 251.046875
+          }
+        },
+        {
+          "width": 147,
+          "height": 40,
+          "id": "dndnode_1711619229887",
+          "type": "newsFeed",
+          "position": {
+            "x": 258.01089573441016,
+            "y": 341.8103196245897
+          },
+          "data": {
+            "label": "newsFeed node"
+          },
+          "dragging": false,
+          "selected": true,
+          "positionAbsolute": {
+            "x": 258.01089573441016,
+            "y": 341.8103196245897
+          }
+        }
+      ],
+      "edges": [
+        {
+          "source": "1",
+          "sourceHandle": "b",
+          "target": "dndnode_1711619172240",
+          "targetHandle": null,
+          "markerEnd": {
+            "type": "arrowclosed",
+            "width": 10,
+            "height": 10,
+            "color": "#333"
+          },
+          "style": {
+            "strokeWidth": 2,
+            "stroke": "#333"
+          },
+          "id": "reactflow__edge-1b-dndnode_1711619172240"
+        },
+        {
+          "source": "dndnode_1711619172240",
+          "sourceHandle": "b",
+          "target": "dndnode_1711619197463",
+          "targetHandle": null,
+          "markerEnd": {
+            "type": "arrowclosed",
+            "width": 10,
+            "height": 10,
+            "color": "#333"
+          },
+          "style": {
+            "strokeWidth": 2,
+            "stroke": "#333"
+          },
+          "id": "reactflow__edge-dndnode_1711619172240b-dndnode_1711619197463"
+        },
+        {
+          "source": "dndnode_1711619197463",
+          "sourceHandle": "b",
+          "target": "dndnode_1711619229887",
+          "targetHandle": null,
+          "markerEnd": {
+            "type": "arrowclosed",
+            "width": 10,
+            "height": 10,
+            "color": "#333"
+          },
+          "style": {
+            "strokeWidth": 2,
+            "stroke": "#333"
+          },
+          "id": "reactflow__edge-dndnode_1711619197463b-dndnode_1711619229887"
+        }
+      ],
+      "viewport": {
+        "x": 31.464305497583837,
+        "y": 44.003092970397574,
+        "zoom": 0.757858283255199
+      }
+    },
+    "script": [
+      {
+        "videoStart": 3,
+        "videoEnd": 6,
+        "delayTimeStart": 15,
+        "delayTimeEnd": 60,
+        "isLike": false,
+        "likeStart": 1,
+        "likeEnd": 2,
+        "isShare": false,
+        "shareStart": 1,
+        "shareEnd": 2,
+        "isComment": false,
+        "option": "text",
+        "typeComment": "line",
+        "text": [],
+        "photos": [],
+        "photoStart": 1,
+        "photoEnd": 2,
+        "commentStart": 1,
+        "commentEnd": 2,
+        "id": "dndnode_1711619172240",
+        "type": "watchVideo",
+        "isLiked": true
+      },
+      {
+        "option": "suggestions",
+        "requestsStart": 2,
+        "requestsEnd": 3,
+        "postStart": 2,
+        "postEnd": 3,
+        "delayTimeStart": 5,
+        "delayTimeEnd": 7,
+        "delayTimeInteractStart": 3,
+        "delayTimeInteractEnd": 5,
+        "isOnlyAddFriend": true,
+        "isAutoDelete": false,
+        "isLiked": false,
+        "isInteract": false,
+        "isComment": false,
+        "typeComment": "line",
+        "comment": [],
+        "stopTime": 10,
+        "text": [],
+        "id": "dndnode_1711619197463",
+        "type": "addFriend"
+      },
+      {
+        "scrollTimeStart": 120,
+        "scrollTimeEnd": 300,
+        "delayTimeStart": 5,
+        "delayTimeEnd": 10,
+        "randomLike": true,
+        "likeStart": 3,
+        "likeEnd": 8,
+        "randomShare": false,
+        "shareStart": 1,
+        "shareEnd": 2,
+        "randomComment": false,
+        "commentStart": 1,
+        "commentEnd": 2,
+        "commentStrs": [],
+        "typeComment": "line",
+        "id": "dndnode_1711619229887",
+        "type": "newsFeed"
+      }
+    ],
+    "name": "Add Friends",
+    "note": "",
+    "status": "",
+    "isSystem": true,
+    "id": "6db44270-fa25-4e38-bbb1-9b133b2737bd",
+    "isPin": false,
+    "createdAt": null
+  }
+]

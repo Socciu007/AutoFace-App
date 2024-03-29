@@ -103,7 +103,7 @@ export const runScript = async (profileSelected, scriptDesign, dispatch, isRunAp
     let node = nodes.find((node) => node.id == edges[0].target);
     while (node) {
       const script = scripts.find((e) => e.id == node.id);
-      arrfunction.push(script);
+      if (script) arrfunction.push(script);
       const edge = edges.find((e) => e.source == node.id);
       if (edge) {
         node = nodes.find((node) => node.id == edge.target);
@@ -112,6 +112,8 @@ export const runScript = async (profileSelected, scriptDesign, dispatch, isRunAp
       }
     }
   }
+
+  console.log(arrfunction);
 
   const isfuncEmail = arrfunction.find((e) => e.type == 'email');
   if (isfuncEmail) {
@@ -937,12 +939,16 @@ try {
 return new Promise(async (resolve) => {
   try {
 
-  setTimeout(async () => {
+    ${
+      !isRunApp
+        ? ` setTimeout(async () => {
     if(browser){
       await browser.close();
   }
-    resolve('Time out');
-  }, ${settings.maxTime} * 1000);
+    resolve('Timeout');
+  }, ${settings.maxTime} * 1000);`
+        : ''
+    }
 
   setTimeout(async () => {
     if(!browser || !browser.isConnected()){

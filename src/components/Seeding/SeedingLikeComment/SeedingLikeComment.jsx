@@ -516,7 +516,7 @@ const SeedingLikeComment = ({ onGoBackClick, id, currentSetup, component, update
                         options={[
                           {
                             value: 'line',
-                            label: 'The comment is only 1 line',
+                            label: 'The comment has only 1 line',
                           },
                           {
                             value: 'moreLine',

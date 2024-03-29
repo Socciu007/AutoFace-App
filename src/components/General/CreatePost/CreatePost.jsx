@@ -301,7 +301,7 @@ const CreatePost = ({ onGoBackClick, id, updateDesignScript, currentSetup, compo
                       options={[
                         {
                           value: 'line',
-                          label: <span>The content is only 1 line</span>,
+                          label: <span>The content has only 1 line</span>,
                         },
                         {
                           value: 'moreLine',
