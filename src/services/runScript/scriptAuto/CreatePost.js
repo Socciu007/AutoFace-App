@@ -208,6 +208,8 @@ export const createPost = (setting) => {
           await clickElement(InputTextContent);
           logger('Clicked input content');
           await InputTextContent.type(CreatePost.text[randomTextIndex], { delay: 150 });
+          await delay(3000);
+          await page.keyboard.press("Enter");
           logger('Hoan tat nhap content');
           await delay(5000);
           return randomTextIndex;
