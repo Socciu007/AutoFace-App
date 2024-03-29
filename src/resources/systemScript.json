@@ -192,7 +192,7 @@
       }
     ],
     "name": "Newfeed",
-    "note": "",
+    "note": "Surf newsfeed - Random like post - Watch video - Random like video",
     "status": "",
     "isSystem": true,
     "id": "e955e8c3-9c4d-4076-982d-eb854535f91a",
@@ -406,7 +406,7 @@
       }
     ],
     "name": "Add Friends",
-    "note": "",
+    "note": "Watch video - Add friend - Surf newsfeed ",
     "status": "",
     "isSystem": true,
     "id": "6db44270-fa25-4e38-bbb1-9b133b2737bd",
