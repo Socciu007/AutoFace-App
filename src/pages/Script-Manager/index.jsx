@@ -169,25 +169,14 @@ const ScriptManager = () => {
     navigate('/');
   };
   // Handle the button edit
-  const handleEditClick = () => {
+  const handleEditClick = (isView = fasle) => {
     navigate('/create', {
-      state: { ...itemSelect, status: '' },
+      state: !isView ? { ...itemSelect, status: '' } : { ...itemSelect, status: '', id: null, isSystem: false },
     });
   };
   // Handle category button
   const handleButtonClick = (isSystem) => {
-    let newList = contentArray.filter((e) => {
-      if (!e.isSystem == isSystem) return true;
-      return false;
-    });
-
-    newList = newList.sort(function (a, b) {
-      if (a.createdAt && b.createdAt) return new Date(b.createdAt) - new Date(a.createdAt);
-      return 0;
-    });
-    newList = newList.sort((x, y) => Number(y.isPin) - Number(x.isPin));
     setIsSystem(!isSystem);
-    setListScript(newList);
   };
 
   const [makeCopyDialogOpen, setMakeCopyDialogOpen] = useState(false);
@@ -466,10 +455,22 @@ const ScriptManager = () => {
                         <img src={pinBlack} alt="icon pin" />
                         {!script.isPin ? <p>Pin</p> : <p>Unpin</p>}
                       </li>
-                      <li onClick={handleEditClick}>
-                        <img src={iconEdit} alt="icon edit" />
-                        Edit
-                      </li>
+
+                      {!isSystem ? (
+                        <li onClick={handleEditClick}>
+                          <img src={iconEdit} alt="icon edit" />
+                          Edit
+                        </li>
+                      ) : (
+                        <li
+                          onClick={() => {
+                            handleEditClick(true);
+                          }}
+                        >
+                          <img src={iconEdit} alt="icon edit" />
+                          View
+                        </li>
+                      )}
 
                       <li
                         onClick={() => {
@@ -486,10 +487,12 @@ const ScriptManager = () => {
                         <img src={iconDuplicate} alt="icon duplicate" />
                         Duplicate
                       </li>
-                      <li onClick={() => handleOptionClick('delete', script)}>
-                        <img src={iconDelete} alt="icon delete" />
-                        Delete
-                      </li>
+                      {!isSystem ? (
+                        <li onClick={() => handleOptionClick('delete', script)}>
+                          <img src={iconDelete} alt="icon delete" />
+                          Delete
+                        </li>
+                      ) : null}
                     </ul>
                   </div>
                   <div style={{ width: '60px', background: 'tranparent !important', display: 'inherit' }}></div>
@@ -576,7 +579,7 @@ const ScriptManager = () => {
               components={components}
               showSorterTooltip={false}
               pagination={false}
-              dataSource={listScripts}
+              dataSource={listScripts.filter((e) => e.isSystem == isSystem || (!e.isSystem && !isSystem))}
               rowClassName={(profile) => (profile.isPin ? 'pinned-row' : '')}
             />
           </div>
