@@ -400,7 +400,7 @@ const ScriptManager = () => {
         </Tooltip>
       ),
     },
-    {
+    isSystem && {
       title: 'Created',
       render: (script) => {
         return (
